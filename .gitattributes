@@ -1,0 +1,9 @@
+* text=auto
+
+# Windows PowerShell 5.1 keeps the script's UTF-8 BOM; use native line endings.
+*.ps1 text eol=crlf
+*.cmd text eol=crlf
+
+# Preserve the exact bytes used by provenance and runtime hash checks.
+data/source/*.json -text diff
+frontend/public/mecoffe/*.json -text diff
