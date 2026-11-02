@@ -1,0 +1,47 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "MeCoffe：启动场景服务",
+      "type": "process",
+      "command": "powershell.exe",
+      "args": ["-NoProfile", "-ExecutionPolicy", "Bypass", "-File", "${workspaceFolder}/start-mecoffe.ps1", "-NoBrowser"],
+      "options": { "cwd": "${workspaceFolder}" },
+      "runOptions": { "instanceLimit": 1 },
+      "problemMatcher": [],
+      "presentation": { "reveal": "always", "panel": "dedicated", "clear": true }
+    },
+    {
+      "label": "MeCoffe：重新生成场景数据",
+      "type": "shell",
+      "command": "python",
+      "args": ["-X", "utf8", "adapter/oasis_to_scene.py"],
+      "options": { "cwd": "${workspaceFolder}" },
+      "problemMatcher": []
+    },
+    {
+      "label": "MeCoffe：重新生成新版网络",
+      "type": "process",
+      "command": "python",
+      "args": ["-X", "utf8", "adapter/snapshot_to_scene.py"],
+      "options": { "cwd": "${workspaceFolder}" },
+      "problemMatcher": []
+    },
+    {
+      "label": "MeCoffe：重新生成新版演示",
+      "type": "process",
+      "command": "python",
+      "args": ["-X", "utf8", "adapter/build_demo.py"],
+      "options": { "cwd": "${workspaceFolder}" },
+      "problemMatcher": []
+    },
+    {
+      "label": "MeCoffe：运行全部测试",
+      "type": "shell",
+      "command": "python -X utf8 -m unittest discover -s adapter -v; cd frontend; npm test",
+      "options": { "cwd": "${workspaceFolder}" },
+      "problemMatcher": [],
+      "group": { "kind": "test", "isDefault": true }
+    }
+  ]
+}

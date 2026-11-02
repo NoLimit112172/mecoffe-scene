@@ -1,0 +1,14 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "MeCoffe：打开校园场景沙盘",
+      "type": "pwa-chrome",
+      "request": "launch",
+      "url": "http://127.0.0.1:5180/mecoffe",
+      "webRoot": "${workspaceFolder}/frontend",
+      "preLaunchTask": "MeCoffe：启动场景服务",
+      "presentation": { "group": "MeCoffe", "order": 1 }
+    }
+  ]
+}

@@ -1,0 +1,43 @@
+{
+  "checked_at": "2026-11-02T15:48:55+08:00",
+  "repository_revision": "5c543f47c25e5f90d207465f256e197698f91566",
+  "status": "awaiting_matching_run",
+  "displayed_run": {
+    "run_id": "run_956ac9fb4ebf43e09dd38a5eb70414ef",
+    "snapshot_id": "snapshot_mecoffe_frontend_100",
+    "snapshot_revision": 2,
+    "snapshot_sha256": "0f3e670336bc9761c019762ec918a1953d307d4edc7d47ee8d4642e925cf15bb",
+    "agent_count": 100,
+    "relationship_count": 348,
+    "completed_steps": 23,
+    "total_steps": 30,
+    "trajectory_sha256": "101043900aeb63d7051f0bcb12f40f185da182023e2d313d02543bb00d909afb"
+  },
+  "latest_snapshot": {
+    "snapshot_id": "snapshot_mecoffe_frontend_100",
+    "revision": 3,
+    "agent_count": 100,
+    "relationship_count": 530,
+    "sha256": "367d7ff36caec7eac740bc978a3a111f807d4c4dafd0388eaf7edd4792a032bf",
+    "source_url": "https://github.com/Alemax067/social-sim/blob/5c543f47c25e5f90d207465f256e197698f91566/backend/network_agent_velpro5/examples/mecoffe/population_snapshot.json"
+  },
+  "comparison": {
+    "added_relationships": 502,
+    "removed_relationships": 320,
+    "retained_relationships": 28,
+    "changed_nodes": 0,
+    "old_relation_types": {
+      "follow": 346,
+      "competition": 2
+    },
+    "latest_relation_types": {
+      "follow": 530
+    }
+  },
+  "note": "共享仓库未提供新版关系网络的配套运行轨迹。引擎 README 说明超时逻辑已修正，100 人用例尚未重新完成 30 轮验证。",
+  "source_urls": {
+    "repository": "https://github.com/Alemax067/social-sim",
+    "network": "https://github.com/Alemax067/social-sim/blob/5c543f47c25e5f90d207465f256e197698f91566/backend/network_agent_velpro5/README.md#L121-L175",
+    "engine": "https://github.com/Alemax067/social-sim/blob/5c543f47c25e5f90d207465f256e197698f91566/backend/oasis_mwb/README.md#L309-L325"
+  }
+}

@@ -1,0 +1,131 @@
+{
+  "schema_version": "mecoffe.campus.v2",
+  "campus_id": "mecoffe_campus_demo",
+  "title": "MeCoffe 示意校园",
+  "status": "illustrative",
+  "note": "展示用的固定校园布局。当前 OASIS 运行不读取地点，地点不参与任何决策；每个人所在的楼栋是按角色做的示意分配，购买时走到门店的动画也只是示意，不代表模拟中的真实行踪。",
+  "routing": "access 描述从楼门走到主路（horizontal_rows 中线）的方式：south 为直接向下；via_x 为先横走到给定 x 的纵向道路再上主路；points 为从柜台(counter)出发到主路的折线，最后一点在主路上。坐标单位为格。",
+  "grid": {
+    "tile_px": 64,
+    "width": 56,
+    "height": 28,
+    "roads": {
+      "horizontal_rows": [13, 14],
+      "vertical_cols": [13, 14, 27, 28, 41, 42]
+    }
+  },
+  "occupancy": {
+    "note": "每类角色按 share 比例分到各楼栋（最大余数法取整），同一楼栋内按人物编号排列。merchant 留在自家门店。",
+    "undergraduate_consumer": [
+      {"building_id": "ug_dorm_west", "share": 0.36},
+      {"building_id": "ug_dorm_east", "share": 0.36},
+      {"building_id": "teaching_main", "share": 0.28}
+    ],
+    "graduate_consumer": [
+      {"building_id": "grad_apartment", "share": 0.5},
+      {"building_id": "library_main", "share": 0.5}
+    ],
+    "teacher_consumer": [
+      {"building_id": "faculty_main", "share": 0.6},
+      {"building_id": "teaching_main", "share": 0.4}
+    ]
+  },
+  "locations": [
+    {
+      "location_id": "teaching_building",
+      "name": "教学楼",
+      "kind": "teaching",
+      "block": {"x": 0, "y": 0, "w": 13, "h": 13},
+      "buildings": [
+        {"building_id": "teaching_main", "name": "教学楼", "style": "house", "type": "21", "model": 1, "x": 4, "y": 8, "w": 4, "h": 3, "floors": 5}
+      ],
+      "access": {"type": "south"},
+      "default_for_roles": []
+    },
+    {
+      "location_id": "library",
+      "name": "图书馆",
+      "kind": "library",
+      "block": {"x": 15, "y": 0, "w": 12, "h": 13},
+      "buildings": [
+        {"building_id": "library_main", "name": "图书馆", "style": "house", "type": "23", "model": 1, "x": 18, "y": 8, "w": 5, "h": 3, "floors": 3}
+      ],
+      "access": {"type": "south"},
+      "default_for_roles": []
+    },
+    {
+      "location_id": "graduate_apartment",
+      "name": "研究生公寓",
+      "kind": "dormitory",
+      "block": {"x": 29, "y": 0, "w": 12, "h": 13},
+      "buildings": [
+        {"building_id": "grad_apartment", "name": "研究生公寓", "style": "house", "type": "22", "model": 2, "x": 33, "y": 8, "w": 4, "h": 3, "floors": 4}
+      ],
+      "access": {"type": "south"},
+      "default_for_roles": ["graduate_consumer"]
+    },
+    {
+      "location_id": "undergraduate_dormitory",
+      "name": "本科生宿舍",
+      "kind": "dormitory",
+      "block": {"x": 43, "y": 0, "w": 13, "h": 13},
+      "buildings": [
+        {"building_id": "ug_dorm_west", "name": "本科生宿舍 1 号楼", "style": "house", "type": "22", "model": 1, "x": 44, "y": 8.5, "w": 4, "h": 3, "floors": 5},
+        {"building_id": "ug_dorm_east", "name": "本科生宿舍 2 号楼", "style": "house", "type": "22", "model": 3, "x": 50.5, "y": 8.5, "w": 4, "h": 3, "floors": 5}
+      ],
+      "access": {"type": "south"},
+      "default_for_roles": ["undergraduate_consumer"]
+    },
+    {
+      "location_id": "shop_merchant_001",
+      "name": "咖啡店 · merchant_001",
+      "kind": "coffee_shop",
+      "brand_id": "merchant_001",
+      "block": {"x": 0, "y": 15, "w": 13, "h": 13},
+      "buildings": [
+        {"building_id": "shop_001", "name": "merchant_001 咖啡店", "style": "villa", "type": "28", "model": 1, "x": 3, "y": 16, "w": 5, "h": 5, "floors": 1}
+      ],
+      "crowd": {"x": 4.4, "y": 22.2, "w": 2.4, "h": 1.2},
+      "counter": [7.8, 22.1],
+      "access": {"type": "points", "points": [[9.4, 22.1], [9.4, 14]]},
+      "default_for_roles": ["merchant:merchant_001"]
+    },
+    {
+      "location_id": "faculty_building",
+      "name": "教工楼",
+      "kind": "faculty",
+      "block": {"x": 15, "y": 15, "w": 12, "h": 13},
+      "buildings": [
+        {"building_id": "faculty_main", "name": "教工楼", "style": "house", "type": "24", "model": 1, "x": 18, "y": 21, "w": 4, "h": 3, "floors": 3}
+      ],
+      "access": {"type": "via_x", "x": 14},
+      "default_for_roles": ["teacher_consumer"]
+    },
+    {
+      "location_id": "central_plaza",
+      "name": "中心广场",
+      "kind": "public_space",
+      "block": {"x": 29, "y": 15, "w": 12, "h": 13},
+      "default_for_roles": []
+    },
+    {
+      "location_id": "shop_merchant_002",
+      "name": "咖啡店 · merchant_002",
+      "kind": "coffee_shop",
+      "brand_id": "merchant_002",
+      "block": {"x": 43, "y": 15, "w": 13, "h": 13},
+      "buildings": [
+        {"building_id": "shop_002", "name": "merchant_002 咖啡店", "style": "villa", "type": "29", "model": 1, "x": 47, "y": 16, "w": 5, "h": 5, "floors": 1}
+      ],
+      "crowd": {"x": 48.4, "y": 22.2, "w": 2.4, "h": 1.2},
+      "counter": [47.2, 22.1],
+      "access": {"type": "points", "points": [[45.6, 22.1], [45.6, 14]]},
+      "default_for_roles": ["merchant:merchant_002"]
+    }
+  ],
+  "decorations": [
+    {"texture": "decoration/40/40_1.png", "at": [[1, 10], [10, 10], [15.5, 9], [24.5, 10], [30, 10], [39, 10]]},
+    {"texture": "decoration/41/41_1.png", "at": [[10, 17], [1, 25], [24.5, 17], [44, 25], [54, 17]]},
+    {"texture": "decoration/42/42_1.png", "at": [[31, 18], [38, 18], [31, 25], [38, 25]]}
+  ]
+}
