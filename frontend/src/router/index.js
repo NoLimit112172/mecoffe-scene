@@ -68,6 +68,11 @@ const routes = [
     path: '/mecoffe',
     name: 'mecoffe',
     component: () => import('../views/MeCoffeScene.vue')
+  },
+  {
+    path: '/mecoffe3d',
+    name: 'mecoffe3d',
+    component: () => import('../views/MeCoffe3D.vue')
   }
 ]
 

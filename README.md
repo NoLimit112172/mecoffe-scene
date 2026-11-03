@@ -116,11 +116,45 @@ OASIS 样例计划仍绑定 revision 2，当前共享仓库没有新版关系网
 
 当前 OASIS 引擎没有位置概念（运行计划写明“社会环境库未接入”“不模拟移动”），所以谁在哪栋楼、去门店怎么走，都只是展示层的安排，不影响谁看到什么、谁买什么。楼栋分配可以在 `campus.json` 的 `occupancy` 里改比例，改完重新生成场景数据即可。`scene/campus.json` 已经给每个地点定义了 `location_id`、类型、范围和默认角色；以后要让地点影响行为时，可以直接把它作为后端的地点层：每天按“所在地点”生成曝光事件，再注入 OASIS。
 
+## 阶段 1：中科大高新校区三维体块
+
+打开 <http://127.0.0.1:5180/mecoffe3d>。原 `/mecoffe` 页面仍按原方式运行，启动脚本与 5180 开发服务不变。新页面使用 Three.js（唯一新增依赖，锁定 `0.187.0`），支持旋转、缩放、平移、悬停楼名、人物选择、播放/暂停、逐条与按天跳转。三种数据模式分别加载原来的 `scene.json`、`latest-network.json` 和 `latest-demo.json`，共享 `replay.js` 的统计与事件游标。
+
+地图仅来自 OpenStreetMap，校园边界使用 [relation 14093671](https://www.openstreetmap.org/relation/14093671)，原始 XML 保存在 `data/osm/ustc_gaoxin.osm`。同目录元数据记录实际下载时间、URL 和摘要；派生数据为 `scene/campus3d.json`，八个示意地点的楼栋对应关系与选择理由为 `scene/campus3d_mapping.json`。OSM 数据许可为 [ODbL 1.0](https://opendatacommons.org/licenses/odbl/1-0/)，详见 [NOTICE.md](NOTICE.md)。页面离线读取这些已保存的数据，不加载地图瓦片。
+
+本次快照下载于 `2026-11-03T05:01:24.973987+00:00`：31 栋建筑（30 栋有 OSM 名称）、57 条原始 highway ways；仅保留下载范围内连续原始节点后，页面绘制 50 段道路。步行图有 195 个节点、234 条边，保留两个连通分量；八个示意地点的最近道路节点都在主分量内，六个住处到两个门店共 12 条路径已验证可达。校园关系由两片独立外边界与一个内孔构成，`boundary_polygons` 完整保留它们，不强行拼接。
+
+重新生成（在仓库根目录）：
+
+```powershell
+# 从已保存的 OSM 原始数据重新生成，通常只需这一步
+python -X utf8 adapter/osm_to_campus3d.py
+
+# 需要刷新 OSM 快照时才重新下载；会更新下载元数据
+python -X utf8 adapter/osm_to_campus3d.py --download
+
+python -X utf8 -m unittest discover -s adapter
+cd frontend
+npm ci
+npm test
+npm run build
+```
+
+转换脚本只使用 Python 标准库。经纬度以校园中心为原点，按等距矩形投影转换为东/北方向的米，公式和原点写入场景 JSON。道路相邻 OSM 节点生成带实际投影长度的无向步行图；购买动画从住所楼栋中心最近的道路节点出发，使用 A* 找到门店的最近节点，再严格原路返回。楼门到道路节点的接入、人物所在楼栋与门店配置均为展示层安排。
+
+页面将同一个人的多笔订单依次排队，重复订单不会再次触发行走；暂停会冻结行走，拖动时间轴或按天跳转会清除未完成动画并恢复示意站位。时间轴到末尾后，已出发的人物继续返回；随后可从头播放。选中人物可查看其关注关系和截至当前的行为记录。动画速度是回放速度，不是实际步行速度。
+
+已知限制：OSM 不提供该批楼栋的楼层与高度，体块使用默认楼层和层高并标明来源；轮廓与道路仅代表下载时的 OSM 覆盖，未登记或后来建设的楼可能缺失。八个地点都是 `illustrative: true` 的人工对应，尤其咖啡店不代表真实店址；OASIS 没有位置数据，人物路线与动画速度不参与模拟，也不应解释为实地可通行性或到店时间。这里仅按 OSM 步行拓扑展示路线，不含室内、门禁、坡度、导航网格或精细模型。
+
+新版演示仍是 v3 网络的 30 天规则脚本，**不是 OASIS 运行结果**；关系网络仅展示静态关注输入，不产生订单；历史回放仍对应原始失败运行（23/30 天完整，第 24 天部分记录），没有补造后续天数。
+
 ## 测试
 
 ```powershell
-python -X utf8 -m unittest discover -s adapter -v   # 适配器27项（历史17 + 快照4 + 演示6）
-cd frontend; npm test                                # 回放状态、楼栋站位与行走路线：17 项
+python -X utf8 -m unittest discover -s adapter -v   # 原有适配器和 OSM 转换测试
+cd frontend
+npm test                                          # 原有回放/二维路线及三维寻路、播放与动画测试
+npm run build
 ```
 
 VS Code 里可直接运行任务 **MeCoffe：运行全部测试**。
@@ -130,6 +164,10 @@ VS Code 里可直接运行任务 **MeCoffe：运行全部测试**。
 | 路径 | 说明 |
 | --- | --- |
 | `scene/campus.json` | 校园地点配置（环境准备模块的产出） |
+| `scene/campus3d.json` / `campus3d_mapping.json` | OSM 三维几何、步行图与八个示意地点映射 |
+| `data/osm/` | OSM 原始 XML 与下载来源、时间、SHA-256 |
+| `adapter/osm_to_campus3d.py` | OSM 快照 → 米制校园几何与步行图，复制派生 JSON 到前端 |
+| `adapter/test_osm_to_campus3d.py` | 投影、几何、路网、映射与数据来源测试 |
 | `adapter/oasis_to_scene.py` | OASIS 轨迹 → 场景数据，含一致性校验 |
 | `adapter/snapshot_to_scene.py` | 最新人物关系快照 → 静态网络场景，不读取旧轨迹 |
 | `adapter/build_demo.py` | 最新快照 + 演示规则 → 30 天动态脚本，不调用模型 |
@@ -138,6 +176,10 @@ VS Code 里可直接运行任务 **MeCoffe：运行全部测试**。
 | `frontend/src/mecoffe/replay.js` | 回放状态、逐日统计、人物记录（纯函数） |
 | `frontend/src/mecoffe/layout.js` | 人物站位、去门店的行走路线（纯函数） |
 | `frontend/src/mecoffe/CampusScene.js` | Pixi 校园场景：地图、人物、行走与事件动画 |
+| `frontend/src/mecoffe/Campus3DScene.js` | Three.js 校园体块、人物与路网动画 |
+| `frontend/src/mecoffe/campus3dRouting.js` | 最近道路节点与 A* 寻路（纯函数） |
+| `frontend/src/mecoffe/campus3dPlayback.js` | 三维页面模式校验与时间轴定位（复用 replay.js 统计） |
+| `frontend/src/views/MeCoffe3D.vue` | 三维页面、三种模式、人物面板与播放控制 |
 | `frontend/tests/layout.test.js` | 站位与路线测试 |
 | `frontend/src/views/MeCoffeScene.vue` | 页面：指标、面板、回放控制、图表 |
 | `frontend/tests/replay.test.js` | 回放状态测试 |
