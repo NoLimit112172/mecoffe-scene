@@ -1,3 +1,4 @@
+import {publicUrl} from './publicUrl.js'
 import {characterLodGeometry,consolidateMaterialGroups} from './renderPerformance.js'
 import * as THREE from 'three'
 import { FBXLoader } from 'three/addons/loaders/FBXLoader.js'
@@ -67,7 +68,7 @@ export function canonicalizeValidSkeleton(source) {
 }
 
 async function loadSource(record) {
-  const base=record.runtime_base||BASE
+  const base=publicUrl(record.runtime_base||BASE)
   const manager = new THREE.LoadingManager(), failures = [],embedded=new Set()
   let ready
   const settled = new Promise(resolve => { ready = resolve })

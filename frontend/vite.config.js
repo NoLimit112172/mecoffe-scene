@@ -1,11 +1,21 @@
+import {fileURLToPath} from 'node:url'
+import {pagesPreparation} from './pages/pages-plugin.mjs'
 import { defineConfig, loadEnv } from 'vite'
 import vue from '@vitejs/plugin-vue'
 
 export default defineConfig(({ mode }) => {
     const env = loadEnv(mode, process.cwd())
-    const apiBaseUrl = env.VITE_API_BASE_URL?.trim()
+    const pages=mode==='pages'
+    const base=pages?(env.VITE_PAGES_BASE || '/mecoffe-scene/'):'/'
+    const prepared=pages?pagesPreparation(fileURLToPath(new URL('.',import.meta.url)),base):null
+    const apiBaseUrl = pages ? undefined : env.VITE_API_BASE_URL?.trim()
     return {
-        plugins: [vue()],
+        base,
+        // Local VITE_* configuration must never be serialized into public JS.
+        envPrefix: pages ? 'MECOFFE_PUBLIC_' : 'VITE_',
+        publicDir:pages?false:'public',
+        resolve:{alias:prepared?.aliases || []},
+        plugins: [vue(),...(prepared?[prepared.plugin]:[])],
         server: {
             host: '127.0.0.1',
             port: 5180,

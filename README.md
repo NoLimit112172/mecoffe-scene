@@ -1,12 +1,32 @@
 # MeCoffe 校园场景沙盘
 
+公开网站：[https://nolimit112172.github.io/mecoffe-scene/](https://nolimit112172.github.io/mecoffe-scene/)（启用 Pages 并完成部署后生效）。
+
+[三维校园](https://nolimit112172.github.io/mecoffe-scene/mecoffe3d) · [二维沙盘](https://nolimit112172.github.io/mecoffe-scene/mecoffe) · [素材库](https://nolimit112172.github.io/mecoffe-scene/mecoffe3d/assets) · [NUS 地图](https://nolimit112172.github.io/mecoffe-scene/mecoffe3d?campus=nus) · [中科大历史场景](https://nolimit112172.github.io/mecoffe-scene/mecoffe3d?scenario=ustc-history) · [NUS 小时场景](https://nolimit112172.github.io/mecoffe-scene/mecoffe3d?scenario=nus-hourly) · [来源与许可](https://nolimit112172.github.io/mecoffe-scene/licenses)
+
+本地开发仍使用 `http://127.0.0.1:5180/`：在 VS Code 打开项目或 `mecoffe-scene.code-workspace`，按 F5 选择原有四个启动入口；首次先执行 `npm --prefix frontend ci`。地图生成、素材库、测试和构建任务继续可用。
+
+Pages 使用独立构建模式，不影响本地路径和完整素材库：
+
+```powershell
+npm --prefix frontend run build:pages
+npm --prefix frontend run check:pages
+node scripts/serve-pages.cjs
+```
+
+静态模拟地址为 `http://127.0.0.1:5187/mecoffe-scene/`，服务器只提供真实文件与目录索引，不提供 SPA 回退。公开包只含沙盘相关资源与 233 项可用原型，完整 Rocketbox 库只保留在本地；大型人物模型在地图可操作后按需加载。
+
+`.github/workflows/pages.yml` 在 main 收到 push 时自动运行 npm ci、前端测试、公开内容扫描、Pages 构建与产物检查，再用官方 Pages actions 发布；也支持在 main 手动触发。无需配置任何 secret。仓库可见性和 Pages 设置由仓库所有者操作，详见 [部署与公开检查](docs/pages-deployment.md)。
+
+本轮测试、体积、慢网测量、截图位置和改动清单见 [里程碑 7 交付记录](docs/milestone7-delivery.md)。公开仓库前还需复核其中的 Git 历史遗留项。
+
 默认打开基于团队最新人物关系快照（目前 revision 3）的动态演示：100 个主体、530 条有向关注，支持 30 个展示日的播放、暂停、逐条推进、走到门店和互动气泡。顶部还可查看静态关系网络或原始 OASIS 历史运行回放。前端基于 [YuLan-OneSim](https://github.com/RUC-GSAI/YuLan-OneSim) 的 Vue + PixiJS 前端和美术素材改造，**不调用模型**。
 
 “新版演示”使用明确的脚本规则，供检查场景、动画和接口，不是新一轮 OASIS 实验结果。演示价格、概率、抽样和每日购买上限在 `scene/demo.json` 中公开配置；不得据此报告销量预测或消费者偏好变化。
 
 ## 在 VS Code 里运行
 
-源码仓库：<https://github.com/NoLimit112172/mecoffe-scene>（私有，包含运行所需的团队输入和美术素材，不做公开网站部署）。首次在另一台电脑使用时：
+源码仓库：<https://github.com/NoLimit112172/mecoffe-scene>，包含运行所需的团队输入和美术素材；仓库公开与 Pages 启用由所有者完成。首次在另一台电脑使用时：
 
 ```powershell
 git clone https://github.com/NoLimit112172/mecoffe-scene.git

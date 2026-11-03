@@ -72,6 +72,7 @@
 </template>
 
 <script setup>
+import {IS_PAGES} from '../mecoffe/publicUrl.js'
 import { computed, nextTick, onBeforeUnmount, onMounted, ref, shallowRef, watch } from 'vue'
 import { RouterLink } from 'vue-router'
 import Campus3DVisualControls from '../components/Campus3DVisualControls.vue'
@@ -280,7 +281,7 @@ async function loadScene(mode) {
     index.value = indexScene(data)
     await nextTick()
     if (current !== generation) return
-    view = new Campus3DScene({ host: mapEl.value, campus, mapping, index: index.value, landcovers:landcover.features, surroundings:surroundings.roads,characterPool:characterPool.value,
+    view = new Campus3DScene({ host: mapEl.value, campus, mapping, index: index.value, landcovers:landcover.features, surroundings:surroundings.roads,characterPool:characterPool.value,deferCharacters:IS_PAGES,
       onQuality: value=>{quality.value=value;qualityNotice.value='已调整画质，让回放更流畅。'},
       onHover: card => { hoverCard.value = card }, onSelect: selectPerson,
       onStats: stats => { motion.value = stats; if (draining.value && !hasPendingAnimation()) draining.value = false },
@@ -299,7 +300,14 @@ async function loadScene(mode) {
     view.setSpeed(speed.value)
     view.setQuality(quality.value)
     await view.setCharacterPool(characterPool.value)
-    await view.setBuildingStyle(props.scenario?.manifest.style?.buildings || 'yulan')
+    if(!IS_PAGES)await view.setBuildingStyle(props.scenario?.manifest.style?.buildings || 'yulan')
+    else {
+      // Keep the map interactive while the atlas and large models download.
+      styleBusy.value++
+      view.setBuildingStyle(props.scenario?.manifest.style?.buildings || 'yulan').then(async()=>{
+        if(renderer===view&&!view.disposed)await view.initCharacters()
+      }).catch(error=>{if(renderer===view)styleError.value=`素材加载失败：${error.message||error}`}).finally(()=>{styleBusy.value--})
+    }
     if(current !== generation || renderer !== view){view.dispose();return}
     view.setLighting(lightSettings())
     view.setPlaying(false)

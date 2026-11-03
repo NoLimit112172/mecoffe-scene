@@ -260,6 +260,7 @@
 </template>
 
 <script setup>
+import {publicUrl} from '../mecoffe/publicUrl.js'
 import { computed, nextTick, onBeforeUnmount, onMounted, ref, shallowRef, watch } from 'vue'
 import * as echarts from 'echarts'
 import { CampusScene, BRAND_COLORS } from '../mecoffe/CampusScene'
@@ -554,7 +555,7 @@ watch(cursor, () => {
 // ---------- 生命周期 ----------
 async function loadSourceSync() {
   try {
-    const response = await fetch('/mecoffe/sync-status.json', { cache: 'no-store' })
+    const response = await fetch(publicUrl('mecoffe/sync-status.json'), { cache: 'no-store' })
     if (response.ok) sourceSync.value = await response.json()
   } catch {
     // 版本核对文件可选；缺失或格式无效时，现有运行仍可正常回放。
@@ -592,7 +593,7 @@ async function loadScene(mode) {
   let view = null
   try {
     const filename = mode === 'demo' ? 'latest-demo.json' : mode === 'network' ? 'latest-network.json' : 'scene.json'
-    const response = await fetch(`/mecoffe/${filename}`, { cache: 'no-store' })
+    const response = await fetch(publicUrl(`mecoffe/${filename}`), { cache: 'no-store' })
     if (!response.ok) throw new Error(`HTTP ${response.status}`)
     const data = await response.json()
     if (generation !== loadGeneration) return

@@ -7,7 +7,9 @@
     "dev": "vite --open /mecoffe",
     "build": "vite build",
     "test": "node --test \"tests/**/*.test.js\"",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "build:pages": "vite build --mode pages",
+    "check:pages": "node pages/check-dist.mjs"
   },
   "dependencies": {
     "@antv/g6": "^5.0.44",

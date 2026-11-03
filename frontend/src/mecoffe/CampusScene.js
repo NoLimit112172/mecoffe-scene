@@ -1,3 +1,4 @@
+import {publicUrl} from './publicUrl.js'
 // 固定校园场景：复用 YuLan-OneSim 的图集素材（建筑、室内、家具、人物、气泡），
 // 布局来自 scene/campus.json。人默认在各自楼栋里，鼠标悬停楼栋可看到每层室内；
 // 购买时从楼门走到门店再回来。所有位置与行走都是示意，OASIS 运行本身没有位置。
@@ -26,7 +27,7 @@ export function loadAtlases() {
       const textures = {}
       const animations = {}
       for (let i = 0; i < 3; i += 1) {
-        const sheet = await PIXI.Assets.load(`/assets/bgrd-${i}.json`)
+        const sheet = await PIXI.Assets.load(publicUrl(`assets/bgrd-${i}.json`))
         Object.assign(textures, sheet.textures)
         Object.assign(animations, sheet.animations || {})
       }

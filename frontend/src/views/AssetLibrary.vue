@@ -7,7 +7,7 @@
     <section class="library-toolbar" aria-label="素材筛选">
       <label class="search-label"><span>搜索</span><input v-model="search" type="search" aria-label="搜索素材" placeholder="名称、类型或原型 ID" /></label>
       <label><span>类别</span><select v-model="category" aria-label="素材类别"><option value="">全部类别</option><option v-for="(label,key) in categories" :key="key" :value="key">{{ label }} · {{ stats.categories[key] || 0 }}</option></select></label>
-      <label><span>来源</span><select v-model="source" aria-label="素材来源"><option value="">全部来源</option><option value="procedural">程序生成</option><option value="yulan">YuLan · Apache-2.0</option><option value="osm">OSM · ODbL</option><option value="valid">VALID 校园人物 · MIT</option><option value="kenney">Kenney 三维植被 · CC0</option><option value="rocketbox">Rocketbox 原始库 · MIT</option></select></label>
+      <label><span>来源</span><select v-model="source" aria-label="素材来源"><option value="">全部来源</option><option value="procedural">程序生成</option><option value="yulan">YuLan · Apache-2.0</option><option value="osm">OSM · ODbL</option><option value="valid">VALID 校园人物 · MIT</option><option value="kenney">Kenney 三维植被 · CC0</option><option v-if="hasIndividualAvatars" value="rocketbox">Rocketbox 原始库 · MIT</option></select></label>
       <label v-if="source === 'rocketbox'"><span>人物分类</span><select v-model="humanGroup" aria-label="人物素材分类"><option value="">全部人形</option><option value="adults">成年人便装</option><option value="professions">职业装</option><option value="children">儿童</option></select></label>
       <span class="result-count" data-testid="asset-count">{{ filtered.length }} / {{ stats.total }} 个原型</span>
       <span class="renderer-note">拖动卡片旋转</span>
@@ -35,7 +35,7 @@
       </article>
     </div>
     <p v-if="!filtered.length" class="no-results">没有匹配的原型，请调整搜索或筛选条件。</p>
-    <footer class="library-footer">目录版本 {{ ASSET_CATALOG.schema_version }} · YuLan、Rocketbox、VALID、Kenney、项目程序生成与 © OpenStreetMap contributors 各自保留来源和许可。人物分类仅描述素材外观；校园与回放数据不受这里的预览选项影响。</footer>
+    <footer class="library-footer">目录版本 {{ ASSET_CATALOG.schema_version }} · 各模型及 © OpenStreetMap contributors 地图数据保留来源与许可。人物分类仅描述素材外观；校园与回放数据不受这里的预览选项影响。</footer>
   </div>
 </template>
 
@@ -47,7 +47,7 @@ import { AssetPreviewRenderer } from '../mecoffe/AssetPreviewRenderer.js'
 import { ASSET_CATEGORY_LABELS, describeMatch, previewParams, safeSourceUrl, paginateAssets } from '../mecoffe/assetPreviewModel.js'
 
 const reloadPreviews=()=>window.location.reload()
-const route=useRoute(),rootEl=ref(null),search=ref(''),category=ref(''),source=ref(route.query.source === 'rocketbox'?'rocketbox':''),pageError=ref('')
+const route=useRoute(),rootEl=ref(null),search=ref(''),category=ref(''),source=ref(ASSET_CATALOG.prototypes.some(p=>p.source.type===route.query.source)?route.query.source:''),pageError=ref('')
 const humanGroup=ref(''),page=ref(1)
 const variants=reactive({}),captions=reactive({}),errors=reactive({})
 const elements=new Map(),categories=ASSET_CATEGORY_LABELS,stats=catalogStats()

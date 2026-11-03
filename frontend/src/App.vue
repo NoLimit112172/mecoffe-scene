@@ -51,7 +51,7 @@ export default {
 
 <template>
   <div class="app">
-    <ThemeToggle v-if="!['mecoffe', 'mecoffe3d', 'asset-library'].includes($route.name)" class="global-theme-toggle" />
+    <ThemeToggle v-if="!['mecoffe', 'mecoffe3d', 'asset-library', 'licenses'].includes($route.name)" class="global-theme-toggle" />
     <router-view v-slot="{ Component }">
       <transition name="fade" mode="out-in">
         <component :is="Component" />

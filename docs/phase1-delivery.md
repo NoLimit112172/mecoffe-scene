@@ -1,6 +1,6 @@
 # 阶段 1 交付与验收记录
 
-日期：2026-11-03。工作目录：`C:\Users\Lenovo\Documents\Claude\mecoffe-scene`。
+日期：2026-11-03。工作目录：`.`。
 
 分支：`feat/campus-3d`；仅本地提交，不 push。现有 5180 Vite 服务未停止、未重启，启动脚本未修改。访问：<http://127.0.0.1:5180/mecoffe3d>；原页面：<http://127.0.0.1:5180/mecoffe>。
 
@@ -90,9 +90,9 @@ npm run build
 
 截图（本地文件，不上传）：
 
-- `C:\Users\Lenovo\Documents\Claude\mecoffe-scene\logs\phase1\mecoffe3d.png`：最终三维页面，包含一笔购买的暂停路线、顶部声明和 OSM 署名。
-- `C:\Users\Lenovo\Documents\Claude\mecoffe-scene\logs\phase1\mecoffe3d-paused.png`：暂停验收补充图。
-- `C:\Users\Lenovo\Documents\Claude\mecoffe-scene\logs\phase1\mecoffe3d-completed.png`：完整 30 天演示结束、人物返程队列清空。
+- `.\logs\phase1\mecoffe3d.png`：最终三维页面，包含一笔购买的暂停路线、顶部声明和 OSM 署名。
+- `.\logs\phase1\mecoffe3d-paused.png`：暂停验收补充图。
+- `.\logs\phase1\mecoffe3d-completed.png`：完整 30 天演示结束、人物返程队列清空。
 
 ## 已知缺口
 
@@ -120,6 +120,6 @@ npm run build
 
 新截图：
 
-- `C:\Users\Lenovo\Documents\Claude\mecoffe-scene\logs\phase1-visual\mecoffe3d-overview-1600x1000.jpg`
-- `C:\Users\Lenovo\Documents\Claude\mecoffe-scene\logs\phase1-visual\mecoffe3d-history-day2-1600x1000.jpg`
-- `C:\Users\Lenovo\Documents\Claude\mecoffe-scene\logs\phase1-visual\mecoffe3d-zoom-1600x1000.jpg`
+- `.\logs\phase1-visual\mecoffe3d-overview-1600x1000.jpg`
+- `.\logs\phase1-visual\mecoffe3d-history-day2-1600x1000.jpg`
+- `.\logs\phase1-visual\mecoffe3d-zoom-1600x1000.jpg`

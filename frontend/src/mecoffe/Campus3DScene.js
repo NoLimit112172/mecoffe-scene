@@ -137,7 +137,8 @@ function roadGeometry(roads, extraWidth = 0, elevation = 0.14) {
 }
 
 export class Campus3DScene {
-  constructor({ host, campus, mapping, index, landcovers = [], surroundings = [], onHover, onSelect, onStats, onVisualActivity, onCharacters, onError, onQuality, characterPool = 'campus' } = {}) {
+  constructor({ host, campus, mapping, index, landcovers = [], surroundings = [], onHover, onSelect, onStats, onVisualActivity, onCharacters, onError, onQuality, characterPool = 'campus', deferCharacters = false } = {}) {
+    this.deferCharacters=deferCharacters
     this.host = host
     this.campus = campus
     this.mapping = mapping
@@ -244,7 +245,7 @@ export class Campus3DScene {
     this.bloom = new SelectiveBloom({ renderer: this.renderer, scene: this.scene, camera: this.camera,
       width: this.host.clientWidth, height: this.host.clientHeight })
     this.setQuality(this.quality)
-    await this.initCharacters()
+    if(!this.deferCharacters)await this.initCharacters()
     if(this.disposed)return this
     this.resetCamera()
     this.resize()

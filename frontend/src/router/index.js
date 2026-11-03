@@ -14,6 +14,7 @@ import SimulationLayout from '../layouts/SimulationLayout.vue'
 import CityMapView from '../views/CityMapView.vue'
 
 const routes = [
+  {path:'/licenses',name:'licenses',component:()=>import('../views/SourceLicenses.vue')},
   {
     path: '/',
     redirect: '/mecoffe'
@@ -82,7 +83,7 @@ const routes = [
 ]
 
 const router = createRouter({
-  history: createWebHistory(),
+  history: createWebHistory(import.meta.env.BASE_URL),
   routes
 })
 

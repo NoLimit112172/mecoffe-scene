@@ -1,5 +1,13 @@
 # 第三方代码说明
 
+## GitHub Pages 发布说明
+
+公开网站使用独立的 Pages 产物白名单：保留 YuLan 图集、OSM 校园数据、Kenney 植被和 9 个 VALID 原始人物模型及许可；完整 Rocketbox、旧页面 img/sounds 资源不进入网站。素材库同步过滤未发布的 Rocketbox 原型，避免失效卡片。本地完整目录与模型文件保持可用。网页提供“来源与许可”入口与下列第三方原始许可全文。
+
+Pages 前端使用 YuLan-OneSim（Apache-2.0）、© OpenStreetMap contributors（ODbL-1.0）、Kenney（CC0-1.0，署名自愿）、VALID（MIT，Copyright (c) 2022 Tiffany Do）、Three.js（MIT）、Vue/Vue Router（MIT）、PixiJS/pixi-viewport（MIT）、Apache ECharts（Apache-2.0，保留 NOTICE）及 Font Awesome Free（图标 CC BY 4.0、字体 OFL 1.1、代码 MIT）。Pages 包保留对应的许可文本与版权声明。新增 favicon 为项目程序绘制。
+
+地点和走路路线为展示示意，OASIS 没有位置数据。公开数据包括已获授权的历史回放、关系网络和规则演示；规则演示仍明确标记为示例，不冒充新模拟结果。发布不会改变原始地图、数据、模型字节或其许可。
+
 ## 当前校园新增模型
 
 - **Kenney Nature Kit 2.1**：来自 <https://kenney.nl/assets/nature-kit>，CC0-1.0。8个原生三维 GLB 和原始 `License.txt` 保存在 `frontend/public/mecoffe/assets3d/kenney/`；清单记录原包 SHA-256、每个归档成员与文件哈希。只是装饰布点，不代表实地植被测绘。校园不再使用 YuLan 像素浮雕树。
@@ -32,7 +40,7 @@ VALID 运行时兼容处理合并同姿态的重名骨骼、重复顶点，移�
 
 ## 三维视觉升级素材
 
-上一轮新增的立体角色（头部、面部、衣服、四肢、背包、帽子与咖啡杯）、建筑窗户贴图、招牌、遮阳棚、草地/道路纹理、树木、路灯、长椅、天空着色器，以及事件气泡与文字图标，均由本仓库 JavaScript/Canvas/Three.js 几何程序生成，没有下载 Quaternius、Kenney 或其他第三方美术素材，也没有新增使用 YuLan 的气泡图片。它们属于项目源码的程序化输出；不冒充外部 CC0 授权资源。素材生成位置及边界见 `frontend/public/mecoffe/assets3d/README.md`。
+早期视觉升级阶段新增的立体角色（头部、面部、衣服、四肢、背包、帽子与咖啡杯）、建筑窗户贴图、招牌、遮阳棚、草地/道路纹理、树木、路灯、长椅、天空着色器，以及事件气泡与文字图标，均由本仓库 JavaScript/Canvas/Three.js 几何程序生成，当时没有下载 Quaternius、Kenney 或其他第三方美术素材（当前新增 Kenney 的来源见前文），也没有新增使用 YuLan 的气泡图片。它们属于项目源码的程序化输出；不冒充外部 CC0 授权资源。素材生成位置及边界见 `frontend/public/mecoffe/assets3d/README.md`。
 
 `frontend/public/mecoffe/campus3d_landcover.json` 中的运动场、水面等几何来自同一份已保存 OSM 快照，通过 `adapter/osm_landcover.py` 独立提取并沿下载边界裁剪；保留原来源与投影，按 ODbL 1.0 提供，与上述 OSM 衍生数据采用相同署名及许可要求。运动场线条/水面风格属于示意性绘制，不是测量结果。
 

@@ -1,3 +1,4 @@
+import {publicUrl} from './publicUrl.js'
 /** Display avatars only. A deterministic model choice is not a demographic
  * inference about the source agent. The original person ID/role stay intact. */
 export const REAL_CHARACTER_HEIGHT = 8.5
@@ -45,7 +46,7 @@ export function rocketboxAssignments(people, availableIds = ROCKETBOX_MODELS, ex
   return result
 }
 
-export function rocketboxTextureUrl(url, model, base = '/mecoffe/assets3d/rocketbox/') {
+export function rocketboxTextureUrl(url, model, base = publicUrl('mecoffe/assets3d/rocketbox/')) {
   const name = decodeURIComponent(String(url)).split(/[\\/]/).at(-1).split(/[?#]/)[0].toLowerCase()
   const texture = (model.textures || []).find(item => item.source_name.toLowerCase() === name || item.path.split('/').at(-1).toLowerCase() === name)
   if (texture) return `${base.replace(/\/?$/, '/')}${texture.path}`
