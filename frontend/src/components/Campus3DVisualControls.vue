@@ -1,6 +1,6 @@
 <template>
   <div class="visual-controls">
-    <label class="light-control"><span>建筑风格</span><select :value="buildingStyle" aria-label="建筑风格" @change="$emit('update:buildingStyle',$event.target.value)"><option value="procedural">程序化</option><option value="yulan">YuLan</option></select></label>
+    <div class="light-control" aria-label="建筑风格"><span>建筑</span><b>YuLan</b></div>
     <div class="quality-control" aria-label="人物显示"><span>人物</span><button :aria-pressed="characterStyle === 'yulan3d'" :class="{active:characterStyle === 'yulan3d'}" aria-label="立体 YuLan 人物" @click="$emit('update:characterStyle','yulan3d')">立体 YuLan</button><button :aria-pressed="characterStyle === 'pixel'" :class="{active:characterStyle === 'pixel'}" aria-label="像素人物" @click="$emit('update:characterStyle','pixel')">像素贴图</button><button :aria-pressed="characterStyle === 'voxel'" :class="{active:characterStyle === 'voxel'}" aria-label="体素人物" @click="$emit('update:characterStyle','voxel')">体素</button></div>
     <div class="quality-control" aria-label="画质"><span>画质</span><button :aria-pressed="quality === 'high'" :class="{active:quality === 'high'}" aria-label="高画质" @click="$emit('update:quality','high')">高</button><button :aria-pressed="quality === 'low'" :class="{active:quality === 'low'}" aria-label="低画质" @click="$emit('update:quality','low')">低</button></div>
     <label class="cycle-control"><input type="checkbox" :checked="cycle" aria-label="日夜循环" @change="$emit('update:cycle',$event.target.checked)" />日夜循环</label>
@@ -8,8 +8,8 @@
   </div>
 </template>
 <script setup>
-defineProps({buildingStyle:{type:String,default:'procedural'},characterStyle:{type:String,default:'yulan3d'},quality:{type:String,default:'high'},cycle:{type:Boolean,default:true},hour:{type:Number,default:12},clock:{type:String,default:'06:00'}})
-const emit = defineEmits(['update:buildingStyle','update:characterStyle','update:quality','update:cycle','update:hour'])
+defineProps({characterStyle:{type:String,default:'yulan3d'},quality:{type:String,default:'high'},cycle:{type:Boolean,default:true},hour:{type:Number,default:12},clock:{type:String,default:'06:00'}})
+const emit = defineEmits(['update:characterStyle','update:quality','update:cycle','update:hour'])
 function chooseLight(value) {
   if (value === 'auto') { emit('update:cycle',true); return }
   emit('update:hour',Number(value))

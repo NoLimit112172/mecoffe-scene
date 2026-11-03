@@ -6,7 +6,7 @@
         <nav aria-label="场景数据模式" class="mode-switch">
           <button v-for="mode in modes" :key="mode.key" :class="{ active: requestedMode === mode.key }" :aria-pressed="requestedMode === mode.key" :disabled="loading" @click="loadScene(mode.key)">{{ mode.label }}</button>
         </nav>
-        <Campus3DVisualControls v-model:building-style="buildingStyle" v-model:character-style="characterStyle" v-model:quality="quality" v-model:cycle="dayCycle" v-model:hour="previewHour" :clock="lightClock.label" />
+        <Campus3DVisualControls v-model:character-style="characterStyle" v-model:quality="quality" v-model:cycle="dayCycle" v-model:hour="previewHour" :clock="lightClock.label" />
         <span v-if="styleBusy" role="status" class="style-status">正在准备三维素材…</span>
         <RouterLink to="/mecoffe" class="old-page">二维沙盘 ↗</RouterLink>
       </div>
@@ -96,7 +96,6 @@ const draining = ref(false)
 const speed = ref(1)
 const quality = ref('high')
 const characterStyle = ref('yulan3d')
-const buildingStyle = ref('procedural')
 const styleBusy = ref(0)
 const styleError = ref('')
 const dayCycle = ref(true)
@@ -220,7 +219,6 @@ async function applyStyle(method,value) {
   finally{styleBusy.value--}
 }
 watch(characterStyle, value => void applyStyle('setCharacterStyle',value))
-watch(buildingStyle, value => void applyStyle('setBuildingStyle',value))
 watch([dayPosition, dayCycle, previewHour], () => renderer?.setLighting({position:dayPosition.value,cycle:dayCycle.value,hour:previewHour.value}))
 
 async function fetchJson(file, signal) {
@@ -268,7 +266,7 @@ async function loadScene(mode) {
     view.setSpeed(speed.value)
     view.setQuality(quality.value)
     await view.setCharacterStyle(characterStyle.value)
-    await view.setBuildingStyle(buildingStyle.value)
+    await view.setBuildingStyle('yulan')
     if(current !== generation || renderer !== view){view.dispose();return}
     view.setLighting({position:dayPosition.value,cycle:dayCycle.value,hour:previewHour.value})
     view.setPlaying(false)

@@ -22,6 +22,6 @@
 
 新增原型为 `character.yulan3d`、`building.component.roof-flat`、`building.component.roof-pitched`、`building.component.foundation`、`landcover.layered-base`。屋顶卡片显示实际实体几何；同一建筑的校正前后原型与理由记录在运行时 `userData`，不覆盖原始地图分配文件。
 
-默认人物为“立体 YuLan”，可切换“像素贴图 / 体素”；建筑默认仍为程序化，可选择 YuLan 立面。程序生成几何不会把原图许可变成 CC0，也不会把 YuLan 原型许可套到 OSM 几何上。
+中科大三维回放页面统一使用 YuLan 立面与三维实体屋顶；默认人物为“立体 YuLan”，可切换“像素贴图 / 体素”。通用地图预览按各自的素材分配加载。程序生成几何不会把原图许可变成 CC0，也不会把 YuLan 原型许可套到 OSM 几何上。
 
 角色位置、楼栋归属、到店行走、门口排队、额外绕行、装饰设施和光照均为展示层安排。人物按缩放后的半径预留间距；相机改变时可调整显示站位，固定相机播放不因尺寸重新排布。原始 A* 图与返回路径、映射和回放数据保持不变，OASIS 没有提供人物位置。建筑层高、屋顶形式及沙盘层次均不表示测量结果。详细验证与本轮限制见根目录 `docs/milestone5-delivery.md`。
