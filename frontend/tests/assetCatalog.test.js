@@ -22,9 +22,16 @@ test('exact matching prefers a dormitory over the generic building and retains i
   assert.equal(queryPrototypes({highway:'primary'},{category:'road'})[0].id,'road.primary')
   assert.deepEqual(queryPrototypes({building:'no'},{category:'building'}),[])
   assert.equal(prototypeParams('building.procedural.dormitory').wall,'#bc7859')
-  assert.equal(prototypeParams('character.pixel').fps,10.8)
+  assert.equal(prototypeParams('character.rocketbox').height_m,8.5)
   assert.throws(()=>getPrototype('missing'),/不存在/)
   assert.throws(()=>{getPrototype('road.primary').params.lanes=9},TypeError)
+})
+
+test('the character catalog contains only the complete realistic library',()=>{
+  const people=queryPrototypes(null,{category:'character'})
+  assert.equal(people.length,116)
+  assert(people.every(item=>item.params.generator==='rocketbox-character'))
+  assert.equal(people.filter(item=>item.params.model_id).length,115)
 })
 
 test('fixed feature ids choose stable variants without mutating tags or catalogue',()=>{

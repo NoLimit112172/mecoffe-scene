@@ -1,4 +1,5 @@
 import test from 'node:test'
+import { atlasFrameDraw, indexPixelAtlases } from '../src/mecoffe/yulanAtlasModel.js'
 import assert from 'node:assert/strict'
 import { readFileSync } from 'node:fs'
 import * as THREE from 'three'
@@ -8,6 +9,13 @@ import { YuLanCampusStyle } from '../src/mecoffe/YuLanCampusStyle.js'
 
 const frames = new Map()
 for(let i=0;i<3;i++)for(const [key,frame] of Object.entries(JSON.parse(readFileSync(new URL(`../public/assets/bgrd-${i}.json`,import.meta.url),'utf8')).frames))frames.set(key,frame)
+
+test('shared building atlas helpers preserve trimmed rotated source rectangles',()=>{
+  const frame={frame:{x:5,y:8,w:20,h:10},rotated:true,spriteSourceSize:{x:2,y:3,w:10,h:20}}
+  const atlas=indexPixelAtlases([{frames:{roof:frame}}])
+  assert.equal(atlas.frames.get('roof').sheet,0)
+  assert.deepEqual(atlasFrameDraw(atlas.frames.get('roof'),4,6),{source:[5,8,20,10],translate:[6,29],rotation:-Math.PI/2,destination:[0,0,20,10]})
+})
 
 test('all ten YuLan suites and their three original variants resolve real atlas parts with explicit villa-derived crops',()=>{
   for(const type of YULAN_BUILDING_TYPES)for(const model of [1,2,3]) {

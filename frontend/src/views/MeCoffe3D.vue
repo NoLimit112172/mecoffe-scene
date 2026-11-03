@@ -6,7 +6,7 @@
         <nav aria-label="场景数据模式" class="mode-switch">
           <button v-for="mode in modes" :key="mode.key" :class="{ active: requestedMode === mode.key }" :aria-pressed="requestedMode === mode.key" :disabled="loading" @click="loadScene(mode.key)">{{ mode.label }}</button>
         </nav>
-        <Campus3DVisualControls v-model:character-style="characterStyle" v-model:character-pool="characterPool" v-model:quality="quality" v-model:cycle="dayCycle" v-model:hour="previewHour" :clock="lightClock.label" />
+        <Campus3DVisualControls v-model:character-pool="characterPool" v-model:quality="quality" v-model:cycle="dayCycle" v-model:hour="previewHour" :clock="lightClock.label" />
         <span v-if="styleBusy" role="status" class="style-status">正在准备三维素材…</span>
         <RouterLink to="/mecoffe" class="old-page">二维沙盘 ↗</RouterLink>
         <RouterLink to="/mecoffe3d/assets?source=rocketbox" class="old-page">人物素材库 ↗</RouterLink>
@@ -19,7 +19,7 @@
 
     <template v-if="index && !loadError">
       <div class="data-notice" :class="requestedMode" data-testid="data-notice">{{ dataNotice }}</div>
-      <div v-if="characterStyle === 'realistic'" class="data-notice character-loading" role="status"><span>写实外观库 {{ characterStatus.available || 115 }} 款 · 当前可见 {{ characterStatus.visibleReady || 0 }}/{{ characterStatus.visibleTotal || 0 }} 已就绪。<template v-if="characterStatus.visibleReady < characterStatus.visibleTotal">其余暂用 YuLan 外观，模型就绪后自动替换。</template></span><button v-if="characterStatus.failed" @click="renderer?.retryCharacters()">重试 {{ characterStatus.failed }} 个模型</button></div>
+      <div class="data-notice character-loading" role="status"><span>写实外观库 {{ characterStatus.available || 115 }} 款 · 当前可见 {{ characterStatus.visibleReady || 0 }}/{{ characterStatus.visibleTotal || 0 }} 已就绪。<template v-if="characterStatus.visibleReady < characterStatus.visibleTotal">正在按需加载人物；就绪前显示脚下身份标记。</template></span><button v-if="characterStatus.failed" @click="renderer?.retryCharacters()">重试 {{ characterStatus.failed }} 个模型</button></div>
       <section class="kpis" aria-label="回放指标">
         <div><span>{{ isNetwork ? '人物关系输入' : currentDay.label }}</span><strong>{{ scene.people.length }}<small> 人</small></strong><em>快照 {{ meta.snapshot_revision ? `v${meta.snapshot_revision}` : '历史版本' }}</em></div>
         <div><span>初始关注关系</span><strong>{{ follows.length }}<small> 条</small></strong><em>{{ isNetwork ? '静态网络，尚未运行' : '与原数据保持一致' }}</em></div>
@@ -32,7 +32,7 @@
           <div ref="mapEl" class="map-canvas"></div>
           <div class="map-top"><div class="map-badge"><b>USTC · 高新校区</b><span>{{ campusData?.buildings.length || 0 }} 栋建筑 / {{ campusData?.roads.length || 0 }} 段道路</span></div><div class="map-camera-buttons"><button class="reset-camera" title="放大查看选中人物或当前行人" @click="focusPerson"><i class="fa-solid fa-person-walking"></i> 人物特写</button><button class="reset-camera" title="恢复校园全景" @click="renderer?.resetCamera()"><i class="fa-solid fa-expand"></i> 全景</button></div></div>
           <div v-if="hoverCard" class="hover-card" :style="hoverStyle"><b>{{ hoverCard.name }}</b><template v-if="hoverCard.type === 'building'"><span>OSM {{ hoverCard.building.osm_id }}</span><span>{{ hoverCard.building.levels }} 层 / {{ hoverCard.building.height_m }} 米 · {{ hoverCard.building.levels_source === 'default' ? '展示默认高度' : '来源见地图数据' }}</span></template><span v-else>点击查看人物与事件</span></div>
-          <div class="map-legend"><span><i style="background:#7c9cab"></i>教学 / 科研</span><span><i style="background:#bc7859"></i>住宿</span><span><i style="background:#65a89b"></i>公共设施</span><div class="role-key"><span v-for="(color, role) in CHARACTER_ROLE_COLORS" :key="role"><i :style="{background:color}"></i>{{ roleNames[role] }}</span></div><p>{{ characterStyle === 'realistic' ? '写实人物为外观示意；脚下颜色表示角色' : characterStyle === 'pixel' ? '像素外观与二维一致；脚下颜色表示角色' : characterStyle === 'voxel' ? '体素外观与二维一致；脚下颜色表示角色' : 'YuLan 配色与五官；脚下颜色表示角色' }}<br>树木、路灯、长椅、草地纹理：<b>装饰</b><br>楼顶人数与光照：展示示意；楼层仍为默认值<br>校外道路仅展示，不参与寻路<br>左键旋转 · 右键平移 · 滚轮缩放</p></div>
+          <div class="map-legend"><span><i style="background:#7c9cab"></i>教学 / 科研</span><span><i style="background:#bc7859"></i>住宿</span><span><i style="background:#65a89b"></i>公共设施</span><div class="role-key"><span v-for="(color, role) in CHARACTER_ROLE_COLORS" :key="role"><i :style="{background:color}"></i>{{ roleNames[role] }}</span></div><p>写实人物为外观示意；脚下颜色表示角色<br>树木、路灯、长椅、草地纹理：<b>装饰</b><br>楼顶人数与光照：展示示意；楼层仍为默认值<br>校外道路仅展示，不参与寻路<br>左键旋转 · 右键平移 · 滚轮缩放</p></div>
           <a class="osm-credit" href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener noreferrer">© OpenStreetMap contributors</a>
           <div v-if="loading" class="map-loading">正在构建校园三维体块…</div>
         </section>
@@ -76,7 +76,7 @@ import { Campus3DScene } from '../mecoffe/Campus3DScene.js'
 import { describeEvent, EVENT_LABELS, indexScene, personHistory, stateAt } from '../mecoffe/replay.js'
 import { advancePosition, clampPosition, cursorAtPosition, dataFileForMode, positionAtCursor, validateDataMode } from '../mecoffe/campus3dPlayback.js'
 import { resolveHomeKey } from '../mecoffe/campus3dRouting.js'
-import { CHARACTER_ROLE_COLORS } from '../mecoffe/Campus3DCharacters.js'
+import { CHARACTER_ROLE_COLORS } from '../mecoffe/characterDisplay.js'
 import { visualClock } from '../mecoffe/campus3dPresentation.js'
 
 const modes = [{ key: 'demo', label: '新版演示' }, { key: 'network', label: '关系网络' }, { key: 'history', label: '历史回放' }]
@@ -97,7 +97,6 @@ const playing = ref(false)
 const draining = ref(false)
 const speed = ref(1)
 const quality = ref('high')
-const characterStyle = ref('realistic')
 const characterPool = ref('all')
 const characterStatus = ref({available:0,visibleReady:0,visibleTotal:0,failed:0})
 const styleBusy = ref(0)
@@ -231,7 +230,6 @@ async function applyStyle(method,value) {
   catch(error){if(renderer===target)styleError.value=`素材准备失败：${error.message||error}`}
   finally{styleBusy.value--}
 }
-watch(characterStyle, value => void applyStyle('setCharacterStyle',value))
 watch(characterPool, value => void applyStyle('setCharacterPool',value))
 watch([dayPosition, dayCycle, previewHour], () => renderer?.setLighting({position:dayPosition.value,cycle:dayCycle.value,hour:previewHour.value}))
 
@@ -275,13 +273,17 @@ async function loadScene(mode) {
       onStats: stats => { motion.value = stats; if (draining.value && !hasPendingAnimation()) draining.value = false },
       onVisualActivity: count => { pendingEffects.value = count; if (draining.value && !hasPendingAnimation()) draining.value = false },
       onCharacters: status=>{characterStatus.value=status},
+      onError:error=>{
+        if(current!==generation)return
+        stopTimeline();view?.dispose();renderer=null
+        loadError.value=`场景显示遇到问题：${error.message||error}。可点击“重新加载”恢复。`
+      },
     })
     await view.init()
     if (current !== generation) { view.dispose(); return }
     renderer = view
     view.setSpeed(speed.value)
     view.setQuality(quality.value)
-    await view.setCharacterStyle(characterStyle.value)
     await view.setCharacterPool(characterPool.value)
     await view.setBuildingStyle('yulan')
     if(current !== generation || renderer !== view){view.dispose();return}

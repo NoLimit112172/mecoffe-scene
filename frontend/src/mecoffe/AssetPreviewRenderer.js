@@ -1,8 +1,6 @@
 // A single WebGL context renders all visible gallery cards using scissors.
 // Each card owns a real mesh/scene and can rotate independently.
 import * as THREE from 'three'
-import { CharacterBatch } from './Campus3DCharacters.js'
-import { PixelCharacterBatch } from './Campus3DPixelCharacters.js'
 import { previewParams, previewViewport } from './assetPreviewModel.js'
 import { createYuLanRoof } from './YuLanRoofGeometry.js'
 import { TERRAIN_LEVELS as TERRAIN } from './campus3dTerrain.js'
@@ -227,20 +225,7 @@ export async function createAssetPreview(prototype, variant, {signal} = {}) {
   if(signal?.aborted)throw Object.assign(new Error('Preview request cancelled'),{name:'AbortError'})
   const factory=factories.get(prototype.params?.generator)||factories.get(prototype.generator)||factories.get(prototype.id)
   if(factory) return factory(prototype,variant,{signal})
-  if(prototype.category==='character') {
-    const p=previewParams(prototype,variant)
-    const previewScene=new THREE.Scene()
-    const entry={person:{id:p.person_id || `preview-${typeof variant==='string'?variant:variant?.id || 'default'}`,role:p.role || 'undergraduate_consumer',gender:p.gender || 'm'},figure:new THREE.Group(),presentationVisible:true,walker:{phase:'outbound'},hasCoffee:false}
-    const entries=new Map([[entry.person.id,entry]])
-    const pixel=/pixel|billboard/.test(`${prototype.id} ${prototype.subtype}`)
-    const batch=pixel?new PixelCharacterBatch({scene:previewScene,entries}):new CharacterBatch({scene:previewScene,entries})
-    if(pixel) await batch.init()
-    const object=new THREE.Group();object.add(entry.figure,batch.group)
-    batch.update(0)
-    return {object,bounds:new THREE.Box3(new THREE.Vector3(-2.3,0,-1.3),new THREE.Vector3(2.3,8.5,1.3)),
-      setPreviewTransform:({scale,center})=>{entry.figure.scale.setScalar(scale);entry.figure.position.copy(center).multiplyScalar(-scale)},
-      update:(seconds,camera)=>batch.update(seconds,camera),dispose:()=>batch.dispose(),caption:pixel?'YuLan 原图集 · 三帧行走':'现有立体角色生成器'}
-  }
+  if(prototype.category==='character')throw new Error('写实人物预览生成器尚未准备就绪')
   const object=createProceduralPreview(prototype,variant)
   const roof=String(prototype.params?.generator).startsWith('roof-')
   const terrainCaption=prototype.params?.generator==='layered-base'?'程序分层底座 · 实体侧面与道路高差':prototype.params?.generator==='foundation'?'程序建筑基座 · 实体基座与示例楼体':null

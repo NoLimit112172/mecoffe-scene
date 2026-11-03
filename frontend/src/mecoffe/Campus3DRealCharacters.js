@@ -148,7 +148,7 @@ export class RealCharacterBatch {
     this.group=new THREE.Group();this.group.name='mecoffe-rocketbox-real-characters'
     this.actors=[];this.resources=[];this.records=new Map();this.readyIds=new Set();this.pending=new Set()
     this.normalizations=new Map();this.quality='high';this.disposed=false;this.initialized=false
-    this.generation=0;this.epoch=0;this.lastSeconds=0;this.inverse=new THREE.Matrix4();this.cupPosition=new THREE.Vector3()
+    this.generation=0;this.epoch=0;this.lastSeconds=0;this.inverse=new THREE.Matrix4();this.actorMatrix=new THREE.Matrix4();this.cupPosition=new THREE.Vector3()
   }
 
   async init(options={}) {
@@ -186,7 +186,7 @@ export class RealCharacterBatch {
 
   wanted(record) {
     const entry=record.entry
-    return this.group.visible&&entry.figure.visible!==false&&(this.strictVisibility?entry.presentationVisible===true:entry.presentationVisible!==false)
+    return this.group.visible&&entry.figure.visible!==false&&entry.inView!==false&&(this.strictVisibility?entry.presentationVisible===true:entry.presentationVisible!==false)
   }
 
   buildActor(record,source) {
@@ -212,6 +212,9 @@ export class RealCharacterBatch {
         const source=this.provided instanceof Map?this.provided.get(record.modelId):this.provided?.[record.modelId]
         lease=source?{source,release(){}}:await acquireModel(record.modelId,this.loader,this.modelRecords.get(record.modelId))
         if(this.disposed||generation!==this.generation){lease.release();return}
+        if(!force&&!this.wanted(record)){
+          lease.release();record.state='idle';this.onReady?.({entry:record.entry,status:'discarded'});return
+        }
         record.actor=this.buildActor(record,lease.source);record.lease=lease;record.state='ready';record.lastUsed=this.epoch
         this.actors.push(record.actor);this.readyIds.add(String(record.entry.person.id));this.update(this.lastSeconds)
         this.onReady?.({entry:record.entry,modelId:record.modelId,status:'ready'})
@@ -232,7 +235,10 @@ export class RealCharacterBatch {
   evictHidden() {
     // Retain a small warm set. Exploring all 115 cards/agents must not leave all
     // high-resolution textures resident after they disappear from the scene.
-    const hidden=[...this.records.values()].filter(record=>record.actor&&!this.wanted(record)).sort((a,b)=>b.lastUsed-a.lastUsed)
+    // Camera-only culling must not evict the current roster representatives:
+    // portrait -> overview would otherwise refetch/reclone most of the campus.
+    // Only identities removed by selection/replay consume the eight warm slots.
+    const hidden=[...this.records.values()].filter(record=>record.actor&&(!this.group.visible||record.entry.presentationVisible===false)).sort((a,b)=>b.lastUsed-a.lastUsed)
     for(const record of hidden.slice(8))this.releaseRecord(record)
   }
 
@@ -245,11 +251,16 @@ export class RealCharacterBatch {
       const actor=record.actor;if(!actor)continue
       const {entry,root,rig,cup}=actor;root.visible=this.wanted(record)
       if(!root.visible)continue
-      entry.figure.updateWorldMatrix(true,false);root.matrix.multiplyMatrices(this.inverse,entry.figure.matrixWorld);root.matrixWorldNeedsUpdate=true
+      entry.figure.updateWorldMatrix(true,false);this.actorMatrix.multiplyMatrices(this.inverse,entry.figure.matrixWorld)
+      const transformChanged=!root.matrix.equals(this.actorMatrix)
+      if(transformChanged){root.matrix.copy(this.actorMatrix);root.matrixWorldNeedsUpdate=true}
       const walking=Boolean(entry.walker&&entry.walker.phase!=='dwell'&&entry.walker.moving!==false)
-      const pose=rocketboxCharacterPose(seconds,actor.phase,walking,Boolean(entry.hasCoffee));applyPose(rig,pose)
-      cup.visible=pose.coffee
-      if(cup.visible){const hand=rig.bones.get('Bip01_R_Hand');if(hand){hand.getWorldPosition(this.cupPosition);root.worldToLocal(this.cupPosition);cup.position.copy(this.cupPosition);cup.position.y+=.10;cup.position.z+=.12}else cup.position.set(.85,4.4,.8)}
+      const poseKey=`${seconds}:${walking}:${Boolean(entry.hasCoffee)}`
+      const poseChanged=actor.poseKey!==poseKey
+      if(poseChanged){applyPose(rig,rocketboxCharacterPose(seconds,actor.phase,walking,Boolean(entry.hasCoffee)));actor.poseKey=poseKey}
+      else if(transformChanged)rig.model.updateMatrixWorld(true)
+      cup.visible=Boolean(entry.hasCoffee)
+      if(cup.visible&&(poseChanged||transformChanged)){const hand=rig.bones.get('Bip01_R_Hand');if(hand){hand.getWorldPosition(this.cupPosition);root.worldToLocal(this.cupPosition);cup.position.copy(this.cupPosition);cup.position.y+=.10;cup.position.z+=.12}else cup.position.set(.85,4.4,.8)}
     }
     if(!this.eager)this.evictHidden()
   }

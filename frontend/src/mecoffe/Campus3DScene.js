@@ -8,9 +8,7 @@ import {
 } from './campus3dRouting.js'
 import { campusBoundaryBounds, fitCampusView } from './campus3dView.js'
 import { layoutLabels, personScaleForCamera } from './campus3dScreen.js'
-import { CharacterBatch } from './Campus3DCharacters.js'
-import { PixelCharacterBatch } from './Campus3DPixelCharacters.js'
-import { YuLanCharacterBatch } from './Campus3DYuLanCharacters.js'
+import { CHARACTER_BASE_COLORS } from './characterDisplay.js'
 import { Campus3DBase } from './Campus3DBase.js'
 import { TERRAIN_LEVELS, terrainSurfaceHeight } from './campus3dTerrain.js'
 import { DISPLAY_RADIUS, CROWD_GAP, standingSlots, stepSeparatedCrowd, displayRoutePoints, outsideBuildings, nearestClearPosition } from './campus3dCrowd.js'
@@ -19,10 +17,10 @@ import { createDisplayCampus } from './campus3dDisplay.js'
 import { Campus3DSurroundings } from './Campus3DSurroundings.js'
 import { Campus3DEnvironment } from './Campus3DEnvironment.js'
 import { EventEffects, SelectiveBloom } from './Campus3DEffects.js'
-import { visualClock, idleRepresentatives, displayOccupancy, billboardScaleForCamera } from './campus3dPresentation.js'
+import { visualClock, idleRepresentatives, displayOccupancy } from './campus3dPresentation.js'
 
 const BRAND_COLORS = prototypeParams('building.component.shop-sign').marker_colors.map(value=>parseInt(value.slice(1),16))
-const ROLE_COLORS = Object.fromEntries(Object.entries(prototypeParams('character.pixel').base_role_colors).map(([key,value])=>[key,parseInt(value.slice(1),16)]))
+const ROLE_COLORS = Object.fromEntries(Object.entries(CHARACTER_BASE_COLORS).map(([key,value])=>[key,parseInt(value.slice(1),16)]))
 const WALK_SPEED_M_S = 100 // Playback speed, deliberately not a real walking speed.
 const SHOP_DWELL_S = 0.85
 
@@ -132,7 +130,7 @@ function roadGeometry(roads, extraWidth = 0, elevation = 0.14) {
 }
 
 export class Campus3DScene {
-  constructor({ host, campus, mapping, index, landcovers = [], surroundings = [], onHover, onSelect, onStats, onVisualActivity, onCharacters, characterPool = 'all' } = {}) {
+  constructor({ host, campus, mapping, index, landcovers = [], surroundings = [], onHover, onSelect, onStats, onVisualActivity, onCharacters, onError, characterPool = 'all' } = {}) {
     this.host = host
     this.campus = campus
     this.mapping = mapping
@@ -152,6 +150,8 @@ export class Campus3DScene {
     this.onStats = onStats
     this.onVisualActivity = onVisualActivity
     this.onCharacters = onCharacters
+    this.onError = onError
+    this.radiusLimits = new Map()
     this.characterPool = ['all','adults','professions','children'].includes(characterPool)?characterPool:'all'
     this.pendingVisualCount = 0
     this.routing = createRouting(campus, mapping)
@@ -173,6 +173,11 @@ export class Campus3DScene {
     this.visualSeconds = 0
     this.quality = 'high'
     this.characterStyle = 'realistic'
+    this.renderDirty = true
+    this.relationsDirty = true
+    this.personFrustum = new THREE.Frustum()
+    this.frustumMatrix = new THREE.Matrix4()
+    this.personSphere = new THREE.Sphere()
     this.buildingStyle = 'procedural'
     this.lighting = { cycle: true, position: 0, hour: 12 }
     this.representatives = idleRepresentatives(index.scene.people)
@@ -200,6 +205,8 @@ export class Campus3DScene {
     this.controls.minDistance = 18
     this.onControlsStart = () => { this.overviewActive = false }
     this.controls.addEventListener('start', this.onControlsStart)
+    this.onControlsChange = () => this.invalidate()
+    this.controls.addEventListener('change', this.onControlsChange)
     this.routeLayer = new THREE.Group()
     this.effectLayer = new THREE.Group()
     this.relationLayer = new THREE.Group()
@@ -208,11 +215,6 @@ export class Campus3DScene {
     this.drawCampus()
     this.placePeople()
     this.baseModel = new Campus3DBase({scene:this.scene,campus:this.display.campus,displayBounds:this.display.bounds}).init()
-    this.pixelBatch = new PixelCharacterBatch({ scene: this.scene, entries: this.people })
-    await this.pixelBatch.init()
-    this.yulanCharacterBatch = new YuLanCharacterBatch({ scene:this.scene, entries:this.people })
-    await this.yulanCharacterBatch.init()
-    if(this.disposed){this.yulanCharacterBatch.dispose();return this}
     this.environment = new Campus3DEnvironment({ scene: this.scene, campus: this.campus,
       displayCampus: this.display.campus, displayBounds: this.display.bounds,
       mapping: this.mapping, buildingMeshes: this.buildingMeshes, renderer: this.renderer,
@@ -224,18 +226,23 @@ export class Campus3DScene {
     this.bloom = new SelectiveBloom({ renderer: this.renderer, scene: this.scene, camera: this.camera,
       width: this.host.clientWidth, height: this.host.clientHeight })
     this.setQuality(this.quality)
-    await this.setCharacterStyle(this.characterStyle)
+    await this.initCharacters()
     if(this.disposed)return this
     this.resetCamera()
     this.resize()
     this.raycaster = new THREE.Raycaster()
     this.pointer = new THREE.Vector2()
     this.handlers = {
-      pointermove: event => this.pick(event, false),
-      pointerleave: () => this.clearHover(),
+      pointermove: event => { this.hoverEvent = {clientX:event.clientX,clientY:event.clientY} },
+      pointerleave: () => { this.hoverEvent = null;this.clearHover() },
       pointerdown: event => { this.pointerDown = { x: event.clientX, y: event.clientY } },
       click: event => {
         if (!this.pointerDown || Math.hypot(event.clientX - this.pointerDown.x, event.clientY - this.pointerDown.y) < 6) this.pick(event, true)
+      },
+      webglcontextlost:event=>{
+        if(this.disposed)return
+        event.preventDefault()
+        this.failFrame(new Error('显卡绘图上下文已中断'))
       },
     }
     for (const [type, handler] of Object.entries(this.handlers)) this.renderer.domElement.addEventListener(type, handler)
@@ -244,35 +251,60 @@ export class Campus3DScene {
     this.lastTime = performance.now()
     const animate = now => {
       if (this.disposed) return
-      const delta = Math.min((now - this.lastTime) / 1000, 0.12)
-      this.lastTime = now
-      if (this.playing) {
-        this.visualSeconds += delta * this.speed
-        this.updateWalkers(delta * this.speed)
-        this.updateEffects(delta * this.speed)
-        this.eventEffects?.update(delta * this.speed)
-        this.emitVisualActivity()
-      }
-      this.controls.update()
-      this.updateScreenVisuals()
-      this.updateRelations()
-      if (this.characterStyle === 'realistic') {
-        this.realCharacterBatch?.update(this.visualSeconds)
-        this.yulanCharacterBatch?.update(this.visualSeconds)
-        this.emitCharacterStatus()
-      }
-      else if (this.characterStyle === 'yulan3d') this.yulanCharacterBatch?.update(this.visualSeconds)
-      else if (this.characterStyle === 'solid') this.characterBatch?.update(this.visualSeconds)
-      else if (this.characterStyle === 'voxel') this.voxelBatch?.update(this.visualSeconds, this.camera)
-      else this.pixelBatch?.update(this.visualSeconds, this.camera)
-      this.surroundings?.update(this.camera, this.host)
-      this.environment?.update(visualClock(this.lighting.position, this.lighting).phase, this.camera)
-      this.bloom ? this.bloom.render() : this.renderer.render(this.scene, this.camera)
+      this.renderFrameSafe(now)
+      if(this.disposed||this.failed)return
       this.frame = requestAnimationFrame(animate)
     }
     this.frame = requestAnimationFrame(animate)
     this.emitStats()
     return this
+  }
+
+  invalidate() { this.renderDirty = true }
+
+  renderFrameSafe(now) {
+    if(this.failed||this.disposed)return false
+    try { return this.renderFrame(now) }
+    catch(error) {
+      this.failFrame(error)
+      return false
+    }
+  }
+
+  failFrame(error) {
+    if(this.failed||this.disposed)return
+    this.failed=true
+    this.playing=false
+    this.onError?.(error)
+  }
+
+  renderFrame(now) {
+    if(this.disposed)return false
+    const delta=Math.min(Math.max(0,(now-this.lastTime)/1000),.12)
+    this.lastTime=now
+    if(this.playing) {
+      this.visualSeconds+=delta*this.speed
+      this.updateWalkers(delta*this.speed)
+      this.updateEffects(delta*this.speed)
+      this.eventEffects?.update(delta*this.speed)
+      this.emitVisualActivity()
+      this.invalidate()
+      this.relationsDirty=true
+    }
+    if(this.controls.update())this.invalidate()
+    if(this.hoverEvent){const event=this.hoverEvent;this.hoverEvent=null;this.pick(event,false)}
+    // Keep OrbitControls damping and input responsive, but do no GPU work or
+    // bone/label/layout updates for an unchanged paused scene.
+    if(!this.renderDirty)return false
+    this.renderDirty=false
+    this.updateScreenVisuals()
+    if(this.relationsDirty){this.updateRelations();this.relationsDirty=false}
+    this.realCharacterBatch?.update(this.visualSeconds)
+    this.emitCharacterStatus()
+    this.surroundings?.update(this.camera,this.host)
+    this.environment?.update(visualClock(this.lighting.position,this.lighting).phase,this.camera)
+    this.bloom ? this.bloom.render() : this.renderer.render(this.scene,this.camera)
+    return true
   }
 
   drawCampus() {
@@ -437,16 +469,18 @@ export class Campus3DScene {
     // Reserve the largest walking footprint across the display on camera
     // changes. Per-frame pixel scaling stays inside this stable reservation;
     // moving farther from a fixed camera must never teleport its neighbours.
-    if (cameraChanged || !this.cameraCrowdRadius || this.crowdCharacterStyle!==this.characterStyle) {
+    if (cameraChanged || !this.cameraCrowdRadius) {
       const b=this.display.bounds, samples=[]
       for(const x of [b.minX-120,b.maxX+120])for(const y of [b.minY-120,b.maxY+120])samples.push(new THREE.Vector3(x,.025,-y))
       samples.push(...[...this.people.values()].map(entry=>entry.figure.position))
-      this.cameraCrowdRadius=Math.max(DISPLAY_RADIUS,...samples.map(position=>3*(this.characterStyle==='pixel'
-        ? billboardScaleForCamera(this.camera,position,{height,minPixels:12})
-        : personScaleForCamera(this.camera,position,{width,height,minPixels:12}))))+.2
-      this.crowdCharacterStyle=this.characterStyle
+      const radius=Math.max(DISPLAY_RADIUS,...samples.map(position=>3*personScaleForCamera(this.camera,position,{width,height,minPixels:12})))+.2
+      // Upward quantization preserves clearance without rebuilding every
+      // corridor for floating-point jitter during OrbitControls damping.
+      this.cameraCrowdRadius=this.fitCrowdRadius(Math.ceil(radius*4)/4)
     }
-    if(cameraChanged || [...this.people.values()].some(entry=>entry.collisionRadius !== this.cameraCrowdRadius))this.reflowPeople()
+    if([...this.people.values()].some(entry=>entry.collisionRadius !== this.cameraCrowdRadius))this.reflowPeople()
+    this.frustumMatrix.multiplyMatrices(this.camera.projectionMatrix,this.camera.matrixWorldInverse)
+    this.personFrustum.setFromProjectionMatrix(this.frustumMatrix)
     // CSS pixels; device pixel ratio must not affect the minimum size.
     for (const entry of this.people.values()) {
       const prominent = Boolean(entry.walker) || entry.person.id === this.selectedId
@@ -455,13 +489,15 @@ export class Campus3DScene {
       entry.base.visible = entry.presentationVisible
       const minPixels = 12
       if (cameraChanged || entry.screenMinPixels !== minPixels || !entry.screenPosition?.equals(entry.figure.position)) {
-        const scale = this.characterStyle === 'pixel'
-          ? billboardScaleForCamera(this.camera, entry.figure.position, { height, minPixels })
-          : personScaleForCamera(this.camera, entry.figure.position, { width, height, minPixels })
+        const scale = Math.min(personScaleForCamera(this.camera, entry.figure.position, { width, height, minPixels }),this.cameraCrowdRadius/3)
         entry.figure.scale.setScalar(scale)
         entry.screenPosition = entry.figure.position.clone()
         entry.screenMinPixels = minPixels
       }
+      this.personSphere.center.copy(entry.figure.position).y+=4.25*entry.figure.scale.x
+      this.personSphere.radius=5.3*entry.figure.scale.x
+      entry.inView=this.personFrustum.intersectsSphere(this.personSphere)
+      entry.figure.visible=entry.presentationVisible&&entry.inView
       entry.walkHalo.visible = Boolean(entry.walker)
     }
     this.updateSelection()
@@ -527,8 +563,7 @@ export class Campus3DScene {
           ? this.brandColors.get(person.id) || ROLE_COLORS.merchant
           : ROLE_COLORS[person.role] || 0x6587a7
         const figure = new THREE.Group()
-        // The root, hit proxy and halos stay here. Actual body parts are drawn
-        // by one shared InstancedMesh batch, never 100 independent rig meshes.
+        // Only hit proxies and role markers live here; Rocketbox owns bodies.
         const body = new THREE.Object3D()
         body.position.y = 3.2
         const base = new THREE.Mesh(new THREE.CircleGeometry(2.6, 12),
@@ -558,7 +593,6 @@ export class Campus3DScene {
     this.selection.visible = false
     this.selection.renderOrder = 4
     this.scene.add(this.selection)
-    this.characterBatch = new CharacterBatch({ scene: this.scene, entries: this.people })
     const slots = new Map(standingSlots([...this.people].map(([id,entry])=>({id,origin:entry.entrance})),this.campus.buildings,
       {radius:DISPLAY_RADIUS,roads:this.campus.roads || []}).map(point=>[point.id,point]))
     for(const [id,entry] of this.people) {
@@ -571,6 +605,22 @@ export class Campus3DScene {
   }
 
   personElevation(point) { return terrainSurfaceHeight(point,this.display.campus)+.025 }
+
+  fitCrowdRadius(requested) {
+    if(this.radiusLimits.has(requested))return this.radiusLimits.get(requested)
+    let applied=requested
+    try {this.standingClearanceRoutes(requested)}
+    catch(error) {
+      // A narrow canvas can require a 15m visual footprint to reach 12px.
+      // Real building gaps cannot support it. Keep a previously valid radius
+      // and cap only the drawn scale; never alter the OSM graph or stop replay.
+      applied=this.lastCrowdLayoutRadius||DISPLAY_RADIUS
+      this.standingClearanceRoutes(applied)
+      this.presentationLimit={requested,applied,reason:error.message}
+    }
+    this.radiusLimits.set(requested,applied)
+    return applied
+  }
 
   reflowPeople() {
     const people=[...this.people].map(([id,entry])=>({id,x:entry.figure.position.x,y:-entry.figure.position.z,
@@ -588,15 +638,31 @@ export class Campus3DScene {
           gap:2*radius+2*CROWD_GAP+6,roads:person.moving?[]:roads,roadClearance:radius+2})})
       }
     }
+    const reroutes=new Map()
+    try {
+      for(const p of positions) {
+        const walker=this.people.get(p.id).walker
+        if(walker&&p.radius>walker.displayRadius)reroutes.set(p.id,displayRoutePoints(walker.displayPoints.slice(walker.displayNextPoint),this.campus.buildings,
+          {radius:p.radius,laneOffset:0,start:p}))
+      }
+    } catch(error) {
+      if(this.lastCrowdLayoutRadius&&this.cameraCrowdRadius!==this.lastCrowdLayoutRadius) {
+        this.presentationLimit={requested:this.cameraCrowdRadius,applied:this.lastCrowdLayoutRadius,reason:error.message}
+        this.radiusLimits.set(this.cameraCrowdRadius,this.lastCrowdLayoutRadius)
+        this.cameraCrowdRadius=this.lastCrowdLayoutRadius
+        return this.reflowPeople()
+      }
+      throw error
+    }
     this.lastCrowdLayoutRadius=this.cameraCrowdRadius
+    this.relationsDirty=true
     for(const p of positions) {
       const entry=this.people.get(p.id)
       entry.figure.position.set(p.x,this.personElevation(p),-p.y)
       entry.collisionRadius=p.radius
       if(!entry.walker)entry.home={x:p.x,y:p.y}
-      else if(p.radius>entry.walker.displayRadius) {
-        entry.walker.displayPoints=displayRoutePoints(entry.walker.displayPoints.slice(entry.walker.displayNextPoint),this.campus.buildings,
-          {radius:p.radius,laneOffset:0,start:p})
+      else if(reroutes.has(p.id)) {
+        entry.walker.displayPoints=reroutes.get(p.id)
         entry.walker.displayNextPoint=1
         entry.walker.displayRadius=p.radius
         this.updateWalkerLine(entry.walker)
@@ -646,6 +712,8 @@ export class Campus3DScene {
   }
 
   setCursor(cursor) {
+    this.invalidate()
+    this.relationsDirty=true
     this.seenOrders.clear()
     for (const event of this.index.scene.events.slice(0, Math.max(0, cursor))) {
       if (event.type === 'purchase') this.seenOrders.add(event.order_id || event.key)
@@ -671,6 +739,7 @@ export class Campus3DScene {
   }
 
   playEvent(event) {
+    this.invalidate()
     const entry = this.people.get(event.actor)
     if (!entry) return
     if (this.eventEffects && event.type !== 'purchase') {
@@ -849,7 +918,11 @@ export class Campus3DScene {
   }
 
   selectPerson(id) {
-    this.selectedId = this.people.has(id) ? id : null
+    const next=this.people.has(id)?id:null
+    if(next===this.selectedId)return
+    this.selectedId=next
+    this.invalidate()
+    this.relationsDirty=true
     this.updateSelection()
     this.clearLayer(this.relationLayer)
     const selected = this.people.get(this.selectedId)
@@ -897,7 +970,8 @@ export class Campus3DScene {
     this.raycaster.setFromCamera(this.pointer, this.camera)
     const hit = this.raycaster.intersectObjects(this.pickTargets, false).find(item =>
       !item.object.userData.person || this.people.get(item.object.userData.person.id)?.presentationVisible !== false)
-    this.clearHoveredBuilding()
+    const buildingHit=hit?.object.userData.building?hit.object:null
+    if(this.hoveredBuilding!==buildingHit)this.clearHoveredBuilding()
     if (!hit) {
       this.renderer.domElement.style.cursor = 'grab'
       this.onHover?.(null)
@@ -915,9 +989,12 @@ export class Campus3DScene {
         this.onSelect?.(person.id)
       }
     } else if (building) {
-      this.hoveredBuilding = hit.object
-      this.hoveredEmissives = hit.object.material.map(material => ({ material, color: material.emissive.clone() }))
-      for (const { material } of this.hoveredEmissives) material.emissive.add(new THREE.Color(0x112b28))
+      if(this.hoveredBuilding!==hit.object) {
+        this.hoveredBuilding = hit.object
+        this.hoveredEmissives = [hit.object.material].flat().filter(material=>material?.emissive).map(material => ({ material, color: material.emissive.clone() }))
+        for (const { material } of this.hoveredEmissives) material.emissive.add(new THREE.Color(0x112b28))
+        this.invalidate()
+      }
       this.onHover?.({ type: 'building', name: building.name || `OSM ${building.osm_id}`, building, x: event.clientX, y: event.clientY })
     }
   }
@@ -927,6 +1004,7 @@ export class Campus3DScene {
       for (const { material, color } of this.hoveredEmissives || []) material.emissive.copy(color)
       this.hoveredEmissives = null
       this.hoveredBuilding = null
+      this.invalidate()
     }
   }
 
@@ -947,22 +1025,20 @@ export class Campus3DScene {
     this.onVisualActivity?.(count)
   }
   isWalking(id) { return this.walkers.has(id) }
-  setPlaying(playing) { this.playing = Boolean(playing) }
+  setPlaying(playing) { this.playing = Boolean(playing);this.invalidate() }
   setSpeed(speed) { this.speed = Number.isFinite(Number(speed)) ? Math.max(0.1, Math.min(20, Number(speed))) : 1 }
 
   setLighting({ position = 0, cycle = true, hour = 12 } = {}) {
     this.lighting = { position, cycle, hour }
+    this.invalidate()
   }
 
   setQuality(value) {
     this.quality = value === 'low' ? 'low' : 'high'
+    this.invalidate()
     this.environment?.setQuality(this.quality)
     this.baseModel?.setQuality(this.quality)
     this.yulanStyle?.setQuality(this.quality)
-    this.characterBatch?.setQuality(this.quality)
-    this.pixelBatch?.setQuality(this.quality)
-    this.voxelBatch?.setQuality(this.quality)
-    this.yulanCharacterBatch?.setQuality(this.quality)
     this.realCharacterBatch?.setQuality(this.quality)
     this.eventEffects?.setQuality(this.quality)
     this.bloom?.setQuality(this.quality)
@@ -972,43 +1048,23 @@ export class Campus3DScene {
     }
   }
 
-  setCharacterStyle(value) {
-    this.characterStyle = ['realistic','yulan3d','pixel','solid','voxel'].includes(value) ? value : 'realistic'
-    if (this.characterBatch) this.characterBatch.group.visible = this.characterStyle === 'solid'
-    this.pixelBatch?.setVisible(this.characterStyle === 'pixel')
-    this.voxelBatch?.setVisible(this.characterStyle === 'voxel')
-    this.yulanCharacterBatch?.setVisible(this.characterStyle === 'yulan3d' || this.characterStyle === 'realistic')
-    this.yulanCharacterBatch?.setEntryFilter?.(this.characterStyle === 'realistic' ? entry=>!this.realCharacterBatch?.isReady?.(entry.person.id) : null)
-    this.realCharacterBatch?.setVisible(this.characterStyle === 'realistic')
-    for (const entry of this.people.values()) entry.screenMinPixels = null
+  initCharacters() {
     this.updateScreenVisuals()
-    if (this.characterStyle === 'realistic' && !this.realCharacterBatch && this.host) {
+    if (!this.realCharacterBatch && this.host) {
       if(!this.realPromise)this.realPromise=import('./Campus3DRealCharacters.js').then(async({RealCharacterBatch})=>{
         if(this.disposed)return
         this.realCharacterBatch=new RealCharacterBatch({scene:this.scene,entries:this.people,pool:this.characterPool,
-          onReady:()=>this.emitCharacterStatus()})
+          onReady:()=>{this.invalidate();this.emitCharacterStatus()}})
         await this.realCharacterBatch.init()
         if(this.disposed){this.realCharacterBatch.dispose();return}
         this.realCharacterBatch.setQuality(this.quality)
-        this.realCharacterBatch.setVisible(this.characterStyle==='realistic')
+        this.realCharacterBatch.setVisible(true)
         this.realCharacterBatch.update(this.visualSeconds)
         this.updateScreenVisuals()
         this.emitCharacterStatus()
+        this.invalidate()
       }).catch(error=>{this.realCharacterBatch?.dispose();this.realCharacterBatch=null;this.realPromise=null;throw error})
       return this.realPromise
-    }
-    if (this.characterStyle === 'voxel' && !this.voxelBatch && this.host) {
-      if (!this.voxelPromise) this.voxelPromise = import('./Campus3DVoxelCharacters.js').then(async({VoxelCharacterBatch})=>{
-        if(this.disposed)return
-        const params=prototypeParams('character.voxel')
-        this.voxelBatch=new VoxelCharacterBatch({scene:this.scene,entries:this.people,resolution:params.resolution,depth:params.depth})
-        await this.voxelBatch.init()
-        if(this.disposed){this.voxelBatch.dispose();return}
-        this.voxelBatch.setQuality(this.quality)
-        this.voxelBatch.setVisible(this.characterStyle==='voxel')
-        this.updateScreenVisuals()
-      }).catch(error=>{this.voxelBatch?.dispose();this.voxelBatch=null;this.voxelPromise=null;throw error})
-      return this.voxelPromise
     }
     return Promise.resolve()
   }
@@ -1024,11 +1080,13 @@ export class Campus3DScene {
     this.characterPool=['all','adults','professions','children'].includes(value)?value:'all'
     if(this.realCharacterBatch)await this.realCharacterBatch.setPool(this.characterPool)
     this.emitCharacterStatus()
+    this.invalidate()
   }
 
   retryCharacters() { this.realCharacterBatch?.retryFailed?.();this.emitCharacterStatus() }
 
   setBuildingStyle(value) {
+    this.invalidate()
     this.buildingStyle=value==='yulan'?'yulan':'procedural'
     if(this.yulanStyle){this.yulanStyle.setEnabled(this.buildingStyle==='yulan');return Promise.resolve()}
     if(this.buildingStyle!=='yulan')return Promise.resolve()
@@ -1084,6 +1142,7 @@ export class Campus3DScene {
     this.controls.update()
     this.controls.enableDamping = damping
     this.updateScreenVisuals()
+    this.invalidate()
     return entry.person.id
   }
 
@@ -1108,6 +1167,7 @@ export class Campus3DScene {
     this.controls.enableDamping = damping
     this.overviewActive = true
     this.updateScreenVisuals()
+    this.invalidate()
   }
 
   resize() {
@@ -1116,6 +1176,7 @@ export class Campus3DScene {
     const height = Math.max(this.host.clientHeight, 1)
     this.camera.aspect = width / height
     this.camera.updateProjectionMatrix()
+    this.invalidate()
     this.renderer.setSize(width, height, false)
     this.bloom?.resize(width, height)
     if (this.overviewActive) this.resetCamera()
@@ -1135,6 +1196,7 @@ export class Campus3DScene {
     if (this.frame) cancelAnimationFrame(this.frame)
     this.resizeObserver?.disconnect()
     this.controls?.removeEventListener('start', this.onControlsStart)
+    this.controls?.removeEventListener('change', this.onControlsChange)
     this.controls?.dispose()
     this.labelLayer?.remove()
     this.labels.length = 0
@@ -1145,11 +1207,7 @@ export class Campus3DScene {
     this.environment?.dispose()
     this.baseModel?.dispose()
     this.surroundings?.dispose()
-    this.pixelBatch?.dispose()
-    this.voxelBatch?.dispose()
-    this.yulanCharacterBatch?.dispose()
     this.realCharacterBatch?.dispose()
-    this.characterBatch?.dispose()
     if (this.scene) {
       disposeObject(this.scene)
       this.scene.clear()

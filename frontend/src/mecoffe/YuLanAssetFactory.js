@@ -1,5 +1,5 @@
 import * as THREE from 'three'
-import { atlasFrameDraw, indexPixelAtlases } from './campus3dPixelModel.js'
+import { atlasFrameDraw, indexPixelAtlases } from './yulanAtlasModel.js'
 import { buildingSuite, cropRectangle, wallModules, voxelizeRGBA, voxelSurface, YULAN_DECORATION_SETS } from './yulanAssetModel.js'
 import { compatibleYuLanFacade, ROUND_FACADE_VARIANTS } from './yulanRoofModel.js'
 import { createYuLanRoof } from './YuLanRoofGeometry.js'

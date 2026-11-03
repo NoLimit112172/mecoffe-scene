@@ -83,10 +83,6 @@ def existing_prototypes():
     rows.append(prototype('vegetation.tree','vegetation','tree',{'generator':'tree','trunk':'#77594a','crown':['#458765','#568d5e','#6d9c62'],'top':['#71a36b','#80aa74','#95b77b'],'height_m':11}, {'natural':'tree'},kind='mesh',title='低多边形装饰树'))
     rows.append(prototype('street_furniture.lamp','street_furniture','lamp',{'generator':'lamp','color':'#39494d','height_m':8.3,'light':'#ffe0a0'}, {'highway':'street_lamp'},kind='mesh',title='装饰路灯'))
     rows.append(prototype('street_furniture.bench','street_furniture','bench',{'generator':'bench','wood':'#b78a5e','metal':'#45504c','width_m':4.6}, {'amenity':'bench'},kind='mesh',title='装饰长椅'))
-    role_colors={'undergraduate_consumer':'#397fca','graduate_consumer':'#8864c5','teacher_consumer':'#39806b','merchant':'#e58b48'}
-    variants=[{'id':role,'params':{'role':role}} for role in role_colors]
-    rows.append(prototype('character.pixel','character','pixel',{'generator':'pixel-character','height_m':8.5,'fps':10.8,'role_colors':role_colors,'base_role_colors':{'undergraduate_consumer':'#4888bf','graduate_consumer':'#8b6ab0','teacher_consumer':'#4b9a83','merchant':'#dc8a3e'}},{},source=YULAN,kind='mesh',variants=variants,style='pixel',title='YuLan 像素人物'))
-    rows.append(prototype('character.solid','character','solid',{'generator':'solid-character','height_m':8.5,'role_colors':role_colors,'skin':['#efc6a5','#dfb38f','#c9916f','#f2d4b7'],'hair':['#302a2b','#473329','#655049','#2c343a'],'status':'legacy-gallery-alternative'},{},kind='mesh',variants=variants,style='solid',title='程序立体人物（旧版备选）'))
     for key,color,text,duration in [('post','#54b5ed','••• 发帖',2.2),('comment','#bd85ec','••• 评论',2.4),('follow','#69d2c7','＋ 关注',2.3),('ad','#ffbe58','推广',2.8),('exposure','#ffbe58','收到广告',2.4),('interview','#f3d574','访谈',2.4),('purchase','#70e0b5','到店',2.8)]:
         rows.append(prototype(f'effect.{key}','effect',key,{'generator':'effect','color':color,'text':text,'duration':duration},{},title=f'事件 · {text}'))
     for key,color,title in [('selection','#ffbd49','人物选中光圈'),('walking','#fff7d6','行走光圈'),('route','#168b7a','A* 路线显示'),('relationship','#4c8ba6','关系连线'),('sky','#78b9e5','天空与日夜光照'),('coffee-cup','#fff6de','程序咖啡杯图标')]:
@@ -126,13 +122,6 @@ def yulan_prototypes():
         rows.append(prototype(f'{category}.yulan.{name}',category,name,
           {'generator':'yulan-decoration','decorationSet':name,'atlasKey':keys[0],'atlasKeys':keys,'height':7,'depth':2,'resolution':36},
           source=YULAN,kind='mesh',variants=variants,style='yulan',title=f'YuLan {name} 体素'))
-    roles=['undergraduate_consumer','graduate_consumer','teacher_consumer','merchant']
-    rows.append(prototype('character.voxel','character','voxel',{'generator':'voxel-character','height_m':8.5,'resolution':40,'depth':2,'fps':10.8},
-      source=YULAN,kind='mesh',style='voxel',variants=[{'id':role,'params':{'role':role}} for role in roles],title='YuLan 体素人物'))
-    rows.append(prototype('character.yulan3d','character','yulan3d',{'generator':'yulan3d-character','height_m':8.5,'radius_m':3.0,
-      'palette_sampling':'same-2d-atlas-parts','face_texture':'YuLan eyes + mouth','default':False,
-      'modeling':'依据 YuLan 角色配色和头部贴图程序建模；封闭头发、头身、关节四肢和鞋；几何由项目程序生成'},
-      source=YULAN,kind='mesh',style='yulan3d',variants=[{'id':role,'params':{'role':role}} for role in roles],title='立体 YuLan 人物'))
     return rows
 
 

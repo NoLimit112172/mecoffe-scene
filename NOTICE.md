@@ -33,13 +33,13 @@ Three.js 及 `three/addons` 的 OrbitControls、EffectComposer、RenderPass、Un
 
 ## YuLan 改编模型与周边道路
 
-三维素材库的 YuLan 模块化建筑、装饰体素与人物体素，同样由上述 `9829d72` 图集改编，保留 Apache-2.0、源作者和 `YULAN_LICENSE`。house21–26 使用原底层/标准层立面；villa27–30 为有记录的墙面分带裁剪，不声称是原生独立模块。里程碑 5 已停用斜二维屋顶贴图，改用程序生成的实体平屋顶、女儿墙、设备或双坡屋顶。目录仍保存原屋顶帧的来源信息，但不将该帧投影到屋面。圆塔专用立面仅用于兼容轮廓，其余轮廓选择直面变体并记录原因。新增屋顶、设备、建筑基座和沙盘层次属于项目程序输出，不代表源图或 OSM 实测了这些结构。
+三维素材库的 YuLan 模块化建筑与环境装饰，同样由上述 `9829d72` 图集改编，保留 Apache-2.0、源作者和 `YULAN_LICENSE`。house21–26 使用原底层/标准层立面；villa27–30 为有记录的墙面分带裁剪，不声称是原生独立模块。里程碑 5 已停用斜二维屋顶贴图，改用程序生成的实体平屋顶、女儿墙、设备或双坡屋顶。目录仍保存原屋顶帧的来源信息，但不将该帧投影到屋面。圆塔专用立面仅用于兼容轮廓，其余轮廓选择直面变体并记录原因。新增屋顶、设备、建筑基座和沙盘层次属于项目程序输出，不代表源图或 OSM 实测了这些结构。
 
-decor40–45 与备选体素人物的 RGBA 通过有限厚度挤出、透明过滤与合并表面转换；这些浮雕/体素模型不含图片未显示的真实背面信息。YuLan 立体备选人物采用另一种方法：按头、躯干、四肢和鞋程序化完整建模，为侧面和背面设计形状，再从该人物对应的 YuLan 组合取样肤色、发色、衣裤颜色和正面五官。`character.yulan3d` 作为 YuLan 参考改编原型保留 Apache-2.0 来源；完整三维形体、关节和行走/待机动画为本项目新增，并非从一张图推导出的真实三维扫描。所有 YuLan 原图文件保持不变；该轮未新增外部模型。各套装、变体、实际源帧及程序建模信息记录在 catalog.json 与模型 userData 中。
+decor40–45 的 RGBA 通过有限厚度挤出、透明过滤与合并表面转换；这些装饰浮雕不含图片未显示的真实背面信息。早期三维像素、体素、YuLan立体和程序方块人物模式已移除；历史交付文档保留当时来源说明。所有 YuLan 原图文件保持不变，继续供二维人物、三维建筑和环境装饰使用。当前各套装、变体、实际源帧及程序建模信息记录在 catalog.json 与模型 userData 中。
 
 独立 NUS 原始 OSM 数据、元数据与 `campuses/nus/` 衍生文件均按 ODbL-1.0 保留来源；调用方 GeoJSON 的几何许可按调用方元数据保存，不自动改称 OSM 或套用 ODbL。模型原型的许可与其使用的地图几何许可分开保留。
 
-`/mecoffe3d` 继续提供像素贴图备选模式，复用 YuLan-OneSim 提交 `9829d72` 中已有的 `frontend/public/assets/bgrd-0.json/png`、`bgrd-1.json/png`、`bgrd-2.json/png`：身体动画键为 `character/{gender}/{typeId}_{variant}`，头部为 `head/{gender}/{part}/...`。来源和上游 Apache License 2.0 说明与本文开头二维素材相同，许可证保留在 `YULAN_LICENSE`；该说明同时覆盖二维及三维复用。未修改、另下载或重新授权这些原图集，不将其声称为 CC0。像素模式在运行时组合原身体/头部帧并设最近邻过滤；咖啡杯小图标由本项目 Canvas 程序生成。YuLan 完整立体、原像素与体素模式保留供对照；当前默认写实试用模型见下一节。
+二维人物继续复用 YuLan-OneSim 提交 `9829d72` 中已有的 `frontend/public/assets/bgrd-0.json/png`、`bgrd-1.json/png`、`bgrd-2.json/png`，身体及头部原帧仍按 Apache License 2.0 使用，许可证保留在 `YULAN_LICENSE`。未修改、另下载或重新授权这些共用原图集，不将其声称为 CC0。当前三维页面只使用下一节的Rocketbox写实人物，加载中只显示身份脚标。
 
 新增 `data/osm/ustc_gaoxin_surroundings.osm`、同目录 metadata 与 `frontend/public/mecoffe/campus3d_surroundings.json` 来自 OSM 官方 API，属于单独保存的周边道路快照及 ODbL 1.0 衍生数据库。保留原始响应、下载 URL/UTC/bbox/SHA-256、转换脚本和 © OpenStreetMap contributors 署名。仅使用实际 `name` 标路名；默认道路宽度、人行道和分道线风格属于展示，不是测绘成果。没有获取高德、百度、Google 数据。
 

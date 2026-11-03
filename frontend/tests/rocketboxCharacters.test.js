@@ -168,6 +168,37 @@ test('undefined visibility does not cause a hundred-model startup fetch; new vis
   batch.dispose()
 })
 
+test('a model made obsolete by rapid selection is never cloned after its fetch completes',async()=>{
+  const setup=lazyEntries(1),entry=setup.entries.get('agent-0'),events=[];let finish
+  const batch=new RealCharacterBatch({...setup,onReady:event=>events.push(event.status)})
+  await batch.init({manifest:inventory(),loader:()=>new Promise(resolve=>{finish=resolve}),lazy:true});await turn()
+  entry.presentationVisible=false
+  finish(sourceModel('Male_Adult_14'));await batch.whenIdle()
+  assert.equal(batch.actors.length,0);assert.equal(batch.readyIds.size,0)
+  assert.equal(batch.records.get(entry.person.id).state,'idle');assert.deepEqual(events,['discarded'])
+  batch.dispose()
+})
+
+test('offscreen identities do not fetch and unchanged paused updates do not reset bone poses',async t=>{
+  const setup=lazyEntries(2),entries=[...setup.entries.values()];entries[1].inView=false
+  const batch=new RealCharacterBatch(setup);let calls=0
+  await batch.init({manifest:inventory(),loader:async()=>{calls++;return sourceModel('Male_Adult_14')},lazy:true});await batch.whenIdle()
+  assert.equal(calls,1);assert.equal(batch.getStats().visibleReady,1)
+  const bone=batch.actors[0].rig.bones.get('Bip01_Head')
+  const reset=t.mock.method(bone.quaternion,'copy')
+  batch.update(3);reset.mock.resetCalls()
+  for(let i=0;i<120;i++)batch.update(3)
+  assert.equal(reset.mock.callCount(),0)
+  entries[0].hasCoffee=true;batch.update(3)
+  assert(reset.mock.callCount()>0);assert.equal(batch.actors[0].cup.visible,true)
+  entries[0].inView=false;batch.update(3)
+  assert.equal(batch.actors[0].root.visible,false)
+  assert(batch.isReady(entries[0].person.id),'moving the camera keeps the representative cached')
+  entries[0].inView=true;batch.update(3);await batch.whenIdle()
+  assert.equal(calls,1);assert.equal(batch.actors[0].root.visible,true)
+  batch.dispose()
+})
+
 test('failed fetch stays a visible fallback until explicit retry, then reaches ready without losing person state',async()=>{
   const setup=lazyEntries(1),events=[];let calls=0
   const batch=new RealCharacterBatch({...setup,onReady:event=>events.push(event.status)})

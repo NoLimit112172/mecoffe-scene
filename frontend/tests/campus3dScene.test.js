@@ -208,36 +208,19 @@ test('portrait camera avoids a foreground obstruction without moving the actor o
   obstruction.material.dispose()
 })
 
-test('switching realistic, YuLan, pixel and legacy solid characters preserves trips, queues and pause state', () => {
-  const { renderer, entry } = world()
-  renderer.playEvent(purchase('first-style'))
-  renderer.playEvent(purchase('second-style', 'merchant_002'))
-  renderer.updateWalkers(.1)
-  renderer.setPlaying(false)
-  const position = entry.figure.position.clone()
-  const walker = entry.walker
-  const queue = [...entry.queue]
-  const statistics = renderer.getStats()
-  const visible = [], yulan = [], realistic = [], filters=[]
-  let ready=false
-  renderer.pixelBatch = { setVisible: value => visible.push(value) }
-  renderer.yulanCharacterBatch = { setVisible: value => yulan.push(value),setEntryFilter:filter=>filters.push(filter) }
-  renderer.realCharacterBatch = { setVisible: value => realistic.push(value),isReady:()=>ready }
-  for (const style of ['realistic', 'pixel', 'solid', 'yulan3d', 'pixel']) {
-    renderer.setCharacterStyle(style)
-    assert.deepEqual(entry.figure.position, position)
-    assert.equal(entry.walker, walker)
-    assert.deepEqual(entry.queue, queue)
-    assert.deepEqual(renderer.getStats(), statistics)
-    assert.equal(renderer.playing, false)
-    assert.equal(renderer.characterBatch.group.visible, style === 'solid')
-  }
-  assert.deepEqual(visible, [false, true, false, false, true])
-  assert.deepEqual(yulan, [true, false, false, true, false])
-  assert.deepEqual(realistic, [true, false, false, false, false])
-  assert.equal(filters[0](entry),true,'pending real models retain a visible fallback')
-  ready=true;assert.equal(filters[0](entry),false,'fallback disappears when the real actor becomes ready')
-  assert.deepEqual(filters.slice(1),[null,null,null,null])
+test('selecting the same person twice keeps relation resources instead of rebuilding them', () => {
+  const {renderer,entry}=world()
+  renderer.people.set('other',{...entry,person:{id:'other'},figure:entry.figure.clone()})
+  renderer.index.scene.relationships=[{source:'consumer',target:'other'}]
+  renderer.selectPerson('consumer')
+  const line=renderer.relationLayer.children[0]
+  let disposed=0;line.geometry.addEventListener('dispose',()=>disposed++)
+  for(let i=0;i<100;i++)renderer.selectPerson('consumer')
+  assert.equal(renderer.relationLayer.children.length,1)
+  assert.equal(renderer.relationLayer.children[0],line)
+  assert.equal(disposed,0)
+  renderer.selectPerson('other')
+  assert.equal(disposed,1)
 })
 
 test('changing the appearance pool preserves current movement, queues and replay state',async()=>{
@@ -251,30 +234,115 @@ test('changing the appearance pool preserves current movement, queues and replay
   assert.deepEqual(renderer.getStats(),stats);assert.equal(renderer.playing,false)
 })
 
-test('optional voxel characters and YuLan buildings keep the same paused trip, queues and time', async () => {
+test('unchanged paused frames do no rendering or pose work; input and replay invalidate once',()=>{
+  const {renderer}=world(),calls={render:0,screen:0,pose:0,pick:0}
+  renderer.lastTime=0
+  renderer.controls={update:()=>false}
+  renderer.renderer={render(){calls.render++}}
+  renderer.realCharacterBatch={update(){calls.pose++},getStats:()=>({available:115})}
+  renderer.updateScreenVisuals=()=>{calls.screen++}
+  renderer.pick=event=>{calls.pick++;assert.equal(event.clientX,2)}
+  renderer.renderFrame(16)
+  for(let i=2;i<120;i++)renderer.renderFrame(i*16)
+  assert.deepEqual(calls,{render:1,screen:1,pose:1,pick:0})
+  renderer.selectPerson('consumer');renderer.renderFrame(2000)
+  assert.equal(calls.render,2)
+  renderer.hoverEvent={clientX:1};renderer.hoverEvent={clientX:2};renderer.renderFrame(2016)
+  assert.equal(calls.pick,1);assert.equal(calls.render,2,'hovering unchanged geometry needs no GPU redraw')
+  renderer.setLighting({hour:23,cycle:false});renderer.renderFrame(2032)
+  assert.equal(calls.render,3)
+  renderer.setPlaying(true);renderer.renderFrame(2048);renderer.renderFrame(2064)
+  assert.equal(calls.render,5);assert(renderer.visualSeconds>0)
+  renderer.setPlaying(false);renderer.renderFrame(2080)
+  const frozen=renderer.visualSeconds
+  for(let i=0;i<60;i++)renderer.renderFrame(2100+i*16)
+  assert.equal(calls.render,6);assert.equal(renderer.visualSeconds,frozen)
+})
+
+test('tiny camera damping changes do not repeatedly rebuild collision corridors',()=>{
+  const {renderer}=world()
+  renderer.host={clientWidth:1230,clientHeight:650}
+  renderer.camera=new THREE.PerspectiveCamera(42,1230/650,.1,10000)
+  renderer.camera.position.set(1200,900,500);renderer.camera.lookAt(0,0,0)
+  let layouts=0;const original=renderer.reflowPeople.bind(renderer)
+  renderer.reflowPeople=()=>{layouts++;original()}
+  renderer.updateScreenVisuals();const initial=layouts
+  for(let i=0;i<30;i++){renderer.camera.position.x+=1e-8;renderer.updateScreenVisuals()}
+  assert.equal(layouts,initial)
+  assertPeopleClear(renderer)
+})
+
+test('offscreen characters keep their simulation state while only their drawing is culled',()=>{
+  const {renderer,entry}=world()
+  renderer.host={clientWidth:1230,clientHeight:650}
+  renderer.camera=new THREE.PerspectiveCamera(42,1230/650,.1,10000)
+  renderer.camera.position.copy(entry.figure.position).add(new THREE.Vector3(0,8,30))
+  renderer.camera.lookAt(entry.figure.position)
+  renderer.selectPerson('consumer');renderer.updateScreenVisuals()
+  assert.equal(entry.inView,true)
+  const position=entry.figure.position.clone(),person=entry.person
+  renderer.camera.lookAt(renderer.camera.position.clone().add(new THREE.Vector3(0,0,30)))
+  renderer.updateScreenVisuals()
+  assert.equal(entry.inView,false);assert.equal(entry.figure.visible,false)
+  assert.equal(entry.person,person);assert.deepEqual(entry.figure.position,position)
+})
+
+test('a narrow viewport cannot inflate avatars beyond a feasible real-campus corridor or stop replay',()=>{
+  const json=relative=>JSON.parse(readFileSync(new URL(relative,import.meta.url),'utf8'))
+  const campus=json('../../scene/campus3d.json'),mapping=json('../../scene/campus3d_mapping.json'),data=json('../public/mecoffe/latest-demo.json')
+  const renderer=new Campus3DScene({campus,mapping,index:indexScene(data)})
+  renderer.scene=new THREE.Scene();renderer.placePeople()
+  const original=JSON.stringify({campus,mapping,data})
+  const minimum=renderer.fitCrowdRadius(3.25)
+  renderer.cameraCrowdRadius=minimum;renderer.reflowPeople()
+  assert.throws(()=>renderer.standingClearanceRoutes(15),/安全走廊/,'reproduces the reported small-canvas failure')
+  const safe=renderer.fitCrowdRadius(15)
+  assert(safe<15);assert.equal(safe,minimum)
+  renderer.host={clientWidth:358,clientHeight:295}
+  renderer.camera=new THREE.PerspectiveCamera(42,358/295,.5,15000)
+  const fit=fitCampusView(renderer.cameraCampus,{aspect:358/295})
+  renderer.camera.position.copy(fit.position);renderer.camera.lookAt(fit.target)
+  assert.doesNotThrow(()=>renderer.updateScreenVisuals())
+  for(const entry of renderer.people.values())assert(entry.figure.scale.x*3<=entry.collisionRadius+1e-6)
+  assertPeopleClear(renderer)
+  assert.equal(JSON.stringify({campus,mapping,data}),original)
+})
+
+test('an unexpected rendering error stops once and reaches the recoverable UI callback',()=>{
+  const {renderer}=world(),errors=[]
+  renderer.onError=error=>errors.push(error.message)
+  renderer.playing=true;renderer.renderFrame=()=>{throw new Error('simulated GPU failure')}
+  assert.equal(renderer.renderFrameSafe(16),false)
+  assert.equal(renderer.playing,false);assert.equal(renderer.failed,true)
+  renderer.renderFrameSafe(32)
+  assert.deepEqual(errors,['simulated GPU failure'])
+})
+
+test('YuLan buildings keep the same paused trip, queues and time', async () => {
   const {renderer,entry}=world()
   renderer.playEvent(purchase('style-a'))
   renderer.playEvent(purchase('style-b','merchant_002'))
   renderer.updateWalkers(.1)
   const before=entry.figure.position.clone(),trip=entry.walker,queue=[...entry.queue],stats=renderer.getStats()
   renderer.setPlaying(false);renderer.visualSeconds=2.4
-  const voxel=[],buildings=[]
-  renderer.voxelBatch={setVisible:value=>voxel.push(value)}
+  const buildings=[]
   renderer.yulanStyle={setEnabled:value=>buildings.push(value)}
-  for(const style of ['voxel','pixel','solid','voxel'])await renderer.setCharacterStyle(style)
   for(const style of ['yulan','procedural','yulan','procedural'])await renderer.setBuildingStyle(style)
-  assert.deepEqual(voxel,[true,false,false,true])
   assert.deepEqual(buildings,[true,false,true,false])
   assert.deepEqual(entry.figure.position,before)
   assert.equal(entry.walker,trip);assert.deepEqual(entry.queue,queue)
   assert.deepEqual(renderer.getStats(),stats);assert.equal(renderer.playing,false);assert.equal(renderer.visualSeconds,2.4)
 })
 
-test('default procedural style never starts an atlas building or voxel loader', async () => {
+test('a headless scene allocates no removed character renderers or loaders', async () => {
   const {renderer}=world()
   assert.equal(renderer.characterStyle, 'realistic')
   await renderer.setBuildingStyle('procedural')
-  await renderer.setCharacterStyle('pixel')
+  await renderer.initCharacters()
+  assert.equal(renderer.setCharacterStyle,undefined)
+  assert.equal(renderer.characterBatch,undefined)
+  assert.equal(renderer.pixelBatch,undefined)
+  assert.equal(renderer.yulanCharacterBatch,undefined)
   assert.equal(renderer.yulanPromise,undefined)
   assert.equal(renderer.voxelPromise,undefined)
   assert.equal(renderer.realPromise,undefined)
