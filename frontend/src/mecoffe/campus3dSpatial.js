@@ -63,7 +63,26 @@ export function buildSpatialEnvironment(campus,landcovers=[],settings={}) {
     }
     water.portals=water.bridges.flatMap(bridge=>[bridge.start,bridge.end])
   }
-  return {waters,bridges,obstacles:[...(campus.buildings||[]),...waters],settings:options}
+  const areas=(campus.boundary_polygons?.length?campus.boundary_polygons:[{outer:campus.boundary||[],holes:[]}]).filter(a=>a.outer.length>=4)
+  const boundary=areas.length?{kind:'campus-boundary',osm_id:'display-campus-area',polygon:areas[0].outer,holes:[],areas}:null
+  return {waters,bridges,boundary,obstacles:[...(boundary?[boundary]:[]),...(campus.buildings||[]),...waters],settings:options}
+}
+
+export function campusPointClear(point,boundary,radius=0) {
+  return boundary.areas.some(area=>pointInRing(point,area.outer)&&!(area.holes||[]).some(h=>pointInRing(point,h))
+    &&[area.outer,...(area.holes||[])].every(ring=>ring.slice(1).every((p,i)=>segmentDistance(point,ring[i],p)>=radius-1e-6)))
+}
+export function campusSegmentClear(a,b,boundary,radius=0) {
+  if(!campusPointClear(a,boundary,radius)||!campusPointClear(b,boundary,radius))return false
+  const rings=boundary.areas.flatMap(area=>[area.outer,...(area.holes||[])]),intervals=cuts(a,b,rings)
+  if(!intervals.slice(1).every((t,i)=>campusPointClear(mix(a,b,(t+intervals[i])/2),boundary,0)))return false
+  if(radius>0)for(const ring of rings)for(let i=1;i<ring.length;i++){
+    const c=asPoint(ring[i-1]),d=asPoint(ring[i])
+    if(intersectionT(a,b,ring[i-1],ring[i])!==null)return false
+    if(Math.min(segmentDistance(a,ring[i-1],ring[i]),segmentDistance(b,ring[i-1],ring[i]),
+      segmentDistance(c,[a.x,a.y],[b.x,b.y]),segmentDistance(d,[a.x,a.y],[b.x,b.y]))<radius-1e-6)return false
+  }
+  return true
 }
 
 function openWaterAt(point,water) {

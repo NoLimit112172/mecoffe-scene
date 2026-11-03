@@ -1,9 +1,9 @@
 // Display geometry only: never writes OSM nodes, A* paths, mappings or events.
 import { pointInRing, segmentDistance } from './campus3dEnvironmentModel.js'
-import { waterPointClear, waterSegmentClear } from './campus3dSpatial.js'
+import { waterPointClear, waterSegmentClear, campusPointClear, campusSegmentClear } from './campus3dSpatial.js'
 
 export const CROWD_GAP = 0.9
-export const DISPLAY_RADIUS = 8
+export const DISPLAY_RADIUS = 6
 const EPS = 1e-6
 const distance = (a,b) => Math.hypot(a.x-b.x,a.y-b.y)
 const array = p => [p.x,p.y]
@@ -13,7 +13,7 @@ export function crowdObstacles(buildings = []) {
   if (cache.has(buildings)) return cache.get(buildings)
   const result = buildings.map(building => {
     const ring=building.polygon, holes=building.holes || []
-    return {ring,holes,id:building.osm_id,water:building.kind==='water'?building:null,minX:Math.min(...ring.map(p=>p[0])),maxX:Math.max(...ring.map(p=>p[0])),
+    return {ring,holes,id:building.osm_id,water:building.kind==='water'?building:null,boundary:building.kind==='campus-boundary'?building:null,minX:Math.min(...ring.map(p=>p[0])),maxX:Math.max(...ring.map(p=>p[0])),
       minY:Math.min(...ring.map(p=>p[1])),maxY:Math.max(...ring.map(p=>p[1]))}
   })
   cache.set(buildings,result)
@@ -22,6 +22,7 @@ export function crowdObstacles(buildings = []) {
 
 export function outsideBuildings(point, buildings, radius = 0) {
   for (const b of crowdObstacles(buildings)) {
+    if(b.boundary){if(!campusPointClear(point,b.boundary,radius))return false;continue}
     if (point.x < b.minX-radius || point.x > b.maxX+radius || point.y < b.minY-radius || point.y > b.maxY+radius) continue
     if(b.water){if(!waterPointClear(point,b.water,radius))return false;continue}
     if (pointInRing(point,b.ring) && !b.holes.some(ring=>pointInRing(point,ring))) return false
@@ -41,6 +42,7 @@ function edgesIntersect(a,b,c,d) {
 export function clearDisplaySegment(a,b,buildings,radius=0) {
   if(!outsideBuildings(a,buildings,radius)||!outsideBuildings(b,buildings,radius))return false
   for(const obstacle of crowdObstacles(buildings)) {
+    if(obstacle.boundary){if(!campusSegmentClear(a,b,obstacle.boundary,radius))return false;continue}
     if(Math.max(a.x,b.x)<obstacle.minX-radius || Math.min(a.x,b.x)>obstacle.maxX+radius
       ||Math.max(a.y,b.y)<obstacle.minY-radius || Math.min(a.y,b.y)>obstacle.maxY+radius)continue
     if(obstacle.water){if(!waterSegmentClear(a,b,obstacle.water,radius))return false;continue}
@@ -87,6 +89,11 @@ function detour(a,b,buildings,radius) {
   // These are collision envelope corners, NOT new OSM graph nodes. Retain the
   // original route separately. Concave buildings are conservatively bypassed.
   const candidates=[a,b]
+  for(const box of crowdObstacles(buildings))if(box.boundary)for(const area of box.boundary.areas)for(const ring of [area.outer,...(area.holes||[])])for(const [x,y]of ring.slice(0,-1)){
+    for(const dx of [-radius-1,radius+1])for(const dy of [-radius-1,radius+1]){
+      const p={x:x+dx,y:y+dy};if(outsideBuildings(p,buildings,radius))candidates.push(p)
+    }
+  }
   for(const box of crowdObstacles(buildings))if(box.water) {
     for(const p of box.water.portals)if(outsideBuildings(p,buildings,radius))candidates.push(p)
     // Shoreline bends are useful visibility vertices; a single water AABB

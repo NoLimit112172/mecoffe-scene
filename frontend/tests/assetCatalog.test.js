@@ -8,7 +8,7 @@ test('all catalogue entries have unique ids, actual thumbnails and provenance',(
   for(const item of ASSET_CATALOG.prototypes) {
     assert.ok(existsSync(new URL(`../public${item.preview}`,import.meta.url)),item.id)
     assert.ok(item.source.path && item.license.spdx)
-    assert.ok(item.variants.length>=3)
+    assert.ok(item.variants.length>=(item.scene_instance?1:3))
   }
   assert.equal(catalogStats().total,ASSET_CATALOG.prototypes.length)
   const invalid=structuredClone(ASSET_CATALOG); invalid.prototypes.push(invalid.prototypes[0])
@@ -27,11 +27,11 @@ test('exact matching prefers a dormitory over the generic building and retains i
   assert.throws(()=>{getPrototype('road.primary').params.lanes=9},TypeError)
 })
 
-test('the character catalog contains only the complete realistic library',()=>{
+test('the character catalog retains original humans and adds campus profiles with explicit source models',()=>{
   const people=queryPrototypes(null,{category:'character'})
-  assert.equal(people.length,116)
+  assert.equal(people.filter(item=>item.source.type==='rocketbox').length,116)
   assert(people.every(item=>item.params.generator==='rocketbox-character'))
-  assert.equal(people.filter(item=>item.params.model_id).length,115)
+  assert.equal(people.filter(item=>item.scene_instance?.kind==='person').length,100)
 })
 
 test('fixed feature ids choose stable variants without mutating tags or catalogue',()=>{

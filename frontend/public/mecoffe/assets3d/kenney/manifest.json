@@ -1,0 +1,77 @@
+{
+  "schema_version": "mecoffe.kenney-nature.v1",
+  "source_url": "https://kenney.nl/assets/nature-kit",
+  "archive_sha256": "fa7974a0d342bfe63c38664ba9f8ec1a4aab8ea25f099bdc56870e33588c4d9d",
+  "version": "2.1",
+  "license": "CC0-1.0",
+  "license_file": "License.txt",
+  "runtime_base": "/mecoffe/assets3d/kenney/",
+  "placement": "decorative, not surveyed species or planting locations",
+  "models": [
+    {
+      "id": "tree_oak",
+      "file": "tree_oak.glb",
+      "kind": "tree",
+      "bytes": 14644,
+      "sha256": "d7fd8773674928c50c11b66d12c636d49bdcc15a8b1c7fbb98e6f63a3439a3f3",
+      "archive_entry": "Models/GLTF format/tree_oak.glb"
+    },
+    {
+      "id": "tree_default",
+      "file": "tree_default.glb",
+      "kind": "tree",
+      "bytes": 9428,
+      "sha256": "562d29638c902de3c7bee465d3a53bb77117efbc392ae04ed894faf6b5dc691d",
+      "archive_entry": "Models/GLTF format/tree_default.glb"
+    },
+    {
+      "id": "tree_detailed",
+      "file": "tree_detailed.glb",
+      "kind": "tree",
+      "bytes": 31412,
+      "sha256": "c041daf2f0fb1d49e4325227cbcd58667adbe51e9b55e8c1f0a94b74cc521b3b",
+      "archive_entry": "Models/GLTF format/tree_detailed.glb"
+    },
+    {
+      "id": "tree_pineRoundD",
+      "file": "tree_pineRoundD.glb",
+      "kind": "tree",
+      "bytes": 13748,
+      "sha256": "a5051944fbfae7900cef8314c4a5d977b6b29bcd4e4ae5dea9d80980e65a411a",
+      "archive_entry": "Models/GLTF format/tree_pineRoundD.glb"
+    },
+    {
+      "id": "tree_pineDefaultA",
+      "file": "tree_pineDefaultA.glb",
+      "kind": "tree",
+      "bytes": 17220,
+      "sha256": "60d8f352fa3659ed275e06cbddfecf8f92c8effe2977c2f2d7b29b6c9b582e46",
+      "archive_entry": "Models/GLTF format/tree_pineDefaultA.glb"
+    },
+    {
+      "id": "plant_bush",
+      "file": "plant_bush.glb",
+      "kind": "shrub",
+      "bytes": 4396,
+      "sha256": "ae7b1beb39e242b13f5f29e3ec23ef21034b814f82297b8aa00a9bf4e1b09590",
+      "archive_entry": "Models/GLTF format/plant_bush.glb"
+    },
+    {
+      "id": "plant_bushDetailed",
+      "file": "plant_bushDetailed.glb",
+      "kind": "shrub",
+      "bytes": 10172,
+      "sha256": "2e0487020d68ccf664435db9d829c78ae00e6d2785ee3ec10b9f89cc70a10406",
+      "archive_entry": "Models/GLTF format/plant_bushDetailed.glb"
+    },
+    {
+      "id": "plant_bushSmall",
+      "file": "plant_bushSmall.glb",
+      "kind": "shrub",
+      "bytes": 3212,
+      "sha256": "a9620a7d1fb165ae68d323676f80dbb2a9e3aafb21110d18d18d90b07026b91d",
+      "archive_entry": "Models/GLTF format/plant_bushSmall.glb"
+    }
+  ],
+  "ancillary_text_note": "Publisher legal/readme wording retained; LF line endings and trailing whitespace normalized for the repository. Original model bytes and recorded model hashes are unchanged."
+}

@@ -2,7 +2,7 @@
   <div class="visual-controls">
     <div class="light-control" aria-label="建筑风格"><span>建筑</span><b>YuLan</b></div>
     <div class="light-control" aria-label="人物显示"><span>人物</span><b>写实人物</b></div>
-    <label class="light-control"><span>外观</span><select :value="characterPool" aria-label="人物外观分类" @change="$emit('update:characterPool',$event.target.value)"><option value="all">全部人形</option><option value="adults">成年人便装</option><option value="professions">职业装</option><option value="children">儿童</option></select></label>
+    <div class="light-control" aria-label="人物外观分类"><span>外观</span><b>校园师生 · 性别匹配</b></div>
     <div class="quality-control" aria-label="画质"><span>画质</span><button :aria-pressed="quality === 'high'" :class="{active:quality === 'high'}" aria-label="高画质" @click="$emit('update:quality','high')">高</button><button :aria-pressed="quality === 'low'" :class="{active:quality === 'low'}" aria-label="低画质" @click="$emit('update:quality','low')">低</button></div>
     <label class="cycle-control"><input type="checkbox" :checked="cycle" aria-label="日夜循环" @change="$emit('update:cycle',$event.target.checked)" />日夜循环</label>
     <label class="light-control"><select aria-label="光照预览" :value="cycle ? 'auto' : String(hour)" @change="chooseLight($event.target.value)"><option value="auto">跟随回放</option><option value="12">正午</option><option value="18">傍晚</option><option value="23">夜晚</option></select><span title="仅为视觉光照，不是模拟记录中的时间">{{ clock }}</span></label>

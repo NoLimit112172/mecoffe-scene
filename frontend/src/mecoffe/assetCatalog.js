@@ -1,7 +1,7 @@
 import rawCatalog from '../../public/mecoffe/assets3d/catalog.json' with { type: 'json' }
 
 const CATEGORIES = new Set(['building','road','landcover','vegetation','street_furniture','character','effect'])
-const SOURCES = new Set(['procedural','yulan','osm','rocketbox'])
+const SOURCES = new Set(['procedural','yulan','osm','rocketbox','valid','kenney'])
 
 export function validateCatalog(catalog) {
   if (catalog?.schema_version !== 'mecoffe.asset-catalog.v1' || !Array.isArray(catalog.prototypes)) throw new Error('素材目录 schema_version 或 prototypes 无效')
@@ -85,4 +85,12 @@ export function catalogStats(catalog = ASSET_CATALOG) {
   const categories = {}, sources = {}
   for (const item of catalog.prototypes) { categories[item.category]=(categories[item.category]||0)+1; sources[item.source.type]=(sources[item.source.type]||0)+1 }
   return { total:catalog.prototypes.length, categories, sources }
+}
+
+export function campusBuildingPrototype(building) {
+  const tags={building:building.building_type||'yes',...(building.tags||{})}
+  if(building.kind==='library')tags.amenity='library'
+  if(building.kind==='dining')tags.amenity='restaurant'
+  if(building.kind==='sports')tags.leisure='sports_centre'
+  return selectPrototype(tags,{category:'building',style:'yulan',featureId:building.osm_id,seed:2026})
 }

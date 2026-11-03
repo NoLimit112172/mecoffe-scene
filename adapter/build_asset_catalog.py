@@ -11,11 +11,15 @@ OSM = {'type': 'osm', 'title': 'OpenStreetMap geometry', 'author': 'OpenStreetMa
 ROCKETBOX = {'type':'rocketbox','title':'Microsoft Rocketbox Avatar Library','author':'Microsoft / Rocketbox Studios',
             'revision':'0943055db6ec570bcef9f2c8b41c9e5467c808f9','path':'frontend/public/mecoffe/assets3d/rocketbox/manifest.json',
             'url':'https://github.com/microsoft/Microsoft-Rocketbox'}
+KENNEY={'type':'kenney','title':'Kenney Nature Kit 2.1','author':'Kenney','path':'frontend/public/mecoffe/assets3d/kenney/manifest.json','url':'https://kenney.nl/assets/nature-kit'}
+VALID={'type':'valid','title':'VALID 亚洲预设人物','author':'Tiffany Do / University of Central Florida / Google','path':'frontend/public/mecoffe/assets3d/valid/manifest.json','url':'https://github.com/google/valid-avatar-library'}
 LICENSES = {'procedural': {'spdx': 'LicenseRef-MeCoffe-Project', 'path': 'NOTICE.md', 'note': '项目程序生成，随仓库源码提供；未另行授予外部模型许可'},
             'yulan': {'spdx': 'Apache-2.0', 'path': 'YULAN_LICENSE'},
             'osm': {'spdx': 'ODbL-1.0', 'url': 'https://www.openstreetmap.org/copyright', 'path': 'NOTICE.md'},
             'rocketbox':{'spdx':'MIT','path':'frontend/public/mecoffe/assets3d/rocketbox/LICENSE.md',
-                        'note':'Microsoft (c) 2020；原模型与贴图按固定提交保存，TGA无损转换PNG；动作由项目程序驱动骨骼'}}
+                        'note':'Microsoft (c) 2020；原模型与贴图按固定提交保存，TGA无损转换PNG；动作由项目程序驱动骨骼'},
+            'kenney':{'spdx':'CC0-1.0','path':'frontend/public/mecoffe/assets3d/kenney/License.txt'},
+            'valid':{'spdx':'MIT','path':'frontend/public/mecoffe/assets3d/valid/LICENSE','note':'Copyright 2022 Tiffany Do；Asian/gender 为上游合成人物标签，不推断模拟人物真实族群'}}
 
 
 def prototype(identifier, category, subtype, params, match=None, *, source=PROCEDURAL, kind='parametric', variants=None, style='procedural', title=None):
@@ -157,17 +161,63 @@ def rocketbox_prototypes():
     return rows
 
 
+def campus_prototypes():
+    rows=[]
+    poses=[{'id':k,'title':t,'params':{'preview_pose':k}} for k,t in [('idle','站立'),('walk','行走'),('coffee','持杯')]]
+    models=json.loads((OUTPUT/'valid/manifest.json').read_text(encoding='utf8'))['models']
+    for model in models:
+        row=prototype('character.valid.'+model['id'],'character','realistic',{'generator':'rocketbox-character','model_id':model['id'],'library':'valid','group':model['category'],'gender':model['gender'],'ethnicity':model['ethnicity'],'preview_pose':'idle'},source=VALID,kind='mesh',style='realistic',variants=poses,title=model['label'])
+        row['scene_scope']='ustc';rows.append(row)
+    nature=json.loads((OUTPUT/'kenney/manifest.json').read_text(encoding='utf8'))['models']
+    for model in nature:
+        row=prototype('vegetation.kenney.'+model['id'],'vegetation',model['kind'],{'generator':'kenney-vegetation','model_id':model['id']},source=KENNEY,kind='mesh',style='kenney',
+            variants=[{'id':str(h),'title':f'展示高 {h}m','params':{'height_m':h}} for h in ([8,10,12] if model['kind']=='tree' else [1.5,2,2.5])],title=('三维乔木 · ' if model['kind']=='tree' else '三维灌木 · ')+model['id'])
+        row['scene_scope']='ustc';rows.append(row)
+    campus=json.loads((ROOT/'scene/campus3d.json').read_text(encoding='utf8'))
+    features=json.loads((ROOT/'frontend/public/mecoffe/campus3d_landcover.json').read_text(encoding='utf8'))['features']
+    people=json.loads((ROOT/'frontend/public/mecoffe/latest-network.json').read_text(encoding='utf8'))['people']
+    def instance(identifier,category,params,title,source,origin):
+        row=prototype(identifier,category,'campus-instance',params,source=source,kind='mesh',title=title,
+            variants=poses if category=='character' else [{'id':'campus','title':'当前场景原型','params':{}}])
+        row.update({'target':'component','scene_scope':'ustc','scene_instance':origin})
+        return row
+    for building in campus['buildings']:
+        row=instance('building.campus.'+building['osm_id'].replace('/','-'),'building',{'generator':'campus-building','building':building},building.get('name') or building['osm_id'],YULAN,{'kind':'building','id':building['osm_id']})
+        row['geometry_source']={'type':'osm','license':'ODbL-1.0','path':'scene/campus3d.json'};rows.append(row)
+    for person in people:
+        gender={'m':'male','f':'female','male':'male','female':'female'}.get(str(person.get('gender','')).lower())
+        outfit='business' if person['role']=='teacher_consumer' else 'casual'
+        eligible=sorted((m for m in models if m['category']==outfit and (not gender or m['gender']==gender)),key=lambda m:m['id'])
+        value=2166136261
+        for letter in person['id']:value=((value^ord(letter))*16777619)&0xffffffff
+        selected=eligible[value%len(eligible)]
+        row=instance('character.campus.'+person['id'],'character',{'generator':'rocketbox-character','library':'valid','model_id':selected['id'],'preview_pose':'idle','person_id':person['id'],'gender':person.get('gender'),'role':person['role']},f"{person['name']} · {person['role_label']} · {'男' if gender=='male' else '女' if gender=='female' else '性别未提供'}",VALID,{'kind':'person','id':person['id'],'profile_source':'frontend/public/mecoffe/latest-network.json'})
+        rows.append(row)
+    for feature in features:
+        kind=feature['kind']
+        if kind not in ['pitch','water']:continue
+        row=instance('landcover.campus.'+feature['osm_id'].replace('/','-'),'landcover',{'generator':'campus-sports' if kind=='pitch' else 'campus-water','feature':feature},('校内运动场 · '+str(feature.get('sport','')) if kind=='pitch' else '永怀湖 · 有深度水域')+' · '+feature['osm_id'],PROCEDURAL,{'kind':kind,'id':feature['osm_id']})
+        row['geometry_source']={'type':'osm','license':'ODbL-1.0','path':'frontend/public/mecoffe/campus3d_landcover.json'};rows.append(row)
+    water=next(f for f in features if f['kind']=='water')
+    for road in campus['roads']:
+        if road['osm_id'] not in ['way/1242495999','way/1242496025']:continue
+        rows.append(instance('road.campus.'+road['osm_id'].replace('/','-'),'road',{'generator':'campus-bridge','road':road,'water':water},'校内跨水通行面 · '+road['osm_id'],PROCEDURAL,{'kind':'bridge','id':road['osm_id'],'illustrative':True}))
+    return rows
+
+
 def thumbnail(item):
     colors={'building':'#76a0a7','road':'#596875','landcover':'#6b9b75','vegetation':'#448b60','street_furniture':'#a2825c','character':'#6d83b1','effect':'#b18ac8'}
     color=item['params'].get('wall',item['params'].get('color',colors[item['category']]))
     label=html.escape(item['title'])
-    if item['source']['type']=='rocketbox':
+    if item['source']['type'] in ['rocketbox','valid']:
         return f'''<svg xmlns="http://www.w3.org/2000/svg" width="240" height="170" viewBox="0 0 240 170"><rect width="240" height="170" rx="12" fill="#edf2ed"/><ellipse cx="120" cy="136" rx="48" ry="9" fill="#cedbd1"/><ellipse cx="120" cy="33" rx="12" ry="15" fill="#d0a185"/><path d="M110 22Q120 13 131 24L131 31Q117 22 109 31Z" fill="#49372d"/><path d="M116 46L116 51Q98 51 98 69L94 96L100 99L110 70L110 93L130 93L130 70L140 99L146 96L141 67Q139 51 124 51L124 46" fill="#467b8b"/><path d="M110 91L130 91L133 130L124 132L120 106L116 132L107 130Z" fill="#3b4a60"/><path d="M106 130L116 130L116 137L103 137ZM124 130L134 130L138 137L124 137Z" fill="#302f32"/><text x="120" y="160" text-anchor="middle" fill="#244b46" font-size="12" font-family="sans-serif">{label}</text></svg>'''
     return f'''<svg xmlns="http://www.w3.org/2000/svg" width="240" height="170" viewBox="0 0 240 170"><rect width="240" height="170" rx="12" fill="#edf2ed"/><path d="M50 110L120 145L195 108L125 75Z" fill="#d6e1d8"/><path d="M80 108V55L130 30L175 55V108L130 132Z" fill="{color}"/><path d="M80 55L130 80L175 55L130 30Z" fill="#d7e4df"/><path d="M130 80V132M90 70V108M105 78V116M148 80V115M162 72V108" stroke="#fff" stroke-width="4" opacity=".6"/><text x="120" y="160" text-anchor="middle" fill="#244b46" font-size="12" font-family="sans-serif">{label}</text></svg>'''
 
 
 def main():
-    rows=existing_prototypes()+yulan_prototypes()+rocketbox_prototypes()
+    rows=existing_prototypes()+yulan_prototypes()+rocketbox_prototypes()+campus_prototypes()
+    for row in rows:
+        if row['source']['type']=='procedural' and (row['category'] in ['road','landcover','effect','street_furniture'] or '.component.' in row['id']):row['scene_scope']='ustc'
     catalog={'schema_version':'mecoffe.asset-catalog.v1','title':'MeCoffe 三维素材库','matching_version':'exact-tags-v1',
              'coordinate_convention':'x east, y up, z south; source maps use WGS84 to local metres',
              'note':'原型描述显示样式，不产生 OASIS 行为或新的地图事实；OSM 几何与素材许可分别保留。','prototypes':rows}

@@ -225,7 +225,14 @@ export async function createAssetPreview(prototype, variant, {signal} = {}) {
   if(signal?.aborted)throw Object.assign(new Error('Preview request cancelled'),{name:'AbortError'})
   const factory=factories.get(prototype.params?.generator)||factories.get(prototype.generator)||factories.get(prototype.id)
   if(factory) return factory(prototype,variant,{signal})
-  if(/^(sports-|bridge$|water-basin$)/.test(prototype.params?.generator||'')){
+  if(prototype.params?.generator==='kenney-vegetation'){
+    const {vegetationPreview,disposeVegetation}=await import('./Campus3DVegetation.js')
+    if(signal?.aborted)throw Object.assign(new Error('Preview request cancelled'),{name:'AbortError'})
+    const object=await vegetationPreview(prototype.params.model_id),p=previewParams(prototype,variant),height=prototype.subtype==='tree'?10:2
+    object.scale.setScalar((p.height_m||height)/height)
+    return {object,dispose:()=>disposeVegetation(object),caption:'Kenney 原生三维网格 · CC0 · 非像素浮雕'}
+  }
+  if(/^(sports-|bridge$|water-basin$|campus-(sports|water|bridge)$)/.test(prototype.params?.generator||'')){
     const {terrainAssetPreview}=await import('./assetPreviewTerrain.js')
     if(signal?.aborted)throw Object.assign(new Error('Preview request cancelled'),{name:'AbortError'})
     return terrainAssetPreview(prototype,variant)

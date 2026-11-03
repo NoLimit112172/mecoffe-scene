@@ -1,5 +1,12 @@
 # 第三方代码说明
 
+## 当前校园新增模型
+
+- **Kenney Nature Kit 2.1**：来自 <https://kenney.nl/assets/nature-kit>，CC0-1.0。8个原生三维 GLB 和原始 `License.txt` 保存在 `frontend/public/mecoffe/assets3d/kenney/`；清单记录原包 SHA-256、每个归档成员与文件哈希。只是装饰布点，不代表实地植被测绘。校园不再使用 YuLan 像素浮雕树。
+- **VALID Validated Avatar Library**：来自 <https://github.com/google/valid-avatar-library>，固定提交 `c76d2547b5b464415283169d18dffb16bb584eee`，MIT，Copyright (c) 2022 Tiffany Do。9个原始带内嵌贴图FBX及原始许可、README和作者标签元数据保存在 `frontend/public/mecoffe/assets3d/valid/`。Asian/male/female是上游合成模型的标签，不是从图像猜测，也不推断画像主体真实族群或国籍。每个文件记录并校验上游Git blob、SHA-256和大小。
+
+VALID 运行时兼容处理合并同姿态的重名骨骼、重复顶点，移除室外回放不需要的口腔内部与作者灯光，并由本项目代码驱动放松站立、行走、持杯；原始FBX不改写。原 Rocketbox115套与其MIT许可仍保留在完整素材库，当前校园按画像性别和师生角色使用VALID预设。31栋实际楼栋及场地/水域/跨水通行面实例卡片的OSM几何仍保留ODbL-1.0，YuLan立面继续保留Apache-2.0；实例没有将几何和模型合并改授许可。
+
 三维素材目录 `frontend/public/mecoffe/assets3d/catalog.json` 逐原型记录来源、源路径与许可。YuLan 原图集保留上游 Apache-2.0 和 `YULAN_LICENSE`，OSM 数据保留 ODbL-1.0 与署名。程序生成的模型、纹理和 SVG 缩略图属于本项目代码输出，目录以 `LicenseRef-MeCoffe-Project` 记录该来源；这不是外部 CC0 授权，也不改变原数据或素材的许可。
 
 `frontend/` 来自 [RUC-GSAI/YuLan-OneSim](https://github.com/RUC-GSAI/YuLan-OneSim) 的 `src/frontend`，提交 `9829d72`，按 Apache License 2.0 使用，许可证全文见 `YULAN_LICENSE`。美术素材（`frontend/public/assets`、`frontend/public/img`）同样来自该项目。

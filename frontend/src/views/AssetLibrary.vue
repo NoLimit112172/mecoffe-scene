@@ -5,9 +5,10 @@
       <RouterLink to="/mecoffe3d" class="back-link">返回三维校园 ↗</RouterLink>
     </header>
     <section class="library-toolbar" aria-label="素材筛选">
+      <label><span>范围</span><select v-model="scope" aria-label="素材范围"><option value="campus">当前校区使用的素材</option><option value="">全部原型与原始素材</option></select></label>
       <label class="search-label"><span>搜索</span><input v-model="search" type="search" aria-label="搜索素材" placeholder="名称、类型或原型 ID" /></label>
       <label><span>类别</span><select v-model="category" aria-label="素材类别"><option value="">全部类别</option><option v-for="(label,key) in categories" :key="key" :value="key">{{ label }} · {{ stats.categories[key] || 0 }}</option></select></label>
-      <label><span>来源</span><select v-model="source" aria-label="素材来源"><option value="">全部来源</option><option value="procedural">程序生成</option><option value="yulan">YuLan · Apache-2.0</option><option value="osm">OSM · ODbL</option><option value="rocketbox">Rocketbox · MIT</option></select></label>
+      <label><span>来源</span><select v-model="source" aria-label="素材来源"><option value="">全部来源</option><option value="procedural">程序生成</option><option value="yulan">YuLan · Apache-2.0</option><option value="osm">OSM · ODbL</option><option value="valid">VALID 校园人物 · MIT</option><option value="kenney">Kenney 三维植被 · CC0</option><option value="rocketbox">Rocketbox 原始库 · MIT</option></select></label>
       <label v-if="source === 'rocketbox'"><span>人物分类</span><select v-model="humanGroup" aria-label="人物素材分类"><option value="">全部人形</option><option value="adults">成年人便装</option><option value="professions">职业装</option><option value="children">儿童</option></select></label>
       <span class="result-count" data-testid="asset-count">{{ filtered.length }} / {{ stats.total }} 个原型</span>
       <span class="renderer-note">单一 WebGL 画布 · 拖动卡片旋转</span>
@@ -24,7 +25,9 @@
           <div class="card-title"><h2>{{ prototype.title || prototype.id }}</h2><span>{{ categories[prototype.category] }}</span></div>
           <code class="prototype-id">{{ prototype.id }}</code>
           <p class="match-rule" :title="describeMatch(prototype.match)">{{ describeMatch(prototype.match) }}</p>
-          <label class="variant-label"><span>{{ prototype.params.model_id ? '预览动作' : '变体' }}</span><select :value="selectedVariant(prototype)" :aria-label="`${prototype.title}变体`" @change="chooseVariant(prototype.id,$event.target.value)"><option v-for="variant in prototype.variants" :key="variant.id" :value="variant.id">{{ variant.title || variant.label || variant.id }}</option></select><small>{{ prototype.kind === 'parametric' ? '参数化生成器' : '固定模型' }}</small></label>
+          <p v-if="prototype.scene_instance" class="match-rule">校内实例：{{ prototype.scene_instance.id }}</p>
+          <p v-if="prototype.geometry_source" class="match-rule">地图几何：OpenStreetMap · ODbL-1.0；模型许可见下方</p>
+          <label class="variant-label"><span>{{ prototype.category === 'character' ? '预览动作' : '变体' }}</span><select :value="selectedVariant(prototype)" :aria-label="`${prototype.title}变体`" @change="chooseVariant(prototype.id,$event.target.value)"><option v-for="variant in prototype.variants" :key="variant.id" :value="variant.id">{{ variant.title || variant.label || variant.id }}</option></select><small>{{ prototype.kind === 'parametric' ? '参数化生成器' : '固定模型' }}</small></label>
           <div class="provenance"><span :class="`source source-${prototype.source.type}`">{{ sourceLabels[prototype.source.type] }}</span><b>{{ prototype.license.spdx }}</b></div>
           <p class="source-path">{{ prototype.source.path }}</p>
           <a v-if="safeSourceUrl(prototype.source.url)" :href="safeSourceUrl(prototype.source.url)" target="_blank" rel="noopener noreferrer" class="source-link">查看来源 ↗</a>
@@ -33,7 +36,7 @@
       </article>
     </div>
     <p v-if="!filtered.length" class="no-results">没有匹配的原型，请调整搜索或筛选条件。</p>
-    <footer class="library-footer">目录版本 {{ ASSET_CATALOG.schema_version }} · YuLan、Rocketbox、项目程序生成与 © OpenStreetMap contributors 各自保留来源和许可。人物分类仅描述素材外观；校园与回放数据不受这里的预览选项影响。</footer>
+    <footer class="library-footer">目录版本 {{ ASSET_CATALOG.schema_version }} · YuLan、Rocketbox、VALID、Kenney、项目程序生成与 © OpenStreetMap contributors 各自保留来源和许可。人物分类仅描述素材外观；校园与回放数据不受这里的预览选项影响。</footer>
   </div>
 </template>
 
@@ -45,13 +48,14 @@ import { AssetPreviewRenderer } from '../mecoffe/AssetPreviewRenderer.js'
 import { ASSET_CATEGORY_LABELS, describeMatch, previewParams, safeSourceUrl, paginateAssets } from '../mecoffe/assetPreviewModel.js'
 
 const route=useRoute(),rootEl=ref(null),search=ref(''),category=ref(''),source=ref(route.query.source === 'rocketbox'?'rocketbox':''),pageError=ref('')
-const humanGroup=ref(''),page=ref(1)
+const scope=ref(route.query.source?'':'campus'),humanGroup=ref(''),page=ref(1)
 const variants=reactive({}),captions=reactive({}),errors=reactive({})
 const elements=new Map(),categories=ASSET_CATEGORY_LABELS,stats=catalogStats()
-const sourceLabels={procedural:'程序生成',yulan:'YuLan 图集',osm:'OpenStreetMap',rocketbox:'Microsoft Rocketbox'}
+const sourceLabels={procedural:'程序生成',yulan:'YuLan 图集',osm:'OpenStreetMap',rocketbox:'Microsoft Rocketbox',valid:'VALID 校园人物',kenney:'Kenney 三维植被'}
 const hasIndividualAvatars=ASSET_CATALOG.prototypes.some(item=>item.source.type==='rocketbox'&&item.params.model_id)
 let renderer=null,disposed=false,removeYuLanFactories=null
 const filtered=computed(()=>queryPrototypes(null,{category:category.value || undefined,text:search.value}).filter(item=>(!source.value||item.source.type===source.value)
+  && (!scope.value||item.scene_scope==='ustc')
   && (!humanGroup.value || source.value!=='rocketbox' || item.params.group===humanGroup.value)
   && !(hasIndividualAvatars && source.value==='rocketbox' && !search.value && item.id==='character.rocketbox')))
 const pagination=computed(()=>paginateAssets(filtered.value,page.value,12))
@@ -69,7 +73,7 @@ async function syncItems() {
   if(disposed||!renderer)return
   renderer.setItems(pagination.value.items.map(prototype=>({prototype,variant:selectedVariant(prototype),element:elements.get(prototype.id)})).filter(item=>item.element))
 }
-watch([search,category,source,humanGroup],()=>{page.value=1})
+watch([search,category,source,humanGroup,scope],()=>{page.value=1})
 watch([filtered,variants,page],()=>{void syncItems()},{deep:true})
 onMounted(async()=>{
   document.title='MeCoffe · 三维素材库'

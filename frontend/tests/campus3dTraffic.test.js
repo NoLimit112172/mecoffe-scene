@@ -8,6 +8,7 @@ import { fitCampusView } from '../src/mecoffe/campus3dView.js'
 import { routeBetweenMappings } from '../src/mecoffe/campus3dRouting.js'
 import { outsideBuildings, CROWD_GAP } from '../src/mecoffe/campus3dCrowd.js'
 import { pointInRing } from '../src/mecoffe/campus3dEnvironmentModel.js'
+import { campusPointClear } from '../src/mecoffe/campus3dSpatial.js'
 
 const json = path => JSON.parse(readFileSync(new URL(path, import.meta.url), 'utf8'))
 const homes = ['ug_dorm_west', 'ug_dorm_east', 'teaching_main', 'grad_apartment', 'library_main', 'faculty_main']
@@ -49,6 +50,7 @@ function assertFrame(renderer, before, frame) {
   let waterContacts=0
   for (let i = 0; i < entries.length; i++) {
     const entry = entries[i], p = point(entry), previous = before?.get(entry.person.id)
+    assert(campusPointClear(p,renderer.spatial.boundary,entry.collisionRadius),`frame ${frame}: ${entry.person.id} leaves the displayed campus`)
     assert.ok(entry.figure.scale.x*3<=entry.collisionRadius+1e-6, `frame ${frame}: model exceeds reserved footprint`)
     assert.ok(outsideBuildings(p, renderer.navigationObstacles, entry.collisionRadius),
       `frame ${frame}: ${entry.person.id} overlaps a building at ${JSON.stringify(p)}`)

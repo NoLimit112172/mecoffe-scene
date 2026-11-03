@@ -1,4 +1,5 @@
-import { createCourt, createTrack400, disposeSportsObject } from './Campus3DSports.js'
+import { createCourt, createTrack400, disposeSportsObject, Campus3DSports } from './Campus3DSports.js'
+import * as THREE from 'three'
 import { createWaterBasin, createBridge } from './Campus3DWater.js'
 import { buildSpatialEnvironment } from './campus3dSpatial.js'
 import { previewParams } from './assetPreviewModel.js'
@@ -6,7 +7,13 @@ import { previewParams } from './assetPreviewModel.js'
 export function terrainAssetPreview(prototype,variant) {
   const p=previewParams(prototype,variant)
   let object,caption
-  if(p.generator==='sports-track400'){object=createTrack400(p);caption='实体跑道 · 分道标线 · 足球场与球门'}
+  if(p.generator==='campus-sports'){
+    const model=new Campus3DSports({scene:new THREE.Scene(),landcovers:[p.feature]}).init();object=model.group;caption='校内 OSM 场地区域 · 与沙盘共用场地模型'
+  }else if(p.generator==='campus-water'){
+    object=createWaterBasin(buildSpatialEnvironment({roads:[],buildings:[]},[p.feature]).waters[0]);caption='校内永怀湖轮廓 · 起伏湖底与岸坡'
+  }else if(p.generator==='campus-bridge'){
+    object=createBridge(buildSpatialEnvironment({roads:[p.road],buildings:[]},[p.water]).bridges[0]);caption='校内跨水通行面 · 与沙盘共用桥梁模型'
+  }else if(p.generator==='sports-track400'){object=createTrack400(p);caption='实体跑道 · 分道标线 · 足球场与球门'}
   else if(p.generator.startsWith('sports-')){object=createCourt(p.generator.slice(7),p);caption='实体球场 · 标线 · 篮架或球网'}
   else if(p.generator==='bridge'){
     const length=p.length_m||44

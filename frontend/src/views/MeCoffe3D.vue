@@ -9,7 +9,7 @@
         <Campus3DVisualControls v-model:character-pool="characterPool" v-model:quality="quality" v-model:cycle="dayCycle" v-model:hour="previewHour" :clock="lightClock.label" />
         <span v-if="styleBusy" role="status" class="style-status">正在准备三维素材…</span>
         <RouterLink to="/mecoffe" class="old-page">二维沙盘 ↗</RouterLink>
-        <RouterLink to="/mecoffe3d/assets?source=rocketbox" class="old-page">人物素材库 ↗</RouterLink>
+        <RouterLink to="/mecoffe3d/assets" class="old-page">场景素材库 ↗</RouterLink>
       </div>
     </header>
 
@@ -19,7 +19,7 @@
 
     <template v-if="index && !loadError">
       <div class="data-notice" :class="requestedMode" data-testid="data-notice">{{ dataNotice }}</div>
-      <div class="data-notice character-loading" role="status"><span>写实外观库 {{ characterStatus.available || 115 }} 款 · 当前可见 {{ characterStatus.visibleReady || 0 }}/{{ characterStatus.visibleTotal || 0 }} 已就绪。<template v-if="characterStatus.visibleReady < characterStatus.visibleTotal">正在按需加载人物；就绪前显示脚下身份标记。</template></span><button v-if="characterStatus.failed" @click="renderer?.retryCharacters()">重试 {{ characterStatus.failed }} 个模型</button></div>
+      <div class="data-notice character-loading" role="status"><span>校园师生外观 {{ characterStatus.available || 9 }} 款 · 按画像性别匹配 · 当前可见 {{ characterStatus.visibleReady || 0 }}/{{ characterStatus.visibleTotal || 0 }} 已就绪。<template v-if="characterStatus.visibleReady < characterStatus.visibleTotal">正在按需加载人物；就绪前显示脚下身份标记。</template></span><button v-if="characterStatus.failed" @click="renderer?.retryCharacters()">重试 {{ characterStatus.failed }} 个模型</button></div>
       <section class="kpis" aria-label="回放指标">
         <div><span>{{ isNetwork ? '人物关系输入' : currentDay.label }}</span><strong>{{ scene.people.length }}<small> 人</small></strong><em>快照 {{ meta.snapshot_revision ? `v${meta.snapshot_revision}` : '历史版本' }}</em></div>
         <div><span>初始关注关系</span><strong>{{ follows.length }}<small> 条</small></strong><em>{{ isNetwork ? '静态网络，尚未运行' : '与原数据保持一致' }}</em></div>
@@ -32,7 +32,7 @@
           <div ref="mapEl" class="map-canvas"></div>
           <div class="map-top"><div class="map-badge"><b>USTC · 高新校区</b><span>{{ campusData?.buildings.length || 0 }} 栋建筑 / {{ campusData?.roads.length || 0 }} 段道路</span></div><div class="map-camera-buttons"><button class="reset-camera" title="放大查看选中人物或当前行人" @click="focusPerson"><i class="fa-solid fa-person-walking"></i> 人物特写</button><button class="reset-camera" title="恢复校园全景" @click="renderer?.resetCamera()"><i class="fa-solid fa-expand"></i> 全景</button></div></div>
           <div v-if="hoverCard" class="hover-card" :style="hoverStyle"><b>{{ hoverCard.name }}</b><template v-if="hoverCard.type === 'building'"><span>OSM {{ hoverCard.building.osm_id }}</span><span>{{ hoverCard.building.levels }} 层 / {{ hoverCard.building.height_m }} 米 · {{ hoverCard.building.levels_source === 'default' ? '展示默认高度' : '来源见地图数据' }}</span></template><span v-else>点击查看人物与事件</span></div>
-          <div class="map-legend"><span><i style="background:#7c9cab"></i>教学 / 科研</span><span><i style="background:#bc7859"></i>住宿</span><span><i style="background:#65a89b"></i>公共设施</span><div class="role-key"><span v-for="(color, role) in CHARACTER_ROLE_COLORS" :key="role"><i :style="{background:color}"></i>{{ roleNames[role] }}</span></div><p>写实人物为外观示意；脚下颜色表示角色<br>水域不可行走，仅跨水道路 / 桥面可通行<br>跑道外圈、球场排布、桥型与水深：展示设定<br>树木、路灯、长椅、草地纹理：<b>装饰</b><br>楼顶人数与光照：展示示意；楼层仍为默认值<br>校外道路仅展示，不参与寻路<br>左键旋转 · 右键平移 · 滚轮缩放</p></div>
+          <div class="map-legend"><span><i style="background:#7c9cab"></i>教学 / 科研</span><span><i style="background:#bc7859"></i>住宿</span><span><i style="background:#65a89b"></i>公共设施</span><div class="role-key"><span v-for="(color, role) in CHARACTER_ROLE_COLORS" :key="role"><i :style="{background:color}"></i>{{ roleNames[role] }}</span></div><p>写实人物为外观示意；脚下颜色表示角色<br>人物活动限制在建成区校界内<br>水域不可行走，仅跨水道路 / 桥面可通行<br>跑道外圈、球场排布、桥型与水深：展示设定<br>树木、路灯、长椅、草地纹理：<b>装饰</b><br>楼顶人数与光照：展示示意；楼层仍为默认值<br>校外道路仅展示，不参与寻路<br>左键旋转 · 右键平移 · 滚轮缩放</p></div>
           <a class="osm-credit" href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener noreferrer">© OpenStreetMap contributors</a>
           <div v-if="loading" class="map-loading">正在构建校园三维体块…</div>
         </section>
@@ -48,7 +48,7 @@
           </div>
           <div v-else-if="activeTab === 'people'" class="side-content">
             <label class="search"><i class="fa-solid fa-magnifying-glass"></i><input v-model="query" placeholder="搜索人物姓名或编号" aria-label="搜索人物" /></label>
-            <div v-if="selected" class="person-detail"><div class="person-title"><span class="person-dot" :style="{ background: roleColor(selected.role) }"></span><h2>{{ selected.name }}</h2><small>{{ selected.role_label }}</small></div><code>{{ selected.id }}</code><p>示意所在楼栋：<b>{{ mappedBuilding(selected)?.name || '未映射' }}</b></p><p class="mapping-note">{{ mappingEntry(selected)?.note }}</p><p class="person-bio">{{ selected.bio }}</p><p>关注 {{ selectedFollowing.length }} 人 · 被关注 {{ selectedFollowers.length }} 人</p><div class="relation-buttons"><button v-for="person in selectedFollowing" :key="person.id" @click="selectPerson(person.id)">{{ person.name }}</button></div><div v-if="selectedHistory.length" class="person-history"><h3>截至当前的行为</h3><p v-for="event in selectedHistory.slice(0, 5)" :key="event.key">{{ describeEvent(index, event) }}</p></div></div>
+            <div v-if="selected" class="person-detail"><div class="person-title"><span class="person-dot" :style="{ background: roleColor(selected.role) }"></span><h2>{{ selected.name }}</h2><small>{{ selected.role_label }}</small></div><code>{{ selected.id }}</code><p>示意所在楼栋：<b>{{ mappedBuilding(selected)?.name || '未映射' }}</b></p><p class="mapping-note">{{ mappingEntry(selected)?.note }}</p><p>画像性别：{{ selected.gender === 'm' ? '男' : selected.gender === 'f' ? '女' : '未提供（商家代理）' }} · {{ selected.role === 'teacher_consumer' ? '教师通勤外观' : selected.role === 'merchant' ? '店员示意外观' : '学生便装外观' }}</p><p class="person-bio">{{ selected.bio }}</p><p>关注 {{ selectedFollowing.length }} 人 · 被关注 {{ selectedFollowers.length }} 人</p><div class="relation-buttons"><button v-for="person in selectedFollowing" :key="person.id" @click="selectPerson(person.id)">{{ person.name }}</button></div><div v-if="selectedHistory.length" class="person-history"><h3>截至当前的行为</h3><p v-for="event in selectedHistory.slice(0, 5)" :key="event.key">{{ describeEvent(index, event) }}</p></div></div>
             <div class="roster" aria-label="人物名册"><button v-for="person in roster" :key="person.id" :class="{ selected: selectedId === person.id }" @click="selectPerson(person.id)"><span class="person-dot" :style="{ background: roleColor(person.role) }"></span><span>{{ person.name }}<small>{{ mappedBuilding(person)?.name || person.role_label }}</small></span><i v-if="selectedId === person.id" class="fa-solid fa-chevron-right"></i></button></div>
           </div>
           <div v-else class="side-content">
@@ -97,7 +97,7 @@ const playing = ref(false)
 const draining = ref(false)
 const speed = ref(1)
 const quality = ref('high')
-const characterPool = ref('all')
+const characterPool = ref('campus')
 const characterStatus = ref({available:0,visibleReady:0,visibleTotal:0,failed:0})
 const styleBusy = ref(0)
 const styleError = ref('')

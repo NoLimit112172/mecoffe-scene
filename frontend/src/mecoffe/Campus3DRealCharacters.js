@@ -1,6 +1,8 @@
 import * as THREE from 'three'
 import { FBXLoader } from 'three/addons/loaders/FBXLoader.js'
 import { clone as cloneSkeleton } from 'three/addons/utils/SkeletonUtils.js'
+import { mergeVertices } from 'three/addons/utils/BufferGeometryUtils.js'
+import { campusAssignments } from './campusCharacterModel.js'
 import { REAL_CHARACTER_HEIGHT, REAL_CHARACTER_RADIUS, ROCKETBOX_MODELS, rocketboxAssignments, rocketboxHumanModels, rocketboxHash,
   rocketboxTextureUrl, rocketboxLodNames, normalizeRocketboxBounds, rocketboxCharacterPose } from './rocketboxCharacterModel.js'
 
@@ -11,7 +13,7 @@ const BLANK = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcS
 const sources = new Map()
 const loadQueue = []
 let activeLoads = 0
-let manifestPromise
+const manifestPromises=new Map()
 const slots = ['map','alphaMap','normalMap','bumpMap','specularMap','emissiveMap','aoMap','roughnessMap','metalnessMap']
 
 function disposeSource(source) {
@@ -39,19 +41,54 @@ function repairMaterials(source) {
   for (const texture of discarded) texture.dispose()
 }
 
+export function canonicalizeValidSkeleton(source) {
+  source.updateMatrixWorld(true)
+  const canonical=new Map(),duplicates=[]
+  source.traverse(bone=>{if(!bone.isBone)return;if(canonical.has(bone.name)){
+    const first=canonical.get(bone.name)
+    if(bone.matrixWorld.elements.some((v,i)=>Math.abs(v-first.matrixWorld.elements[i])>1e-5))throw new Error(`VALID 重名骨骼姿态不一致：${bone.name}`)
+    duplicates.push(bone)
+  }else canonical.set(bone.name,bone)})
+  const parents=[...canonical.values()].map(bone=>{
+    let parent=bone.parent;while(parent?.isBone&&parent.name===bone.name)parent=parent.parent
+    return {bone,parent:parent?.isBone?canonical.get(parent.name):parent}
+  })
+  for(const {bone,parent}of parents)if(parent&&bone.parent!==parent)parent.attach(bone)
+  source.traverse(mesh=>{if(!mesh.isSkinnedMesh)return
+    const old=mesh.skeleton
+    mesh.skeleton=new THREE.Skeleton(old.bones.map(b=>canonical.get(b.name)),old.boneInverses.map(m=>m.clone()))
+    old.dispose()
+  })
+  for(const bone of duplicates)bone.removeFromParent()
+  source.updateMatrixWorld(true)
+  return source
+}
+
 async function loadSource(record) {
-  const manager = new THREE.LoadingManager(), failures = []
+  const base=record.runtime_base||BASE
+  const manager = new THREE.LoadingManager(), failures = [],embedded=new Set()
   let ready
   const settled = new Promise(resolve => { ready = resolve })
   manager.onLoad = ready
   manager.onError = url => failures.push(url)
-  manager.setURLModifier(url => rocketboxTextureUrl(url, record, BASE) ?? BLANK)
+  manager.setURLModifier(url => {if(url.startsWith('blob:'))embedded.add(url);return rocketboxTextureUrl(url, record, base) ?? BLANK})
   // FBX chooses handlers from the ORIGINAL extension, before URL rewriting.
   manager.addHandler(/\.tga$/i, new THREE.TextureLoader(manager))
-  const source = await new FBXLoader(manager).loadAsync(`${BASE}${record.fbx}`)
+  const source = await new FBXLoader(manager).loadAsync(`${base}${record.fbx}`)
   await settled
+  for(const url of embedded)URL.revokeObjectURL(url)
   if (failures.length) { disposeSource(source); throw new Error(`Rocketbox texture failed: ${failures.join(', ')}`) }
   repairMaterials(source)
+  if(record.ethnicity==='Asian'){
+    // VALID also bundles dense internal teeth/glands and authoring lights.
+    // Outdoor campus avatars keep the body and both eyes; mouth interiors
+    // are unnecessary for this replay and would triple skinning work.
+    const removed=[]
+    source.traverse(o=>{if(o.isLight||o.isMesh&&/teeth|gland/i.test(o.name))removed.push(o)})
+    for(const o of removed){o.removeFromParent();o.geometry?.dispose()}
+    canonicalizeValidSkeleton(source)
+    source.traverse(o=>{if(o.isMesh){const old=o.geometry;o.geometry=mergeVertices(old);old.dispose()}})
+  }
   const meshes = []; source.traverse(object => { if (object.isMesh) meshes.push(object) })
   const keep = new Set(rocketboxLodNames(meshes.map(mesh => mesh.name)))
   for (const mesh of meshes) if (!keep.has(mesh.name)) mesh.removeFromParent()
@@ -68,12 +105,13 @@ function drainLoads() {
     Promise.resolve().then(task.work).then(task.resolve,task.reject).finally(() => { activeLoads--; drainLoads() })
   }
 }
-function loadManifest() {
-  if (!manifestPromise) manifestPromise = fetch(`${BASE}manifest.json`).then(response => {
+function loadManifest(library='rocketbox') {
+  const base=library==='valid'?`${import.meta.env?.BASE_URL||'/'}mecoffe/assets3d/valid/`:BASE
+  if (!manifestPromises.has(library)) manifestPromises.set(library,fetch(`${base}manifest.json`).then(response => {
     if (!response.ok) throw new Error(`Rocketbox manifest: HTTP ${response.status}`)
     return response.json()
-  }).catch(error => { manifestPromise = null; throw error })
-  return manifestPromise
+  }).catch(error => { manifestPromises.delete(library); throw error }))
+  return manifestPromises.get(library)
 }
 
 async function acquireModel(id, loader, record) {
@@ -88,15 +126,22 @@ async function acquireModel(id, loader, record) {
   } catch (error) { cached.refs--; throw error }
 }
 
+const VALID_BONES={Hips:'Bip01_Pelvis',Head:'Bip01_Head',LeftUpLeg:'Bip01_L_Thigh',RightUpLeg:'Bip01_R_Thigh',LeftLeg:'Bip01_L_Calf',RightLeg:'Bip01_R_Calf',LeftFoot:'Bip01_L_Foot',RightFoot:'Bip01_R_Foot',LeftToeBase:'Bip01_L_Toe0',RightToeBase:'Bip01_R_Toe0',LeftArm:'Bip01_L_UpperArm',RightArm:'Bip01_R_UpperArm',LeftForeArm:'Bip01_L_Forearm',RightForeArm:'Bip01_R_Forearm',LeftHand:'Bip01_L_Hand',RightHand:'Bip01_R_Hand'}
+const boneKey=name=>VALID_BONES[name]||name.replace(/\s/g,'_').replace(/^Bip\d+_/,'Bip01_')
 function rigFor(model) {
-  const bones = new Map(), rest = []
-  model.traverse(bone => { if (bone.isBone) { bones.set(bone.name.replace(/\s/g,'_').replace(/^Bip\d+_/,'Bip01_'),bone); rest.push({bone,quaternion:bone.quaternion.clone(),position:bone.position.clone()}) } })
-  return { model, bones, rest, world: new THREE.Quaternion(), parent: new THREE.Quaternion(), delta: new THREE.Quaternion(), from: new THREE.Vector3(), to: new THREE.Vector3(), origin: new THREE.Vector3() }
+  const bones=new Map(),boneSets=new Map(),rest=[],used=new Set()
+  model.traverse(o=>{if(o.isSkinnedMesh)for(const b of o.skeleton.bones){used.add(b);for(let p=b.parent;p?.isBone;p=p.parent)used.add(p)}})
+  model.traverse(bone => { if (bone.isBone&&used.has(bone)) {const key=boneKey(bone.name);if(!bones.has(key))bones.set(key,bone);if(!boneSets.has(key))boneSets.set(key,[]);boneSets.get(key).push(bone);rest.push({bone,quaternion:bone.quaternion.clone(),position:bone.position.clone()}) } })
+  model.updateWorldMatrix(true,true)
+  const armSigns={}
+  for(const side of ['L','R']){const b=bones.get(`Bip01_${side}_UpperArm`);if(b){const p=model.worldToLocal(b.getWorldPosition(new THREE.Vector3()));armSigns[side]=Math.sign(p.x)|| (side==='L'?-1:1)}}
+  return { model, bones, boneSets, rest, armSigns, world: new THREE.Quaternion(), parent: new THREE.Quaternion(), delta: new THREE.Quaternion(), from: new THREE.Vector3(), to: new THREE.Vector3(), origin: new THREE.Vector3() }
 }
 
 function aim(rig, name, childName, direction) {
-  const bone = rig.bones.get(name), child = rig.bones.get(childName)
-  if (!bone || !child) return
+  for(const bone of rig.boneSets.get(name)||[]){
+  const child=bone.children.find(c=>boneKey(c.name)===childName)
+  if (!child) continue
   bone.updateWorldMatrix(true,false)
   bone.getWorldPosition(rig.origin); child.getWorldPosition(rig.from); rig.from.sub(rig.origin).normalize()
   rig.to.set(...direction).normalize().transformDirection(rig.model.matrixWorld)
@@ -104,6 +149,7 @@ function aim(rig, name, childName, direction) {
   bone.getWorldQuaternion(rig.world); rig.world.premultiply(rig.delta)
   bone.parent.getWorldQuaternion(rig.parent); bone.quaternion.copy(rig.parent.invert().multiply(rig.world))
   bone.updateWorldMatrix(false,false)
+  }
 }
 
 function applyPose(rig, pose) {
@@ -115,11 +161,11 @@ function applyPose(rig, pose) {
     aim(rig,`${prefix}Thigh`,`${prefix}Calf`,[0,-Math.cos(leg),Math.sin(leg)])
     aim(rig,`${prefix}Calf`,`${prefix}Foot`,[0,-Math.cos(leg-knee),Math.sin(leg-knee)])
     aim(rig,`${prefix}Foot`,`${prefix}Toe0`,[0,0,1])
-    aim(rig,`${prefix}UpperArm`,`${prefix}Forearm`,[sign*.10,-Math.cos(arm),Math.sin(arm)])
-    aim(rig,`${prefix}Forearm`,`${prefix}Hand`,[sign*.06,-Math.cos(arm+elbow),Math.sin(arm+elbow)])
+    const outward=rig.armSigns[side]||sign
+    aim(rig,`${prefix}UpperArm`,`${prefix}Forearm`,[outward*.14,-Math.cos(arm),Math.sin(arm)])
+    aim(rig,`${prefix}Forearm`,`${prefix}Hand`,[outward*.08,-Math.cos(arm+elbow),Math.sin(arm+elbow)])
   }
-  const head=rig.bones.get('Bip01_Head')
-  if(head)head.rotateX(pose.headTilt)
+  for(const head of rig.boneSets.get('Bip01_Head')||[])head.rotateX(pose.headTilt)
   rig.model.updateWorldMatrix(true,true)
   // SkinnedMesh overrides updateMatrixWorld (not updateWorldMatrix) to refresh
   // bindMatrixInverse. Calling it prevents normalization being applied twice.
@@ -142,9 +188,10 @@ function normalizedModel(source, cachedNormalization) {
 }
 
 export class RealCharacterBatch {
-  constructor({scene,entries,modelId,pool='all',onReady}={}) {
+  constructor({scene,entries,modelId,pool='all',library,onReady}={}) {
     if(!scene||!entries)throw new Error('RealCharacterBatch requires a scene and entries')
     this.scene=scene;this.entries=entries;this.modelId=modelId;this.pool=pool;this.onReady=onReady
+    this.library=library||(pool==='campus'?'valid':'rocketbox')
     this.group=new THREE.Group();this.group.name='mecoffe-rocketbox-real-characters'
     this.actors=[];this.resources=[];this.records=new Map();this.readyIds=new Set();this.pending=new Set()
     this.normalizations=new Map();this.quality='high';this.disposed=false;this.initialized=false
@@ -161,7 +208,8 @@ export class RealCharacterBatch {
     try {
       this.modelId=modelId;this.loader=loader;this.provided=assets?.models||assets
       const suppliedIds=this.provided instanceof Map?[...this.provided.keys()]:Object.keys(this.provided||{})
-      this.manifest=manifest||assets?.manifest||((assets||loader)?{models:(suppliedIds.length?suppliedIds:ROCKETBOX_MODELS).map(id=>({id,human:true,category:'adults'}))}:await loadManifest())
+      this.injectedSources=Boolean(manifest||assets||loader)
+      this.manifest=manifest||assets?.manifest||((assets||loader)?{models:(suppliedIds.length?suppliedIds:ROCKETBOX_MODELS).map(id=>({id,human:true,category:'adults'}))}:await loadManifest(this.library))
       if(this.disposed)return this
       this.eager=Boolean(modelId||((assets||loader)&&!lazy));this.strictVisibility=!this.eager
       this.cupGeometry=new THREE.CylinderGeometry(.20,.16,.44,12);this.lidGeometry=new THREE.CylinderGeometry(.22,.22,.06,12)
@@ -176,11 +224,12 @@ export class RealCharacterBatch {
   configureRecords() {
     const humans=rocketboxHumanModels(this.manifest)
     this.counts=humans.reduce((counts,model)=>{const category=model.category||'adults';counts[category]=(counts[category]||0)+1;return counts},{})
-    const candidates=this.modelId||this.pool==='all'?humans:humans.filter(model=>model.category===this.pool)
+    const candidates=this.modelId||['all','campus'].includes(this.pool)?humans:humans.filter(model=>model.category===this.pool)
     if(!candidates.length)throw new Error(`No Rocketbox avatars in pool ${this.pool}`)
     this.available=humans.length;this.candidateCount=candidates.length
-    this.modelRecords=new Map(humans.map(model=>[model.id,model]))
-    this.assignments=rocketboxAssignments([...this.entries.values()].map(entry=>entry.person),candidates.map(model=>model.id),this.modelId)
+    this.modelRecords=new Map(humans.map(model=>[model.id,{...model,runtime_base:model.runtime_base||this.manifest.runtime_base}]))
+    const people=[...this.entries.values()].map(entry=>entry.person)
+    this.assignments=this.pool==='campus'&&!this.modelId?campusAssignments(people,candidates):rocketboxAssignments(people,candidates.map(model=>model.id),this.modelId)
     this.records=new Map([...this.entries.values()].map(entry=>[String(entry.person.id),{entry,modelId:this.assignments.get(String(entry.person.id)),state:'idle',lastUsed:0}]))
   }
 
@@ -274,11 +323,13 @@ export class RealCharacterBatch {
   async whenIdle(){while(!this.disposed&&this.pending.size)await Promise.allSettled([...this.pending]);return this.getStats()}
   retryFailed(){for(const record of this.records.values())if(record.state==='failed'){record.state='idle';record.error=null}this.update(this.lastSeconds);return this.whenIdle()}
   async setPool(pool){
-    if(!['all','adults','children','professions'].includes(pool))throw new Error(`Unknown Rocketbox pool: ${pool}`)
+    if(!['all','adults','children','professions','campus'].includes(pool))throw new Error(`Unknown Rocketbox pool: ${pool}`)
     if(this.disposed||pool===this.pool||this.modelId)return this
-    if(!rocketboxHumanModels(this.manifest).some(model=>pool==='all'||model.category===pool))throw new Error(`No Rocketbox avatars in pool ${pool}`)
+    const library=pool==='campus'?'valid':'rocketbox'
+    const manifest=!this.injectedSources&&library!==this.library?await loadManifest(library):this.manifest
+    if(!rocketboxHumanModels(manifest).some(model=>['all','campus'].includes(pool)||model.category===pool))throw new Error(`No Rocketbox avatars in pool ${pool}`)
     this.generation++;for(const record of this.records.values())this.releaseRecord(record)
-    this.pool=pool;this.configureRecords();this.onReady?.({status:'reset',pool});this.update(this.lastSeconds);return this
+    this.library=library;this.manifest=manifest;this.pool=pool;this.configureRecords();this.onReady?.({status:'reset',pool});this.update(this.lastSeconds);return this
   }
   setVisible(value){this.group.visible=Boolean(value);if(value)this.update(this.lastSeconds);else this.evictHidden()}
   setQuality(value){this.quality=value==='low'?'low':'high';this.group.traverse(object=>{if(object.isMesh)object.castShadow=this.quality==='high'})}

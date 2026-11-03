@@ -2,7 +2,7 @@
 // neither the building assignments nor these animations are OASIS positions.
 import * as THREE from 'three'
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js'
-import { prototypeParams, selectPrototype, getPrototype } from './assetCatalog.js'
+import { prototypeParams, selectPrototype, getPrototype, campusBuildingPrototype } from './assetCatalog.js'
 import {
   createRouting, polygonCenter, resolveHomeKey, reverseRoute, routeBetweenMappings,
 } from './campus3dRouting.js'
@@ -13,6 +13,7 @@ import { Campus3DBase } from './Campus3DBase.js'
 import { Campus3DSports } from './Campus3DSports.js'
 import { sportsExclusions } from './campus3dSportsModel.js'
 import { Campus3DWater } from './Campus3DWater.js'
+import { Campus3DVegetation } from './Campus3DVegetation.js'
 import { buildSpatialEnvironment, bridgeHeightAt } from './campus3dSpatial.js'
 import { TERRAIN_LEVELS, terrainSurfaceHeight } from './campus3dTerrain.js'
 import { DISPLAY_RADIUS, CROWD_GAP, standingSlots, stepSeparatedCrowd, displayRoutePoints, outsideBuildings, nearestClearPosition } from './campus3dCrowd.js'
@@ -134,7 +135,7 @@ function roadGeometry(roads, extraWidth = 0, elevation = 0.14) {
 }
 
 export class Campus3DScene {
-  constructor({ host, campus, mapping, index, landcovers = [], surroundings = [], onHover, onSelect, onStats, onVisualActivity, onCharacters, onError, characterPool = 'all' } = {}) {
+  constructor({ host, campus, mapping, index, landcovers = [], surroundings = [], onHover, onSelect, onStats, onVisualActivity, onCharacters, onError, characterPool = 'campus' } = {}) {
     this.host = host
     this.campus = campus
     this.mapping = mapping
@@ -158,7 +159,7 @@ export class Campus3DScene {
     this.onCharacters = onCharacters
     this.onError = onError
     this.radiusLimits = new Map()
-    this.characterPool = ['all','adults','professions','children'].includes(characterPool)?characterPool:'all'
+    this.characterPool = ['campus','all','adults','professions','children'].includes(characterPool)?characterPool:'campus'
     this.pendingVisualCount = 0
     this.routing = createRouting(campus, mapping)
     this.people = new Map()
@@ -227,6 +228,8 @@ export class Campus3DScene {
       displayCampus: this.display.campus, displayBounds: this.display.bounds,
       mapping: this.mapping, buildingMeshes: this.buildingMeshes, renderer: this.renderer,
       center: this.center, landcovers: [...this.display.landcovers,...sportsExclusions(this.display.landcovers)], avoidance:this.decorationAvoidance() }).init()
+    this.vegetation=await new Campus3DVegetation({scene:this.scene,environment:this.environment}).init()
+    if(this.disposed){this.vegetation.dispose();return this}
     this.surroundings = new Campus3DSurroundings({ scene: this.scene, roads: this.surroundingRoads,
       displayBounds: this.display.bounds, campus: this.campus, host: this.host }).init()
     this.eventEffects = new EventEffects({ scene: this.scene, index: this.index,
@@ -641,6 +644,8 @@ export class Campus3DScene {
     // Standing groups leave an additional walking-width corridor between
     // neighbours. Tight disc packing is collision-free but traps departures.
     let positions=people
+    const reroutes=new Map()
+    try {
     if(invalid || this.lastCrowdLayoutRadius!==this.cameraCrowdRadius) {
       positions=[]
       const radius=this.cameraCrowdRadius || DISPLAY_RADIUS,roads=this.standingClearanceRoutes(radius)
@@ -652,18 +657,17 @@ export class Campus3DScene {
           gap:2*radius+2*CROWD_GAP+6,roads:person.moving?[]:roads,roadClearance:radius+2})})
       }
     }
-    const reroutes=new Map()
-    try {
       for(const p of positions) {
         const walker=this.people.get(p.id).walker
         if(walker&&p.radius>walker.displayRadius)reroutes.set(p.id,displayRoutePoints(walker.displayPoints.slice(walker.displayNextPoint),this.navigationObstacles,
           {radius:p.radius,laneOffset:0,start:p}))
       }
     } catch(error) {
-      if(this.lastCrowdLayoutRadius&&this.cameraCrowdRadius!==this.lastCrowdLayoutRadius) {
-        this.presentationLimit={requested:this.cameraCrowdRadius,applied:this.lastCrowdLayoutRadius,reason:error.message}
-        this.radiusLimits.set(this.cameraCrowdRadius,this.lastCrowdLayoutRadius)
-        this.cameraCrowdRadius=this.lastCrowdLayoutRadius
+      const safe=this.lastCrowdLayoutRadius||Math.ceil((DISPLAY_RADIUS+.2)*4)/4
+      if(this.cameraCrowdRadius>safe) {
+        this.presentationLimit={requested:this.cameraCrowdRadius,applied:safe,reason:error.message}
+        this.radiusLimits.set(this.cameraCrowdRadius,safe)
+        this.cameraCrowdRadius=safe
         return this.reflowPeople()
       }
       throw error
@@ -1091,7 +1095,7 @@ export class Campus3DScene {
   }
 
   async setCharacterPool(value) {
-    this.characterPool=['all','adults','professions','children'].includes(value)?value:'all'
+    this.characterPool=['all','adults','professions','children','campus'].includes(value)?value:'campus'
     if(this.realCharacterBatch)await this.realCharacterBatch.setPool(this.characterPool)
     this.emitCharacterStatus()
     this.invalidate()
@@ -1106,15 +1110,9 @@ export class Campus3DScene {
     if(this.buildingStyle!=='yulan')return Promise.resolve()
     if(!this.yulanPromise)this.yulanPromise=import('./YuLanCampusStyle.js').then(async({YuLanCampusStyle})=>{
       if(this.disposed)return
-      const resolvePrototype=building=>{
-        const tags={building:building.building_type||'yes',...(building.tags||{})}
-        if(building.kind==='library')tags.amenity='library'
-        if(building.kind==='dining')tags.amenity='restaurant'
-        if(building.kind==='sports')tags.leisure='sports_centre'
-        return selectPrototype(tags,{category:'building',style:'yulan',featureId:building.osm_id,seed:2026})
-      }
+      const resolvePrototype=campusBuildingPrototype
       this.yulanStyle=new YuLanCampusStyle({scene:this.scene,campus:this.display.campus,buildingMeshes:this.buildingMeshes,
-        environment:this.environment,resolvePrototype,resolveDecorationPrototype:()=>getPrototype('vegetation.yulan.tree_group')})
+        environment:this.environment,resolvePrototype,sourceObjects:{trees:null}})
       await this.yulanStyle.init()
       if(this.disposed){this.yulanStyle.dispose();return}
       this.yulanStyle.setQuality?.(this.quality)
@@ -1221,6 +1219,7 @@ export class Campus3DScene {
     this.environment?.dispose()
     this.baseModel?.dispose()
     this.waterModel?.dispose()
+    this.vegetation?.dispose()
     this.sportsModel?.dispose()
     this.surroundings?.dispose()
     this.realCharacterBatch?.dispose()
