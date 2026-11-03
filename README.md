@@ -187,6 +187,14 @@ python -X utf8 adapter/osm_surroundings.py
 
 三张本轮截图及完整测试记录见 `docs/campus3d-polish-delivery.md`。
 
+## 三维素材库
+
+打开 <http://127.0.0.1:5180/mecoffe3d/assets>。目录位于 `frontend/public/mecoffe/assets3d/catalog.json`，版本 `mecoffe.asset-catalog.v1`；按类别、来源或名称查询原型，每张卡片显示可旋转的三维示例、变体、参数、匹配规则和来源许可。预览只改变素材卡片，不影响校园回放。
+
+现有建筑配色、道路分级、角色外观和事件样式从目录读取，默认值保持原样。`adapter/build_asset_catalog.py` 可重建目录及代码生成的 SVG 缩略图。整要素自动匹配排除 `target: component` 的墙窗/招牌等部件；匹配按标签具体程度排序，固定 seed 和要素 ID 决定变体。
+
+程序生成资源使用 `LicenseRef-MeCoffe-Project` 标记项目自产来源与授权边界，不冒称 CC0；YuLan 和 OSM 分别保留 Apache-2.0、ODbL-1.0 记录。实现和验证详见 `docs/asset-library-delivery.md`。
+
 ## 测试
 
 ```powershell

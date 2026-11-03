@@ -1,6 +1,7 @@
 // Procedural scenery only. None of these materials, decorations or light
 // presets are written back to OSM, person placement, the graph or OASIS data.
 import * as THREE from 'three'
+import { prototypeParams } from './assetCatalog.js'
 import { buildingPalette, dayLighting, decorationPlacements, seededRandom, windowPattern } from './campus3dEnvironmentModel.js'
 import { clipLandcovers, pointInDisplay } from './campus3dDisplay.js'
 
@@ -181,13 +182,13 @@ export class Campus3DEnvironment {
   decorateSurfaces() {
     const grass = this.own(new THREE.MeshStandardMaterial({ map: this.noiseTexture('grass'), roughness: 1, side: THREE.DoubleSide }))
     const asphalt = this.own(new THREE.MeshStandardMaterial({ map: this.noiseTexture('asphalt'), roughness: .96, side: THREE.DoubleSide }))
-    const walkway = this.own(new THREE.MeshStandardMaterial({ color: 0xd1c5a8, roughness: 1, side: THREE.DoubleSide }))
-    const roadEdge = this.own(new THREE.MeshStandardMaterial({ color: 0xb3b8a6, roughness: 1, side: THREE.DoubleSide }))
+    const walkway = this.own(new THREE.MeshStandardMaterial({ color: prototypeParams('road.footway').color, roughness: 1, side: THREE.DoubleSide }))
+    const roadEdge = this.own(new THREE.MeshStandardMaterial({ color: prototypeParams('road.markings').campus_edge, roughness: 1, side: THREE.DoubleSide }))
     // The backdrop is only 0.15 m below the campus. At a kilometre-wide overview
     // those depths can quantise to the same value in an offscreen render target,
     // producing stripes through otherwise flat grass. Draw it first without
     // writing depth; the real campus surfaces then always cover the backdrop.
-    const outside = this.own(new THREE.MeshStandardMaterial({ color: 0x697867, roughness: 1, side: THREE.DoubleSide, depthWrite: false }))
+    const outside = this.own(new THREE.MeshStandardMaterial({ color: prototypeParams('landcover.outside').color, roughness: 1, side: THREE.DoubleSide, depthWrite: false }))
     this.scene.traverse(mesh => {
       const kind = mesh.userData.environmentKind || mesh.userData.kind
       if (!mesh.isMesh || !kind) return
@@ -295,7 +296,8 @@ export class Campus3DEnvironment {
       const properties = feature.properties || feature
       const water = properties.kind === 'water' || properties.natural === 'water'
       const sport = properties.sport
-      const colour = water ? 0x5b9faf : sport === 'basketball' ? 0xba816c : sport === 'tennis' ? 0x6b9daa : 0x77a686
+      const pitch = prototypeParams('landcover.pitch')
+      const colour = water ? prototypeParams('landcover.water').color : pitch.sport_colors[sport] || pitch.color
       const material = this.own(new THREE.MeshStandardMaterial({ color: colour, roughness: water ? .35 : .95,
         metalness: water ? .18 : 0, side: THREE.DoubleSide }))
       const mesh = new THREE.Mesh(this.own(new THREE.ShapeGeometry(shape(ring))), material)
@@ -319,6 +321,7 @@ export class Campus3DEnvironment {
   }
 
   drawVegetation() {
+    const tree = prototypeParams('vegetation.tree')
     // The smaller parcel has fewer safe candidates. Reserve slots for each
     // furniture type instead of filling the complete pool with trees first.
     this.placements = decorationPlacements(this.campus, { landcovers: this.landcovers,
@@ -333,7 +336,7 @@ export class Campus3DEnvironment {
     this.trees.name = '装饰树木'
     const points = this.placements.trees
     const trunk = new THREE.InstancedMesh(this.own(new THREE.CylinderGeometry(.55, .8, 5.5, 5)),
-      this.own(new THREE.MeshStandardMaterial({ color: 0x77594a, roughness: 1 })), points.length)
+      this.own(new THREE.MeshStandardMaterial({ color: tree.trunk, roughness: 1 })), points.length)
     const crown = new THREE.InstancedMesh(this.own(new THREE.IcosahedronGeometry(4.7, 0)),
       this.own(new THREE.MeshStandardMaterial({ roughness: 1 })), points.length)
     const top = new THREE.InstancedMesh(this.own(new THREE.IcosahedronGeometry(3.8, 0)),
@@ -350,12 +353,12 @@ export class Campus3DEnvironment {
       dummy.scale.set(point.scale, point.scale * .9, point.scale)
       dummy.updateMatrix()
       crown.setMatrixAt(i, dummy.matrix)
-      crown.setColorAt(i, colour.set([0x458765, 0x568d5e, 0x6d9c62][point.variant]))
+      crown.setColorAt(i, colour.set(tree.crown[point.variant]))
       dummy.position.y = 10 * point.scale
       dummy.scale.set(point.scale * .9, point.scale, point.scale * .9)
       dummy.updateMatrix()
       top.setMatrixAt(i, dummy.matrix)
-      top.setColorAt(i, colour.set([0x71a36b, 0x80aa74, 0x95b77b][point.variant]))
+      top.setColorAt(i, colour.set(tree.top[point.variant]))
     }
     for (const object of [trunk, crown, top]) {
       object.instanceMatrix.needsUpdate = true
@@ -367,9 +370,11 @@ export class Campus3DEnvironment {
   }
 
   drawFurniture() {
+    const lamp = prototypeParams('street_furniture.lamp')
+    const bench = prototypeParams('street_furniture.bench')
     const lamps = this.placements.lamps
     const stem = new THREE.InstancedMesh(this.own(new THREE.CylinderGeometry(.22, .3, 8, 5)),
-      this.own(new THREE.MeshStandardMaterial({ color: 0x39494d, roughness: .78 })), lamps.length)
+      this.own(new THREE.MeshStandardMaterial({ color: lamp.color, roughness: .78 })), lamps.length)
     const lightMaterial = this.own(new THREE.MeshBasicMaterial({ color: 0x1d180d, toneMapped: false }))
     const light = new THREE.InstancedMesh(this.own(new THREE.SphereGeometry(.9, 6, 4)), lightMaterial, lamps.length)
     light.userData.bloom = true
@@ -402,8 +407,8 @@ export class Campus3DEnvironment {
     this.lightMaterials.push({ material: lightMaterial, colour: new THREE.Color('#ffe0a0'), multiplier: 2.2 }, { material: poolMaterial, opacity: .7 })
     this.group.add(stem, light, pools)
     const seats = this.placements.benches
-    const wood = this.own(new THREE.MeshStandardMaterial({ color: 0xb78a5e, roughness: .95 }))
-    const metal = this.own(new THREE.MeshStandardMaterial({ color: 0x45504c, roughness: .8 }))
+    const wood = this.own(new THREE.MeshStandardMaterial({ color: bench.wood, roughness: .95 }))
+    const metal = this.own(new THREE.MeshStandardMaterial({ color: bench.metal, roughness: .8 }))
     for (const [size, offset, material] of [
       [[4.6, .35, 1.3], [0, 1.0, 0], wood], [[4.6, 1.35, .25], [0, 1.7, .65], wood],
       [[.25, 1, 1.2], [-1.7, .5, 0], metal], [[.25, 1, 1.2], [1.7, .5, 0], metal],
@@ -448,7 +453,7 @@ export class Campus3DEnvironment {
 
   drawShops() {
     const entries = Object.entries(this.mapping.mappings).filter(([key]) => key.startsWith('shop_'))
-    const colours = ['#168b7a', '#db784c']
+    const colours = prototypeParams('building.component.shop-sign').colors
     for (const [index, [, mapping]] of entries.entries()) {
       const building = this.campus.buildings.find(item => item.osm_id === mapping.osm_id)
       if (!building) continue

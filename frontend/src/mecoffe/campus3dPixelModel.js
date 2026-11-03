@@ -1,9 +1,10 @@
 // Appearance rules are intentionally the same rules used by CampusScene.
 // Import the original 2D hash rather than maintaining a second implementation.
 import { hashOf } from './layout.js'
+import { prototypeParams } from './assetCatalog.js'
 
-export const PIXEL_PERSON_HEIGHT = 8.5
-export const PIXEL_WALK_FPS = .18 * 60
+export const PIXEL_PERSON_HEIGHT = prototypeParams('character.pixel').height_m
+export const PIXEL_WALK_FPS = prototypeParams('character.pixel').fps
 
 export function pixelAppearance(person = {}, headCounts = {}) {
   const hash = hashOf(person.id)

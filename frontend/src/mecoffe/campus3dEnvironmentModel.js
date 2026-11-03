@@ -1,5 +1,6 @@
 // Pure display helpers: scenery defaults do not describe measured facilities,
 // weather, opening hours or agent state, and never modify OSM or walking data.
+import { prototypeParams } from './assetCatalog.js'
 const clamp = (value, low, high) => Math.max(low, Math.min(high, value))
 
 export function visualSeed(value) {
@@ -19,15 +20,10 @@ export function seededRandom(seed) {
   }
 }
 
-const PALETTES = {
-  dormitory: { wall: '#bc7859', roof: '#e4d3bb', accent: '#934f40', glass: '#487f94' },
-  education: { wall: '#7c9cab', roof: '#d8e4e2', accent: '#376578', glass: '#285a73' },
-  library: { wall: '#efe3ca', roof: '#d4c8ad', accent: '#7673a6', glass: '#467c87' },
-  office: { wall: '#9aa8a1', roof: '#e1ded0', accent: '#617a75', glass: '#385969' },
-  dining: { wall: '#e3bd71', roof: '#f2e3c1', accent: '#a46a40', glass: '#54818a' },
-  sports: { wall: '#65a89b', roof: '#c9e3d4', accent: '#377f75', glass: '#3c6677' },
-  other: { wall: '#c4b88e', roof: '#e5dfc5', accent: '#8a8963', glass: '#4d7885' },
-}
+const PALETTES = Object.fromEntries(['dormitory','education','library','office','dining','sports','other'].map(kind=>{
+  const {wall,roof,accent,glass}=prototypeParams(`building.procedural.${kind}`)
+  return [kind,{wall,roof,accent,glass}]
+}))
 
 export function buildingPalette(building = {}) {
   const name = building.name || ''

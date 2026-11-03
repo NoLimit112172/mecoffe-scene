@@ -1,5 +1,7 @@
 # 第三方代码说明
 
+三维素材目录 `frontend/public/mecoffe/assets3d/catalog.json` 逐原型记录来源、源路径与许可。YuLan 原图集保留上游 Apache-2.0 和 `YULAN_LICENSE`，OSM 数据保留 ODbL-1.0 与署名。程序生成的模型、纹理和 SVG 缩略图属于本项目代码输出，目录以 `LicenseRef-MeCoffe-Project` 记录该来源；这不是外部 CC0 授权，也不改变原数据或素材的许可。
+
 `frontend/` 来自 [RUC-GSAI/YuLan-OneSim](https://github.com/RUC-GSAI/YuLan-OneSim) 的 `src/frontend`，提交 `9829d72`，按 Apache License 2.0 使用，许可证全文见 `YULAN_LICENSE`。美术素材（`frontend/public/assets`、`frontend/public/img`）同样来自该项目。
 
 对上游文件的改动：

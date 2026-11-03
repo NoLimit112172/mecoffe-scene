@@ -70,6 +70,11 @@ const routes = [
     component: () => import('../views/MeCoffeScene.vue')
   },
   {
+    path: '/mecoffe3d/assets',
+    name: 'asset-library',
+    component: () => import('../views/AssetLibrary.vue')
+  },
+  {
     path: '/mecoffe3d',
     name: 'mecoffe3d',
     component: () => import('../views/MeCoffe3D.vue')

@@ -1,19 +1,20 @@
 // Display-only road styling and clipping. Never import these into A* routing.
+import { prototypeParams } from './assetCatalog.js'
 const VEHICLE_TYPES = new Set(['motorway', 'trunk', 'primary', 'secondary', 'tertiary', 'residential', 'living_street', 'unclassified', 'service'])
 const EPSILON = 1e-7
 
 export function roadStyle(road = {}) {
   const highway = (road.highway || '').replace(/_link$/, '')
-  const defaults = { motorway: 4, trunk: 4, primary: 4, secondary: 4, tertiary: 2, residential: 2, living_street: 1, unclassified: 2, service: 1 }
+  const params=prototypeParams(VEHICLE_TYPES.has(highway)?`road.${highway}`:'road.other')
   const rawLanes = String(road.lanes ?? '')
   const recordedLanes = /^\d+$/.test(rawLanes) ? Number(rawLanes) : null
-  const lanes = Math.max(1, Math.min(8, recordedLanes || defaults[highway] || 1))
+  const lanes = Math.max(1, Math.min(8, recordedLanes || params.lanes || 1))
   const oneWay = ['yes', 'true', '1', '-1'].includes(String(road.oneway).toLowerCase())
   const tunnel = !['', 'no', 'false', '0', 'undefined', 'null'].includes(String(road.tunnel ?? '').toLowerCase())
-  const width = lanes * (['primary', 'secondary', 'trunk', 'motorway'].includes(highway) ? 3.4 : 3.1)
+  const width = lanes * params.lane_width_m
   return { highway, visible: VEHICLE_TYPES.has(highway), width, lanes, oneWay, tunnel,
-    sidewalk: tunnel || ['motorway', 'trunk'].includes(highway) ? 0 : highway === 'service' ? 1.3 : 2.3,
-    centerColor: oneWay ? '#ebede5' : '#e9c45a', asphalt: '#444c52',
+    sidewalk: tunnel ? 0 : params.sidewalk_m,
+    centerColor: oneWay ? '#ebede5' : prototypeParams('road.markings').yellow, asphalt: params.asphalt,
     sourceOfWidth: recordedLanes ? 'OSM lanes + illustrative lane width' : 'illustrative highway-class default' }
 }
 

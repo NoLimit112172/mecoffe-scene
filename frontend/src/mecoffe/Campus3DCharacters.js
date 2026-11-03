@@ -1,16 +1,13 @@
 // Original procedural low-poly characters: no downloaded models or textures.
 // The batch reads presentation transforms; it never owns routes or positions.
 import * as THREE from 'three'
+import { prototypeParams } from './assetCatalog.js'
 
-export const CHARACTER_ROLE_COLORS = Object.freeze({
-  undergraduate_consumer: '#397fca',
-  graduate_consumer: '#8864c5',
-  teacher_consumer: '#39806b',
-  merchant: '#e58b48',
-})
+const CHARACTER_PARAMS = prototypeParams('character.solid')
+export const CHARACTER_ROLE_COLORS = Object.freeze(CHARACTER_PARAMS.role_colors)
 
-const SKIN = ['#efc6a5', '#dfb38f', '#c9916f', '#f2d4b7']
-const HAIR = ['#302a2b', '#473329', '#655049', '#2c343a']
+const SKIN = CHARACTER_PARAMS.skin
+const HAIR = CHARACTER_PARAMS.hair
 const TAU = Math.PI * 2
 
 function hashOf(value) {

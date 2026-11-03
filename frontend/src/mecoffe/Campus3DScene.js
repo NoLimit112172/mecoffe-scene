@@ -2,6 +2,7 @@
 // neither the building assignments nor these animations are OASIS positions.
 import * as THREE from 'three'
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js'
+import { prototypeParams } from './assetCatalog.js'
 import {
   createRouting, polygonCenter, resolveHomeKey, reverseRoute, routeBetweenMappings,
 } from './campus3dRouting.js'
@@ -15,13 +16,8 @@ import { Campus3DEnvironment } from './Campus3DEnvironment.js'
 import { EventEffects, SelectiveBloom } from './Campus3DEffects.js'
 import { visualClock, idleRepresentatives, displayOccupancy, billboardScaleForCamera } from './campus3dPresentation.js'
 
-const BRAND_COLORS = [0x168b7a, 0xe17943, 0x6976bb, 0xb08c3d]
-const ROLE_COLORS = {
-  undergraduate_consumer: 0x4888bf,
-  graduate_consumer: 0x8b6ab0,
-  teacher_consumer: 0x4b9a83,
-  merchant: 0xdc8a3e,
-}
+const BRAND_COLORS = prototypeParams('building.component.shop-sign').marker_colors.map(value=>parseInt(value.slice(1),16))
+const ROLE_COLORS = Object.fromEntries(Object.entries(prototypeParams('character.pixel').base_role_colors).map(([key,value])=>[key,parseInt(value.slice(1),16)]))
 const WALK_SPEED_M_S = 100 // Playback speed, deliberately not a real walking speed.
 const SHOP_DWELL_S = 0.85
 
@@ -105,7 +101,7 @@ function roadGeometry(roads, extraWidth = 0, elevation = 0.14) {
   for (const road of roads) {
     const points = road.points || []
     const path = ['footway', 'path', 'steps', 'pedestrian', 'cycleway'].includes(road.highway)
-    const radius = (path ? 2.5 : 6) / 2 + extraWidth
+    const radius = prototypeParams(path?'road.footway':'road.campus').width_m / 2 + extraWidth
     for (let i = 1; i < points.length; i += 1) {
       const [ax, ay] = points[i - 1]
       const [bx, by] = points[i]

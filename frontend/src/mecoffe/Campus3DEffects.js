@@ -7,16 +7,12 @@ import { ShaderPass } from 'three/addons/postprocessing/ShaderPass.js'
 import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js'
 import { OutputPass } from 'three/addons/postprocessing/OutputPass.js'
 import { resolveHomeKey } from './campus3dRouting.js'
+import { prototypeParams } from './assetCatalog.js'
 
-const STYLES = {
-  post: { color: 0x54b5ed, text: '••• 发帖', duration: 2.2 },
-  comment: { color: 0xbd85ec, text: '••• 评论', duration: 2.4 },
-  follow: { color: 0x69d2c7, text: '＋ 关注', duration: 2.3 },
-  ad: { color: 0xffbe58, text: '推广', duration: 2.8 },
-  exposure: { color: 0xffbe58, text: '收到广告', duration: 2.4 },
-  interview: { color: 0xf3d574, text: '访谈', duration: 2.4 },
-  purchase: { color: 0x70e0b5, text: '到店', duration: 2.8 },
-}
+const STYLES = Object.fromEntries(['post','comment','follow','ad','exposure','interview','purchase'].map(type=>{
+  const {color,text,duration}=prototypeParams(`effect.${type}`)
+  return [type,{color:parseInt(color.slice(1),16),text,duration}]
+}))
 
 export function visualEventStyle(type) {
   const style = STYLES[type]
