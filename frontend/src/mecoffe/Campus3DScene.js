@@ -5,6 +5,8 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js'
 import {
   createRouting, polygonCenter, resolveHomeKey, reverseRoute, routeBetweenMappings,
 } from './campus3dRouting.js'
+import { campusBoundaryBounds, fitCampusView } from './campus3dView.js'
+import { layoutLabels, personScaleForCamera } from './campus3dScreen.js'
 
 const BRAND_COLORS = [0x168b7a, 0xe17943, 0x6976bb, 0xb08c3d]
 const ROLE_COLORS = {
@@ -89,32 +91,6 @@ function disposeObject(object) {
   for (const material of materials) material.dispose()
 }
 
-function labelSprite(content, { color = '#334e59', background = '#ffffff', height = 12 } = {}) {
-  const canvas = document.createElement('canvas')
-  const context = canvas.getContext('2d')
-  const font = '600 32px "Microsoft YaHei",sans-serif'
-  context.font = font
-  canvas.width = Math.ceil(context.measureText(content).width + 36)
-  canvas.height = 58
-  context.font = font
-  context.fillStyle = background
-  context.globalAlpha = 0.94
-  context.beginPath()
-  context.roundRect(0, 0, canvas.width, canvas.height, 12)
-  context.fill()
-  context.globalAlpha = 1
-  context.fillStyle = color
-  context.textAlign = 'center'
-  context.textBaseline = 'middle'
-  context.fillText(content, canvas.width / 2, canvas.height / 2)
-  const texture = new THREE.CanvasTexture(canvas)
-  texture.colorSpace = THREE.SRGBColorSpace
-  const sprite = new THREE.Sprite(new THREE.SpriteMaterial({ map: texture, depthTest: false, transparent: true }))
-  sprite.scale.set(height * canvas.width / canvas.height, height, 1)
-  sprite.renderOrder = 5
-  return sprite
-}
-
 // Batch the road ribbons so hundreds of OSM segments do not each add a draw call.
 function roadGeometry(roads, extraWidth = 0, elevation = 0.14) {
   const vertices = []
@@ -167,6 +143,10 @@ export class Campus3DScene {
     this.pickTargets = []
     this.walkers = new Set()
     this.effects = []
+    this.labels = []
+    this.screenWorld = new THREE.Matrix4()
+    this.screenProjection = new THREE.Matrix4()
+    this.screenSize = { width: 0, height: 0 }
     this.seenOrders = new Set()
     this.playing = false
     this.speed = 1
@@ -195,6 +175,8 @@ export class Campus3DScene {
     this.controls.dampingFactor = 0.08
     this.controls.maxPolarAngle = Math.PI * 0.47
     this.controls.minDistance = 18
+    this.onControlsStart = () => { this.overviewActive = false }
+    this.controls.addEventListener('start', this.onControlsStart)
     this.scene.add(new THREE.HemisphereLight(0xf6fcff, 0xa4b398, 1.65))
     const sun = new THREE.DirectionalLight(0xfff5e5, 1.5)
     sun.position.set(-350, 800, 250)
@@ -203,6 +185,7 @@ export class Campus3DScene {
     this.effectLayer = new THREE.Group()
     this.relationLayer = new THREE.Group()
     this.scene.add(this.routeLayer, this.effectLayer, this.relationLayer)
+    this.createLabelLayer()
     this.drawCampus()
     this.placePeople()
     this.resetCamera()
@@ -230,6 +213,7 @@ export class Campus3DScene {
         this.updateEffects(delta * this.speed)
       }
       this.controls.update()
+      this.updateScreenVisuals()
       this.updateRelations()
       this.renderer.render(this.scene, this.camera)
       this.frame = requestAnimationFrame(animate)
@@ -242,23 +226,15 @@ export class Campus3DScene {
   drawCampus() {
     const polygons = this.campus.boundary_polygons?.length
       ? this.campus.boundary_polygons : [{ outer: this.campus.boundary, holes: [] }]
-    const coordinates = [
-      ...polygons.flatMap(polygon => polygon.outer),
-      ...this.campus.buildings.flatMap(building => building.polygon),
-      ...this.campus.roads.flatMap(road => road.points),
-    ]
-    const xs = coordinates.map(point => point[0])
-    const ys = coordinates.map(point => point[1])
-    this.bounds = {
-      minX: Math.min(...xs), maxX: Math.max(...xs), minY: Math.min(...ys), maxY: Math.max(...ys),
-    }
-    const { minX, maxX, minY, maxY } = this.bounds
-    const width = maxX - minX
-    const height = maxY - minY
+    // The outer ground and default camera follow the actual campus parcels,
+    // rather than distant road points or empty corners of a padded scene box.
+    this.bounds = campusBoundaryBounds(this.campus, 0)
+    const groundBounds = campusBoundaryBounds(this.campus, 12)
+    const { width, height } = this.bounds
     this.span = Math.max(width, height, 100)
-    this.center = new THREE.Vector3((minX + maxX) / 2, 0, -(minY + maxY) / 2)
+    this.center = this.bounds.center.clone()
     this.controls.maxDistance = this.span * 5
-    const base = new THREE.Mesh(new THREE.PlaneGeometry(width + 120, height + 120),
+    const base = new THREE.Mesh(new THREE.PlaneGeometry(groundBounds.width, groundBounds.height),
       new THREE.MeshStandardMaterial({ color: 0xe7e9dd, roughness: 1 }))
     base.rotation.x = -Math.PI / 2
     base.position.copy(this.center)
@@ -308,11 +284,16 @@ export class Campus3DScene {
       const edges = new THREE.LineSegments(new THREE.EdgesGeometry(mesh.geometry, 30),
         new THREE.LineBasicMaterial({ color: 0x5e7781, transparent: true, opacity: 0.35 }))
       mesh.add(edges)
-      if (building.name) {
+      // Only the eight mapped places receive persistent labels. Every other
+      // building remains in pickTargets and exposes its name on hover.
+      if (keys.length) {
         const center = polygonCenter(building.polygon)
-        const label = labelSprite(building.name, { height: 11 })
-        label.position.set(center.x, building.height_m + 7, -center.y)
-        this.scene.add(label)
+        const shopKey = keys.find(key => key.startsWith('shop_'))
+        const shopIndex = shopKey ? [...this.brandColors.keys()].indexOf(shopKey.slice(5)) : -1
+        const prefix = shopIndex >= 0 ? `门店 ${String.fromCharCode(65 + shopIndex)}（示意）· ` : ''
+        this.addCampusLabel(building.osm_id, `${prefix}${name}`,
+          new THREE.Vector3(center.x, building.height_m + 5, -center.y),
+          shopIndex >= 0 ? `#${BRAND_COLORS[shopIndex % BRAND_COLORS.length].toString(16).padStart(6, '0')}` : '#294e48')
       }
     }
     this.shopMarkers = new Map()
@@ -329,24 +310,91 @@ export class Campus3DScene {
       ball.position.y = 14
       marker.add(ring, pin, ball)
       marker.position.set(anchor.node.x, 0.4, -anchor.node.y)
-      const shopIndex = [...this.brandColors.keys()].indexOf(brandId)
-      const letter = String.fromCharCode(65 + shopIndex)
-      const label = labelSprite(`门店 ${letter} · 接路点`, {
-        color: `#${color.toString(16).padStart(6, '0')}`, height: 13,
-      })
-      label.position.y = 27
-      marker.add(label)
       this.scene.add(marker)
       this.shopMarkers.set(brandId, marker)
-      const buildingLabel = labelSprite(`门店 ${letter} · 示意楼栋`, {
-        color: `#${color.toString(16).padStart(6, '0')}`, height: 12,
-      })
-      buildingLabel.position.set(anchor.center.x, anchor.building.height_m + 23, -anchor.center.y)
-      this.scene.add(buildingLabel)
     }
-    const north = labelSprite('N ↑', { color: '#3a685a', height: 20, background: '#e7efe8' })
-    north.position.set(maxX + 28, 8, -maxY + 35)
-    this.scene.add(north)
+  }
+
+  createLabelLayer() {
+    this.labelLayer = document.createElement('div')
+    this.labelLayer.className = 'campus3d-screen-labels'
+    Object.assign(this.labelLayer.style, { position: 'absolute', inset: '0', overflow: 'hidden', pointerEvents: 'none', zIndex: '1' })
+    this.labelLeaders = document.createElementNS('http://www.w3.org/2000/svg', 'svg')
+    this.labelLeaders.setAttribute('width', '100%')
+    this.labelLeaders.setAttribute('height', '100%')
+    this.labelLeaders.setAttribute('aria-hidden', 'true')
+    Object.assign(this.labelLeaders.style, { position: 'absolute', inset: '0', pointerEvents: 'none' })
+    this.labelLayer.appendChild(this.labelLeaders)
+    this.host.appendChild(this.labelLayer)
+  }
+
+  addCampusLabel(id, text, position, color) {
+    const element = document.createElement('div')
+    element.textContent = text
+    element.title = text
+    element.setAttribute('data-campus-label', id)
+    Object.assign(element.style, {
+      position: 'absolute', font: '600 12px/18px "Microsoft YaHei",sans-serif',
+      padding: '3px 7px', color, background: 'rgba(255,255,255,.96)',
+      border: '1px solid rgba(70,104,92,.28)', borderRadius: '5px',
+      boxShadow: '0 1px 4px rgba(29,61,50,.12)', whiteSpace: 'nowrap',
+      overflow: 'hidden', textOverflow: 'ellipsis', pointerEvents: 'none',
+      boxSizing: 'border-box', width: 'max-content',
+    })
+    const leader = document.createElementNS('http://www.w3.org/2000/svg', 'line')
+    leader.setAttribute('stroke', color)
+    leader.setAttribute('stroke-width', '1')
+    leader.setAttribute('opacity', '.55')
+    this.labelLayer.appendChild(element)
+    this.labelLeaders.appendChild(leader)
+    // Integer offsetWidth can round the natural text width down at fractional
+    // device scales; two spare CSS pixels prevent unwanted final-character … .
+    this.labels.push({ id, position, element, leader,
+      width: Math.ceil(element.getBoundingClientRect().width) + 2, height: Math.ceil(element.getBoundingClientRect().height) })
+  }
+
+  updateScreenVisuals() {
+    if (!this.camera || !this.host) return
+    const width = Math.max(1, this.host.clientWidth)
+    const height = Math.max(1, this.host.clientHeight)
+    this.camera.updateMatrixWorld()
+    const cameraChanged = width !== this.screenSize.width || height !== this.screenSize.height
+      || !this.screenWorld.equals(this.camera.matrixWorld) || !this.screenProjection.equals(this.camera.projectionMatrix)
+    this.screenWorld.copy(this.camera.matrixWorld)
+    this.screenProjection.copy(this.camera.projectionMatrix)
+    this.screenSize = { width, height }
+    // Scale only the figure, never its ground position or route. Values are
+    // CSS pixels; renderer pixel ratio must not affect the minimum size.
+    for (const entry of this.people.values()) {
+      if (cameraChanged || !entry.screenPosition?.equals(entry.figure.position)) {
+        const scale = personScaleForCamera(this.camera, entry.figure.position, { width, height, minPixels: 12 })
+        entry.figure.scale.setScalar(scale)
+        entry.screenPosition = entry.figure.position.clone()
+      }
+      entry.walkHalo.visible = Boolean(entry.walker)
+    }
+    this.updateSelection()
+    if (!this.labelLayer || !cameraChanged) return
+    const items = []
+    for (const label of this.labels) {
+      const projected = label.position.clone().project(this.camera)
+      const visible = projected.z > -1 && projected.z < 1 && Math.abs(projected.x) < 1.12 && Math.abs(projected.y) < 1.12
+      label.element.style.display = visible ? 'block' : 'none'
+      label.leader.style.display = visible ? '' : 'none'
+      if (!visible) continue
+      items.push({ id: label.id, x: (projected.x + 1) * width / 2, y: (1 - projected.y) * height / 2,
+        width: label.width, height: label.height })
+    }
+    const placed = new Map(layoutLabels(items, { width, height, padding: 10, gap: 5 }).map(item => [item.id, item]))
+    for (const label of this.labels) {
+      const item = placed.get(label.id)
+      if (!item) continue
+      Object.assign(label.element.style, { left: `${item.left}px`, top: `${item.top}px`, width: `${item.width}px` })
+      label.leader.setAttribute('x1', item.anchorX)
+      label.leader.setAttribute('y1', item.anchorY)
+      label.leader.setAttribute('x2', Math.max(item.left, Math.min(item.left + item.width, item.anchorX)))
+      label.leader.setAttribute('y2', Math.max(item.top, Math.min(item.top + item.height, item.anchorY)))
+    }
   }
 
   placePeople() {
@@ -385,15 +433,21 @@ export class Campus3DScene {
           new THREE.MeshBasicMaterial({ color, transparent: true, opacity: 0.25, depthWrite: false }))
         base.rotation.x = -Math.PI / 2
         base.position.y = 0.05
+        const walkHalo = new THREE.Mesh(new THREE.RingGeometry(2.8, 3.8, 20),
+          new THREE.MeshBasicMaterial({ color: 0xfff7d6, transparent: true, opacity: 0.95, side: THREE.DoubleSide, depthTest: false, depthWrite: false }))
+        walkHalo.rotation.x = -Math.PI / 2
+        walkHalo.position.y = 0.12
+        walkHalo.renderOrder = 5
+        walkHalo.visible = false
         const hit = new THREE.Mesh(new THREE.SphereGeometry(4, 6, 4),
           new THREE.MeshBasicMaterial({ visible: false }))
         hit.position.y = 4.5
         for (const child of [body, head, hit]) child.userData.person = person
-        figure.add(base, body, head, hit)
+        figure.add(base, walkHalo, body, head, hit)
         figure.position.set(home.x, 0.35, -home.y)
         this.scene.add(figure)
         this.pickTargets.push(hit)
-        this.people.set(person.id, { person, key, anchor, entrance, home, figure, body, color, queue: [], walker: null })
+        this.people.set(person.id, { person, key, anchor, entrance, home, figure, body, walkHalo, color, queue: [], walker: null })
       })
     }
     this.selection = new THREE.Mesh(new THREE.RingGeometry(4.1, 5.2, 32),
@@ -569,7 +623,10 @@ export class Campus3DScene {
     if (!this.selection) return
     const selected = this.people.get(this.selectedId)
     this.selection.visible = Boolean(selected)
-    if (selected) this.selection.position.set(selected.figure.position.x, 0.9, selected.figure.position.z)
+    if (selected) {
+      this.selection.position.set(selected.figure.position.x, 0.9, selected.figure.position.z)
+      this.selection.scale.setScalar(selected.figure.scale.x)
+    }
   }
 
   pick(event, select) {
@@ -629,31 +686,18 @@ export class Campus3DScene {
     this.camera.aspect = Math.max(aspect, 0.05)
     this.camera.zoom = 1
     this.camera.updateProjectionMatrix()
-    const maxHeight = Math.max(...this.campus.buildings.map(building => building.height_m), 1) + 40
-    const target = this.center.clone()
-    target.y = maxHeight * 0.25
-    const direction = new THREE.Vector3(0.22, 0.9, 0.85).normalize()
-    const right = new THREE.Vector3().crossVectors(new THREE.Vector3(0, 1, 0), direction).normalize()
-    const up = new THREE.Vector3().crossVectors(direction, right).normalize()
-    const tanVertical = Math.tan(THREE.MathUtils.degToRad(this.camera.fov) / 2)
-    const tanHorizontal = tanVertical * this.camera.aspect
-    let distance = 20
-    // Fit the eight corners in camera space. A span multiplier misses the front
-    // (southern) edge at low camera angles and on narrow screens.
-    for (const x of [this.bounds.minX - 35, this.bounds.maxX + 35]) {
-      for (const z of [-this.bounds.maxY - 35, -this.bounds.minY + 35]) {
-        for (const y of [0, maxHeight]) {
-          const offset = new THREE.Vector3(x, y, z).sub(target)
-          distance = Math.max(distance, offset.dot(direction)
-            + Math.max(Math.abs(offset.dot(right)) / tanHorizontal, Math.abs(offset.dot(up)) / tanVertical))
-        }
-      }
-    }
-    distance *= 1.1
-    this.controls.maxDistance = Math.max(this.span * 5, distance * 2)
-    this.controls.target.copy(target)
-    this.camera.position.copy(target).addScaledVector(direction, distance)
+    const fit = fitCampusView(this.campus, { aspect: this.camera.aspect, fov: this.camera.fov, fill: 0.8 })
+    // Consume any residual drag damping before assigning an exact overview.
+    const damping = this.controls.enableDamping
+    this.controls.enableDamping = false
     this.controls.update()
+    this.controls.maxDistance = Math.max(this.span * 5, fit.distance * 2)
+    this.controls.target.copy(fit.target)
+    this.camera.position.copy(fit.position)
+    this.controls.update()
+    this.controls.enableDamping = damping
+    this.overviewActive = true
+    this.updateScreenVisuals()
   }
 
   resize() {
@@ -663,6 +707,7 @@ export class Campus3DScene {
     this.camera.aspect = width / height
     this.camera.updateProjectionMatrix()
     this.renderer.setSize(width, height, false)
+    if (this.overviewActive) this.resetCamera()
   }
 
   clearLayer(layer) {
@@ -678,7 +723,10 @@ export class Campus3DScene {
     this.disposed = true
     if (this.frame) cancelAnimationFrame(this.frame)
     this.resizeObserver?.disconnect()
+    this.controls?.removeEventListener('start', this.onControlsStart)
     this.controls?.dispose()
+    this.labelLayer?.remove()
+    this.labels.length = 0
     this.clearHover()
     if (this.scene) {
       disposeObject(this.scene)

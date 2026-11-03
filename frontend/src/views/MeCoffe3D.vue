@@ -29,7 +29,6 @@
           <div v-if="hoverCard" class="hover-card" :style="hoverStyle"><b>{{ hoverCard.name }}</b><template v-if="hoverCard.type === 'building'"><span>OSM {{ hoverCard.building.osm_id }}</span><span>{{ hoverCard.building.levels }} 层 / {{ hoverCard.building.height_m }} 米 · {{ hoverCard.building.levels_source === 'default' ? '展示默认高度' : '来源见地图数据' }}</span></template><span v-else>点击查看人物与事件</span></div>
           <div class="map-legend"><span><i style="background:#6095b4"></i>教学 / 科研</span><span><i style="background:#d2a66b"></i>住宿</span><span><i style="background:#609985"></i>公共设施</span><p>左键旋转 · 右键平移 · 滚轮缩放<br>楼层与高度为展示默认值；楼名可悬停查看</p></div>
           <a class="osm-credit" href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener noreferrer">© OpenStreetMap contributors</a>
-          <span class="north-indicator">N ↑<small>初始视角北向</small></span>
           <div v-if="loading" class="map-loading">正在构建校园三维体块…</div>
         </section>
 

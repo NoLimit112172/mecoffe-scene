@@ -1,8 +1,11 @@
 import test from 'node:test'
 import assert from 'node:assert/strict'
+import { readFileSync } from 'node:fs'
 import * as THREE from 'three'
 import { Campus3DScene } from '../src/mecoffe/Campus3DScene.js'
 import { indexScene } from '../src/mecoffe/replay.js'
+import { projectedPersonSize } from '../src/mecoffe/campus3dScreen.js'
+import { fitCampusView } from '../src/mecoffe/campus3dView.js'
 
 const purchase = (order, brand = 'merchant_001', step = 1) => ({
   key: `event-${order}`, type: 'purchase', order_id: order,
@@ -92,6 +95,58 @@ test('one person completes purchase trips in FIFO order without losing queued pu
   assert.deepEqual(renderer.getStats(), { active: 0, queued: 0, unreachable: 0 })
   assert.equal(renderer.routeLayer.children.length, 0)
   at(entry, entry.home.x, entry.home.y)
+})
+
+test('screen scaling and walking halos preserve world positions, route speed and selection', () => {
+  const { renderer, entry } = world()
+  renderer.host = { clientWidth: 1230, clientHeight: 650 }
+  renderer.camera = new THREE.PerspectiveCamera(42, 1230 / 650, 0.1, 10000)
+  renderer.camera.position.set(1200, 900, 500)
+  renderer.camera.lookAt(0, 0, 0)
+  const home = entry.figure.position.clone()
+  renderer.selectPerson('consumer')
+  renderer.updateScreenVisuals()
+  assert.ok(projectedPersonSize(renderer.camera, entry.figure.position, entry.figure.scale.x, { width: 1230, height: 650 }).height >= 12)
+  assert.deepEqual(entry.figure.position, home)
+  assert.equal(entry.walkHalo.visible, false)
+  assert.equal(renderer.selection.scale.x, entry.figure.scale.x)
+  renderer.playEvent(purchase('visual-walk'))
+  renderer.updateScreenVisuals()
+  assert.equal(entry.walkHalo.visible, true)
+  renderer.updateWalkers(0.1)
+  renderer.updateScreenVisuals()
+  at(entry, 10, 0) // 100 metres/second remains unchanged by screen scale.
+  renderer.setCursor(0)
+  renderer.updateScreenVisuals()
+  assert.deepEqual(entry.figure.position, home)
+  assert.equal(entry.walkHalo.visible, false)
+  renderer.camera.position.multiplyScalar(2)
+  renderer.camera.updateMatrixWorld()
+  renderer.updateScreenVisuals()
+  assert.ok(projectedPersonSize(renderer.camera, entry.figure.position, entry.figure.scale.x, { width: 1230, height: 650 }).height >= 12)
+})
+
+test('all 100 real roster figures meet the minimum at the 1600×1000 page overview', () => {
+  const json = relative => JSON.parse(readFileSync(new URL(relative, import.meta.url), 'utf8'))
+  const campus = json('../../scene/campus3d.json')
+  const mapping = json('../../scene/campus3d_mapping.json')
+  const scene = json('../public/mecoffe/latest-demo.json')
+  const renderer = new Campus3DScene({ campus, mapping, index: indexScene(scene) })
+  renderer.scene = new THREE.Scene()
+  renderer.placePeople()
+  renderer.host = { clientWidth: 1208, clientHeight: 647 }
+  const fit = fitCampusView(campus, { aspect: 1208 / 647 })
+  renderer.camera = new THREE.PerspectiveCamera(42, 1208 / 647, 0.5, 15000)
+  renderer.camera.position.copy(fit.position)
+  renderer.camera.lookAt(fit.target)
+  renderer.updateScreenVisuals()
+  assert.equal(renderer.people.size, 100)
+  for (const entry of renderer.people.values()) {
+    const pixels = projectedPersonSize(renderer.camera, entry.figure.position, entry.figure.scale.x, { width: 1208, height: 647 })
+    assert.ok(pixels.height >= 12, `${entry.person.id}: ${pixels.height}px`)
+    at(entry, entry.home.x, entry.home.y)
+  }
+  renderer.dispose()
 })
 
 test('duplicate order IDs and repeated fallback event keys never create extra trips', () => {

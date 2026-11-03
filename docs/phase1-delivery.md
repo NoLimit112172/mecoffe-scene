@@ -102,3 +102,24 @@ npm run build
 4. 图上的最近节点不是实测入口。人物从示意楼门安置点切换到道路起点，往返严格走 OSM 边；缺失的楼门接路、门禁、坡度和动态障碍没有模拟。
 5. 购买事件先由原数据确定，再播放出行；位置不会反向影响 OASIS 决策。100 米/秒的基础移动速度仅服务回放，不能作为校园出行耗时。
 6. 新版演示仍是规则脚本；网络模式没有行为；历史运行仍为失败的不完整原记录。本阶段未调用模型，也未生成新 OASIS 运行。
+
+## 视觉验收修正（2026-11-03）
+
+按 Claude 功能验收后的四项观感反馈追加修正，继续使用 `feat/campus-3d`，无新依赖、无地图或行为数据变更。
+
+- 全景按真实校园边界点和建筑屋顶进行透视适配，限制轴约 80%，不再用包含道路及空角的包围盒。宽屏将校园长轴横向展开（1230×650 画布投影宽约 70.27%、高 80%）；窄屏采用南侧视角，五种画布尺寸均未裁切。地面包围平面在边界外仅留 12 米。
+- 人物按相机和画布 CSS 尺寸计算均匀显示缩放，包围盒至少 12 CSS px，行走时加浅色光圈。人物位置、A* 路线、速度、订单和回放逻辑不变；点击区域与选中环跟随显示尺度。顶视、远近、resize、DPR 独立性有回归测试。
+- 仅八个映射楼栋保留默认 DOM 标签，固定 12px 字号；含门店示意说明，采用引线、边缘限制与重叠避让。其他楼栋仍可悬停。相机改变才重排标签；自然文字宽度留像素余量，避免分数缩放导致末字省略。
+- 删除 `.gitattributes` 全仓库 `* text=auto`，保留原 ps1/cmd、来源 JSON、前端场景 JSON 和 OSM 的定向规则；未运行全仓库 renormalize，未修改系统 Git 配置。
+
+本轮文件：`.gitattributes`、`README.md`、本记录、`frontend/src/views/MeCoffe3D.vue`、`frontend/src/mecoffe/Campus3DScene.js`、`frontend/src/mecoffe/campus3dView.js`、`frontend/src/mecoffe/campus3dScreen.js`、`frontend/tests/campus3dView.test.js`、`frontend/tests/campus3dScreen.test.js`、`frontend/tests/campus3dScene.test.js`。
+
+验收命令：`python -X utf8 -m unittest discover -s adapter` **36/36**；`frontend` 下 `npm test` **44/44**（本轮增加 13 项）；`npm run build` **通过**。仍有原先的大分块、上游静态/动态混合导入提示。
+
+浏览器按 1600×1000 验证初始全景、手动缩放后“全景”恢复、历史第 2 天购买和暂停。八个标签均为 12px、全景无截断；缩放后仍为 12px。反复切换三种数据模式，画布始终 1 个、标签层 1 个、标签 8 个；控制台无 error/warn。
+
+新截图：
+
+- `C:\Users\Lenovo\Documents\Claude\mecoffe-scene\logs\phase1-visual\mecoffe3d-overview-1600x1000.jpg`
+- `C:\Users\Lenovo\Documents\Claude\mecoffe-scene\logs\phase1-visual\mecoffe3d-history-day2-1600x1000.jpg`
+- `C:\Users\Lenovo\Documents\Claude\mecoffe-scene\logs\phase1-visual\mecoffe3d-zoom-1600x1000.jpg`

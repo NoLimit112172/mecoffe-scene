@@ -1,4 +1,4 @@
-* text=auto
+# Limit explicit line-ending rules to scripts and provenance data.
 
 # Windows PowerShell 5.1 keeps the script's UTF-8 BOM; use native line endings.
 *.ps1 text eol=crlf
