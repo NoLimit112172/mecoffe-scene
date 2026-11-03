@@ -33,6 +33,10 @@ Three.js 及 `three/addons` 的 OrbitControls、EffectComposer、RenderPass、Un
 
 ## 三维像素人物与周边道路
 
+三维素材库新增的 YuLan 模块化建筑、装饰体素与人物体素，同样由上述 `9829d72` 图集改编，保留 Apache-2.0、源作者和 `YULAN_LICENSE`。house21–26 使用原底层/标准层/屋顶零件；villa27–30 为有记录的分带裁剪，不声称是原生独立模块。decor40–45 与 character/head 的 RGBA 通过有限厚度挤出、透明过滤与合并表面转换，原图文件均未修改；这些模型不含图片未显示的真实背面信息。每个套装和变体的实际源帧/厚度/来源许可记录在 catalog.json 与模型 userData 中。
+
+独立 NUS 原始 OSM 数据、元数据与 `campuses/nus/` 衍生文件均按 ODbL-1.0 保留来源；调用方 GeoJSON 的几何许可按调用方元数据保存，不自动改称 OSM 或套用 ODbL。模型原型的许可与其使用的地图几何许可分开保留。
+
 本轮 `/mecoffe3d` 默认像素人物复用 YuLan-OneSim 提交 `9829d72` 中已有的 `frontend/public/assets/bgrd-0.json/png`、`bgrd-1.json/png`、`bgrd-2.json/png`：身体动画键为 `character/{gender}/{typeId}_{variant}`，头部为 `head/{gender}/{part}/...`。来源和上游 Apache License 2.0 说明与本文开头二维素材相同，许可证保留在 `YULAN_LICENSE`；该说明同时覆盖二维与本轮三维复用。未修改、另下载或重新授权这些原图集，不将其声称为 CC0。三维只在运行时组合原身体/头部帧并设最近邻过滤；咖啡杯小图标由本项目 Canvas 程序生成。
 
 新增 `data/osm/ustc_gaoxin_surroundings.osm`、同目录 metadata 与 `frontend/public/mecoffe/campus3d_surroundings.json` 来自 OSM 官方 API，属于单独保存的周边道路快照及 ODbL 1.0 衍生数据库。保留原始响应、下载 URL/UTC/bbox/SHA-256、转换脚本和 © OpenStreetMap contributors 署名。仅使用实际 `name` 标路名；默认道路宽度、人行道和分道线风格属于展示，不是测绘成果。没有获取高德、百度、Google 数据。

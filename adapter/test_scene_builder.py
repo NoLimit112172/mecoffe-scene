@@ -101,6 +101,9 @@ class SceneBuilderCase(unittest.TestCase):
 
     def test_building_style_does_not_require_yulan_versions_of_roads_or_landcover(self):
         catalog=copy.deepcopy(self.catalog)
+        # Isolate the synthetic style fixture from real YuLan suites added in
+        # milestone 3; this test is about category fallback, not tie-breaking.
+        catalog['prototypes']=[item for item in catalog['prototypes'] if item.get('style')!='yulan']
         alternate=copy.deepcopy(next(item for item in catalog['prototypes'] if item['id']=='building.procedural.dormitory'))
         alternate.update(id='building.yulan.test-dorm',style='yulan')
         catalog['prototypes'].append(alternate)

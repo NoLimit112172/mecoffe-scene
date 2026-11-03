@@ -1,7 +1,13 @@
 import * as THREE from 'three'
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js'
 import { fitCampusView } from './campus3dView.js'
-import { prototypeParams } from './assetCatalog.js'
+import { prototypeParams, getPrototype } from './assetCatalog.js'
+
+export function isOpenStreetMapSource(source) {
+  if(source?.source_type==='caller_geojson')return false
+  try {const url=new URL(source?.source_url);return url.protocol==='https:' && url.hostname==='api.openstreetmap.org' && url.pathname==='/api/0.6/map'}
+  catch{return false}
+}
 
 export function previewMapSummary(campus, assignments) {
   if (campus?.schema_version!=='mecoffe.campus3d.v1' || !Array.isArray(campus.buildings) || !Array.isArray(campus.roads)) throw new Error('地图场景格式无效')
@@ -63,9 +69,26 @@ export class MapSceneRenderer {
     this.renderer.domElement.addEventListener('click',this.click)
     this.observer=new ResizeObserver(()=>this.resize());this.observer.observe(this.host);this.resize();this.resetCamera()
     const frame=()=>{if(this.disposed)return;this.controls.update();this.renderer.render(this.scene,this.camera);this.frame=requestAnimationFrame(frame)};frame()
+    this.assetReady=this.loadAssignedModels()
     return this
+  }
+  async loadAssignedModels(){
+    const selected=this.meshes.filter(mesh=>mesh.userData.assignment && getPrototype(mesh.userData.assignment.prototype_id).params.generator==='yulan-building')
+    if(!selected.length)return
+    const {YuLanAssetFactory,disposeYuLanObject}=await import('./YuLanAssetFactory.js')
+    if(this.disposed)return
+    this.disposeAssigned=disposeYuLanObject;this.assetFactory=new YuLanAssetFactory()
+    await this.assetFactory.init()
+    if(this.disposed){this.assetFactory.dispose();return}
+    this.assignedGroup=new THREE.Group();this.assignedGroup.name='catalog-assigned-map-buildings'
+    for(const original of selected){
+      const {building,assignment}=original.userData,p={...getPrototype(assignment.prototype_id).params,...assignment.params}
+      const object=this.assetFactory.createBuilding(building,{type:p.atlasType,model:p.model,moduleWidth:p.moduleWidth})
+      object.position.y=original.position.y;object.userData={building,assignment};this.assignedGroup.add(object);original.visible=false
+    }
+    this.scene.add(this.assignedGroup)
   }
   resize(){if(this.disposed)return;const w=Math.max(1,this.host.clientWidth),h=Math.max(1,this.host.clientHeight);this.renderer.setSize(w,h);this.camera.aspect=w/h;this.camera.updateProjectionMatrix()}
   resetCamera(){const fit=fitCampusView(this.campus,{aspect:this.camera.aspect,fill:.82});this.controls.target.copy(fit.target);this.camera.position.copy(fit.position);this.controls.update()}
-  dispose(){if(this.disposed)return;this.disposed=true;cancelAnimationFrame(this.frame);this.observer?.disconnect();this.controls?.dispose();const geometries=new Set(),materials=new Set();this.scene?.traverse(o=>{if(o.geometry)geometries.add(o.geometry);for(const m of Array.isArray(o.material)?o.material:[o.material])if(m)materials.add(m)});geometries.forEach(g=>g.dispose());materials.forEach(m=>m.dispose());this.renderer?.domElement.removeEventListener('click',this.click);this.renderer?.dispose();this.renderer?.forceContextLoss();this.renderer?.domElement.remove()}
+  dispose(){if(this.disposed)return;this.disposed=true;cancelAnimationFrame(this.frame);this.observer?.disconnect();this.controls?.dispose();if(this.assignedGroup){this.disposeAssigned(this.assignedGroup);this.assignedGroup.removeFromParent()}this.assetFactory?.dispose();const geometries=new Set(),materials=new Set();this.scene?.traverse(o=>{if(o.geometry)geometries.add(o.geometry);for(const m of Array.isArray(o.material)?o.material:[o.material])if(m)materials.add(m)});geometries.forEach(g=>g.dispose());materials.forEach(m=>m.dispose());this.renderer?.domElement.removeEventListener('click',this.click);this.renderer?.dispose();this.renderer?.forceContextLoss();this.renderer?.domElement.remove()}
 }

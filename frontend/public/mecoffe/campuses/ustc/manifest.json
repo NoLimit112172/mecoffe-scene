@@ -1,0 +1,11 @@
+{
+  "schema_version": "mecoffe.scene-bundle.v1",
+  "campus_id": "ustc_gaoxin_osm",
+  "simulation_data": false,
+  "files": {
+    "campus3d.json": "e892d87164980f3822d567f2ba6625db51c045b329cb8535212b81013a790119",
+    "asset_assignments.json": "28580dc4dd96230ebe8fb417f24481ae15d2285f2b084ed16cc62f07359491b6",
+    "location_mapping.json": "4920408900e5f02f836e0f44b7dd0a7050da76262b849aebf0f79b67f2795805",
+    "landcover.json": "c57fc8faa29825ee6302207b328e1fcadffe059fe76054848c9acde7a90af187"
+  }
+}

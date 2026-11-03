@@ -1,5 +1,7 @@
 # 三维视觉资源清单
 
+当前版本化目录见 `catalog.json`，交互浏览页为 `/mecoffe3d/assets`。新增 house21–26 / villa27–30 建筑套装、decor40–45 装饰浮雕和人物体素均由已有 YuLan 图集改编，按 Apache-2.0 保留署名；不新增下载或改写原图。villa 分带裁剪与体素厚度是风格改编，不代表恢复了源图未显示的结构。完整源帧、默认参数、变体和许可逐项记录在目录。
+
 本轮不新增下载 GLB、GLTF、PNG 或 JPEG 美术资产。默认像素人物复用已有 YuLan `public/assets/bgrd-0..2.json/png`，来源及上游 Apache-2.0 说明见根目录 NOTICE.md / YULAN_LICENSE；未修改原图集，也不将其标为 CC0。立体备选角色、装饰及特效由项目代码生成。
 
 | 内容 | 生成源码 | 来源/许可说明 |

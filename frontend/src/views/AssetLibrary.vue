@@ -46,24 +46,34 @@ const rootEl=ref(null),search=ref(''),category=ref(''),source=ref(''),pageError=
 const variants=reactive({}),captions=reactive({}),errors=reactive({})
 const elements=new Map(),categories=ASSET_CATEGORY_LABELS,stats=catalogStats()
 const sourceLabels={procedural:'程序生成',yulan:'YuLan 图集',osm:'OpenStreetMap'}
-let renderer=null,disposed=false
+let renderer=null,disposed=false,removeYuLanFactories=null
 const filtered=computed(()=>queryPrototypes(null,{category:category.value || undefined,text:search.value}).filter(item=>!source.value||item.source.type===source.value))
 const pretty=value=>JSON.stringify(value,null,2)
 const selectedVariant=prototype=>variants[prototype.id] || prototype.variants[0]?.id || 'default'
 function setPreviewElement(id,element) {if(element)elements.set(id,element);else elements.delete(id)}
-function chooseVariant(id,value) {variants[id]=value;delete errors[id];delete captions[id]}
+function chooseVariant(id,value) {
+  const prototype=ASSET_CATALOG.prototypes.find(item=>item.id===id)
+  if(prototype&&selectedVariant(prototype)===value)return
+  variants[id]=value;delete errors[id];delete captions[id]
+}
 async function syncItems() {
   await nextTick()
   if(disposed||!renderer)return
   renderer.setItems(filtered.value.map(prototype=>({prototype,variant:selectedVariant(prototype),element:elements.get(prototype.id)})).filter(item=>item.element))
 }
 watch([filtered,variants],()=>{void syncItems()},{deep:true})
-onMounted(()=>{
+onMounted(async()=>{
   document.title='MeCoffe · 三维素材库'
-  try {renderer=new AssetPreviewRenderer({host:rootEl.value,onCaption:(id,text)=>{captions[id]=text},onError:(id,text)=>{errors[id]=`预览失败：${text}`}});void syncItems()}
+  try {
+    const {installYuLanPreviewFactories}=await import('../mecoffe/assetPreviewYulan.js')
+    if(disposed)return
+    removeYuLanFactories=installYuLanPreviewFactories()
+    renderer=new AssetPreviewRenderer({host:rootEl.value,onCaption:(id,text)=>{captions[id]=text},onError:(id,text)=>{errors[id]=`预览失败：${text}`}})
+    void syncItems()
+  }
   catch(error){pageError.value=`三维预览不可用：${error.message || error}。目录与许可信息仍可浏览。`}
 })
-onBeforeUnmount(()=>{disposed=true;renderer?.dispose();renderer=null;elements.clear()})
+onBeforeUnmount(()=>{disposed=true;renderer?.dispose();renderer=null;removeYuLanFactories?.();elements.clear()})
 </script>
 
 <style scoped>

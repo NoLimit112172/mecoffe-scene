@@ -78,6 +78,40 @@ def existing_prototypes():
     return rows
 
 
+def yulan_prototypes():
+    rows=[]
+    matches={21:{'building':['dormitory','apartments','hostel']},22:{'building':['university','school','college']},
+             23:{'building':'office'},24:{'amenity':['cafe','restaurant','canteen']},25:{'building':'residential'},
+             26:{'building':'*'},27:{'building':'detached'},28:{'building':['house','terrace']},
+             29:{'building':['retail','commercial']},30:{'amenity':'library'}}
+    for number in range(21,31):
+        family='house' if number<27 else 'villa'
+        variants=[{'id':f'model-{model}','params':{'model':model},'title':f'原图集变体 {model}'} for model in [1,2,3]]
+        rows.append(prototype(f'building.yulan.{family}{number}','building',f'{family}{number}',
+          {'generator':'yulan-building','atlasType':number,'model':1,'moduleWidth':8,'levels':4,'storey_height_m':3.2,
+           'module_source':'native-base-floor-roof' if number<27 else 'documented-derived-villa-bands'},
+          matches[number],source=YULAN,variants=variants,style='yulan',title=f'YuLan {family} {number} 模块套装'))
+    sets={
+      'bush':('vegetation',['decoration/40/40_1.png','decoration/40/40_2.png','decoration/40/40_16.png']),
+      'tree_group':('vegetation',['decoration/41/41_1.png','decoration/43/43_1.png','decoration/45/45_1.png']),
+      'planter':('street_furniture',['decoration/40/40_3.png','decoration/40/40_4.png','decoration/40/40_5.png']),
+      'bench':('street_furniture',['decoration/40/40_6.png','decoration/40/40_14.png']),
+      'lamp':('street_furniture',['decoration/40/40_7.png']),
+      'garden':('street_furniture',['decoration/42/42_4.png','decoration/44/44_6.png','decoration/45/45_2.png']),
+      'fountain':('street_furniture',['decoration/42/42_5.png','decoration/44/44_3.png','decoration/44/44_12.png']),
+    }
+    for name,(category,keys) in sets.items():
+        variants=[{'id':f'variant-{i+1}','title':f'源帧 {i%len(keys)+1} / 厚度 {i+2}',
+                   'params':{'atlasKey':keys[i%len(keys)],'depth':i+2}} for i in range(3)]
+        rows.append(prototype(f'{category}.yulan.{name}',category,name,
+          {'generator':'yulan-decoration','decorationSet':name,'atlasKey':keys[0],'atlasKeys':keys,'height':7,'depth':2,'resolution':36},
+          source=YULAN,kind='mesh',variants=variants,style='yulan',title=f'YuLan {name} 体素'))
+    roles=['undergraduate_consumer','graduate_consumer','teacher_consumer','merchant']
+    rows.append(prototype('character.voxel','character','voxel',{'generator':'voxel-character','height_m':8.5,'resolution':40,'depth':2,'fps':10.8},
+      source=YULAN,kind='mesh',style='voxel',variants=[{'id':role,'params':{'role':role}} for role in roles],title='YuLan 体素人物'))
+    return rows
+
+
 def thumbnail(item):
     colors={'building':'#76a0a7','road':'#596875','landcover':'#6b9b75','vegetation':'#448b60','street_furniture':'#a2825c','character':'#6d83b1','effect':'#b18ac8'}
     color=item['params'].get('wall',item['params'].get('color',colors[item['category']]))
@@ -86,7 +120,7 @@ def thumbnail(item):
 
 
 def main():
-    rows=existing_prototypes()
+    rows=existing_prototypes()+yulan_prototypes()
     catalog={'schema_version':'mecoffe.asset-catalog.v1','title':'MeCoffe 三维素材库','matching_version':'exact-tags-v1',
              'coordinate_convention':'x east, y up, z south; source maps use WGS84 to local metres',
              'note':'原型描述显示样式，不产生 OASIS 行为或新的地图事实；OSM 几何与素材许可分别保留。','prototypes':rows}

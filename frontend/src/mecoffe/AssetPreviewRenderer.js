@@ -238,7 +238,9 @@ export class AssetPreviewRenderer {
     this.pending.set(key,true)
     try {
       const model=await createAssetPreview(item.prototype,item.variant)
-      if(this.disposed||!this.items.some(candidate=>this.key(candidate)===key)) {model.dispose?.();return}
+      const current=this.items.find(candidate=>this.key(candidate)===key)
+      if(this.disposed||!current?.element?.isConnected) {model.dispose?.();return}
+      item=current
       const scene=new THREE.Scene()
       const normalized=new THREE.Group();normalized.add(model.object)
       model.object.updateWorldMatrix(true,true)
@@ -260,7 +262,7 @@ export class AssetPreviewRenderer {
       for(const [type,handler] of Object.entries(view.handlers)) item.element.addEventListener(type,handler)
       this.views.set(key,view)
       this.onCaption?.(item.prototype.id,model.caption || '三维原型 · 拖动旋转')
-    } catch(error) {this.failed.add(key);this.onError?.(item.prototype.id,error.message || String(error))}
+    } catch(error) {this.failed.add(key);if(!this.disposed)this.onError?.(item.prototype.id,error.message || String(error))}
     finally {this.pending.delete(key)}
   }
 

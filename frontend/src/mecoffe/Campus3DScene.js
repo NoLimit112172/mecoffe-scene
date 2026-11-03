@@ -2,7 +2,7 @@
 // neither the building assignments nor these animations are OASIS positions.
 import * as THREE from 'three'
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js'
-import { prototypeParams } from './assetCatalog.js'
+import { prototypeParams, selectPrototype, getPrototype } from './assetCatalog.js'
 import {
   createRouting, polygonCenter, resolveHomeKey, reverseRoute, routeBetweenMappings,
 } from './campus3dRouting.js'
@@ -171,6 +171,7 @@ export class Campus3DScene {
     this.visualSeconds = 0
     this.quality = 'high'
     this.characterStyle = 'pixel'
+    this.buildingStyle = 'procedural'
     this.lighting = { cycle: true, position: 0, hour: 12 }
     this.representatives = idleRepresentatives(index.scene.people)
     this.brandColors = new Map(index.scene.brands.map((brand, k) => [brand.brand_id, BRAND_COLORS[k % BRAND_COLORS.length]]))
@@ -249,6 +250,7 @@ export class Campus3DScene {
       this.updateScreenVisuals()
       this.updateRelations()
       if (this.characterStyle === 'solid') this.characterBatch?.update(this.visualSeconds)
+      else if (this.characterStyle === 'voxel') this.voxelBatch?.update(this.visualSeconds, this.camera)
       else this.pixelBatch?.update(this.visualSeconds, this.camera)
       this.surroundings?.update(this.camera, this.host)
       this.environment?.update(visualClock(this.lighting.position, this.lighting).phase, this.camera)
@@ -425,8 +427,8 @@ export class Campus3DScene {
       const prominent = Boolean(entry.walker) || entry.person.id === this.selectedId
       entry.presentationVisible = prominent || this.representatives.has(entry.person.id)
       entry.figure.visible = entry.presentationVisible
-      entry.base.visible = prominent || (this.characterStyle === 'pixel' && entry.presentationVisible)
-      const minPixels = this.characterStyle === 'pixel' ? (prominent ? 40 : 30) : (prominent ? 26 : 18)
+      entry.base.visible = prominent || (this.characterStyle !== 'solid' && entry.presentationVisible)
+      const minPixels = this.characterStyle !== 'solid' ? (prominent ? 40 : 30) : (prominent ? 26 : 18)
       if (cameraChanged || entry.screenMinPixels !== minPixels || !entry.screenPosition?.equals(entry.figure.position)) {
         const scale = this.characterStyle === 'pixel'
           ? billboardScaleForCamera(this.camera, entry.figure.position, { height, minPixels })
@@ -786,8 +788,10 @@ export class Campus3DScene {
   setQuality(value) {
     this.quality = value === 'low' ? 'low' : 'high'
     this.environment?.setQuality(this.quality)
+    this.yulanStyle?.setQuality(this.quality)
     this.characterBatch?.setQuality(this.quality)
     this.pixelBatch?.setQuality(this.quality)
+    this.voxelBatch?.setQuality(this.quality)
     this.eventEffects?.setQuality(this.quality)
     this.bloom?.setQuality(this.quality)
     if (this.renderer) {
@@ -797,11 +801,49 @@ export class Campus3DScene {
   }
 
   setCharacterStyle(value) {
-    this.characterStyle = value === 'solid' ? 'solid' : 'pixel'
+    this.characterStyle = ['pixel','solid','voxel'].includes(value) ? value : 'pixel'
     if (this.characterBatch) this.characterBatch.group.visible = this.characterStyle === 'solid'
     this.pixelBatch?.setVisible(this.characterStyle === 'pixel')
+    this.voxelBatch?.setVisible(this.characterStyle === 'voxel')
     for (const entry of this.people.values()) entry.screenMinPixels = null
     this.updateScreenVisuals()
+    if (this.characterStyle === 'voxel' && !this.voxelBatch && this.host) {
+      if (!this.voxelPromise) this.voxelPromise = import('./Campus3DVoxelCharacters.js').then(async({VoxelCharacterBatch})=>{
+        if(this.disposed)return
+        const params=prototypeParams('character.voxel')
+        this.voxelBatch=new VoxelCharacterBatch({scene:this.scene,entries:this.people,resolution:params.resolution,depth:params.depth})
+        await this.voxelBatch.init()
+        if(this.disposed){this.voxelBatch.dispose();return}
+        this.voxelBatch.setQuality(this.quality)
+        this.voxelBatch.setVisible(this.characterStyle==='voxel')
+        this.updateScreenVisuals()
+      }).catch(error=>{this.voxelBatch?.dispose();this.voxelBatch=null;this.voxelPromise=null;throw error})
+      return this.voxelPromise
+    }
+    return Promise.resolve()
+  }
+
+  setBuildingStyle(value) {
+    this.buildingStyle=value==='yulan'?'yulan':'procedural'
+    if(this.yulanStyle){this.yulanStyle.setEnabled(this.buildingStyle==='yulan');return Promise.resolve()}
+    if(this.buildingStyle!=='yulan')return Promise.resolve()
+    if(!this.yulanPromise)this.yulanPromise=import('./YuLanCampusStyle.js').then(async({YuLanCampusStyle})=>{
+      if(this.disposed)return
+      const resolvePrototype=building=>{
+        const tags={building:building.building_type||'yes',...(building.tags||{})}
+        if(building.kind==='library')tags.amenity='library'
+        if(building.kind==='dining')tags.amenity='restaurant'
+        if(building.kind==='sports')tags.leisure='sports_centre'
+        return selectPrototype(tags,{category:'building',style:'yulan',featureId:building.osm_id,seed:2026})
+      }
+      this.yulanStyle=new YuLanCampusStyle({scene:this.scene,campus:this.display.campus,buildingMeshes:this.buildingMeshes,
+        environment:this.environment,resolvePrototype,resolveDecorationPrototype:()=>getPrototype('vegetation.yulan.tree_group')})
+      await this.yulanStyle.init()
+      if(this.disposed){this.yulanStyle.dispose();return}
+      this.yulanStyle.setQuality?.(this.quality)
+      this.yulanStyle.setEnabled(this.buildingStyle==='yulan')
+    }).catch(error=>{this.yulanStyle?.dispose();this.yulanStyle=null;this.yulanPromise=null;throw error})
+    return this.yulanPromise
   }
 
   focusPerson(id) {
@@ -894,9 +936,11 @@ export class Campus3DScene {
     this.clearHover()
     this.eventEffects?.dispose()
     this.bloom?.dispose()
+    this.yulanStyle?.dispose()
     this.environment?.dispose()
     this.surroundings?.dispose()
     this.pixelBatch?.dispose()
+    this.voxelBatch?.dispose()
     this.characterBatch?.dispose()
     if (this.scene) {
       disposeObject(this.scene)

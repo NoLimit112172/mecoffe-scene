@@ -181,6 +181,33 @@ test('switching pixel and solid characters preserves ongoing trips, queued order
   assert.deepEqual(visible, [true, false, true])
 })
 
+test('optional voxel characters and YuLan buildings keep the same paused trip, queues and time', async () => {
+  const {renderer,entry}=world()
+  renderer.playEvent(purchase('style-a'))
+  renderer.playEvent(purchase('style-b','merchant_002'))
+  renderer.updateWalkers(.1)
+  const before=entry.figure.position.clone(),trip=entry.walker,queue=[...entry.queue],stats=renderer.getStats()
+  renderer.setPlaying(false);renderer.visualSeconds=2.4
+  const voxel=[],buildings=[]
+  renderer.voxelBatch={setVisible:value=>voxel.push(value)}
+  renderer.yulanStyle={setEnabled:value=>buildings.push(value)}
+  for(const style of ['voxel','pixel','solid','voxel'])await renderer.setCharacterStyle(style)
+  for(const style of ['yulan','procedural','yulan','procedural'])await renderer.setBuildingStyle(style)
+  assert.deepEqual(voxel,[true,false,false,true])
+  assert.deepEqual(buildings,[true,false,true,false])
+  assert.deepEqual(entry.figure.position,before)
+  assert.equal(entry.walker,trip);assert.deepEqual(entry.queue,queue)
+  assert.deepEqual(renderer.getStats(),stats);assert.equal(renderer.playing,false);assert.equal(renderer.visualSeconds,2.4)
+})
+
+test('default procedural style never starts an atlas building or voxel loader', async () => {
+  const {renderer}=world()
+  await renderer.setBuildingStyle('procedural')
+  await renderer.setCharacterStyle('pixel')
+  assert.equal(renderer.yulanPromise,undefined)
+  assert.equal(renderer.voxelPromise,undefined)
+})
+
 test('surrounding roads and cropped display never extend or replace the original walking graph', () => {
   const json = relative => JSON.parse(readFileSync(new URL(relative, import.meta.url), 'utf8'))
   const campus = json('../../scene/campus3d.json')

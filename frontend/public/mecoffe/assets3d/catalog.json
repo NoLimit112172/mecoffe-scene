@@ -2501,6 +2501,1081 @@
         "path": "NOTICE.md"
       },
       "preview": "/mecoffe/assets3d/previews/building.osm-footprint.svg"
+    },
+    {
+      "id": "building.yulan.house21",
+      "title": "YuLan house 21 模块套装",
+      "category": "building",
+      "subtype": "house21",
+      "kind": "parametric",
+      "style": "yulan",
+      "target": "feature",
+      "match": {
+        "building": [
+          "dormitory",
+          "apartments",
+          "hostel"
+        ]
+      },
+      "params": {
+        "generator": "yulan-building",
+        "atlasType": 21,
+        "model": 1,
+        "moduleWidth": 8,
+        "levels": 4,
+        "storey_height_m": 3.2,
+        "module_source": "native-base-floor-roof"
+      },
+      "variants": [
+        {
+          "id": "model-1",
+          "params": {
+            "model": 1
+          },
+          "title": "原图集变体 1"
+        },
+        {
+          "id": "model-2",
+          "params": {
+            "model": 2
+          },
+          "title": "原图集变体 2"
+        },
+        {
+          "id": "model-3",
+          "params": {
+            "model": 3
+          },
+          "title": "原图集变体 3"
+        }
+      ],
+      "source": {
+        "type": "yulan",
+        "title": "YuLan-OneSim 图集",
+        "author": "RUC-GSAI/YuLan-OneSim",
+        "revision": "9829d72",
+        "path": "frontend/public/assets/bgrd-*.json/png",
+        "url": "https://github.com/RUC-GSAI/YuLan-OneSim"
+      },
+      "license": {
+        "spdx": "Apache-2.0",
+        "path": "YULAN_LICENSE"
+      },
+      "preview": "/mecoffe/assets3d/previews/building.yulan.house21.svg"
+    },
+    {
+      "id": "building.yulan.house22",
+      "title": "YuLan house 22 模块套装",
+      "category": "building",
+      "subtype": "house22",
+      "kind": "parametric",
+      "style": "yulan",
+      "target": "feature",
+      "match": {
+        "building": [
+          "university",
+          "school",
+          "college"
+        ]
+      },
+      "params": {
+        "generator": "yulan-building",
+        "atlasType": 22,
+        "model": 1,
+        "moduleWidth": 8,
+        "levels": 4,
+        "storey_height_m": 3.2,
+        "module_source": "native-base-floor-roof"
+      },
+      "variants": [
+        {
+          "id": "model-1",
+          "params": {
+            "model": 1
+          },
+          "title": "原图集变体 1"
+        },
+        {
+          "id": "model-2",
+          "params": {
+            "model": 2
+          },
+          "title": "原图集变体 2"
+        },
+        {
+          "id": "model-3",
+          "params": {
+            "model": 3
+          },
+          "title": "原图集变体 3"
+        }
+      ],
+      "source": {
+        "type": "yulan",
+        "title": "YuLan-OneSim 图集",
+        "author": "RUC-GSAI/YuLan-OneSim",
+        "revision": "9829d72",
+        "path": "frontend/public/assets/bgrd-*.json/png",
+        "url": "https://github.com/RUC-GSAI/YuLan-OneSim"
+      },
+      "license": {
+        "spdx": "Apache-2.0",
+        "path": "YULAN_LICENSE"
+      },
+      "preview": "/mecoffe/assets3d/previews/building.yulan.house22.svg"
+    },
+    {
+      "id": "building.yulan.house23",
+      "title": "YuLan house 23 模块套装",
+      "category": "building",
+      "subtype": "house23",
+      "kind": "parametric",
+      "style": "yulan",
+      "target": "feature",
+      "match": {
+        "building": "office"
+      },
+      "params": {
+        "generator": "yulan-building",
+        "atlasType": 23,
+        "model": 1,
+        "moduleWidth": 8,
+        "levels": 4,
+        "storey_height_m": 3.2,
+        "module_source": "native-base-floor-roof"
+      },
+      "variants": [
+        {
+          "id": "model-1",
+          "params": {
+            "model": 1
+          },
+          "title": "原图集变体 1"
+        },
+        {
+          "id": "model-2",
+          "params": {
+            "model": 2
+          },
+          "title": "原图集变体 2"
+        },
+        {
+          "id": "model-3",
+          "params": {
+            "model": 3
+          },
+          "title": "原图集变体 3"
+        }
+      ],
+      "source": {
+        "type": "yulan",
+        "title": "YuLan-OneSim 图集",
+        "author": "RUC-GSAI/YuLan-OneSim",
+        "revision": "9829d72",
+        "path": "frontend/public/assets/bgrd-*.json/png",
+        "url": "https://github.com/RUC-GSAI/YuLan-OneSim"
+      },
+      "license": {
+        "spdx": "Apache-2.0",
+        "path": "YULAN_LICENSE"
+      },
+      "preview": "/mecoffe/assets3d/previews/building.yulan.house23.svg"
+    },
+    {
+      "id": "building.yulan.house24",
+      "title": "YuLan house 24 模块套装",
+      "category": "building",
+      "subtype": "house24",
+      "kind": "parametric",
+      "style": "yulan",
+      "target": "feature",
+      "match": {
+        "amenity": [
+          "cafe",
+          "restaurant",
+          "canteen"
+        ]
+      },
+      "params": {
+        "generator": "yulan-building",
+        "atlasType": 24,
+        "model": 1,
+        "moduleWidth": 8,
+        "levels": 4,
+        "storey_height_m": 3.2,
+        "module_source": "native-base-floor-roof"
+      },
+      "variants": [
+        {
+          "id": "model-1",
+          "params": {
+            "model": 1
+          },
+          "title": "原图集变体 1"
+        },
+        {
+          "id": "model-2",
+          "params": {
+            "model": 2
+          },
+          "title": "原图集变体 2"
+        },
+        {
+          "id": "model-3",
+          "params": {
+            "model": 3
+          },
+          "title": "原图集变体 3"
+        }
+      ],
+      "source": {
+        "type": "yulan",
+        "title": "YuLan-OneSim 图集",
+        "author": "RUC-GSAI/YuLan-OneSim",
+        "revision": "9829d72",
+        "path": "frontend/public/assets/bgrd-*.json/png",
+        "url": "https://github.com/RUC-GSAI/YuLan-OneSim"
+      },
+      "license": {
+        "spdx": "Apache-2.0",
+        "path": "YULAN_LICENSE"
+      },
+      "preview": "/mecoffe/assets3d/previews/building.yulan.house24.svg"
+    },
+    {
+      "id": "building.yulan.house25",
+      "title": "YuLan house 25 模块套装",
+      "category": "building",
+      "subtype": "house25",
+      "kind": "parametric",
+      "style": "yulan",
+      "target": "feature",
+      "match": {
+        "building": "residential"
+      },
+      "params": {
+        "generator": "yulan-building",
+        "atlasType": 25,
+        "model": 1,
+        "moduleWidth": 8,
+        "levels": 4,
+        "storey_height_m": 3.2,
+        "module_source": "native-base-floor-roof"
+      },
+      "variants": [
+        {
+          "id": "model-1",
+          "params": {
+            "model": 1
+          },
+          "title": "原图集变体 1"
+        },
+        {
+          "id": "model-2",
+          "params": {
+            "model": 2
+          },
+          "title": "原图集变体 2"
+        },
+        {
+          "id": "model-3",
+          "params": {
+            "model": 3
+          },
+          "title": "原图集变体 3"
+        }
+      ],
+      "source": {
+        "type": "yulan",
+        "title": "YuLan-OneSim 图集",
+        "author": "RUC-GSAI/YuLan-OneSim",
+        "revision": "9829d72",
+        "path": "frontend/public/assets/bgrd-*.json/png",
+        "url": "https://github.com/RUC-GSAI/YuLan-OneSim"
+      },
+      "license": {
+        "spdx": "Apache-2.0",
+        "path": "YULAN_LICENSE"
+      },
+      "preview": "/mecoffe/assets3d/previews/building.yulan.house25.svg"
+    },
+    {
+      "id": "building.yulan.house26",
+      "title": "YuLan house 26 模块套装",
+      "category": "building",
+      "subtype": "house26",
+      "kind": "parametric",
+      "style": "yulan",
+      "target": "feature",
+      "match": {
+        "building": "*"
+      },
+      "params": {
+        "generator": "yulan-building",
+        "atlasType": 26,
+        "model": 1,
+        "moduleWidth": 8,
+        "levels": 4,
+        "storey_height_m": 3.2,
+        "module_source": "native-base-floor-roof"
+      },
+      "variants": [
+        {
+          "id": "model-1",
+          "params": {
+            "model": 1
+          },
+          "title": "原图集变体 1"
+        },
+        {
+          "id": "model-2",
+          "params": {
+            "model": 2
+          },
+          "title": "原图集变体 2"
+        },
+        {
+          "id": "model-3",
+          "params": {
+            "model": 3
+          },
+          "title": "原图集变体 3"
+        }
+      ],
+      "source": {
+        "type": "yulan",
+        "title": "YuLan-OneSim 图集",
+        "author": "RUC-GSAI/YuLan-OneSim",
+        "revision": "9829d72",
+        "path": "frontend/public/assets/bgrd-*.json/png",
+        "url": "https://github.com/RUC-GSAI/YuLan-OneSim"
+      },
+      "license": {
+        "spdx": "Apache-2.0",
+        "path": "YULAN_LICENSE"
+      },
+      "preview": "/mecoffe/assets3d/previews/building.yulan.house26.svg"
+    },
+    {
+      "id": "building.yulan.villa27",
+      "title": "YuLan villa 27 模块套装",
+      "category": "building",
+      "subtype": "villa27",
+      "kind": "parametric",
+      "style": "yulan",
+      "target": "feature",
+      "match": {
+        "building": "detached"
+      },
+      "params": {
+        "generator": "yulan-building",
+        "atlasType": 27,
+        "model": 1,
+        "moduleWidth": 8,
+        "levels": 4,
+        "storey_height_m": 3.2,
+        "module_source": "documented-derived-villa-bands"
+      },
+      "variants": [
+        {
+          "id": "model-1",
+          "params": {
+            "model": 1
+          },
+          "title": "原图集变体 1"
+        },
+        {
+          "id": "model-2",
+          "params": {
+            "model": 2
+          },
+          "title": "原图集变体 2"
+        },
+        {
+          "id": "model-3",
+          "params": {
+            "model": 3
+          },
+          "title": "原图集变体 3"
+        }
+      ],
+      "source": {
+        "type": "yulan",
+        "title": "YuLan-OneSim 图集",
+        "author": "RUC-GSAI/YuLan-OneSim",
+        "revision": "9829d72",
+        "path": "frontend/public/assets/bgrd-*.json/png",
+        "url": "https://github.com/RUC-GSAI/YuLan-OneSim"
+      },
+      "license": {
+        "spdx": "Apache-2.0",
+        "path": "YULAN_LICENSE"
+      },
+      "preview": "/mecoffe/assets3d/previews/building.yulan.villa27.svg"
+    },
+    {
+      "id": "building.yulan.villa28",
+      "title": "YuLan villa 28 模块套装",
+      "category": "building",
+      "subtype": "villa28",
+      "kind": "parametric",
+      "style": "yulan",
+      "target": "feature",
+      "match": {
+        "building": [
+          "house",
+          "terrace"
+        ]
+      },
+      "params": {
+        "generator": "yulan-building",
+        "atlasType": 28,
+        "model": 1,
+        "moduleWidth": 8,
+        "levels": 4,
+        "storey_height_m": 3.2,
+        "module_source": "documented-derived-villa-bands"
+      },
+      "variants": [
+        {
+          "id": "model-1",
+          "params": {
+            "model": 1
+          },
+          "title": "原图集变体 1"
+        },
+        {
+          "id": "model-2",
+          "params": {
+            "model": 2
+          },
+          "title": "原图集变体 2"
+        },
+        {
+          "id": "model-3",
+          "params": {
+            "model": 3
+          },
+          "title": "原图集变体 3"
+        }
+      ],
+      "source": {
+        "type": "yulan",
+        "title": "YuLan-OneSim 图集",
+        "author": "RUC-GSAI/YuLan-OneSim",
+        "revision": "9829d72",
+        "path": "frontend/public/assets/bgrd-*.json/png",
+        "url": "https://github.com/RUC-GSAI/YuLan-OneSim"
+      },
+      "license": {
+        "spdx": "Apache-2.0",
+        "path": "YULAN_LICENSE"
+      },
+      "preview": "/mecoffe/assets3d/previews/building.yulan.villa28.svg"
+    },
+    {
+      "id": "building.yulan.villa29",
+      "title": "YuLan villa 29 模块套装",
+      "category": "building",
+      "subtype": "villa29",
+      "kind": "parametric",
+      "style": "yulan",
+      "target": "feature",
+      "match": {
+        "building": [
+          "retail",
+          "commercial"
+        ]
+      },
+      "params": {
+        "generator": "yulan-building",
+        "atlasType": 29,
+        "model": 1,
+        "moduleWidth": 8,
+        "levels": 4,
+        "storey_height_m": 3.2,
+        "module_source": "documented-derived-villa-bands"
+      },
+      "variants": [
+        {
+          "id": "model-1",
+          "params": {
+            "model": 1
+          },
+          "title": "原图集变体 1"
+        },
+        {
+          "id": "model-2",
+          "params": {
+            "model": 2
+          },
+          "title": "原图集变体 2"
+        },
+        {
+          "id": "model-3",
+          "params": {
+            "model": 3
+          },
+          "title": "原图集变体 3"
+        }
+      ],
+      "source": {
+        "type": "yulan",
+        "title": "YuLan-OneSim 图集",
+        "author": "RUC-GSAI/YuLan-OneSim",
+        "revision": "9829d72",
+        "path": "frontend/public/assets/bgrd-*.json/png",
+        "url": "https://github.com/RUC-GSAI/YuLan-OneSim"
+      },
+      "license": {
+        "spdx": "Apache-2.0",
+        "path": "YULAN_LICENSE"
+      },
+      "preview": "/mecoffe/assets3d/previews/building.yulan.villa29.svg"
+    },
+    {
+      "id": "building.yulan.villa30",
+      "title": "YuLan villa 30 模块套装",
+      "category": "building",
+      "subtype": "villa30",
+      "kind": "parametric",
+      "style": "yulan",
+      "target": "feature",
+      "match": {
+        "amenity": "library"
+      },
+      "params": {
+        "generator": "yulan-building",
+        "atlasType": 30,
+        "model": 1,
+        "moduleWidth": 8,
+        "levels": 4,
+        "storey_height_m": 3.2,
+        "module_source": "documented-derived-villa-bands"
+      },
+      "variants": [
+        {
+          "id": "model-1",
+          "params": {
+            "model": 1
+          },
+          "title": "原图集变体 1"
+        },
+        {
+          "id": "model-2",
+          "params": {
+            "model": 2
+          },
+          "title": "原图集变体 2"
+        },
+        {
+          "id": "model-3",
+          "params": {
+            "model": 3
+          },
+          "title": "原图集变体 3"
+        }
+      ],
+      "source": {
+        "type": "yulan",
+        "title": "YuLan-OneSim 图集",
+        "author": "RUC-GSAI/YuLan-OneSim",
+        "revision": "9829d72",
+        "path": "frontend/public/assets/bgrd-*.json/png",
+        "url": "https://github.com/RUC-GSAI/YuLan-OneSim"
+      },
+      "license": {
+        "spdx": "Apache-2.0",
+        "path": "YULAN_LICENSE"
+      },
+      "preview": "/mecoffe/assets3d/previews/building.yulan.villa30.svg"
+    },
+    {
+      "id": "vegetation.yulan.bush",
+      "title": "YuLan bush 体素",
+      "category": "vegetation",
+      "subtype": "bush",
+      "kind": "mesh",
+      "style": "yulan",
+      "target": "feature",
+      "match": {},
+      "params": {
+        "generator": "yulan-decoration",
+        "decorationSet": "bush",
+        "atlasKey": "decoration/40/40_1.png",
+        "atlasKeys": [
+          "decoration/40/40_1.png",
+          "decoration/40/40_2.png",
+          "decoration/40/40_16.png"
+        ],
+        "height": 7,
+        "depth": 2,
+        "resolution": 36
+      },
+      "variants": [
+        {
+          "id": "variant-1",
+          "title": "源帧 1 / 厚度 2",
+          "params": {
+            "atlasKey": "decoration/40/40_1.png",
+            "depth": 2
+          }
+        },
+        {
+          "id": "variant-2",
+          "title": "源帧 2 / 厚度 3",
+          "params": {
+            "atlasKey": "decoration/40/40_2.png",
+            "depth": 3
+          }
+        },
+        {
+          "id": "variant-3",
+          "title": "源帧 3 / 厚度 4",
+          "params": {
+            "atlasKey": "decoration/40/40_16.png",
+            "depth": 4
+          }
+        }
+      ],
+      "source": {
+        "type": "yulan",
+        "title": "YuLan-OneSim 图集",
+        "author": "RUC-GSAI/YuLan-OneSim",
+        "revision": "9829d72",
+        "path": "frontend/public/assets/bgrd-*.json/png",
+        "url": "https://github.com/RUC-GSAI/YuLan-OneSim"
+      },
+      "license": {
+        "spdx": "Apache-2.0",
+        "path": "YULAN_LICENSE"
+      },
+      "preview": "/mecoffe/assets3d/previews/vegetation.yulan.bush.svg"
+    },
+    {
+      "id": "vegetation.yulan.tree_group",
+      "title": "YuLan tree_group 体素",
+      "category": "vegetation",
+      "subtype": "tree_group",
+      "kind": "mesh",
+      "style": "yulan",
+      "target": "feature",
+      "match": {},
+      "params": {
+        "generator": "yulan-decoration",
+        "decorationSet": "tree_group",
+        "atlasKey": "decoration/41/41_1.png",
+        "atlasKeys": [
+          "decoration/41/41_1.png",
+          "decoration/43/43_1.png",
+          "decoration/45/45_1.png"
+        ],
+        "height": 7,
+        "depth": 2,
+        "resolution": 36
+      },
+      "variants": [
+        {
+          "id": "variant-1",
+          "title": "源帧 1 / 厚度 2",
+          "params": {
+            "atlasKey": "decoration/41/41_1.png",
+            "depth": 2
+          }
+        },
+        {
+          "id": "variant-2",
+          "title": "源帧 2 / 厚度 3",
+          "params": {
+            "atlasKey": "decoration/43/43_1.png",
+            "depth": 3
+          }
+        },
+        {
+          "id": "variant-3",
+          "title": "源帧 3 / 厚度 4",
+          "params": {
+            "atlasKey": "decoration/45/45_1.png",
+            "depth": 4
+          }
+        }
+      ],
+      "source": {
+        "type": "yulan",
+        "title": "YuLan-OneSim 图集",
+        "author": "RUC-GSAI/YuLan-OneSim",
+        "revision": "9829d72",
+        "path": "frontend/public/assets/bgrd-*.json/png",
+        "url": "https://github.com/RUC-GSAI/YuLan-OneSim"
+      },
+      "license": {
+        "spdx": "Apache-2.0",
+        "path": "YULAN_LICENSE"
+      },
+      "preview": "/mecoffe/assets3d/previews/vegetation.yulan.tree_group.svg"
+    },
+    {
+      "id": "street_furniture.yulan.planter",
+      "title": "YuLan planter 体素",
+      "category": "street_furniture",
+      "subtype": "planter",
+      "kind": "mesh",
+      "style": "yulan",
+      "target": "feature",
+      "match": {},
+      "params": {
+        "generator": "yulan-decoration",
+        "decorationSet": "planter",
+        "atlasKey": "decoration/40/40_3.png",
+        "atlasKeys": [
+          "decoration/40/40_3.png",
+          "decoration/40/40_4.png",
+          "decoration/40/40_5.png"
+        ],
+        "height": 7,
+        "depth": 2,
+        "resolution": 36
+      },
+      "variants": [
+        {
+          "id": "variant-1",
+          "title": "源帧 1 / 厚度 2",
+          "params": {
+            "atlasKey": "decoration/40/40_3.png",
+            "depth": 2
+          }
+        },
+        {
+          "id": "variant-2",
+          "title": "源帧 2 / 厚度 3",
+          "params": {
+            "atlasKey": "decoration/40/40_4.png",
+            "depth": 3
+          }
+        },
+        {
+          "id": "variant-3",
+          "title": "源帧 3 / 厚度 4",
+          "params": {
+            "atlasKey": "decoration/40/40_5.png",
+            "depth": 4
+          }
+        }
+      ],
+      "source": {
+        "type": "yulan",
+        "title": "YuLan-OneSim 图集",
+        "author": "RUC-GSAI/YuLan-OneSim",
+        "revision": "9829d72",
+        "path": "frontend/public/assets/bgrd-*.json/png",
+        "url": "https://github.com/RUC-GSAI/YuLan-OneSim"
+      },
+      "license": {
+        "spdx": "Apache-2.0",
+        "path": "YULAN_LICENSE"
+      },
+      "preview": "/mecoffe/assets3d/previews/street_furniture.yulan.planter.svg"
+    },
+    {
+      "id": "street_furniture.yulan.bench",
+      "title": "YuLan bench 体素",
+      "category": "street_furniture",
+      "subtype": "bench",
+      "kind": "mesh",
+      "style": "yulan",
+      "target": "feature",
+      "match": {},
+      "params": {
+        "generator": "yulan-decoration",
+        "decorationSet": "bench",
+        "atlasKey": "decoration/40/40_6.png",
+        "atlasKeys": [
+          "decoration/40/40_6.png",
+          "decoration/40/40_14.png"
+        ],
+        "height": 7,
+        "depth": 2,
+        "resolution": 36
+      },
+      "variants": [
+        {
+          "id": "variant-1",
+          "title": "源帧 1 / 厚度 2",
+          "params": {
+            "atlasKey": "decoration/40/40_6.png",
+            "depth": 2
+          }
+        },
+        {
+          "id": "variant-2",
+          "title": "源帧 2 / 厚度 3",
+          "params": {
+            "atlasKey": "decoration/40/40_14.png",
+            "depth": 3
+          }
+        },
+        {
+          "id": "variant-3",
+          "title": "源帧 1 / 厚度 4",
+          "params": {
+            "atlasKey": "decoration/40/40_6.png",
+            "depth": 4
+          }
+        }
+      ],
+      "source": {
+        "type": "yulan",
+        "title": "YuLan-OneSim 图集",
+        "author": "RUC-GSAI/YuLan-OneSim",
+        "revision": "9829d72",
+        "path": "frontend/public/assets/bgrd-*.json/png",
+        "url": "https://github.com/RUC-GSAI/YuLan-OneSim"
+      },
+      "license": {
+        "spdx": "Apache-2.0",
+        "path": "YULAN_LICENSE"
+      },
+      "preview": "/mecoffe/assets3d/previews/street_furniture.yulan.bench.svg"
+    },
+    {
+      "id": "street_furniture.yulan.lamp",
+      "title": "YuLan lamp 体素",
+      "category": "street_furniture",
+      "subtype": "lamp",
+      "kind": "mesh",
+      "style": "yulan",
+      "target": "feature",
+      "match": {},
+      "params": {
+        "generator": "yulan-decoration",
+        "decorationSet": "lamp",
+        "atlasKey": "decoration/40/40_7.png",
+        "atlasKeys": [
+          "decoration/40/40_7.png"
+        ],
+        "height": 7,
+        "depth": 2,
+        "resolution": 36
+      },
+      "variants": [
+        {
+          "id": "variant-1",
+          "title": "源帧 1 / 厚度 2",
+          "params": {
+            "atlasKey": "decoration/40/40_7.png",
+            "depth": 2
+          }
+        },
+        {
+          "id": "variant-2",
+          "title": "源帧 1 / 厚度 3",
+          "params": {
+            "atlasKey": "decoration/40/40_7.png",
+            "depth": 3
+          }
+        },
+        {
+          "id": "variant-3",
+          "title": "源帧 1 / 厚度 4",
+          "params": {
+            "atlasKey": "decoration/40/40_7.png",
+            "depth": 4
+          }
+        }
+      ],
+      "source": {
+        "type": "yulan",
+        "title": "YuLan-OneSim 图集",
+        "author": "RUC-GSAI/YuLan-OneSim",
+        "revision": "9829d72",
+        "path": "frontend/public/assets/bgrd-*.json/png",
+        "url": "https://github.com/RUC-GSAI/YuLan-OneSim"
+      },
+      "license": {
+        "spdx": "Apache-2.0",
+        "path": "YULAN_LICENSE"
+      },
+      "preview": "/mecoffe/assets3d/previews/street_furniture.yulan.lamp.svg"
+    },
+    {
+      "id": "street_furniture.yulan.garden",
+      "title": "YuLan garden 体素",
+      "category": "street_furniture",
+      "subtype": "garden",
+      "kind": "mesh",
+      "style": "yulan",
+      "target": "feature",
+      "match": {},
+      "params": {
+        "generator": "yulan-decoration",
+        "decorationSet": "garden",
+        "atlasKey": "decoration/42/42_4.png",
+        "atlasKeys": [
+          "decoration/42/42_4.png",
+          "decoration/44/44_6.png",
+          "decoration/45/45_2.png"
+        ],
+        "height": 7,
+        "depth": 2,
+        "resolution": 36
+      },
+      "variants": [
+        {
+          "id": "variant-1",
+          "title": "源帧 1 / 厚度 2",
+          "params": {
+            "atlasKey": "decoration/42/42_4.png",
+            "depth": 2
+          }
+        },
+        {
+          "id": "variant-2",
+          "title": "源帧 2 / 厚度 3",
+          "params": {
+            "atlasKey": "decoration/44/44_6.png",
+            "depth": 3
+          }
+        },
+        {
+          "id": "variant-3",
+          "title": "源帧 3 / 厚度 4",
+          "params": {
+            "atlasKey": "decoration/45/45_2.png",
+            "depth": 4
+          }
+        }
+      ],
+      "source": {
+        "type": "yulan",
+        "title": "YuLan-OneSim 图集",
+        "author": "RUC-GSAI/YuLan-OneSim",
+        "revision": "9829d72",
+        "path": "frontend/public/assets/bgrd-*.json/png",
+        "url": "https://github.com/RUC-GSAI/YuLan-OneSim"
+      },
+      "license": {
+        "spdx": "Apache-2.0",
+        "path": "YULAN_LICENSE"
+      },
+      "preview": "/mecoffe/assets3d/previews/street_furniture.yulan.garden.svg"
+    },
+    {
+      "id": "street_furniture.yulan.fountain",
+      "title": "YuLan fountain 体素",
+      "category": "street_furniture",
+      "subtype": "fountain",
+      "kind": "mesh",
+      "style": "yulan",
+      "target": "feature",
+      "match": {},
+      "params": {
+        "generator": "yulan-decoration",
+        "decorationSet": "fountain",
+        "atlasKey": "decoration/42/42_5.png",
+        "atlasKeys": [
+          "decoration/42/42_5.png",
+          "decoration/44/44_3.png",
+          "decoration/44/44_12.png"
+        ],
+        "height": 7,
+        "depth": 2,
+        "resolution": 36
+      },
+      "variants": [
+        {
+          "id": "variant-1",
+          "title": "源帧 1 / 厚度 2",
+          "params": {
+            "atlasKey": "decoration/42/42_5.png",
+            "depth": 2
+          }
+        },
+        {
+          "id": "variant-2",
+          "title": "源帧 2 / 厚度 3",
+          "params": {
+            "atlasKey": "decoration/44/44_3.png",
+            "depth": 3
+          }
+        },
+        {
+          "id": "variant-3",
+          "title": "源帧 3 / 厚度 4",
+          "params": {
+            "atlasKey": "decoration/44/44_12.png",
+            "depth": 4
+          }
+        }
+      ],
+      "source": {
+        "type": "yulan",
+        "title": "YuLan-OneSim 图集",
+        "author": "RUC-GSAI/YuLan-OneSim",
+        "revision": "9829d72",
+        "path": "frontend/public/assets/bgrd-*.json/png",
+        "url": "https://github.com/RUC-GSAI/YuLan-OneSim"
+      },
+      "license": {
+        "spdx": "Apache-2.0",
+        "path": "YULAN_LICENSE"
+      },
+      "preview": "/mecoffe/assets3d/previews/street_furniture.yulan.fountain.svg"
+    },
+    {
+      "id": "character.voxel",
+      "title": "YuLan 体素人物",
+      "category": "character",
+      "subtype": "voxel",
+      "kind": "mesh",
+      "style": "voxel",
+      "target": "feature",
+      "match": {},
+      "params": {
+        "generator": "voxel-character",
+        "height_m": 8.5,
+        "resolution": 40,
+        "depth": 2,
+        "fps": 10.8
+      },
+      "variants": [
+        {
+          "id": "undergraduate_consumer",
+          "params": {
+            "role": "undergraduate_consumer"
+          }
+        },
+        {
+          "id": "graduate_consumer",
+          "params": {
+            "role": "graduate_consumer"
+          }
+        },
+        {
+          "id": "teacher_consumer",
+          "params": {
+            "role": "teacher_consumer"
+          }
+        },
+        {
+          "id": "merchant",
+          "params": {
+            "role": "merchant"
+          }
+        }
+      ],
+      "source": {
+        "type": "yulan",
+        "title": "YuLan-OneSim 图集",
+        "author": "RUC-GSAI/YuLan-OneSim",
+        "revision": "9829d72",
+        "path": "frontend/public/assets/bgrd-*.json/png",
+        "url": "https://github.com/RUC-GSAI/YuLan-OneSim"
+      },
+      "license": {
+        "spdx": "Apache-2.0",
+        "path": "YULAN_LICENSE"
+      },
+      "preview": "/mecoffe/assets3d/previews/character.voxel.svg"
     }
   ]
 }
