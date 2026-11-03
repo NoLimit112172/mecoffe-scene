@@ -20,3 +20,11 @@
 原始数据为 `data/osm/ustc_gaoxin.osm`，下载来源、UTC 时间、范围及 SHA-256 记录在同目录元数据文件。`scene/campus3d.json` 中的校园边界、建筑轮廓、道路、投影坐标和步行图均由此导出，作为 OSM 衍生数据库按 ODbL 1.0 提供。保留原始数据、转换脚本和许可说明，分发该衍生数据库时遵守 ODbL 的署名及相同方式共享要求。网页右下角保留可点击的 OSM 署名。
 
 地图未使用高德、百度、Google 地图或任何卫星影像。缺失的楼层与高度采用公开的展示默认值；地点映射、人物安置、门店位置和行走动画为 MeCoffe 展示层示意，不代表 OSM 记录了咖啡店，也不是 OASIS 输出的位置或轨迹。
+
+## 三维视觉升级素材
+
+本轮新增的角色（头部、面部、衣服、四肢、背包、帽子与咖啡杯）、建筑窗户贴图、招牌、遮阳棚、草地/道路纹理、树木、路灯、长椅、天空着色器，以及事件气泡与文字图标，均由本仓库 JavaScript/Canvas/Three.js 几何程序生成，没有下载 Quaternius、Kenney 或其他第三方美术素材，也没有新增使用 YuLan 的气泡图片。它们属于本次项目源码的程序化输出；不冒充外部 CC0 授权资源。素材生成位置及边界见 `frontend/public/mecoffe/assets3d/README.md`。
+
+`frontend/public/mecoffe/campus3d_landcover.json` 中的运动场、水面等几何来自同一份已保存 OSM 快照，通过 `adapter/osm_landcover.py` 独立提取并沿下载边界裁剪；保留原来源与投影，按 ODbL 1.0 提供，与上述 OSM 衍生数据采用相同署名及许可要求。运动场线条/水面风格属于示意性绘制，不是测量结果。
+
+Three.js 及 `three/addons` 的 OrbitControls、EffectComposer、RenderPass、UnrealBloomPass、ShaderPass、OutputPass 使用当前已安装版本的 MIT 许可代码（见 `frontend/node_modules/three/LICENSE`）；本轮未升级或新增依赖。当前 r187 已移除 PCFSoftShadowMap，阴影使用受支持的 PCFShadowMap 和扩大的采样半径得到柔和边缘。

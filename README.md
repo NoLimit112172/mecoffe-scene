@@ -150,6 +150,23 @@ npm run build
 
 新版演示仍是 v3 网络的 30 天规则脚本，**不是 OASIS 运行结果**；关系网络仅展示静态关注输入，不产生订单；历史回放仍对应原始失败运行（23/30 天完整，第 24 天部分记录），没有补造后续天数。
 
+## 三维视觉版
+
+`/mecoffe3d` 增加程序生成的楼面窗户、屋顶边缘、两家示意门店招牌与遮阳棚，以及树木、路灯、长椅和草地纹理。环境装饰均在图例注明，建筑轮廓、高度默认值、八个地点映射和原步行图不变。原始 OSM 快照里的八块运动场与永怀湖另存为独立显示图层，不更新已有场景数据。
+
+人物使用程序搭建的低多边形头部、躯干、四肢和面部，用 InstancedMesh 批量绘制；本科生蓝衣、研究生紫衣、教师绿衣、商家橙衣。只绘制少量站立代表与正在行走/选中的人物，楼顶徽标显示对应楼栋的示意人数。行走仍沿原 A* 路线，身体朝向前进方向，左右手脚交替摆动；到店后拿杯返回。点击“人物特写”可放大当前行人或选中人物，自动选择较少遮挡的观察方向。
+
+右上角“日夜循环”按每个回放日的小数进度改变**展示光照**，并非 OASIS 的真实时间、天气或作息；暂停时光照与动作保持不变。可用“光照预览”固定正午、傍晚或夜晚。夜里固定种子的部分窗户亮灯；发帖气泡、评论/关注弧线、广告光束/粒子和到店收据仅表示已有事件。高画质开启阴影、装饰树和选择性辉光，低画质关闭这三项。
+
+全部新美术均为代码/Canvas 程序生成，没有下载外部人物模型或贴图。详见 `NOTICE.md` 和 `frontend/public/mecoffe/assets3d/README.md`。
+
+```powershell
+# 只从已保存的 OSM 快照生成新增的运动场/水面显示图层
+python -X utf8 adapter/osm_landcover.py
+```
+
+现有 `campus3d.json`、地点映射、步行图、三种模式的数据与 `/mecoffe` 二维页面不受上述命令影响。截图与验收记录见 `docs/campus3d-visual-delivery.md`。
+
 ## 测试
 
 ```powershell
@@ -179,6 +196,11 @@ VS Code 里可直接运行任务 **MeCoffe：运行全部测试**。
 | `frontend/src/mecoffe/layout.js` | 人物站位、去门店的行走路线（纯函数） |
 | `frontend/src/mecoffe/CampusScene.js` | Pixi 校园场景：地图、人物、行走与事件动画 |
 | `frontend/src/mecoffe/Campus3DScene.js` | Three.js 校园体块、人物与路网动画 |
+| `frontend/src/mecoffe/Campus3DEnvironment.js` | 程序化外观、装饰、日夜光照与 OSM 地表显示 |
+| `frontend/src/mecoffe/Campus3DCharacters.js` | 带四肢动画和咖啡杯的实例化低多边形人物 |
+| `frontend/src/mecoffe/Campus3DEffects.js` | 事件气泡、弧线、粒子、收据及选择性辉光 |
+| `frontend/src/components/Campus3DVisualControls.vue` | 高低画质、日夜循环和光照预览 |
+| `adapter/osm_landcover.py` | 从同一已存快照提取运动场、水面等独立图层 |
 | `frontend/src/mecoffe/campus3dRouting.js` | 最近道路节点与 A* 寻路（纯函数） |
 | `frontend/src/mecoffe/campus3dPlayback.js` | 三维页面模式校验与时间轴定位（复用 replay.js 统计） |
 | `frontend/src/mecoffe/campus3dView.js` | 按真实校园边界进行透视全景适配 |

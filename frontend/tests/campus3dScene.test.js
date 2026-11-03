@@ -75,6 +75,88 @@ function finishTrip(renderer) {
   renderer.updateWalkers(2) // return home and start the next queued order
 }
 
+test('arrival hands over one cup and receipt, return retains it, seek clears it', () => {
+  const { renderer, entry } = world()
+  const receipts = []
+  renderer.eventEffects = { effects: [], purchaseArrived: event => receipts.push(event.order_id), reset() {} }
+  renderer.playEvent(purchase('coffee'))
+  assert.equal(entry.hasCoffee, false)
+  renderer.updateWalkers(.7)
+  assert.equal(entry.walker.phase, 'dwell')
+  assert.equal(entry.hasCoffee, true)
+  renderer.updateWalkers(.9)
+  assert.equal(entry.walker.phase, 'return')
+  assert.equal(entry.hasCoffee, true)
+  renderer.updateWalkers(.7)
+  assert.deepEqual(receipts, ['coffee'])
+  assert.equal(entry.hasCoffee, true)
+  renderer.setCursor(0)
+  assert.equal(entry.hasCoffee, false)
+})
+
+test('visual activity drains standalone events without changing movement statistics', () => {
+  const { renderer } = world()
+  const counts = []
+  renderer.onVisualActivity = count => counts.push(count)
+  renderer.eventEffects = {
+    effects: [],
+    playEvent() { this.effects.push({ life: 0 }) },
+    reset() { this.effects = [] },
+  }
+  renderer.playEvent({ actor: 'consumer', type: 'post' })
+  assert.deepEqual(counts, [1])
+  assert.deepEqual(renderer.getStats(), { active: 0, queued: 0, unreachable: 0 })
+  renderer.eventEffects.effects = []
+  renderer.emitVisualActivity()
+  assert.deepEqual(counts, [1, 0])
+  renderer.playEvent({ actor: 'consumer', type: 'ad' })
+  renderer.setCursor(0)
+  assert.deepEqual(counts, [1, 0, 1, 0])
+})
+
+test('hover restores the original night window colour instead of switching it off', () => {
+  const { renderer } = world()
+  const wall = new THREE.MeshStandardMaterial({ emissive: '#ffffff', emissiveIntensity: 2 })
+  const roof = new THREE.MeshStandardMaterial({ emissive: '#231e12' })
+  const building = new THREE.Mesh(new THREE.BoxGeometry(), [roof, wall])
+  building.userData.building = { osm_id: 'home', name: '宿舍' }
+  renderer.raycaster = { setFromCamera() {}, intersectObjects: () => [{ object: building }] }
+  renderer.pointer = new THREE.Vector2()
+  renderer.renderer = { domElement: { getBoundingClientRect: () => ({ left: 0, top: 0, width: 100, height: 100 }), style: {} } }
+  const original = [roof.emissive.clone(), wall.emissive.clone()]
+  renderer.pick({ clientX: 50, clientY: 50 }, false)
+  renderer.clearHoveredBuilding()
+  assert.deepEqual([roof.emissive, wall.emissive], original)
+  assert.equal(wall.emissiveIntensity, 2)
+  building.geometry.dispose()
+  roof.dispose()
+  wall.dispose()
+})
+
+test('portrait camera avoids a foreground obstruction without moving the actor or its route', () => {
+  const { renderer, entry } = world()
+  renderer.camera = new THREE.PerspectiveCamera(42, 1.8, .1, 10000)
+  renderer.host = { clientWidth: 1208, clientHeight: 647 }
+  renderer.controls = { target: new THREE.Vector3(), enableDamping: true, update() {
+    renderer.camera.lookAt(this.target)
+    renderer.camera.updateMatrixWorld()
+  } }
+  renderer.playEvent(purchase('portrait'))
+  const before = entry.figure.position.clone()
+  const route = JSON.stringify(entry.walker.points)
+  const obstruction = new THREE.Mesh(new THREE.BoxGeometry(7, 15, 7), new THREE.MeshBasicMaterial())
+  obstruction.position.set(before.x + Math.sin(.55) * 18, 7, before.z + Math.cos(.55) * 18)
+  renderer.scene.add(obstruction)
+  renderer.environment = { trees: obstruction }
+  renderer.focusPerson('consumer')
+  assert.ok(Math.abs(renderer.camera.position.x - before.x - Math.sin(.55) * 38) > 1)
+  assert.deepEqual(entry.figure.position, before)
+  assert.equal(JSON.stringify(entry.walker.points), route)
+  assert.equal(renderer.selectedId, 'consumer')
+  obstruction.geometry.dispose()
+  obstruction.material.dispose()
+})
+
 test('one person completes purchase trips in FIFO order without losing queued purchases', () => {
   const { renderer, entry } = world()
   for (const event of renderer.index.scene.events) renderer.playEvent(event)

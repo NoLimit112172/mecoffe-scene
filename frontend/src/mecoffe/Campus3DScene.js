@@ -7,6 +7,10 @@ import {
 } from './campus3dRouting.js'
 import { campusBoundaryBounds, fitCampusView } from './campus3dView.js'
 import { layoutLabels, personScaleForCamera } from './campus3dScreen.js'
+import { CharacterBatch } from './Campus3DCharacters.js'
+import { Campus3DEnvironment } from './Campus3DEnvironment.js'
+import { EventEffects, SelectiveBloom } from './Campus3DEffects.js'
+import { visualClock, idleRepresentatives, displayOccupancy } from './campus3dPresentation.js'
 
 const BRAND_COLORS = [0x168b7a, 0xe17943, 0x6976bb, 0xb08c3d]
 const ROLE_COLORS = {
@@ -129,14 +133,17 @@ function roadGeometry(roads, extraWidth = 0, elevation = 0.14) {
 }
 
 export class Campus3DScene {
-  constructor({ host, campus, mapping, index, onHover, onSelect, onStats } = {}) {
+  constructor({ host, campus, mapping, index, landcovers = [], onHover, onSelect, onStats, onVisualActivity } = {}) {
     this.host = host
     this.campus = campus
     this.mapping = mapping
     this.index = index
+    this.landcovers = landcovers
     this.onHover = onHover
     this.onSelect = onSelect
     this.onStats = onStats
+    this.onVisualActivity = onVisualActivity
+    this.pendingVisualCount = 0
     this.routing = createRouting(campus, mapping)
     this.people = new Map()
     this.buildingMeshes = new Map()
@@ -153,6 +160,10 @@ export class Campus3DScene {
     this.unreachable = 0
     this.selectedId = null
     this.disposed = false
+    this.visualSeconds = 0
+    this.quality = 'high'
+    this.lighting = { cycle: true, position: 0, hour: 12 }
+    this.representatives = idleRepresentatives(index.scene.people)
     this.brandColors = new Map(index.scene.brands.map((brand, k) => [brand.brand_id, BRAND_COLORS[k % BRAND_COLORS.length]]))
   }
 
@@ -160,7 +171,7 @@ export class Campus3DScene {
     this.scene = new THREE.Scene()
     this.scene.background = new THREE.Color(0xeaf0ef)
     this.renderer = new THREE.WebGLRenderer({ antialias: true, alpha: false })
-    this.renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2))
+    this.renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 1.5))
     this.renderer.outputColorSpace = THREE.SRGBColorSpace
     this.renderer.toneMapping = THREE.ACESFilmicToneMapping
     this.renderer.toneMappingExposure = 1.02
@@ -177,10 +188,6 @@ export class Campus3DScene {
     this.controls.minDistance = 18
     this.onControlsStart = () => { this.overviewActive = false }
     this.controls.addEventListener('start', this.onControlsStart)
-    this.scene.add(new THREE.HemisphereLight(0xf6fcff, 0xa4b398, 1.65))
-    const sun = new THREE.DirectionalLight(0xfff5e5, 1.5)
-    sun.position.set(-350, 800, 250)
-    this.scene.add(sun)
     this.routeLayer = new THREE.Group()
     this.effectLayer = new THREE.Group()
     this.relationLayer = new THREE.Group()
@@ -188,6 +195,14 @@ export class Campus3DScene {
     this.createLabelLayer()
     this.drawCampus()
     this.placePeople()
+    this.environment = new Campus3DEnvironment({ scene: this.scene, campus: this.campus,
+      mapping: this.mapping, buildingMeshes: this.buildingMeshes, renderer: this.renderer,
+      center: this.center, landcovers: this.landcovers }).init()
+    this.eventEffects = new EventEffects({ scene: this.scene, index: this.index,
+      routing: this.routing, shopMarkers: this.shopMarkers })
+    this.bloom = new SelectiveBloom({ renderer: this.renderer, scene: this.scene, camera: this.camera,
+      width: this.host.clientWidth, height: this.host.clientHeight })
+    this.setQuality(this.quality)
     this.resetCamera()
     this.resize()
     this.raycaster = new THREE.Raycaster()
@@ -209,13 +224,18 @@ export class Campus3DScene {
       const delta = Math.min((now - this.lastTime) / 1000, 0.12)
       this.lastTime = now
       if (this.playing) {
+        this.visualSeconds += delta * this.speed
         this.updateWalkers(delta * this.speed)
         this.updateEffects(delta * this.speed)
+        this.eventEffects?.update(delta * this.speed)
+        this.emitVisualActivity()
       }
       this.controls.update()
       this.updateScreenVisuals()
       this.updateRelations()
-      this.renderer.render(this.scene, this.camera)
+      this.characterBatch?.update(this.visualSeconds)
+      this.environment?.update(visualClock(this.lighting.position, this.lighting).phase, this.camera)
+      this.bloom ? this.bloom.render() : this.renderer.render(this.scene, this.camera)
       this.frame = requestAnimationFrame(animate)
     }
     this.frame = requestAnimationFrame(animate)
@@ -239,6 +259,7 @@ export class Campus3DScene {
     base.rotation.x = -Math.PI / 2
     base.position.copy(this.center)
     base.position.y = -0.15
+    base.userData.environmentKind = 'base'
     this.scene.add(base)
     for (const polygon of polygons) {
       if (!polygon.outer?.length) continue
@@ -246,16 +267,23 @@ export class Campus3DScene {
         new THREE.MeshStandardMaterial({ color: 0xcbdcbe, side: THREE.DoubleSide, roughness: 1 }))
       ground.rotation.x = -Math.PI / 2
       ground.position.y = 0
+      ground.userData.environmentKind = 'ground'
       this.scene.add(ground)
       const border = new THREE.Line(new THREE.BufferGeometry().setFromPoints(polygon.outer.map(([x, y]) => new THREE.Vector3(x, 0.28, -y))),
         new THREE.LineDashedMaterial({ color: 0x6c917d, dashSize: 7, gapSize: 4, transparent: true, opacity: 0.8 }))
       border.computeLineDistances()
       this.scene.add(border)
     }
-    this.scene.add(new THREE.Mesh(roadGeometry(this.campus.roads, 0.7, 0.08),
-      new THREE.MeshStandardMaterial({ color: 0x87998b, roughness: 1, side: THREE.DoubleSide })))
-    this.scene.add(new THREE.Mesh(roadGeometry(this.campus.roads),
-      new THREE.MeshStandardMaterial({ color: 0xe7d9b9, roughness: 1, side: THREE.DoubleSide })))
+    const roadEdge = new THREE.Mesh(roadGeometry(this.campus.roads, 0.7, 0.08),
+      new THREE.MeshStandardMaterial({ color: 0xb9bcaf, roughness: 1, side: THREE.DoubleSide }))
+    this.scene.add(roadEdge)
+    for (const kind of ['road', 'path']) {
+      const isPath = road => ['footway', 'path', 'steps', 'pedestrian', 'cycleway'].includes(road.highway)
+      const roads = this.campus.roads.filter(road => kind === 'path' ? isPath(road) : !isPath(road))
+      const mesh = new THREE.Mesh(roadGeometry(roads), new THREE.MeshStandardMaterial({ color: kind === 'path' ? 0xdbcbaa : 0x6c7675, roughness: 1, side: THREE.DoubleSide }))
+      mesh.userData.environmentKind = kind
+      this.scene.add(mesh)
+    }
     const mapped = new Map()
     for (const [key, entry] of Object.entries(this.mapping.mappings)) {
       if (!mapped.has(entry.osm_id)) mapped.set(entry.osm_id, [])
@@ -326,11 +354,22 @@ export class Campus3DScene {
     Object.assign(this.labelLeaders.style, { position: 'absolute', inset: '0', pointerEvents: 'none' })
     this.labelLayer.appendChild(this.labelLeaders)
     this.host.appendChild(this.labelLayer)
+    this.personNameLabel = document.createElement('div')
+    this.personNameLabel.setAttribute('data-person-name', '')
+    Object.assign(this.personNameLabel.style, { position: 'absolute', display: 'none', padding: '5px 9px',
+      background: '#123f3a', color: '#fff9d8', border: '1px solid #f4d187', borderRadius: '6px',
+      font: '600 12px/18px "Microsoft YaHei",sans-serif', whiteSpace: 'nowrap', pointerEvents: 'none', zIndex: '2' })
+    this.labelLayer.appendChild(this.personNameLabel)
   }
 
   addCampusLabel(id, text, position, color) {
     const element = document.createElement('div')
     element.textContent = text
+    const badge = document.createElement('span')
+    const total = [...this.people.values()].filter(entry => entry.anchor.building.osm_id === id).length
+    badge.textContent = `示意 ${total}人`
+    Object.assign(badge.style, { display:'inline-block', minWidth:'48px', marginLeft:'5px', padding:'0 3px', borderRadius:'4px', fontSize:'9px', textAlign:'center', color:'#47705c', background:'#e5eddd' })
+    element.appendChild(badge)
     element.title = text
     element.setAttribute('data-campus-label', id)
     Object.assign(element.style, {
@@ -349,7 +388,7 @@ export class Campus3DScene {
     this.labelLeaders.appendChild(leader)
     // Integer offsetWidth can round the natural text width down at fractional
     // device scales; two spare CSS pixels prevent unwanted final-character … .
-    this.labels.push({ id, position, element, leader,
+    this.labels.push({ id, position, element, leader, badge,
       width: Math.ceil(element.getBoundingClientRect().width) + 2, height: Math.ceil(element.getBoundingClientRect().height) })
   }
 
@@ -366,14 +405,33 @@ export class Campus3DScene {
     // Scale only the figure, never its ground position or route. Values are
     // CSS pixels; renderer pixel ratio must not affect the minimum size.
     for (const entry of this.people.values()) {
-      if (cameraChanged || !entry.screenPosition?.equals(entry.figure.position)) {
-        const scale = personScaleForCamera(this.camera, entry.figure.position, { width, height, minPixels: 12 })
+      const prominent = Boolean(entry.walker) || entry.person.id === this.selectedId
+      entry.presentationVisible = prominent || this.representatives.has(entry.person.id)
+      entry.figure.visible = entry.presentationVisible
+      entry.base.visible = prominent
+      const minPixels = prominent ? 26 : 18
+      if (cameraChanged || entry.screenMinPixels !== minPixels || !entry.screenPosition?.equals(entry.figure.position)) {
+        const scale = personScaleForCamera(this.camera, entry.figure.position, { width, height, minPixels })
         entry.figure.scale.setScalar(scale)
         entry.screenPosition = entry.figure.position.clone()
+        entry.screenMinPixels = minPixels
       }
       entry.walkHalo.visible = Boolean(entry.walker)
     }
     this.updateSelection()
+    if (this.personNameLabel) {
+      const selected = this.people.get(this.selectedId)
+      const point = selected?.figure.position.clone().add(new THREE.Vector3(0, 9 * selected.figure.scale.x, 0)).project(this.camera)
+      const visible = point && point.z > -1 && point.z < 1 && Math.abs(point.x) < 1 && Math.abs(point.y) < 1
+      this.personNameLabel.style.display = visible ? 'block' : 'none'
+      if (visible) {
+        this.personNameLabel.textContent = `${selected.person.name} · ${selected.person.role_label}`
+        this.personNameLabel.style.left = `${Math.max(5, Math.min(width - 190, (point.x + 1) * width / 2 - 65))}px`
+        this.personNameLabel.style.top = `${Math.max(5, (1 - point.y) * height / 2 - 24)}px`
+      }
+    }
+    const occupancy = displayOccupancy(this.people.values())
+    for (const label of this.labels) label.badge.textContent = `示意 ${occupancy.get(label.id)?.inside || 0}人`
     if (!this.labelLayer || !cameraChanged) return
     const items = []
     for (const label of this.labels) {
@@ -423,12 +481,10 @@ export class Campus3DScene {
           ? this.brandColors.get(person.id) || ROLE_COLORS.merchant
           : ROLE_COLORS[person.role] || 0x6587a7
         const figure = new THREE.Group()
-        const body = new THREE.Mesh(new THREE.CapsuleGeometry(1.45, 3.3, 3, 7),
-          new THREE.MeshStandardMaterial({ color, roughness: 0.85 }))
+        // The root, hit proxy and halos stay here. Actual body parts are drawn
+        // by one shared InstancedMesh batch, never 100 independent rig meshes.
+        const body = new THREE.Object3D()
         body.position.y = 3.2
-        const head = new THREE.Mesh(new THREE.SphereGeometry(1.25, 8, 6),
-          new THREE.MeshStandardMaterial({ color: 0xf0d4b9, roughness: 0.9 }))
-        head.position.y = 7.2
         const base = new THREE.Mesh(new THREE.CircleGeometry(2.6, 12),
           new THREE.MeshBasicMaterial({ color, transparent: true, opacity: 0.25, depthWrite: false }))
         base.rotation.x = -Math.PI / 2
@@ -442,12 +498,12 @@ export class Campus3DScene {
         const hit = new THREE.Mesh(new THREE.SphereGeometry(4, 6, 4),
           new THREE.MeshBasicMaterial({ visible: false }))
         hit.position.y = 4.5
-        for (const child of [body, head, hit]) child.userData.person = person
-        figure.add(base, walkHalo, body, head, hit)
+        hit.userData.person = person
+        figure.add(base, walkHalo, body, hit)
         figure.position.set(home.x, 0.35, -home.y)
         this.scene.add(figure)
         this.pickTargets.push(hit)
-        this.people.set(person.id, { person, key, anchor, entrance, home, figure, body, walkHalo, color, queue: [], walker: null })
+        this.people.set(person.id, { person, key, anchor, entrance, home, figure, body, base, walkHalo, color, queue: [], walker: null, hasCoffee: false })
       })
     }
     this.selection = new THREE.Mesh(new THREE.RingGeometry(4.1, 5.2, 32),
@@ -456,6 +512,7 @@ export class Campus3DScene {
     this.selection.visible = false
     this.selection.renderOrder = 4
     this.scene.add(this.selection)
+    this.characterBatch = new CharacterBatch({ scene: this.scene, entries: this.people })
   }
 
   setCursor(cursor) {
@@ -468,12 +525,16 @@ export class Campus3DScene {
     for (const entry of this.people.values()) {
       entry.queue.length = 0
       entry.walker = null
+      entry.hasCoffee = false
       entry.figure.position.set(entry.home.x, 0.35, -entry.home.y)
       entry.body.position.y = 3.2
     }
     this.clearLayer(this.routeLayer)
     this.clearLayer(this.effectLayer)
     this.effects = []
+    this.visualSeconds = 0
+    this.eventEffects?.reset()
+    this.emitVisualActivity()
     this.updateSelection()
     this.emitStats()
   }
@@ -481,6 +542,11 @@ export class Campus3DScene {
   playEvent(event) {
     const entry = this.people.get(event.actor)
     if (!entry) return
+    if (this.eventEffects && event.type !== 'purchase') {
+      this.eventEffects.playEvent(event)
+      this.emitVisualActivity()
+      return
+    }
     if (event.type === 'purchase') {
       const order = event.order_id || event.key
       if (this.seenOrders.has(order)) return
@@ -503,12 +569,14 @@ export class Campus3DScene {
       ring.position.y = 0.7
       this.effectLayer.add(ring)
       this.effects.push({ ring, life: 0, duration: 1.2 })
+      this.emitVisualActivity()
     }
   }
 
   startNextTrip(entry) {
     const next = entry.queue.shift()
     if (!next) return
+    entry.hasCoffee = false
     const material = new THREE.LineBasicMaterial({ color: this.brandColors.get(next.event.brand_id) || 0xe17943, transparent: true, opacity: 0.75 })
     const routeLine = new THREE.Line(new THREE.BufferGeometry().setFromPoints(next.route.points.map(point => new THREE.Vector3(point.x, 0.65, -point.y))), material)
     this.routeLayer.add(routeLine)
@@ -556,6 +624,9 @@ export class Campus3DScene {
         if (walker.phase === 'outbound') {
           walker.phase = 'dwell'
           walker.dwell = 0
+          entry.hasCoffee = true
+          this.eventEffects?.purchaseArrived(walker.event)
+          this.emitVisualActivity()
         } else {
           this.routeLayer.remove(walker.line)
           disposeObject(walker.line)
@@ -634,7 +705,8 @@ export class Campus3DScene {
     const rect = this.renderer.domElement.getBoundingClientRect()
     this.pointer.set((event.clientX - rect.left) / rect.width * 2 - 1, -(event.clientY - rect.top) / rect.height * 2 + 1)
     this.raycaster.setFromCamera(this.pointer, this.camera)
-    const hit = this.raycaster.intersectObjects(this.pickTargets, false)[0]
+    const hit = this.raycaster.intersectObjects(this.pickTargets, false).find(item =>
+      !item.object.userData.person || this.people.get(item.object.userData.person.id)?.presentationVisible !== false)
     this.clearHoveredBuilding()
     if (!hit) {
       this.renderer.domElement.style.cursor = 'grab'
@@ -654,14 +726,16 @@ export class Campus3DScene {
       }
     } else if (building) {
       this.hoveredBuilding = hit.object
-      for (const material of hit.object.material) material.emissive.setHex(0x112b28)
+      this.hoveredEmissives = hit.object.material.map(material => ({ material, color: material.emissive.clone() }))
+      for (const { material } of this.hoveredEmissives) material.emissive.add(new THREE.Color(0x112b28))
       this.onHover?.({ type: 'building', name: building.name || `OSM ${building.osm_id}`, building, x: event.clientX, y: event.clientY })
     }
   }
 
   clearHoveredBuilding() {
     if (this.hoveredBuilding) {
-      for (const material of this.hoveredBuilding.material) material.emissive.setHex(0)
+      for (const { material, color } of this.hoveredEmissives || []) material.emissive.copy(color)
+      this.hoveredEmissives = null
       this.hoveredBuilding = null
     }
   }
@@ -676,9 +750,67 @@ export class Campus3DScene {
   }
 
   emitStats() { this.onStats?.(this.getStats()) }
+  emitVisualActivity() {
+    const count = this.effects.length + (this.eventEffects?.effects.length || 0)
+    if (count === this.pendingVisualCount) return
+    this.pendingVisualCount = count
+    this.onVisualActivity?.(count)
+  }
   isWalking(id) { return this.walkers.has(id) }
   setPlaying(playing) { this.playing = Boolean(playing) }
   setSpeed(speed) { this.speed = Number.isFinite(Number(speed)) ? Math.max(0.1, Math.min(20, Number(speed))) : 1 }
+
+  setLighting({ position = 0, cycle = true, hour = 12 } = {}) {
+    this.lighting = { position, cycle, hour }
+  }
+
+  setQuality(value) {
+    this.quality = value === 'low' ? 'low' : 'high'
+    this.environment?.setQuality(this.quality)
+    this.characterBatch?.setQuality(this.quality)
+    this.eventEffects?.setQuality(this.quality)
+    this.bloom?.setQuality(this.quality)
+    if (this.renderer) {
+      this.renderer.setPixelRatio(this.quality === 'low' ? 1 : Math.min(window.devicePixelRatio || 1, 1.5))
+      this.resize()
+    }
+  }
+
+  focusPerson(id) {
+    const entry = this.people.get(id) || this.people.get([...this.walkers][0]) || [...this.people.values()].find(item => item.person.role !== 'merchant')
+    if (!entry || !this.camera) return null
+    this.selectPerson(entry.person.id)
+    this.overviewActive = false
+    const target = entry.figure.position.clone().add(new THREE.Vector3(0, 4.3, 0))
+    const angle = entry.figure.rotation.y
+    // Choose an unobstructed front/side view rather than putting a decorative
+    // tree between the lens and the person. This changes only the camera.
+    const occluders = [...this.buildingMeshes.values()]
+    if (this.environment?.trees?.visible) occluders.push(this.environment.trees)
+    this.scene.updateMatrixWorld(true)
+    const ray = new THREE.Raycaster()
+    const views = [.55, -.55, 1.1, -1.1, 0, 1.8, -1.8, Math.PI].map(offset => {
+      const position = target.clone().add(new THREE.Vector3(Math.sin(angle + offset) * 38, 18, Math.cos(angle + offset) * 38))
+      let obstruction = 0
+      for (const height of [1.5, 4.3, 7]) {
+        const point = entry.figure.position.clone().add(new THREE.Vector3(0, height, 0))
+        const direction = point.clone().sub(position)
+        ray.set(position, direction.clone().normalize())
+        ray.far = direction.length() - 2
+        obstruction += ray.intersectObjects(occluders, true).length
+      }
+      return { position, obstruction }
+    })
+    views.sort((a, b) => a.obstruction - b.obstruction)
+    this.controls.target.copy(target)
+    this.camera.position.copy(views[0].position)
+    const damping = this.controls.enableDamping
+    this.controls.enableDamping = false
+    this.controls.update()
+    this.controls.enableDamping = damping
+    this.updateScreenVisuals()
+    return entry.person.id
+  }
 
   resetCamera() {
     if (!this.camera) return
@@ -707,6 +839,7 @@ export class Campus3DScene {
     this.camera.aspect = width / height
     this.camera.updateProjectionMatrix()
     this.renderer.setSize(width, height, false)
+    this.bloom?.resize(width, height)
     if (this.overviewActive) this.resetCamera()
   }
 
@@ -728,6 +861,10 @@ export class Campus3DScene {
     this.labelLayer?.remove()
     this.labels.length = 0
     this.clearHover()
+    this.eventEffects?.dispose()
+    this.bloom?.dispose()
+    this.environment?.dispose()
+    this.characterBatch?.dispose()
     if (this.scene) {
       disposeObject(this.scene)
       this.scene.clear()
