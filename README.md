@@ -12,23 +12,63 @@
 git clone https://github.com/NoLimit112172/mecoffe-scene.git
 ```
 
-1. 用 VS Code 打开 `mecoffe-scene.code-workspace`（或直接打开本文件夹）。
-2. 按 **F5**，选择 **MeCoffe：打开校园场景沙盘**：会先启动本地服务，再打开 Chrome 调试页。
-3. 不用调试器时，双击 `start-mecoffe.cmd`，或在终端运行：
+安装 Node.js（建议 22 或 24）、Python 3.9+ 和 Google Chrome。Python 适配器只用标准库；前端测试也会检查 VS Code 配置。首次缺少前端依赖时，启动和前端任务会按 `package-lock.json` 自动执行 `npm ci`，需要网络。
+
+用 VS Code 的“文件 → 从文件打开工作区”打开 `mecoffe-scene.code-workspace`，或直接打开本文件夹。扩展面板中的“工作区推荐”提供 **Vue - Official（Vue.volar）**、**Python**、**Pylance**；Chrome 调试由 VS Code 内置 JavaScript 调试器提供。工作区搜索默认排除依赖、构建产物、原始大数据和派生校园 JSON；文件仍在磁盘上，可直接打开。
+
+在左侧“运行和调试”的下拉框选择入口，再按 **F5**。四个入口按以下顺序排列，共用启动任务：自动启动或复用本项目的 **5180** 服务，校验就绪后打开相应 Chrome 调试页。
+
+| F5 启动项 | 页面 |
+| --- | --- |
+| **MeCoffe：二维校园沙盘** | <http://127.0.0.1:5180/mecoffe> |
+| **MeCoffe：三维校园沙盘** | <http://127.0.0.1:5180/mecoffe3d> |
+| **MeCoffe：三维素材库** | <http://127.0.0.1:5180/mecoffe3d/assets> |
+| **MeCoffe：NUS 建模预览** | <http://127.0.0.1:5180/mecoffe3d?campus=nus> |
+
+NUS 入口只预览通用流水线生成的地图，没有模拟数据。三维沙盘默认效果、三种回放模式与二维页面保持原样。停止调试不会停止后台开发服务，下次 F5 会复用它。
+
+不用调试器时，双击 `start-mecoffe.cmd`，或在项目根目录终端运行：
 
 ```powershell
 .\start-mecoffe.ps1            # 启动并打开浏览器
 .\start-mecoffe.ps1 -NoBrowser # 只启动服务
 .\start-mecoffe.ps1 -Rebuild   # 先重新生成场景数据
+.\start-mecoffe.ps1 -Port 5181 -NoBrowser # 可选其他端口；F5 入口固定为 5180
 ```
 
-页面地址：<http://127.0.0.1:5180/mecoffe>。服务在后台运行，日志在 `logs/`。端口固定为 5180，被别的程序占用时脚本会报错退出，不会结束任何进程。
-
-需要 Node.js 18+ 和 Python 3.9+（适配器只用标准库）。首次运行若没有 `frontend/node_modules`，脚本会自动执行 `npm ci`。
+脚本就绪后打印全部四个地址；不带 `-NoBrowser` 时仍只自动打开二维页面。每次仍完整生成并校验数据，内容一致时保留原文件，避免重复替换引起 Windows 文件占用错误；输入变化时发布新结果。服务在后台运行，日志在 `logs/`。默认端口 5180 被其他项目占用时，脚本报错退出并保留现有进程。
 
 也可以在 `frontend/` 终端运行 `npm run dev`，会自动打开同一个新版演示页面。该项目默认固定使用 5180，访问首页 `/` 也会跳到 `/mecoffe`。MeCoffe 三种展示模式都不需要另开后端或填写 API 密钥；`frontend/.env.example` 仅保留可选配置说明。
 
-若启动失败，先查看 VS Code 的启动任务终端和 `logs/`，其中会说明解释器、依赖、数据或端口的具体问题。代码更新不包含本机 `node_modules/`、构建产物、日志、备份或个人 `.claude/` 配置；其他电脑拉取后会按锁文件安装依赖。
+### 常用任务
+
+按 **Ctrl+Shift+P → 任务: 运行任务（Tasks: Run Task）**，选择以下任务。所有任务以项目根目录为基准；前端测试和构建脚本自动进入 `frontend/`。Python 任务使用终端 PATH 中的 `python`；安装后需重开 VS Code，终端可用 `python --version`、`node --version` 验证。
+
+| 任务 | 作用 |
+| --- | --- |
+| **MeCoffe：启动场景服务** | 只启动/复用服务，打印四个页面地址 |
+| **MeCoffe：生成地图场景（OSM 范围）** | 交互输入新地图 ID、标题和四边经纬度，下载 OSM 并生成地图 |
+| **MeCoffe：生成地图场景（GeoJSON 文件）** | 输入文件路径、新地图 ID 和标题，生成调用方地图 |
+| **MeCoffe：重建中科大场景** | 从已保存 OSM 使用 `--profile ustc_legacy` 重建到 `campuses/ustc/`，原校园数据和映射保持不变 |
+| **MeCoffe：重建素材库目录** | 执行 `adapter/build_asset_catalog.py`，重建目录和缩略图 |
+| **MeCoffe：重新生成场景数据** | 从原始 OASIS 轨迹生成历史回放 |
+| **MeCoffe：重新生成新版网络** | 从最新快照生成静态关系网络 |
+| **MeCoffe：重新生成新版演示** | 重建可复现的规则演示 |
+| **MeCoffe：运行全部测试** | 依次运行 Python、前端测试；前一步失败即停止，包含配置路径检查 |
+| **MeCoffe：运行 Python 测试** | 单独运行全部 Python 适配器测试 |
+| **MeCoffe：运行前端测试** | 单独运行 `npm test` |
+| **MeCoffe：构建前端** | 执行 `npm run build`，输出到 `frontend/dist/`；也是 **Ctrl+Shift+B** 的默认构建任务 |
+
+### 用自己的地图生成新校园
+
+1. 选一个**新的地图 ID**，如 `my-campus`：以英文字母或数字开头，仅用英文字母、数字、下划线或连字符，最长 64 个字符。不要填路径、中文或空格。重复 ID 会重建同目录，请勿用 `nus`、`ustc` 覆盖已验收示例。任务输入框给出格式提示，不会自动修正 ID。
+2. 使用 OSM 时，运行 **生成地图场景（OSM 范围）**，依次填写标题和 **最小经度、最小纬度、最大经度、最大纬度**（西、南、东、北），使用 WGS84。默认范围是 NUS 校园内约百米的小块，适合首次验证，可替换为自己的校园；现成 NUS 预览仍保留完整的已验收范围。下载仅访问 OSM 官方 API；原始 XML、下载时间与 SHA-256 存到 `data/osm/<id>.*`。下载速度取决于网络与范围，超大范围会被校验拒绝。
+3. 使用 GeoJSON 时，运行 **生成地图场景（GeoJSON 文件）**。填写本地文件的绝对路径或相对项目根目录的路径；**含空格也不用手动加引号**。文件应为 WGS84 `[经度, 纬度]` 的 `FeatureCollection`，包含建筑 Polygon、道路 LineString 等要素，格式和示例见 [地图输入草案](docs/map-input-contract.md)。
+4. 成功后，五个场景文件写入 `frontend/public/mecoffe/campuses/<id>/`。用任一 F5 入口启动服务，再访问 `http://127.0.0.1:5180/mecoffe3d?campus=<id>`；例如 <http://127.0.0.1:5180/mecoffe3d?campus=my-campus>。重新生成后刷新即可，无需重启服务。只有地图和素材原型分配，不会自动生成 agent、订单或 OASIS 结果。
+
+中科大兼容重建的独立预览地址为 <http://127.0.0.1:5180/mecoffe3d?campus=ustc>；原有 `/mecoffe3d` 继续使用原数据展示完整沙盘。
+
+若启动或任务失败，先查看任务终端和 `logs/`，其中会说明解释器、依赖、数据或端口问题；输入路径/范围错误时按终端提示修正再运行。代码不包含本机依赖、构建产物、日志、备份或个人 `.claude/` 配置。里程碑 4 验证见 [VS Code 配置交付记录](docs/vscode-project-delivery.md)。
 
 ## 页面能看什么
 

@@ -2,6 +2,18 @@
   "folders": [{ "name": "MeCoffe 校园场景沙盘", "path": "." }],
   "settings": {
     "files.exclude": { "**/node_modules": true, "frontend/dist": true },
-    "search.exclude": { "data/source": true, "frontend/public/assets": true }
+    "search.exclude": {
+      "**/node_modules/**": true,
+      "**/dist/**": true,
+      "**/data/source/**": true,
+      "**/data/pending/**": true,
+      "**/data/osm/**": true,
+      "**/frontend/public/assets/**": true,
+      "**/frontend/public/mecoffe/*.json": true,
+      "**/frontend/public/mecoffe/campuses/**": true,
+      "**/scene/campus3d*.json": true,
+      "**/logs/**": true,
+      "**/backups/**": true
+    }
   }
 }

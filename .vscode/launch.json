@@ -2,13 +2,40 @@
   "version": "0.2.0",
   "configurations": [
     {
-      "name": "MeCoffe：打开校园场景沙盘",
+      "name": "MeCoffe：二维校园沙盘",
       "type": "pwa-chrome",
       "request": "launch",
       "url": "http://127.0.0.1:5180/mecoffe",
       "webRoot": "${workspaceFolder}/frontend",
       "preLaunchTask": "MeCoffe：启动场景服务",
       "presentation": { "group": "MeCoffe", "order": 1 }
+    },
+    {
+      "name": "MeCoffe：三维校园沙盘",
+      "type": "pwa-chrome",
+      "request": "launch",
+      "url": "http://127.0.0.1:5180/mecoffe3d",
+      "webRoot": "${workspaceFolder}/frontend",
+      "preLaunchTask": "MeCoffe：启动场景服务",
+      "presentation": { "group": "MeCoffe", "order": 2 }
+    },
+    {
+      "name": "MeCoffe：三维素材库",
+      "type": "pwa-chrome",
+      "request": "launch",
+      "url": "http://127.0.0.1:5180/mecoffe3d/assets",
+      "webRoot": "${workspaceFolder}/frontend",
+      "preLaunchTask": "MeCoffe：启动场景服务",
+      "presentation": { "group": "MeCoffe", "order": 3 }
+    },
+    {
+      "name": "MeCoffe：NUS 建模预览",
+      "type": "pwa-chrome",
+      "request": "launch",
+      "url": "http://127.0.0.1:5180/mecoffe3d?campus=nus",
+      "webRoot": "${workspaceFolder}/frontend",
+      "preLaunchTask": "MeCoffe：启动场景服务",
+      "presentation": { "group": "MeCoffe", "order": 4 }
     }
   ]
 }

@@ -28,6 +28,31 @@ function Get-FileSha256([string]$Path) {
     finally { $stream.Dispose(); $digest.Dispose() }
 }
 
+function Publish-GeneratedFile([string]$Prepared, [string]$Destination) {
+    if (Test-Path -LiteralPath $Destination) {
+        if ((Get-FileSha256 $Prepared) -eq (Get-FileSha256 $Destination)) {
+            Write-Host "内容未变，保留现有文件：$Destination"
+            return
+        }
+        # 同目录原子替换；若目标被占用而禁止替换，报错并保留旧文件。
+        [IO.File]::Replace($Prepared, $Destination, [NullString]::Value)
+    } else {
+        [IO.File]::Move($Prepared, $Destination)
+    }
+}
+
+function Invoke-DataAdapter([string]$Python, [string]$Adapter, [string]$Destination) {
+    # 仍完整生成和校验；相同内容不触发替换或 Vite 热更新。
+    $prepared = "$Destination.$([Guid]::NewGuid().ToString('N')).prepared.tmp"
+    try {
+        & $Python -X utf8 (Join-Path $Root $Adapter) --output $prepared
+        if ($LASTEXITCODE -ne 0) { throw "数据生成失败：$Adapter。请查看上面的适配器错误。" }
+        Publish-GeneratedFile $prepared $Destination
+    } finally {
+        if (Test-Path -LiteralPath $prepared) { Remove-Item -LiteralPath $prepared -Force }
+    }
+}
+
 function Find-Node {
     $candidates = @((Get-Command node -All -CommandType Application -ErrorAction SilentlyContinue | ForEach-Object Source))
     if ($env:ProgramFiles) { $candidates += Join-Path $env:ProgramFiles 'nodejs\node.exe' }
@@ -187,14 +212,11 @@ try {
     if (-not (Test-Path -LiteralPath $vite)) { throw '前端依赖安装未完成，缺少 Vite 入口。' }
 
     if ($Rebuild -or -not (Test-Path -LiteralPath $Scene)) {
-        & $python -X utf8 (Join-Path $Root 'adapter\oasis_to_scene.py')
-        if ($LASTEXITCODE -ne 0) { throw '历史数据转换失败，请检查上面的适配器错误。' }
+        Invoke-DataAdapter $python 'adapter\oasis_to_scene.py' $Scene
     }
     if (-not (Test-Path -LiteralPath $SnapshotPath)) { throw '缺少 data/source/population_snapshot.latest.json，无法生成新版演示。' }
-    & $python -X utf8 (Join-Path $Root 'adapter\snapshot_to_scene.py')
-    if ($LASTEXITCODE -ne 0) { throw '新版网络转换失败，请检查上面的适配器错误。' }
-    & $python -X utf8 (Join-Path $Root 'adapter\build_demo.py')
-    if ($LASTEXITCODE -ne 0) { throw '新版演示生成失败，请检查上面的脚本错误。' }
+    Invoke-DataAdapter $python 'adapter\snapshot_to_scene.py' $NetworkPath
+    Invoke-DataAdapter $python 'adapter\build_demo.py' $DemoPath
     Assert-GeneratedData
 
     if (Test-PortBusy) {
@@ -216,6 +238,10 @@ try {
         Write-Host "本项目服务已就绪（进程 $($child.Id)），日志：$out"
     }
     Write-Host "已就绪：$Url"
+    Write-Host "二维校园沙盘：$Url"
+    Write-Host "三维校园沙盘：http://127.0.0.1:$Port/mecoffe3d"
+    Write-Host "三维素材库：http://127.0.0.1:$Port/mecoffe3d/assets"
+    Write-Host "NUS 建模预览：http://127.0.0.1:$Port/mecoffe3d?campus=nus"
     if (-not $NoBrowser) { Start-Process $Url }
 } catch {
     Write-Host "启动失败：$($_.Exception.Message)" -ForegroundColor Red

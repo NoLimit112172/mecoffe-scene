@@ -13,7 +13,7 @@
     },
     {
       "label": "MeCoffe：重新生成场景数据",
-      "type": "shell",
+      "type": "process",
       "command": "python",
       "args": ["-X", "utf8", "adapter/oasis_to_scene.py"],
       "options": { "cwd": "${workspaceFolder}" },
@@ -37,11 +37,96 @@
     },
     {
       "label": "MeCoffe：运行全部测试",
-      "type": "shell",
-      "command": "python -X utf8 -m unittest discover -s adapter -v; cd frontend; npm test",
-      "options": { "cwd": "${workspaceFolder}" },
+      "dependsOrder": "sequence",
+      "dependsOn": ["MeCoffe：运行 Python 测试", "MeCoffe：运行前端测试"],
       "problemMatcher": [],
       "group": { "kind": "test", "isDefault": true }
+    },
+    {
+      "label": "MeCoffe：运行 Python 测试",
+      "type": "process",
+      "command": "python",
+      "args": ["-X", "utf8", "-m", "unittest", "discover", "-s", "adapter", "-v"],
+      "options": { "cwd": "${workspaceFolder}" },
+      "problemMatcher": []
+    },
+    {
+      "label": "MeCoffe：运行前端测试",
+      "type": "process",
+      "command": "powershell.exe",
+      "args": ["-NoProfile", "-ExecutionPolicy", "Bypass", "-File", "${workspaceFolder}/scripts/run-frontend.ps1", "-Action", "test"],
+      "options": { "cwd": "${workspaceFolder}" },
+      "problemMatcher": []
+    },
+    {
+      "label": "MeCoffe：生成地图场景（OSM 范围）",
+      "type": "process",
+      "command": "python",
+      "args": [
+        "-X", "utf8", "-m", "adapter.scene_builder", "osm",
+        "--campus-id", "${input:campusId}", "--title", "${input:campusTitle}",
+        "--bbox", "${input:minLon}", "${input:minLat}", "${input:maxLon}", "${input:maxLat}",
+        "--seed", "2026", "--archive-dir", "${workspaceFolder}/data/osm",
+        "--output-dir", "${workspaceFolder}/frontend/public/mecoffe/campuses/${input:campusId}"
+      ],
+      "options": { "cwd": "${workspaceFolder}" },
+      "problemMatcher": []
+    },
+    {
+      "label": "MeCoffe：生成地图场景（GeoJSON 文件）",
+      "type": "process",
+      "command": "python",
+      "args": [
+        "-X", "utf8", "-m", "adapter.scene_builder", "geojson",
+        "--input", "${input:geojsonPath}", "--campus-id", "${input:campusId}",
+        "--title", "${input:campusTitle}", "--seed", "2026",
+        "--output-dir", "${workspaceFolder}/frontend/public/mecoffe/campuses/${input:campusId}"
+      ],
+      "options": { "cwd": "${workspaceFolder}" },
+      "problemMatcher": []
+    },
+    {
+      "label": "MeCoffe：重建中科大场景",
+      "type": "process",
+      "command": "python",
+      "args": [
+        "-X", "utf8", "-m", "adapter.scene_builder", "osm",
+        "--osm", "data/osm/ustc_gaoxin.osm", "--metadata", "data/osm/ustc_gaoxin.metadata.json",
+        "--profile", "ustc_legacy", "--campus-id", "ustc_gaoxin_osm", "--seed", "2026",
+        "--output-dir", "frontend/public/mecoffe/campuses/ustc"
+      ],
+      "options": { "cwd": "${workspaceFolder}" },
+      "problemMatcher": []
+    },
+    {
+      "label": "MeCoffe：重建素材库目录",
+      "type": "process",
+      "command": "python",
+      "args": ["-X", "utf8", "adapter/build_asset_catalog.py"],
+      "options": { "cwd": "${workspaceFolder}" },
+      "problemMatcher": []
+    },
+    {
+      "label": "MeCoffe：构建前端",
+      "type": "process",
+      "command": "powershell.exe",
+      "args": ["-NoProfile", "-ExecutionPolicy", "Bypass", "-File", "${workspaceFolder}/scripts/run-frontend.ps1", "-Action", "build"],
+      "options": { "cwd": "${workspaceFolder}" },
+      "problemMatcher": [],
+      "group": { "kind": "build", "isDefault": true }
     }
+  ],
+  "inputs": [
+    {
+      "id": "campusId", "type": "promptString",
+      "description": "新地图 ID：以英文字母或数字开头，仅用 A-Z/a-z/0-9/_/-，最长 64 字符。用新 ID，避免覆盖 nus/ustc。",
+      "default": "my-campus"
+    },
+    { "id": "campusTitle", "type": "promptString", "description": "地图预览标题", "default": "我的校园建模预览" },
+    { "id": "minLon", "type": "promptString", "description": "OSM 范围：最小经度 minLon（WGS84 / 西边界）", "default": "103.774" },
+    { "id": "minLat", "type": "promptString", "description": "OSM 范围：最小纬度 minLat（WGS84 / 南边界）", "default": "1.295" },
+    { "id": "maxLon", "type": "promptString", "description": "OSM 范围：最大经度 maxLon（WGS84 / 东边界）", "default": "103.775" },
+    { "id": "maxLat", "type": "promptString", "description": "OSM 范围：最大纬度 maxLat（WGS84 / 北边界）", "default": "1.296" },
+    { "id": "geojsonPath", "type": "promptString", "description": "WGS84 GeoJSON 文件路径：绝对路径或相对项目根目录；带空格也不用加引号", "default": "campus.geojson" }
   ]
 }
