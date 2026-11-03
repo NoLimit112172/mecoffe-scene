@@ -1,5 +1,6 @@
 // Display geometry only: never writes OSM nodes, A* paths, mappings or events.
 import { pointInRing, segmentDistance } from './campus3dEnvironmentModel.js'
+import { waterPointClear, waterSegmentClear } from './campus3dSpatial.js'
 
 export const CROWD_GAP = 0.9
 export const DISPLAY_RADIUS = 8
@@ -12,7 +13,7 @@ export function crowdObstacles(buildings = []) {
   if (cache.has(buildings)) return cache.get(buildings)
   const result = buildings.map(building => {
     const ring=building.polygon, holes=building.holes || []
-    return {ring,holes,id:building.osm_id,minX:Math.min(...ring.map(p=>p[0])),maxX:Math.max(...ring.map(p=>p[0])),
+    return {ring,holes,id:building.osm_id,water:building.kind==='water'?building:null,minX:Math.min(...ring.map(p=>p[0])),maxX:Math.max(...ring.map(p=>p[0])),
       minY:Math.min(...ring.map(p=>p[1])),maxY:Math.max(...ring.map(p=>p[1]))}
   })
   cache.set(buildings,result)
@@ -22,6 +23,7 @@ export function crowdObstacles(buildings = []) {
 export function outsideBuildings(point, buildings, radius = 0) {
   for (const b of crowdObstacles(buildings)) {
     if (point.x < b.minX-radius || point.x > b.maxX+radius || point.y < b.minY-radius || point.y > b.maxY+radius) continue
+    if(b.water){if(!waterPointClear(point,b.water,radius))return false;continue}
     if (pointInRing(point,b.ring) && !b.holes.some(ring=>pointInRing(point,ring))) return false
     for (const ring of [b.ring,...b.holes]) for(let i=0;i<ring.length;i++) {
       if(segmentDistance(point,ring[i],ring[(i+1)%ring.length]) < radius-EPS) return false
@@ -41,6 +43,7 @@ export function clearDisplaySegment(a,b,buildings,radius=0) {
   for(const obstacle of crowdObstacles(buildings)) {
     if(Math.max(a.x,b.x)<obstacle.minX-radius || Math.min(a.x,b.x)>obstacle.maxX+radius
       ||Math.max(a.y,b.y)<obstacle.minY-radius || Math.min(a.y,b.y)>obstacle.maxY+radius)continue
+    if(obstacle.water){if(!waterSegmentClear(a,b,obstacle.water,radius))return false;continue}
     for(const ring of [obstacle.ring,...obstacle.holes])for(let i=0;i<ring.length;i++) {
       const c={x:ring[i][0],y:ring[i][1]},d={x:ring[(i+1)%ring.length][0],y:ring[(i+1)%ring.length][1]}
       if(edgesIntersect(a,b,c,d))return false
@@ -53,8 +56,8 @@ export function clearDisplaySegment(a,b,buildings,radius=0) {
   return true
 }
 
-export function nearestClearPosition(desired, buildings, { radius=DISPLAY_RADIUS, occupied=[], gap=CROWD_GAP, roads=[], roadClearance=0 }={}) {
-  const valid=p=>outsideBuildings(p,buildings,radius) && occupied.every(q=>distance(p,q)>=radius+(q.radius??radius)+gap-EPS)
+export function nearestClearPosition(desired, buildings, { radius=DISPLAY_RADIUS, obstacleRadius=radius, occupied=[], gap=CROWD_GAP, roads=[], roadClearance=0 }={}) {
+  const valid=p=>outsideBuildings(p,buildings,obstacleRadius) && occupied.every(q=>distance(p,q)>=radius+(q.radius??radius)+gap-EPS)
     && roads.every(road=>(road.points || road).slice(1).every((b,i)=>segmentDistance(p,
       Array.isArray((road.points||road)[i])?(road.points||road)[i]:array((road.points||road)[i]),Array.isArray(b)?b:array(b))>=roadClearance+radius))
   if(valid(desired))return {x:desired.x,y:desired.y,radius}
@@ -84,6 +87,16 @@ function detour(a,b,buildings,radius) {
   // These are collision envelope corners, NOT new OSM graph nodes. Retain the
   // original route separately. Concave buildings are conservatively bypassed.
   const candidates=[a,b]
+  for(const box of crowdObstacles(buildings))if(box.water) {
+    for(const p of box.water.portals)if(outsideBuildings(p,buildings,radius))candidates.push(p)
+    // Shoreline bends are useful visibility vertices; a single water AABB
+    // would force every shopper around the entire 350m lake.
+    const ring=box.ring,margin=radius*box.water.settings.footRadiusRatio+1
+    for(let i=0;i<ring.length-1;i++)for(const [dx,dy]of [[1,1],[1,-1],[-1,1],[-1,-1]]) {
+      const p={x:ring[i][0]+dx*margin,y:ring[i][1]+dy*margin}
+      if(outsideBuildings(p,buildings,radius))candidates.push(p)
+    }
+  }
   for(const box of crowdObstacles(buildings))for(const x of [box.minX-radius-.2,box.maxX+radius+.2])
     for(const y of [box.minY-radius-.2,box.maxY+radius+.2]) {
       const p={x,y};if(outsideBuildings(p,buildings,radius))candidates.push(p)

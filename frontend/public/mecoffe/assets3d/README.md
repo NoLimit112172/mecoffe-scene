@@ -1,6 +1,6 @@
 # 三维视觉资源清单
 
-版本化目录为 `catalog.json`，交互浏览页为 `/mecoffe3d/assets`。当前共 **185 个原型**：建筑26、道路14、地表6、植被3、街道家具7、人物116、特效13。每个原型记录源路径、许可、变体、参数与匹配规则；`target: component` 的屋顶、基座等部件不参加整栋楼的自动匹配。程序来源51、YuLan图集改编17、Rocketbox原型116、OSM几何1；实例所用地图几何与模型原型的许可分别记录。
+版本化目录为 `catalog.json`，交互浏览页为 `/mecoffe3d/assets`。当前共 **190 个原型**：建筑26、道路15、地表10、植被3、街道家具7、人物116、特效13。每个原型记录源路径、许可、变体、参数与匹配规则；`target: component` 的屋顶、基座等部件不参加整栋楼的自动匹配。程序来源56、YuLan图集改编17、Rocketbox原型116、OSM几何1；实例所用地图几何与模型原型的许可分别记录。
 
 本轮稳定性清理没有新增下载美术资产。YuLan 原图仍来自上游提交 `9829d72` 的 `public/assets/bgrd-0..2.json/png`，按 Apache-2.0 保留根目录 `NOTICE.md` / `YULAN_LICENSE`，未修改或重新授权原图。程序输出以 `LicenseRef-MeCoffe-Project` 标记，不能称为外部 CC0 素材。
 
@@ -11,6 +11,8 @@
 | YuLan 建筑立面 | `src/mecoffe/YuLanAssetFactory.js`、`YuLanCampusStyle.js` | house21–26 原底层/标准层；villa27–30 为注明的墙面分带裁剪。圆塔立面不分给不兼容方形轮廓 |
 | 实体平/坡屋顶和屋面设备 | `src/mecoffe/YuLanRoofGeometry.js`、`yulanRoofModel.js` | 程序生成有厚度的屋面、女儿墙、水箱等；已停用斜二维 roof atlas。固定 ID/seed 布置，中庭保留开口，设备避开孔洞与边缘 |
 | 分层底座、建筑基座和道路层次 | `src/mecoffe/Campus3DBase.js`、`campus3dTerrain.js`、`Campus3DSurroundings.js` | 程序生成石/土/表层、校内外高差、人行道与路缘厚度；只是展示高度，不是实测地形 |
+| 跑道、篮球、网球、羽毛球场 | `src/mecoffe/Campus3DSports.js`、`campus3dSportsModel.js` | 程序生成实体场地、分道标线、篮架、球网；以 OSM 球场定位，外围跑道与多片球场排布是展示设计 |
+| 有深度水域和实体桥 | `src/mecoffe/Campus3DWater.js`、`campus3dSpatial.js` | 从草地/台地挖除水域；程序生成岸坡、起伏湖底、半透明水面、桥面坡道及桥墩；桥型和 0.22–2.8m 水深不是测量成果 |
 | 程序建筑窗户、招牌、遮阳棚、草地/道路纹理 | `src/mecoffe/Campus3DEnvironment.js` | Canvas 运行时绘制，不是实景照片 |
 | 树、灯、长椅、天空 | 同上及 `campus3dEnvironmentModel.js` | 固定种子装饰；避让路线、站位和建筑，页面图例注明“装饰” |
 | 气泡、弧线、广告粒子与购买收据 | `src/mecoffe/Campus3DEffects.js` | 程序几何/文字；数据只读原事件 |

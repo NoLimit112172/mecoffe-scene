@@ -79,10 +79,22 @@ def existing_prototypes():
     for key, match, color in [('grass',{'landuse':['grass','meadow']},'#71915a'),('pitch',{'leisure':'pitch'},'#77a686'),('water',{'natural':'water'},'#5b9faf'),('parking',{'amenity':'parking'},'#78858b'),('outside',{},'#697867')]:
         params={'generator':'landcover','color':color}
         if key=='pitch': params['sport_colors']={'basketball':'#ba816c','tennis':'#6b9daa'}
-        rows.append(prototype(f'landcover.{key}','landcover',key,params,match,title=f'地表 · {key}'))
+        if key=='water': params.update({'generator':'water-basin','surface_height_m':-.55,'shallow_depth_m':.22,'max_depth_m':2.8,'depth_source':'illustrative-not-surveyed','bank_width_m':1.8})
+        rows.append(prototype(f'landcover.{key}','landcover',key,params,match,title=f'地表 · {key}',
+          variants=[{'id':f'depth-{depth}','title':f'设定最大水深 {depth}m','params':{'max_depth_m':depth}} for depth in [2.8,1.6,.8]] if key=='water' else None))
     rows.append(prototype('vegetation.tree','vegetation','tree',{'generator':'tree','trunk':'#77594a','crown':['#458765','#568d5e','#6d9c62'],'top':['#71a36b','#80aa74','#95b77b'],'height_m':11}, {'natural':'tree'},kind='mesh',title='低多边形装饰树'))
     rows.append(prototype('street_furniture.lamp','street_furniture','lamp',{'generator':'lamp','color':'#39494d','height_m':8.3,'light':'#ffe0a0'}, {'highway':'street_lamp'},kind='mesh',title='装饰路灯'))
     rows.append(prototype('street_furniture.bench','street_furniture','bench',{'generator':'bench','wood':'#b78a5e','metal':'#45504c','width_m':4.6}, {'amenity':'bench'},kind='mesh',title='装饰长椅'))
+    rows.append(prototype('landcover.sports.track400','landcover','track',
+      {'generator':'sports-track400','inner_radius_m':36.5,'straight_m':84.39,'lane_width_m':1.22,'lanes':8,'measurement_offset_m':.3,
+       'reference_url':'https://worldathletics.org/about-iaaf/documents/technical-information','placement':'user-annotated wrapper around mapped USTC soccer pitch; not a surveyed track outline'},
+      {'leisure':'track','sport':['athletics','running']},kind='mesh',title='400m标准型跑道与足球场',
+      variants=[{'id':f'lanes-{lanes}','title':f'{lanes}道原型','params':{'lanes':lanes}} for lanes in [8,6,4]]))
+    for sport,width,length,title in [('basketball',15,28,'篮球场与立体篮架'),('tennis',10.97,23.77,'网球场与球网'),('badminton',6.1,13.4,'羽毛球场与球网')]:
+        rows.append(prototype(f'landcover.sports.{sport}','landcover','pitch',{'generator':f'sports-{sport}','width_m':width,'length_m':length,'layout':'scaled/tiled presentation layout, not a surveyed court count'},
+          {'leisure':'pitch','sport':sport},kind='mesh',title=title,variants=[{'id':key,'title':label,'params':{'surface_color':color}} for key,label,color in [('standard','标准配色',{'basketball':'#b76b50','tennis':'#477b7c','badminton':'#527d66'}[sport]),('blue','蓝色面层','#4c84a4'),('green','绿色面层','#60875b')]]))
+    rows.append(prototype('road.bridge','road','bridge',{'generator':'bridge','width_m':10,'length_m':44,'approach_m':10,'deck_height_m':1.05,'placement':'inferred at existing OSM road/water intersections; style and dimensions illustrative'},
+      {'bridge':'yes'},kind='mesh',title='跨水桥梁、护栏与坡道',variants=[{'id':f'width-{w}','title':f'展示桥宽 {w}m','params':{'width_m':w}} for w in [10,8,6]]))
     for key,color,text,duration in [('post','#54b5ed','••• 发帖',2.2),('comment','#bd85ec','••• 评论',2.4),('follow','#69d2c7','＋ 关注',2.3),('ad','#ffbe58','推广',2.8),('exposure','#ffbe58','收到广告',2.4),('interview','#f3d574','访谈',2.4),('purchase','#70e0b5','到店',2.8)]:
         rows.append(prototype(f'effect.{key}','effect',key,{'generator':'effect','color':color,'text':text,'duration':duration},{},title=f'事件 · {text}'))
     for key,color,title in [('selection','#ffbd49','人物选中光圈'),('walking','#fff7d6','行走光圈'),('route','#168b7a','A* 路线显示'),('relationship','#4c8ba6','关系连线'),('sky','#78b9e5','天空与日夜光照'),('coffee-cup','#fff6de','程序咖啡杯图标')]:

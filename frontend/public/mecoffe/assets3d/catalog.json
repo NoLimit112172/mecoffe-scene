@@ -1660,24 +1660,34 @@
         "natural": "water"
       },
       "params": {
-        "generator": "landcover",
-        "color": "#5b9faf"
+        "generator": "water-basin",
+        "color": "#5b9faf",
+        "surface_height_m": -0.55,
+        "shallow_depth_m": 0.22,
+        "max_depth_m": 2.8,
+        "depth_source": "illustrative-not-surveyed",
+        "bank_width_m": 1.8
       },
       "variants": [
         {
-          "id": "default",
-          "params": {}
-        },
-        {
-          "id": "compact",
+          "id": "depth-2.8",
+          "title": "设定最大水深 2.8m",
           "params": {
-            "preview_scale": 0.85
+            "max_depth_m": 2.8
           }
         },
         {
-          "id": "extended",
+          "id": "depth-1.6",
+          "title": "设定最大水深 1.6m",
           "params": {
-            "preview_scale": 1.15
+            "max_depth_m": 1.6
+          }
+        },
+        {
+          "id": "depth-0.8",
+          "title": "设定最大水深 0.8m",
+          "params": {
+            "max_depth_m": 0.8
           }
         }
       ],
@@ -1936,6 +1946,284 @@
         "note": "项目程序生成，随仓库源码提供；未另行授予外部模型许可"
       },
       "preview": "/mecoffe/assets3d/previews/street_furniture.bench.svg"
+    },
+    {
+      "id": "landcover.sports.track400",
+      "title": "400m标准型跑道与足球场",
+      "category": "landcover",
+      "subtype": "track",
+      "kind": "mesh",
+      "style": "procedural",
+      "target": "feature",
+      "match": {
+        "leisure": "track",
+        "sport": [
+          "athletics",
+          "running"
+        ]
+      },
+      "params": {
+        "generator": "sports-track400",
+        "inner_radius_m": 36.5,
+        "straight_m": 84.39,
+        "lane_width_m": 1.22,
+        "lanes": 8,
+        "measurement_offset_m": 0.3,
+        "reference_url": "https://worldathletics.org/about-iaaf/documents/technical-information",
+        "placement": "user-annotated wrapper around mapped USTC soccer pitch; not a surveyed track outline"
+      },
+      "variants": [
+        {
+          "id": "lanes-8",
+          "title": "8道原型",
+          "params": {
+            "lanes": 8
+          }
+        },
+        {
+          "id": "lanes-6",
+          "title": "6道原型",
+          "params": {
+            "lanes": 6
+          }
+        },
+        {
+          "id": "lanes-4",
+          "title": "4道原型",
+          "params": {
+            "lanes": 4
+          }
+        }
+      ],
+      "source": {
+        "type": "procedural",
+        "title": "MeCoffe 程序生成",
+        "author": "MeCoffe contributors",
+        "path": "frontend/src/mecoffe/"
+      },
+      "license": {
+        "spdx": "LicenseRef-MeCoffe-Project",
+        "path": "NOTICE.md",
+        "note": "项目程序生成，随仓库源码提供；未另行授予外部模型许可"
+      },
+      "preview": "/mecoffe/assets3d/previews/landcover.sports.track400.svg"
+    },
+    {
+      "id": "landcover.sports.basketball",
+      "title": "篮球场与立体篮架",
+      "category": "landcover",
+      "subtype": "pitch",
+      "kind": "mesh",
+      "style": "procedural",
+      "target": "feature",
+      "match": {
+        "leisure": "pitch",
+        "sport": "basketball"
+      },
+      "params": {
+        "generator": "sports-basketball",
+        "width_m": 15,
+        "length_m": 28,
+        "layout": "scaled/tiled presentation layout, not a surveyed court count"
+      },
+      "variants": [
+        {
+          "id": "standard",
+          "title": "标准配色",
+          "params": {
+            "surface_color": "#b76b50"
+          }
+        },
+        {
+          "id": "blue",
+          "title": "蓝色面层",
+          "params": {
+            "surface_color": "#4c84a4"
+          }
+        },
+        {
+          "id": "green",
+          "title": "绿色面层",
+          "params": {
+            "surface_color": "#60875b"
+          }
+        }
+      ],
+      "source": {
+        "type": "procedural",
+        "title": "MeCoffe 程序生成",
+        "author": "MeCoffe contributors",
+        "path": "frontend/src/mecoffe/"
+      },
+      "license": {
+        "spdx": "LicenseRef-MeCoffe-Project",
+        "path": "NOTICE.md",
+        "note": "项目程序生成，随仓库源码提供；未另行授予外部模型许可"
+      },
+      "preview": "/mecoffe/assets3d/previews/landcover.sports.basketball.svg"
+    },
+    {
+      "id": "landcover.sports.tennis",
+      "title": "网球场与球网",
+      "category": "landcover",
+      "subtype": "pitch",
+      "kind": "mesh",
+      "style": "procedural",
+      "target": "feature",
+      "match": {
+        "leisure": "pitch",
+        "sport": "tennis"
+      },
+      "params": {
+        "generator": "sports-tennis",
+        "width_m": 10.97,
+        "length_m": 23.77,
+        "layout": "scaled/tiled presentation layout, not a surveyed court count"
+      },
+      "variants": [
+        {
+          "id": "standard",
+          "title": "标准配色",
+          "params": {
+            "surface_color": "#477b7c"
+          }
+        },
+        {
+          "id": "blue",
+          "title": "蓝色面层",
+          "params": {
+            "surface_color": "#4c84a4"
+          }
+        },
+        {
+          "id": "green",
+          "title": "绿色面层",
+          "params": {
+            "surface_color": "#60875b"
+          }
+        }
+      ],
+      "source": {
+        "type": "procedural",
+        "title": "MeCoffe 程序生成",
+        "author": "MeCoffe contributors",
+        "path": "frontend/src/mecoffe/"
+      },
+      "license": {
+        "spdx": "LicenseRef-MeCoffe-Project",
+        "path": "NOTICE.md",
+        "note": "项目程序生成，随仓库源码提供；未另行授予外部模型许可"
+      },
+      "preview": "/mecoffe/assets3d/previews/landcover.sports.tennis.svg"
+    },
+    {
+      "id": "landcover.sports.badminton",
+      "title": "羽毛球场与球网",
+      "category": "landcover",
+      "subtype": "pitch",
+      "kind": "mesh",
+      "style": "procedural",
+      "target": "feature",
+      "match": {
+        "leisure": "pitch",
+        "sport": "badminton"
+      },
+      "params": {
+        "generator": "sports-badminton",
+        "width_m": 6.1,
+        "length_m": 13.4,
+        "layout": "scaled/tiled presentation layout, not a surveyed court count"
+      },
+      "variants": [
+        {
+          "id": "standard",
+          "title": "标准配色",
+          "params": {
+            "surface_color": "#527d66"
+          }
+        },
+        {
+          "id": "blue",
+          "title": "蓝色面层",
+          "params": {
+            "surface_color": "#4c84a4"
+          }
+        },
+        {
+          "id": "green",
+          "title": "绿色面层",
+          "params": {
+            "surface_color": "#60875b"
+          }
+        }
+      ],
+      "source": {
+        "type": "procedural",
+        "title": "MeCoffe 程序生成",
+        "author": "MeCoffe contributors",
+        "path": "frontend/src/mecoffe/"
+      },
+      "license": {
+        "spdx": "LicenseRef-MeCoffe-Project",
+        "path": "NOTICE.md",
+        "note": "项目程序生成，随仓库源码提供；未另行授予外部模型许可"
+      },
+      "preview": "/mecoffe/assets3d/previews/landcover.sports.badminton.svg"
+    },
+    {
+      "id": "road.bridge",
+      "title": "跨水桥梁、护栏与坡道",
+      "category": "road",
+      "subtype": "bridge",
+      "kind": "mesh",
+      "style": "procedural",
+      "target": "feature",
+      "match": {
+        "bridge": "yes"
+      },
+      "params": {
+        "generator": "bridge",
+        "width_m": 10,
+        "length_m": 44,
+        "approach_m": 10,
+        "deck_height_m": 1.05,
+        "placement": "inferred at existing OSM road/water intersections; style and dimensions illustrative"
+      },
+      "variants": [
+        {
+          "id": "width-10",
+          "title": "展示桥宽 10m",
+          "params": {
+            "width_m": 10
+          }
+        },
+        {
+          "id": "width-8",
+          "title": "展示桥宽 8m",
+          "params": {
+            "width_m": 8
+          }
+        },
+        {
+          "id": "width-6",
+          "title": "展示桥宽 6m",
+          "params": {
+            "width_m": 6
+          }
+        }
+      ],
+      "source": {
+        "type": "procedural",
+        "title": "MeCoffe 程序生成",
+        "author": "MeCoffe contributors",
+        "path": "frontend/src/mecoffe/"
+      },
+      "license": {
+        "spdx": "LicenseRef-MeCoffe-Project",
+        "path": "NOTICE.md",
+        "note": "项目程序生成，随仓库源码提供；未另行授予外部模型许可"
+      },
+      "preview": "/mecoffe/assets3d/previews/road.bridge.svg"
     },
     {
       "id": "effect.post",

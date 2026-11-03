@@ -7,15 +7,16 @@ import { indexScene } from '../src/mecoffe/replay.js'
 import { fitCampusView } from '../src/mecoffe/campus3dView.js'
 import { routeBetweenMappings } from '../src/mecoffe/campus3dRouting.js'
 import { outsideBuildings, CROWD_GAP } from '../src/mecoffe/campus3dCrowd.js'
+import { pointInRing } from '../src/mecoffe/campus3dEnvironmentModel.js'
 
 const json = path => JSON.parse(readFileSync(new URL(path, import.meta.url), 'utf8'))
 const homes = ['ug_dorm_west', 'ug_dorm_east', 'teaching_main', 'grad_apartment', 'library_main', 'faculty_main']
 const brands = ['merchant_001', 'merchant_002']
 const point = entry => ({ x: entry.figure.position.x, y: -entry.figure.position.z })
 
-function overview(renderer) {
+function overview(renderer, height=647) {
   // Actual canvas inside the 1600×1000 page, after its controls/sidebar.
-  renderer.host = { clientWidth: 1208, clientHeight: 647 }
+  renderer.host = { clientWidth: 1208, clientHeight: height }
   const aspect = renderer.host.clientWidth / renderer.host.clientHeight
   const eastWest = renderer.display.bounds.width > renderer.display.bounds.height
   const direction = (aspect >= 1.25) === eastWest ? new THREE.Vector3(.22, .9, .85) : new THREE.Vector3(.85, .9, .22)
@@ -45,11 +46,16 @@ function snapshot(renderer, frame, receipts) {
 
 function assertFrame(renderer, before, frame) {
   const entries = [...renderer.people.values()]
+  let waterContacts=0
   for (let i = 0; i < entries.length; i++) {
     const entry = entries[i], p = point(entry), previous = before?.get(entry.person.id)
     assert.ok(entry.figure.scale.x*3<=entry.collisionRadius+1e-6, `frame ${frame}: model exceeds reserved footprint`)
-    assert.ok(outsideBuildings(p, renderer.campus.buildings, entry.collisionRadius),
+    assert.ok(outsideBuildings(p, renderer.navigationObstacles, entry.collisionRadius),
       `frame ${frame}: ${entry.person.id} overlaps a building at ${JSON.stringify(p)}`)
+    for(const water of renderer.spatial.waters)if(pointInRing(p,water.polygon)){
+      assert(water.bridges.some(bridge=>pointInRing(p,bridge.polygon)),`frame ${frame}: ${entry.person.id} walks on open water`)
+      waterContacts++
+    }
     if (previous) assert.ok(Math.hypot(p.x - previous.x, p.y - previous.y) <= 4 + 1e-6,
       `frame ${frame}: ${entry.person.id} exceeds 100 m/s: ${Math.hypot(p.x - previous.x, p.y - previous.y) / .04}`)
     for (let j = 0; j < i; j++) {
@@ -58,14 +64,16 @@ function assertFrame(renderer, before, frame) {
         `frame ${frame}: ${entry.person.id} overlaps ${other.person.id}`)
     }
   }
+  return waterContacts
 }
 
 test('100 real campus figures safely drain 12 simultaneous two-shop purchases at overview scale within 120s', t => {
   const campus = json('../../scene/campus3d.json'), mapping = json('../../scene/campus3d_mapping.json')
   const data = json('../public/mecoffe/latest-demo.json')
   const surroundings = json('../public/mecoffe/campus3d_surroundings.json').roads
-  const source = JSON.stringify({ campus, mapping, data, surroundings })
-  const renderer = new Campus3DScene({ campus, mapping, index: indexScene(data), surroundings })
+  const landcovers=json('../public/mecoffe/campus3d_landcover.json').features
+  const source = JSON.stringify({ campus, mapping, data, surroundings, landcovers })
+  const renderer = new Campus3DScene({ campus, mapping, index: indexScene(data), surroundings,landcovers })
   renderer.scene = new THREE.Scene()
   for (const name of ['routeLayer', 'effectLayer', 'relationLayer']) {
     renderer[name] = new THREE.Group()
@@ -98,7 +106,7 @@ test('100 real campus figures safely drain 12 simultaneous two-shop purchases at
   // Entering walking mode changes the minimum to 18 px. Apply this initial
   // scale/layout change before measuring steady-camera frame displacement.
   renderer.updateScreenVisuals()
-  let frame = 0, frameStages = null
+  let frame = 0, frameStages = null, bridgeContacts=0
   try {
     assertFrame(renderer, null, frame)
     for (; frame < 3000 && renderer.walkers.size; frame++) {
@@ -109,7 +117,7 @@ test('100 real campus figures safely drain 12 simultaneous two-shop purchases at
       frameStages = [...renderer.people].map(([id, entry]) => ({
         id, before: before.get(id), afterWalk: afterWalk.get(id), afterScreen: point(entry),
       })).filter(row => Math.hypot(row.afterScreen.x - row.before.x, row.afterScreen.y - row.before.y) > 4 + 1e-6)
-      assertFrame(renderer, before, frame + 1)
+      bridgeContacts+=assertFrame(renderer, before, frame + 1)
       assert.equal(new Set(receipts).size, receipts.length, `frame ${frame + 1}: duplicate receipt`)
       for (const entry of renderer.people.values()) if (entry.walker) {
         assert.deepEqual(entry.walker.route, routes.get(entry.walker.event.order_id), 'movement must not rewrite the authoritative A* route')
@@ -128,8 +136,9 @@ test('100 real campus figures safely drain 12 simultaneous two-shop purchases at
     }
     assert.equal(renderer.walkers.size, 0)
     assert.equal(receipts.length, 12)
-    t.diagnostic(`12 purchases completed in ${frame} frames (${(frame*.04).toFixed(2)} display seconds); all 100 footprints checked every frame`)
-    assert.equal(JSON.stringify({ campus, mapping, data, surroundings }), source, 'source OSM graph, mapping, replay JSON and context roads remain immutable')
+    assert(bridgeContacts>0, 'real purchase trips must exercise bridge crossings')
+    t.diagnostic(`12 purchases completed in ${frame} frames (${(frame*.04).toFixed(2)} display seconds); all 100 footprints checked every frame; ${bridgeContacts} bridge contacts`)
+    assert.equal(JSON.stringify({ campus, mapping, data, surroundings, landcovers }), source, 'source OSM graph, mapping, replay JSON, water and context roads remain immutable')
   } catch (error) {
     const folder = new URL('../../logs/asset-library/', import.meta.url)
     mkdirSync(folder, { recursive: true })
@@ -138,4 +147,34 @@ test('100 real campus figures safely drain 12 simultaneous two-shop purchases at
   } finally {
     renderer.dispose()
   }
+})
+
+test('the exact historical day-2 first purchase exits its idle bay, returns safely and keeps the recorded event unchanged',t=>{
+  const campus=json('../../scene/campus3d.json'),mapping=json('../../scene/campus3d_mapping.json'),data=json('../public/mecoffe/scene.json')
+  const landcovers=json('../public/mecoffe/campus3d_landcover.json').features,surroundings=json('../public/mecoffe/campus3d_surroundings.json').roads
+  const source=JSON.stringify({campus,mapping,data,landcovers,surroundings})
+  const renderer=new Campus3DScene({campus,mapping,index:indexScene(data),landcovers,surroundings})
+  renderer.scene=new THREE.Scene()
+  for(const name of ['routeLayer','effectLayer','relationLayer']){renderer[name]=new THREE.Group();renderer.scene.add(renderer[name])}
+  try{
+    renderer.placePeople();overview(renderer,603)
+    for(const entry of renderer.people.values())assert(outsideBuildings(point(entry),renderer.navigationObstacles,entry.collisionRadius*2+CROWD_GAP+4),'idle bays must leave a passable wall-side corridor')
+    const next=data.events.findIndex(event=>event.type==='purchase'),event=data.events[next],entry=renderer.people.get(event.actor)
+    assert.equal(event.step,2);assert.equal(event.actor,'undergraduate_consumer_003')
+    renderer.setCursor(next);const home={...entry.home},receipts=[]
+    renderer.eventEffects={effects:[],purchaseArrived:e=>receipts.push(e.order_id),reset(){},dispose(){}}
+    renderer.playEvent(event);renderer.selectPerson(event.actor);renderer.updateScreenVisuals()
+    const route=structuredClone(entry.walker.route)
+    let frame=0
+    for(;frame<3000&&renderer.walkers.size;frame++){
+      const before=new Map([...renderer.people].map(([id,e])=>[id,point(e)]))
+      renderer.updateWalkers(.04);renderer.updateScreenVisuals();assertFrame(renderer,before,frame+1)
+      if(entry.walker)assert.deepEqual(entry.walker.route,route)
+    }
+    assert.equal(renderer.walkers.size,0,'the historical preview must finish, not oscillate at an occupied departure corner')
+    assert.deepEqual(receipts,[event.order_id]);assert.equal(entry.hasCoffee,true)
+    assert(Math.hypot(point(entry).x-home.x,point(entry).y-home.y)<1e-6)
+    assert.equal(JSON.stringify({campus,mapping,data,landcovers,surroundings}),source)
+    t.diagnostic(`historical first purchase returned in ${frame} frames; original event and A* route unchanged`)
+  }finally{renderer.dispose()}
 })

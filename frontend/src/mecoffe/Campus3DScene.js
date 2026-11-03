@@ -10,6 +10,10 @@ import { campusBoundaryBounds, fitCampusView } from './campus3dView.js'
 import { layoutLabels, personScaleForCamera } from './campus3dScreen.js'
 import { CHARACTER_BASE_COLORS } from './characterDisplay.js'
 import { Campus3DBase } from './Campus3DBase.js'
+import { Campus3DSports } from './Campus3DSports.js'
+import { sportsExclusions } from './campus3dSportsModel.js'
+import { Campus3DWater } from './Campus3DWater.js'
+import { buildSpatialEnvironment, bridgeHeightAt } from './campus3dSpatial.js'
 import { TERRAIN_LEVELS, terrainSurfaceHeight } from './campus3dTerrain.js'
 import { DISPLAY_RADIUS, CROWD_GAP, standingSlots, stepSeparatedCrowd, displayRoutePoints, outsideBuildings, nearestClearPosition } from './campus3dCrowd.js'
 import { displayCrowdDetour } from './campus3dDetour.js'
@@ -138,6 +142,8 @@ export class Campus3DScene {
     this.landcovers = landcovers
     this.surroundingRoads = surroundings
     this.display = createDisplayCampus(campus, { mapping, landcovers })
+    this.spatial = buildSpatialEnvironment(this.display.campus,this.display.landcovers)
+    this.navigationObstacles = this.spatial.obstacles
     const { minX, maxX, minY, maxY } = this.display.bounds
     // A small, independent framing margin exposes the four perimeter roads;
     // the newly downloaded 300 m context never becomes a giant grass parcel.
@@ -214,11 +220,13 @@ export class Campus3DScene {
     this.createLabelLayer()
     this.drawCampus()
     this.placePeople()
-    this.baseModel = new Campus3DBase({scene:this.scene,campus:this.display.campus,displayBounds:this.display.bounds}).init()
+    this.baseModel = new Campus3DBase({scene:this.scene,campus:this.display.campus,displayBounds:this.display.bounds,waters:this.spatial.waters}).init()
+    this.waterModel = new Campus3DWater({scene:this.scene,spatial:this.spatial}).init()
+    this.sportsModel = new Campus3DSports({scene:this.scene,landcovers:this.display.landcovers}).init()
     this.environment = new Campus3DEnvironment({ scene: this.scene, campus: this.campus,
       displayCampus: this.display.campus, displayBounds: this.display.bounds,
       mapping: this.mapping, buildingMeshes: this.buildingMeshes, renderer: this.renderer,
-      center: this.center, landcovers: this.display.landcovers, avoidance:this.decorationAvoidance() }).init()
+      center: this.center, landcovers: [...this.display.landcovers,...sportsExclusions(this.display.landcovers)], avoidance:this.decorationAvoidance() }).init()
     this.surroundings = new Campus3DSurroundings({ scene: this.scene, roads: this.surroundingRoads,
       displayBounds: this.display.bounds, campus: this.campus, host: this.host }).init()
     this.eventEffects = new EventEffects({ scene: this.scene, index: this.index,
@@ -593,7 +601,7 @@ export class Campus3DScene {
     this.selection.visible = false
     this.selection.renderOrder = 4
     this.scene.add(this.selection)
-    const slots = new Map(standingSlots([...this.people].map(([id,entry])=>({id,origin:entry.entrance})),this.campus.buildings,
+    const slots = new Map(standingSlots([...this.people].map(([id,entry])=>({id,origin:entry.entrance})),this.navigationObstacles,
       {radius:DISPLAY_RADIUS,roads:this.campus.roads || []}).map(point=>[point.id,point]))
     for(const [id,entry] of this.people) {
       const point=slots.get(id)
@@ -604,7 +612,10 @@ export class Campus3DScene {
     }
   }
 
-  personElevation(point) { return terrainSurfaceHeight(point,this.display.campus)+.025 }
+  personElevation(point) {
+    for(const bridge of this.spatial.bridges){const height=bridgeHeightAt(point,bridge);if(height!==null)return height+.025}
+    return terrainSurfaceHeight(point,this.display.campus)+.025
+  }
 
   fitCrowdRadius(requested) {
     if(this.radiusLimits.has(requested))return this.radiusLimits.get(requested)
@@ -625,7 +636,7 @@ export class Campus3DScene {
   reflowPeople() {
     const people=[...this.people].map(([id,entry])=>({id,x:entry.figure.position.x,y:-entry.figure.position.z,
       radius:this.cameraCrowdRadius || Math.max(DISPLAY_RADIUS,entry.figure.scale.x*3),moving:Boolean(entry.walker)}))
-    const invalid=people.some((p,i)=>!outsideBuildings(p,this.campus.buildings,p.radius)
+    const invalid=people.some((p,i)=>!outsideBuildings(p,this.navigationObstacles,p.radius)
       || people.slice(0,i).some(q=>Math.hypot(p.x-q.x,p.y-q.y)<p.radius+q.radius+CROWD_GAP-1e-6))
     // Standing groups leave an additional walking-width corridor between
     // neighbours. Tight disc packing is collision-free but traps departures.
@@ -634,7 +645,10 @@ export class Campus3DScene {
       positions=[]
       const radius=this.cameraCrowdRadius || DISPLAY_RADIUS,roads=this.standingClearanceRoutes(radius)
       for(const person of [...people].sort((a,b)=>Number(b.moving)-Number(a.moving)||a.id.localeCompare(b.id))) {
-        positions.push({...person,...nearestClearPosition(person,this.campus.buildings,{radius:person.radius,occupied:positions,
+        // Idle bays need room for another full figure to pass between them and
+        // a wall. Otherwise a harmless standing person can seal a cul-de-sac.
+        positions.push({...person,...nearestClearPosition(person,this.navigationObstacles,{radius:person.radius,
+          obstacleRadius:person.moving?person.radius:person.radius*2+CROWD_GAP+4,occupied:positions,
           gap:2*radius+2*CROWD_GAP+6,roads:person.moving?[]:roads,roadClearance:radius+2})})
       }
     }
@@ -642,7 +656,7 @@ export class Campus3DScene {
     try {
       for(const p of positions) {
         const walker=this.people.get(p.id).walker
-        if(walker&&p.radius>walker.displayRadius)reroutes.set(p.id,displayRoutePoints(walker.displayPoints.slice(walker.displayNextPoint),this.campus.buildings,
+        if(walker&&p.radius>walker.displayRadius)reroutes.set(p.id,displayRoutePoints(walker.displayPoints.slice(walker.displayNextPoint),this.navigationObstacles,
           {radius:p.radius,laneOffset:0,start:p}))
       }
     } catch(error) {
@@ -690,8 +704,8 @@ export class Campus3DScene {
       const route=routeBetweenMappings(this.routing,key,shop)
       if(route) {
         routes.push(route.points)
-        routes.push(displayRoutePoints(route.points,this.campus.buildings,{radius,laneOffset:4}))
-        routes.push(displayRoutePoints(reverseRoute(route).points,this.campus.buildings,{radius,laneOffset:4}))
+        routes.push(displayRoutePoints(route.points,this.navigationObstacles,{radius,laneOffset:4}))
+        routes.push(displayRoutePoints(reverseRoute(route).points,this.navigationObstacles,{radius,laneOffset:4}))
       }
     }
     this.standingRouteRadius=radius;this.standingRoutes=routes
@@ -704,8 +718,8 @@ export class Campus3DScene {
       const route=routeBetweenMappings(this.routing,key,shop)
       if(route) {
         routes.push(route.points)
-        routes.push(displayRoutePoints(route.points,this.campus.buildings,{radius:DISPLAY_RADIUS,laneOffset:4}))
-        routes.push(displayRoutePoints(reverseRoute(route).points,this.campus.buildings,{radius:DISPLAY_RADIUS,laneOffset:4}))
+        routes.push(displayRoutePoints(route.points,this.navigationObstacles,{radius:DISPLAY_RADIUS,laneOffset:4}))
+        routes.push(displayRoutePoints(reverseRoute(route).points,this.navigationObstacles,{radius:DISPLAY_RADIUS,laneOffset:4}))
       }
     }
     return {points:[...this.people.values()].map(entry=>({...entry.home,radius:DISPLAY_RADIUS})),routes,clearance:14}
@@ -781,8 +795,8 @@ export class Campus3DScene {
     const occupied=[...this.people.values()].filter(other=>other!==entry).flatMap(other=>[
       {x:other.figure.position.x,y:-other.figure.position.z,radius:other.collisionRadius},
       ...(other.walker?.servicePoint ? [{...other.walker.servicePoint,radius:other.collisionRadius}] : [])])
-    const servicePoint=nearestClearPosition(next.route.points.at(-1),this.campus.buildings,{radius:displayRadius,occupied})
-    const displayPoints=displayRoutePoints(next.route.points,this.campus.buildings,{radius:displayRadius,laneOffset:4,
+    const servicePoint=nearestClearPosition(next.route.points.at(-1),this.navigationObstacles,{radius:displayRadius,occupied})
+    const displayPoints=displayRoutePoints(next.route.points,this.navigationObstacles,{radius:displayRadius,laneOffset:4,
       start:{x:entry.figure.position.x,y:-entry.figure.position.z},end:servicePoint})
     const material = new THREE.LineBasicMaterial({ color: this.brandColors.get(next.event.brand_id) || 0xe17943, transparent: true, opacity: 0.75 })
     const routeLine = new THREE.Line(new THREE.BufferGeometry().setFromPoints(displayPoints.map(point => new THREE.Vector3(point.x, this.personElevation(point)+.3, -point.y))), material)
@@ -813,7 +827,7 @@ export class Campus3DScene {
             walker.phase='return'
             walker.points=reverseRoute(walker.route).points
             walker.nextPoint=1
-            walker.displayPoints=displayRoutePoints(walker.points,this.campus.buildings,{radius:walker.displayRadius,laneOffset:4,start:p,end:entry.home})
+            walker.displayPoints=displayRoutePoints(walker.points,this.navigationObstacles,{radius:walker.displayRadius,laneOffset:4,start:p,end:entry.home})
             walker.displayNextPoint=1
             this.updateWalkerLine(walker)
             this.refreshDecorationClearance()
@@ -829,7 +843,7 @@ export class Campus3DScene {
         }
         proposals.push(p)
       }
-      const result=stepSeparatedCrowd(proposals,this.campus.buildings)
+      const result=stepSeparatedCrowd(proposals,this.navigationObstacles)
       for(const p of result) {
         const entry=this.people.get(p.id),walker=entry.walker
         const goal=walker?.displayPoints[walker.displayNextPoint]
@@ -850,7 +864,7 @@ export class Campus3DScene {
           // Rejoin a later free corner rather than waiting forever at it.
           let replanned=false
           for(let i=walker.displayNextPoint;i<walker.displayPoints.length;i++) {
-            const path=displayCrowdDetour(p,walker.displayPoints[i],this.campus.buildings,obstacles,entry.collisionRadius)
+            const path=displayCrowdDetour(p,walker.displayPoints[i],this.navigationObstacles,obstacles,entry.collisionRadius)
             if(path) {
               walker.displayPoints=[...path,...walker.displayPoints.slice(i+1)]
               walker.displayNextPoint=1
@@ -865,7 +879,7 @@ export class Campus3DScene {
           if(!replanned && !walker.retreating && !walker.yieldCooldown
             && [...this.people.values()].some(other=>other.walker && other.person.id<entry.person.id
               && Math.hypot(p.x-other.figure.position.x,p.y+other.figure.position.z)<entry.collisionRadius*6)) {
-            const retreat=displayCrowdDetour(p,entry.home,this.campus.buildings,obstacles,entry.collisionRadius)
+            const retreat=displayCrowdDetour(p,entry.home,this.navigationObstacles,obstacles,entry.collisionRadius)
             if(retreat && retreat.length>1) {
               walker.resumeDisplayPoints=walker.displayPoints.slice(walker.displayNextPoint)
               walker.displayPoints=retreat;walker.displayNextPoint=1;walker.retreating=true
@@ -878,7 +892,7 @@ export class Campus3DScene {
         if(p.reachesGoal && p.fraction>.9999)walker.displayNextPoint++
         if(walker.phase!=='dwell' && walker.displayNextPoint>=walker.displayPoints.length) {
           if(walker.retreating) {
-            walker.displayPoints=displayRoutePoints(walker.resumeDisplayPoints,this.campus.buildings,{radius:walker.displayRadius,laneOffset:0,start:p})
+            walker.displayPoints=displayRoutePoints(walker.resumeDisplayPoints,this.navigationObstacles,{radius:walker.displayRadius,laneOffset:0,start:p})
             walker.displayNextPoint=1;walker.retreating=false;walker.holdRemaining=2;walker.yieldCooldown=8
             this.updateWalkerLine(walker)
             this.refreshDecorationClearance()
@@ -958,7 +972,7 @@ export class Campus3DScene {
     const selected = this.people.get(this.selectedId)
     this.selection.visible = Boolean(selected)
     if (selected) {
-      this.selection.position.set(selected.figure.position.x, 0.9, selected.figure.position.z)
+      this.selection.position.set(selected.figure.position.x, selected.figure.position.y+.12, selected.figure.position.z)
       this.selection.scale.setScalar(selected.figure.scale.x)
     }
   }
@@ -1206,6 +1220,8 @@ export class Campus3DScene {
     this.yulanStyle?.dispose()
     this.environment?.dispose()
     this.baseModel?.dispose()
+    this.waterModel?.dispose()
+    this.sportsModel?.dispose()
     this.surroundings?.dispose()
     this.realCharacterBatch?.dispose()
     if (this.scene) {

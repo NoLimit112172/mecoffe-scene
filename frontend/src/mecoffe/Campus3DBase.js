@@ -28,8 +28,9 @@ function polygonGeometry(polygons,top,bottom=null) {
 
 /** A finite physical display model. Grass slots are actual polygon subtraction. */
 export class Campus3DBase {
-  constructor({scene,campus,displayBounds}) {
+  constructor({scene,campus,displayBounds,waters=[]}) {
     this.scene=scene;this.campus=campus;this.bounds=terrainBaseBounds(displayBounds)
+    this.waters=waters
     this.group=new THREE.Group();this.group.name='分层沙盘底座（展示层）'
     this.group.userData.illustrative=true
     this.resources=new Set();this.hidden=new Map();this.contactShadows=new THREE.Group();this.contactShadows.name='柔和接触阴影（展示层）'
@@ -57,7 +58,8 @@ export class Campus3DBase {
     const polygons=this.campus.boundary_polygons?.length?this.campus.boundary_polygons:[{outer:this.campus.boundary,holes:[]}]
     const corridors=roadCorridors(this.campus.roads||[]),outerCorridors=roadCorridors(this.campus.roads||[],.72)
     const triangles=polygons.flatMap(p=>planarTriangles(p.outer,p.holes||[]))
-    const grassPieces=subtractTerrainCuts(triangles,outerCorridors)
+    const waterCuts=this.waters.flatMap(water=>planarTriangles(water.polygon))
+    const grassPieces=subtractTerrainCuts(triangles,[...outerCorridors,...waterCuts])
     const grass=this.mesh(polygonGeometry(grassPieces,L.campusGrass,L.campusPlinth),this.material('#93af74'),'校园：道路切槽草坪')
     grass.userData.environmentKind='ground';grass.userData.roadSlots=true
     this.grassPieces=grassPieces
@@ -66,7 +68,10 @@ export class Campus3DBase {
     const curbs=subtractTerrainCuts(outerCorridors,corridors)
     this.mesh(polygonGeometry(curbs,L.campusCurb,L.campusPlinth),this.material('#c6c8b6'),'校内道路：实体路缘')
     for(const p of polygons) {
-      this.extrude(p.outer,p.holes||[],L.outsideTop,L.campusPlinth,'#b8b3a0','校园：抬高一级的石材台地')
+      if(waterCuts.length){
+        const platform=subtractTerrainCuts(planarTriangles(p.outer,p.holes||[]),waterCuts)
+        this.mesh(polygonGeometry(platform,L.campusPlinth,L.outsideTop),this.material('#b8b3a0'),'校园：开挖水域后的石材台地')
+      }else this.extrude(p.outer,p.holes||[],L.outsideTop,L.campusPlinth,'#b8b3a0','校园：抬高一级的石材台地')
       // A shallow boundary plinth, with cut road openings, makes the height
       // transition legible without drawing a wall over the mapped footpaths.
       const edgeTriangles=planarTriangles(p.outer,[offsetTerrainRing(p.outer,-.7)])

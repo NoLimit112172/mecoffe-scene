@@ -225,6 +225,11 @@ export async function createAssetPreview(prototype, variant, {signal} = {}) {
   if(signal?.aborted)throw Object.assign(new Error('Preview request cancelled'),{name:'AbortError'})
   const factory=factories.get(prototype.params?.generator)||factories.get(prototype.generator)||factories.get(prototype.id)
   if(factory) return factory(prototype,variant,{signal})
+  if(/^(sports-|bridge$|water-basin$)/.test(prototype.params?.generator||'')){
+    const {terrainAssetPreview}=await import('./assetPreviewTerrain.js')
+    if(signal?.aborted)throw Object.assign(new Error('Preview request cancelled'),{name:'AbortError'})
+    return terrainAssetPreview(prototype,variant)
+  }
   if(prototype.category==='character')throw new Error('写实人物预览生成器尚未准备就绪')
   const object=createProceduralPreview(prototype,variant)
   const roof=String(prototype.params?.generator).startsWith('roof-')

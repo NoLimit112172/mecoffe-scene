@@ -336,6 +336,8 @@ export class Campus3DEnvironment {
       const ring = feature.polygon || feature.geometry?.coordinates?.[0]
       if (!ring?.length) continue
       const properties = feature.properties || feature
+      // Dedicated 3D sports/basin meshes own these surfaces, not flat paint.
+      if(properties.kind==='water'||properties.natural==='water'||properties.kind==='pitch')continue
       const water = properties.kind === 'water' || properties.natural === 'water'
       const sport = properties.sport
       const pitch = prototypeParams('landcover.pitch')

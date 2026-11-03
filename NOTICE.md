@@ -29,6 +29,8 @@
 
 `frontend/public/mecoffe/campus3d_landcover.json` 中的运动场、水面等几何来自同一份已保存 OSM 快照，通过 `adapter/osm_landcover.py` 独立提取并沿下载边界裁剪；保留原来源与投影，按 ODbL 1.0 提供，与上述 OSM 衍生数据采用相同署名及许可要求。运动场线条/水面风格属于示意性绘制，不是测量结果。
 
+`Campus3DSports.js` 的实体跑道、球场、篮架与球网，及 `Campus3DWater.js` 的岸坡、起伏湖底、水面、桥面、坡道、护栏与桥墩，都是项目程序生成的几何，未下载外部美术素材。400m 标准型跑道按用户标注包围既有足球场；外围尺寸与多场排布经过展示缩放，不代表实测球场外圈或数量。永怀湖的变化水深是 0.22–2.8m 的展示设定；现有 OSM 道路/水域交叠生成的桥型和通行面也是推定展示，不新增 `bridge=yes` 或更改原 `layer`。可行走性仅约束显示人物，不写回 OASIS。各程序原型按 `LicenseRef-MeCoffe-Project` 记录；所用 OSM 定位几何继续保留 ODbL-1.0。
+
 Three.js 及 `three/addons` 的 OrbitControls、EffectComposer、RenderPass、UnrealBloomPass、ShaderPass、OutputPass 使用当前已安装版本的 MIT 许可代码（见 `frontend/node_modules/three/LICENSE`）；本轮未升级或新增依赖。当前 r187 已移除 PCFSoftShadowMap，阴影使用受支持的 PCFShadowMap 和扩大的采样半径得到柔和边缘。
 
 ## YuLan 改编模型与周边道路
