@@ -6,6 +6,7 @@ import { Campus3DScene } from '../src/mecoffe/Campus3DScene.js'
 import { indexScene } from '../src/mecoffe/replay.js'
 import { projectedPersonSize } from '../src/mecoffe/campus3dScreen.js'
 import { fitCampusView } from '../src/mecoffe/campus3dView.js'
+import { outsideBuildings, clearDisplaySegment, CROWD_GAP } from '../src/mecoffe/campus3dCrowd.js'
 
 const purchase = (order, brand = 'merchant_001', step = 1) => ({
   key: `event-${order}`, type: 'purchase', order_id: order,
@@ -63,16 +64,47 @@ function world({ disconnectedShop = false, events } = {}) {
   return { renderer, entry: renderer.people.get('consumer'), stats }
 }
 
-function at(entry, x, y) {
+function at(renderer, entry, x, y) {
   assert.ok(Math.abs(entry.figure.position.x - x) < 1e-8, `expected x=${x}, got ${entry.figure.position.x}`)
   assert.ok(Math.abs(-entry.figure.position.z - y) < 1e-8, `expected north=${y}, got ${-entry.figure.position.z}`)
-  assert.equal(entry.figure.position.y, 0.35)
+  // M5 adds a layered terrain surface. Feet follow that surface, not the old
+  // globally flat y=.35 plane; source x/y coordinates remain separately tested.
+  assert.equal(entry.figure.position.y, renderer.personElevation({ x, y }))
+}
+
+function assertPeopleClear(renderer) {
+  const entries = [...renderer.people.values()]
+  for (const [index, entry] of entries.entries()) {
+    const point = { x: entry.figure.position.x, y: -entry.figure.position.z }
+    assert.ok(outsideBuildings(point, renderer.campus.buildings, entry.collisionRadius), `${entry.person.id} overlaps a building`)
+    for (const other of entries.slice(0, index)) {
+      const minimum = entry.collisionRadius + other.collisionRadius + CROWD_GAP
+      assert.ok(Math.hypot(point.x - other.figure.position.x, point.y + other.figure.position.z) >= minimum - 1e-6,
+        `${entry.person.id} overlaps ${other.person.id}`)
+    }
+  }
+}
+
+function advanceUntil(renderer, complete, limit = 400) {
+  // M5's safe display corridor can be longer than the immutable OSM path and
+  // queues may wait. Bound the wait and verify speed/clearance at every frame.
+  for (let tick = 0; tick < limit && !complete(); tick++) {
+    const before = new Map([...renderer.people].map(([id, entry]) => [id, entry.figure.position.clone()]))
+    renderer.updateWalkers(.04)
+    for (const [id, entry] of renderer.people) {
+      const previous = before.get(id)
+      assert.ok(Math.hypot(entry.figure.position.x - previous.x, entry.figure.position.z - previous.z) <= 4 + 1e-6,
+        `${id} moved faster than the 100 m/s display speed`)
+    }
+    assertPeopleClear(renderer)
+  }
+  assert.ok(complete(), `display trip did not complete within ${limit * .04}s`)
 }
 
 function finishTrip(renderer) {
-  renderer.updateWalkers(2) // reach the shop, including both corners
-  renderer.updateWalkers(1) // dwell, then begin the reverse route
-  renderer.updateWalkers(2) // return home and start the next queued order
+  const entry = renderer.people.get('consumer'), order = entry.walker?.event
+  assert.ok(order)
+  advanceUntil(renderer, () => entry.walker?.event !== order)
 }
 
 test('arrival hands over one cup and receipt, return retains it, seek clears it', () => {
@@ -81,17 +113,36 @@ test('arrival hands over one cup and receipt, return retains it, seek clears it'
   renderer.eventEffects = { effects: [], purchaseArrived: event => receipts.push(event.order_id), reset() {} }
   renderer.playEvent(purchase('coffee'))
   assert.equal(entry.hasCoffee, false)
-  renderer.updateWalkers(.7)
+  advanceUntil(renderer, () => entry.walker.phase === 'dwell')
   assert.equal(entry.walker.phase, 'dwell')
   assert.equal(entry.hasCoffee, true)
-  renderer.updateWalkers(.9)
+  advanceUntil(renderer, () => entry.walker.phase === 'return')
   assert.equal(entry.walker.phase, 'return')
   assert.equal(entry.hasCoffee, true)
-  renderer.updateWalkers(.7)
+  advanceUntil(renderer, () => entry.walker === null)
   assert.deepEqual(receipts, ['coffee'])
   assert.equal(entry.hasCoffee, true)
   renderer.setCursor(0)
   assert.equal(entry.hasCoffee, false)
+})
+
+test('a zero-length display waypoint advances even with a 1/240 second movement slice', () => {
+  const { renderer, entry } = world()
+  renderer.playEvent(purchase('zero-length-waypoint'))
+  const walker = entry.walker
+  const authoritativeRoute = structuredClone(walker.route)
+  const start = { x: entry.figure.position.x, y: -entry.figure.position.z }
+  // Numerical equality or display replanning can leave an already reached
+  // corner. At high refresh rates / low playback speed this must consume no
+  // distance, rather than treating the zero distance as a one-metre segment.
+  walker.displayPoints = [start, { ...start }, ...walker.displayPoints.slice(1)]
+  walker.displayNextPoint = 1
+  renderer.updateWalkers(1 / 240)
+  assert.equal(walker.displayNextPoint, 2)
+  assert.equal(walker.phase, 'outbound')
+  assert.equal(walker.travelled, 0)
+  at(renderer, entry, start.x, start.y)
+  assert.deepEqual(walker.route, authoritativeRoute)
 })
 
 test('visual activity drains standalone events without changing movement statistics', () => {
@@ -157,7 +208,7 @@ test('portrait camera avoids a foreground obstruction without moving the actor o
   obstruction.material.dispose()
 })
 
-test('switching pixel and solid characters preserves ongoing trips, queued orders and pause state', () => {
+test('switching default YuLan, pixel and legacy solid characters preserves trips, queues and pause state', () => {
   const { renderer, entry } = world()
   renderer.playEvent(purchase('first-style'))
   renderer.playEvent(purchase('second-style', 'merchant_002'))
@@ -167,9 +218,10 @@ test('switching pixel and solid characters preserves ongoing trips, queued order
   const walker = entry.walker
   const queue = [...entry.queue]
   const statistics = renderer.getStats()
-  const visible = []
+  const visible = [], yulan = []
   renderer.pixelBatch = { setVisible: value => visible.push(value) }
-  for (const style of ['pixel', 'solid', 'pixel']) {
+  renderer.yulanCharacterBatch = { setVisible: value => yulan.push(value) }
+  for (const style of ['pixel', 'solid', 'yulan3d', 'pixel']) {
     renderer.setCharacterStyle(style)
     assert.deepEqual(entry.figure.position, position)
     assert.equal(entry.walker, walker)
@@ -178,7 +230,8 @@ test('switching pixel and solid characters preserves ongoing trips, queued order
     assert.equal(renderer.playing, false)
     assert.equal(renderer.characterBatch.group.visible, style === 'solid')
   }
-  assert.deepEqual(visible, [true, false, true])
+  assert.deepEqual(visible, [true, false, false, true])
+  assert.deepEqual(yulan, [false, false, true, false])
 })
 
 test('optional voxel characters and YuLan buildings keep the same paused trip, queues and time', async () => {
@@ -202,6 +255,7 @@ test('optional voxel characters and YuLan buildings keep the same paused trip, q
 
 test('default procedural style never starts an atlas building or voxel loader', async () => {
   const {renderer}=world()
+  assert.equal(renderer.characterStyle, 'yulan3d')
   await renderer.setBuildingStyle('procedural')
   await renderer.setCharacterStyle('pixel')
   assert.equal(renderer.yulanPromise,undefined)
@@ -246,36 +300,47 @@ test('one person completes purchase trips in FIFO order without losing queued pu
   assert.equal(entry.walker, null)
   assert.deepEqual(renderer.getStats(), { active: 0, queued: 0, unreachable: 0 })
   assert.equal(renderer.routeLayer.children.length, 0)
-  at(entry, entry.home.x, entry.home.y)
+  at(renderer, entry, entry.home.x, entry.home.y)
 })
 
-test('screen scaling and walking halos preserve world positions, route speed and selection', () => {
+test('screen scaling reflows only display positions while preserving route data, speed limits and selection', () => {
   const { renderer, entry } = world()
   renderer.host = { clientWidth: 1230, clientHeight: 650 }
   renderer.camera = new THREE.PerspectiveCamera(42, 1230 / 650, 0.1, 10000)
   renderer.camera.position.set(1200, 900, 500)
   renderer.camera.lookAt(0, 0, 0)
-  const home = entry.figure.position.clone()
+  const source = JSON.stringify({ campus: renderer.campus, mapping: renderer.mapping, scene: renderer.index.scene })
+  renderer.personNameLabel = { style: {}, textContent: '' }
   renderer.selectPerson('consumer')
   renderer.updateScreenVisuals()
   assert.ok(projectedPersonSize(renderer.camera, entry.figure.position, entry.figure.scale.x, { width: 1230, height: 650 }).height >= 12)
-  assert.deepEqual(entry.figure.position, home)
+  assertPeopleClear(renderer)
+  at(renderer, entry, entry.home.x, entry.home.y)
   assert.equal(entry.walkHalo.visible, false)
   assert.equal(renderer.selection.scale.x, entry.figure.scale.x)
+  assert.equal(renderer.selectedId, 'consumer')
+  assert.ok(renderer.personNameLabel.textContent.startsWith(entry.person.name))
   renderer.playEvent(purchase('visual-walk'))
+  const route = JSON.stringify(entry.walker.route)
   renderer.updateScreenVisuals()
   assert.equal(entry.walkHalo.visible, true)
+  const before = entry.figure.position.clone()
   renderer.updateWalkers(0.1)
+  assert.ok(Math.hypot(entry.figure.position.x - before.x, entry.figure.position.z - before.z) <= 10 + 1e-6)
   renderer.updateScreenVisuals()
-  at(entry, 10, 0) // 100 metres/second remains unchanged by screen scale.
+  assert.equal(JSON.stringify(entry.walker.route), route)
+  assertPeopleClear(renderer)
   renderer.setCursor(0)
   renderer.updateScreenVisuals()
-  assert.deepEqual(entry.figure.position, home)
+  at(renderer, entry, entry.home.x, entry.home.y)
+  assertPeopleClear(renderer)
   assert.equal(entry.walkHalo.visible, false)
   renderer.camera.position.multiplyScalar(2)
   renderer.camera.updateMatrixWorld()
   renderer.updateScreenVisuals()
   assert.ok(projectedPersonSize(renderer.camera, entry.figure.position, entry.figure.scale.x, { width: 1230, height: 650 }).height >= 12)
+  assertPeopleClear(renderer)
+  assert.equal(JSON.stringify({ campus: renderer.campus, mapping: renderer.mapping, scene: renderer.index.scene }), source)
 })
 
 test('all 100 real roster figures meet the minimum at the 1600×1000 page overview', () => {
@@ -296,8 +361,9 @@ test('all 100 real roster figures meet the minimum at the 1600×1000 page overvi
   for (const entry of renderer.people.values()) {
     const pixels = projectedPersonSize(renderer.camera, entry.figure.position, entry.figure.scale.x, { width: 1208, height: 647 })
     assert.ok(pixels.height >= 12, `${entry.person.id}: ${pixels.height}px`)
-    at(entry, entry.home.x, entry.home.y)
+    at(renderer, entry, entry.home.x, entry.home.y)
   }
+  assertPeopleClear(renderer)
   renderer.dispose()
 })
 
@@ -321,38 +387,39 @@ test('duplicate order IDs and repeated fallback event keys never create extra tr
   assert.equal(renderer.routeLayer.children.length, 0)
 })
 
-test('movement follows graph corners at metre distances and returns on the exact reverse path', () => {
+test('movement retains exact OSM corners and reverse path while its displayed corridor clears every building', () => {
   const { renderer, entry } = world()
   renderer.playEvent(purchase('route'))
   assert.deepEqual(entry.walker.route.node_ids, ['a', 'b', 'c'])
   const outbound = [{ x: 0, y: 0 }, { x: 30, y: 0 }, { x: 30, y: 40 }]
   assert.deepEqual(entry.walker.points, outbound)
+  assert.equal(entry.walker.route.length_m, 70)
+  const source = JSON.stringify(renderer.campus.walk_graph)
+  const display = entry.walker.displayPoints.map(point => ({ ...point }))
   const positions = entry.walker.line.geometry.attributes.position
-  assert.deepEqual([...positions.array], [0, 0.65, 0, 30, 0.65, 0, 30, 0.65, -40].map(Math.fround))
-
-  at(entry, 0, 0)
-  renderer.updateWalkers(0.1)
-  at(entry, 10, 0)
-  renderer.updateWalkers(0.2)
-  at(entry, 30, 0)
-  renderer.updateWalkers(0.1)
-  at(entry, 30, 10)
-  renderer.updateWalkers(0.3)
-  at(entry, 30, 40)
+  assert.deepEqual([...positions.array], display.flatMap(point => [point.x, renderer.personElevation(point) + .3, -point.y]).map(Math.fround))
+  // This deliberate fixture places original graph endpoints inside buildings.
+  // Preserve those original A* results, while independently checking every
+  // sampled position of the new finite-radius presentation corridor.
+  for (let index = 1; index < display.length; index++) {
+    const a = display[index - 1], b = display[index]
+    assert.ok(clearDisplaySegment(a, b, renderer.campus.buildings, entry.collisionRadius))
+    for (let t = 0; t <= 1; t += .05) assert.ok(outsideBuildings({ x: a.x + (b.x - a.x) * t, y: a.y + (b.y - a.y) * t }, renderer.campus.buildings, entry.collisionRadius))
+  }
+  advanceUntil(renderer, () => entry.walker.phase === 'dwell')
+  at(renderer, entry, display.at(-1).x, display.at(-1).y)
   assert.equal(entry.walker.phase, 'dwell')
-
-  renderer.updateWalkers(0.9)
+  assert.deepEqual(entry.walker.points, outbound)
+  advanceUntil(renderer, () => entry.walker.phase === 'return')
   assert.equal(entry.walker.phase, 'return')
   assert.deepEqual(entry.walker.points, [...outbound].reverse())
-  renderer.updateWalkers(0.1)
-  at(entry, 30, 30)
-  renderer.updateWalkers(0.3)
-  at(entry, 30, 0)
-  renderer.updateWalkers(0.2)
-  at(entry, 10, 0)
-  renderer.updateWalkers(0.1)
+  assert.deepEqual(entry.walker.route.node_ids, ['a', 'b', 'c'])
+  assert.equal(entry.walker.route.length_m, 70)
+  for (let i = 1; i < entry.walker.displayPoints.length; i++) assert.ok(clearDisplaySegment(entry.walker.displayPoints[i - 1], entry.walker.displayPoints[i], renderer.campus.buildings, entry.collisionRadius))
+  advanceUntil(renderer, () => entry.walker === null)
   assert.equal(entry.walker, null)
-  at(entry, entry.home.x, entry.home.y)
+  at(renderer, entry, entry.home.x, entry.home.y)
+  assert.equal(JSON.stringify(renderer.campus.walk_graph), source)
 })
 
 test('seeking restores home positions, clears pending animation and rebuilds order deduplication', () => {
@@ -374,7 +441,7 @@ test('seeking restores home positions, clears pending animation and rebuilds ord
   assert.deepEqual(renderer.effects, [])
   assert.deepEqual([...renderer.seenOrders], [first.order_id])
   assert.deepEqual(renderer.getStats(), { active: 0, queued: 0, unreachable: 0 })
-  at(entry, entry.home.x, entry.home.y)
+  at(renderer, entry, entry.home.x, entry.home.y)
   assert.equal(entry.body.position.y, 3.2)
   renderer.playEvent(first)
   assert.equal(entry.walker, null)
@@ -399,7 +466,7 @@ test('an unreachable purchase is reported once without fabricating a road or blo
   assert.deepEqual(stats.at(-1), renderer.getStats())
   assert.equal(renderer.routeLayer.children.length, 0)
   assert.equal(entry.walker, null)
-  at(entry, entry.home.x, entry.home.y)
+  at(renderer, entry, entry.home.x, entry.home.y)
 
   renderer.playEvent(purchase('reachable'))
   assert.deepEqual(entry.walker.route.node_ids, ['a', 'b', 'c'])

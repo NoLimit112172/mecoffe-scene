@@ -111,7 +111,31 @@ export function decorationIsClear(point, campus, separation = 7, landcovers = []
   return true
 }
 
-export function decorationPlacements(campus, { seed = 'mecoffe-campus-decor-v1', trees = 130, lamps = 28, benches = 16, landcovers = [] } = {}) {
+/** Scenery clearance includes its full crown/relief, not only the trunk point. */
+export function decorationAvoidsAgents(point, avoidance = {}, radius = 8 * (point.scale || 1)) {
+  for(const other of avoidance.points || []) {
+    const x=Array.isArray(other)?other[0]:other.x,y=Array.isArray(other)?other[1]:other.y
+    if(Math.hypot(point.x-x,point.y-y)<radius+(Number(other.radius)||0)+1)return false
+  }
+  for(const route of avoidance.routes || []) {
+    const points=route.points||route
+    for(let i=1;i<points.length;i++) {
+      const a=Array.isArray(points[i-1])?points[i-1]:[points[i-1].x,points[i-1].y]
+      const b=Array.isArray(points[i])?points[i]:[points[i].x,points[i].y]
+      if(segmentDistance(point,a,b)<(avoidance.clearance??14)+radius)return false
+    }
+  }
+  return true
+}
+
+// Keep stable candidate indices: a temporarily blocked prop is hidden, not
+// deleted or relocated. Callers can reserve larger measured atlas envelopes.
+export function decorationVisibility(points = [], avoidance = {}, radii = []) {
+  return points.map((point, index) => decorationAvoidsAgents(point, avoidance,
+    Math.max(8 * (point.scale || 1), Number(radii[index]) || 0)))
+}
+
+export function decorationPlacements(campus, { seed = 'mecoffe-campus-decor-v1', trees = 130, lamps = 28, benches = 16, landcovers = [], avoidance = {} } = {}) {
   const random = seededRandom(seed)
   const candidates = []
   for (const road of campus.roads || []) {
@@ -128,7 +152,7 @@ export function decorationPlacements(campus, { seed = 'mecoffe-campus-decor-v1',
         const point = { x: a[0] + (b[0] - a[0]) * t - (b[1] - a[1]) / length * offset * side,
           y: a[1] + (b[1] - a[1]) * t + (b[0] - a[0]) / length * offset * side,
           angle: Math.atan2(-(b[1] - a[1]), b[0] - a[0]), scale: .8 + random() * .5, variant: Math.floor(random() * 3) }
-        if (decorationIsClear(point, campus, 7, landcovers)) candidates.push(point)
+        if (decorationIsClear(point, campus, 7, landcovers) && decorationAvoidsAgents(point, avoidance)) candidates.push(point)
       }
     }
   }

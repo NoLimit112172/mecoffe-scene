@@ -4,6 +4,8 @@ import * as THREE from 'three'
 import { CharacterBatch } from './Campus3DCharacters.js'
 import { PixelCharacterBatch } from './Campus3DPixelCharacters.js'
 import { previewParams, previewViewport } from './assetPreviewModel.js'
+import { createYuLanRoof } from './YuLanRoofGeometry.js'
+import { TERRAIN_LEVELS as TERRAIN } from './campus3dTerrain.js'
 
 const factories = new Map()
 
@@ -70,7 +72,22 @@ function windowTexture(p) {
 function buildingPreview(prototype, p) {
   const group = new THREE.Group()
   const subtype = `${prototype.id} ${prototype.subtype}`
-  if (/component.windows/.test(subtype)) {
+  if (p.generator === 'foundation') {
+    const width=Number(p.width_m)||14,depth=Number(p.depth_m)||10,outset=Number(p.outset_m)||.75
+    const footing=box(group,width+outset*2,TERRAIN.buildingBase-TERRAIN.campusRoad,depth+outset*2,p.color||'#c6bba2',0,(TERRAIN.buildingBase+TERRAIN.campusRoad)/2)
+    footing.name='foundation-solid'
+    const context=box(group,width,3.2,depth,'#a8b8bc',0,TERRAIN.buildingBase+1.6)
+    context.name='foundation-building-context';context.userData.illustrative=true
+    box(group,width+5,.24,depth+5,'#90aa78',0,TERRAIN.campusRoad-.12).name='foundation-ground-context'
+  } else if (p.generator === 'roof-flat' || p.generator === 'roof-pitched') {
+    const pitched=p.generator === 'roof-pitched'
+    const width=Number(p.width_m)||(pitched?20:40),depth=Number(p.depth_m)||(pitched?12:28)
+    const footprint=p.polygon || [[-width/2,-depth/2],[width/2,-depth/2],[width/2,depth/2],[-width/2,depth/2],[-width/2,-depth/2]]
+    const roof=createYuLanRoof({osm_id:`${prototype.id}:${p.seed ?? 2026}`,polygon:footprint,height_m:.15},
+      {type:pitched?27:22,model:Number(p.model)||1,seed:p.seed ?? 2026})
+    if(p.tile_color)roof.getObjectByName('pitched-roof-solid')?.material.color.set(p.tile_color)
+    group.add(roof)
+  } else if (/component.windows/.test(subtype)) {
     const panel=box(group,5.4,3.2,.22,p.wall || '#7c9cab')
     const columns=Math.max(1,Math.min(8,Number(p.columns)||8)),rows=Math.max(1,Math.min(4,Number(p.rows)||4))
     for(let row=0;row<rows;row++)for(let col=0;col<columns;col++) {
@@ -137,6 +154,27 @@ export function createProceduralPreview(prototype, variant) {
       break
     }
     case 'landcover': {
+      if(p.generator==='layered-base') {
+        // A local section uses the actual campus elevation constants. It is a
+        // genuine stacked mesh, not a flattened texture or a 135 m mini-campus.
+        const layer=(name,bottom,top,color,x=0,width=40,depth=28)=>{
+          const mesh=box(group,width,top-bottom,depth,color,x,(bottom+top)/2)
+          mesh.name=name;mesh.userData.terrainHeights={bottom,top};return mesh
+        }
+        layer('base-stone',TERRAIN.baseBottom,TERRAIN.stoneTop,'#4c6066')
+        layer('base-earth',TERRAIN.stoneTop,TERRAIN.earthTop,'#ab9274')
+        layer('base-surface',TERRAIN.earthTop,TERRAIN.outsideTop,'#c1c0ae')
+        layer('campus-platform',TERRAIN.outsideTop,TERRAIN.campusPlinth,'#b8b3a0',-10,20)
+        for(const x of [-16.8,-3.2])layer(`campus-turf-${x}`,TERRAIN.campusPlinth,TERRAIN.campusGrass,p.color||'#93af74',x,6.4)
+        layer('campus-road',TERRAIN.campusPlinth,TERRAIN.campusRoad,'#65716e',-10,5.76)
+        for(const x of [-13.24,-6.76])layer(`campus-curb-${x}`,TERRAIN.campusPlinth,TERRAIN.campusCurb,'#c6c8b6',x,.72)
+        layer('external-road',TERRAIN.externalRoadBottom,TERRAIN.externalRoad,'#444c52',9,7)
+        for(const x of [4.3,13.7])layer(`external-sidewalk-${x}`,TERRAIN.externalRoadBottom,TERRAIN.externalSidewalk,'#b9c0b9',x,2)
+        for(const x of [5.325,12.675])layer(`external-curb-${x}`,TERRAIN.externalRoadBottom,TERRAIN.externalCurb,'#e0e2d5',x,.35)
+        for(let z=-12;z<13;z+=4)box(group,.18,.025,2,'#edcf70',9,TERRAIN.externalRoad+.025,z)
+        group.userData.illustrative=true
+        break
+      }
       const water=/water|lake/.test(subtype), pitch=/pitch|sport/.test(subtype), parking=/parking/.test(subtype)
       shapeMesh(group,[[-3,-2],[2.7,-2],[3,1],[.8,2],[-2.6,1.8]],p.color || (water?'#5b9faf':parking?'#777d79':'#77a686'))
       if(water) for(let z=-1.4;z<1.5;z+=.5) box(group,2.3,.01,.035,'#a1d5d0',Math.sin(z)*.3,.04,z)
@@ -203,7 +241,9 @@ export async function createAssetPreview(prototype, variant) {
       update:(seconds,camera)=>batch.update(seconds,camera),dispose:()=>batch.dispose(),caption:pixel?'YuLan 原图集 · 三帧行走':'现有立体角色生成器'}
   }
   const object=createProceduralPreview(prototype,variant)
-  return {object,dispose:()=>disposePreviewObject(object),caption:prototype.source?.type==='yulan'?'原型体块预览；图集三维生成器尚未接入':'参数化三维预览 · 示例轮廓'}
+  const roof=String(prototype.params?.generator).startsWith('roof-')
+  const terrainCaption=prototype.params?.generator==='layered-base'?'程序分层底座 · 实体侧面与道路高差':prototype.params?.generator==='foundation'?'程序建筑基座 · 实体基座与示例楼体':null
+  return {object,dispose:()=>disposePreviewObject(object),caption:terrainCaption||(roof?'程序三维屋顶 · 实体屋面与构件':prototype.source?.type==='yulan'?'原型体块预览；图集三维生成器尚未接入':'参数化三维预览 · 示例轮廓')}
 }
 
 export class AssetPreviewRenderer {

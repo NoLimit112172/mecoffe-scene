@@ -20,7 +20,8 @@ export function buildingSuite(type = 21, model = 1) {
     base: { key: `house/${type}/${type}_${model}_0.png` },
     floor: { key: `house/${type}/${type}_${model}_1.png` },
     roof: { key: `house/${type}/${type}_${model}_2.png`, crop: [0.04, 0.02, .92, .52] },
-    note: 'house atlas parts 0 / 1 / 2 are the original ground / repeat floor / roof pieces; roof uses a documented upper-band crop for top projection',
+    roofTextureApplied: false,
+    note: 'house atlas parts 0 / 1 retain the original ground / repeat floor walls; part 2 is a source reference only. Rendered roofs are program-generated solid geometry, never a projected roof image',
   }
   // villa has complete landscape/façade images, not original modular parts.
   // Record these derived bands explicitly rather than claiming native parts.
@@ -30,7 +31,8 @@ export function buildingSuite(type = 21, model = 1) {
     base: { key, crop: [.12, bands[2], .76, 1 - bands[2]] },
     floor: { key, crop: [.12, bands[1], .76, bands[2] - bands[1]] },
     roof: { key, crop: [.12, bands[0], .76, bands[1] - bands[0]] },
-    note: 'villa has one complete source image; these normalized roof / storey / entrance bands are an explicit stylistic adaptation, not surveyed architectural parts',
+    roofTextureApplied: false,
+    note: 'villa has one complete source image; storey / entrance bands are an explicit stylistic adaptation, not surveyed architecture. Roof source band is reference only; rendered roofs are program-generated solid geometry',
   }
 }
 

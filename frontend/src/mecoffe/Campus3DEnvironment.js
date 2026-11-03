@@ -2,8 +2,9 @@
 // presets are written back to OSM, person placement, the graph or OASIS data.
 import * as THREE from 'three'
 import { prototypeParams } from './assetCatalog.js'
-import { buildingPalette, dayLighting, decorationPlacements, seededRandom, windowPattern } from './campus3dEnvironmentModel.js'
+import { buildingPalette, dayLighting, decorationPlacements, decorationVisibility, seededRandom, windowPattern } from './campus3dEnvironmentModel.js'
 import { clipLandcovers, pointInDisplay } from './campus3dDisplay.js'
+import { TERRAIN_LEVELS as L } from './campus3dTerrain.js'
 
 const PATH_TYPES = new Set(['footway', 'path', 'steps', 'pedestrian', 'cycleway'])
 
@@ -70,12 +71,15 @@ float star=step(0.9987,hash(floor(d*550.0)))*smoothstep(0.05,0.5,d.y)*night;
 gl_FragColor=vec4(color+vec3(star*0.6),1.0); }`
 
 export class Campus3DEnvironment {
-  constructor({ scene, campus, displayCampus = null, displayBounds = null, mapping, buildingMeshes, renderer, center, landcovers = [] }) {
+  constructor({ scene, campus, displayCampus = null, displayBounds = null, mapping, buildingMeshes, renderer, center, landcovers = [], avoidance = {} }) {
     this.scene = scene
     this.campus = displayCampus || campus
     this.displayBounds = displayBounds || displayCampus?.display_bounds || null
     this.mapping = mapping
     this.buildingMeshes = buildingMeshes
+    this.avoidance = avoidance
+    this.decorationBatches = []
+    this.clearanceListeners = new Set()
     this.renderer = renderer
     this.center = center?.clone() || new THREE.Vector3()
     this.landcovers = this.displayBounds ? clipLandcovers(landcovers, this.displayBounds) : landcovers
@@ -96,6 +100,47 @@ export class Campus3DEnvironment {
   }
 
   own(resource) { this.resources.add(resource); return resource }
+
+  registerDecorationBatch(mesh, points) {
+    const matrices = points.map((_, index) => { const matrix = new THREE.Matrix4(); mesh.getMatrixAt(index, matrix); return matrix })
+    mesh.geometry.computeBoundingBox()
+    const box = mesh.geometry.boundingBox
+    const radii = matrices.map((matrix, index) => {
+      let radius = 0
+      for (const x of [box.min.x, box.max.x]) for (const y of [box.min.y, box.max.y]) for (const z of [box.min.z, box.max.z]) {
+        const p = new THREE.Vector3(x, y, z).applyMatrix4(matrix)
+        radius = Math.max(radius, Math.hypot(p.x - points[index].x, p.z + points[index].y))
+      }
+      return radius
+    })
+    // Full candidate bounds remain valid while individual instances are hidden.
+    mesh.computeBoundingBox(); mesh.computeBoundingSphere()
+    this.decorationBatches.push({ mesh, points, matrices, radii, visible: null })
+    this.setAgentClearance(this.avoidance)
+  }
+
+  setAgentClearance(avoidance = {}) {
+    this.avoidance = avoidance
+    const zero = new THREE.Vector3(0, 0, 0)
+    for (const batch of this.decorationBatches) {
+      const visible = decorationVisibility(batch.points, avoidance, batch.radii)
+      let changed = false
+      for (let i = 0; i < visible.length; i++) if (visible[i] !== batch.visible?.[i]) {
+        batch.mesh.setMatrixAt(i, visible[i] ? batch.matrices[i] : batch.matrices[i].clone().scale(zero))
+        changed = true
+      }
+      batch.visible = visible
+      batch.mesh.userData.decorationVisibility = [...visible]
+      if (changed) batch.mesh.instanceMatrix.needsUpdate = true
+    }
+    for (const listener of this.clearanceListeners) listener(avoidance)
+  }
+
+  onAgentClearance(listener) {
+    this.clearanceListeners.add(listener)
+    listener(this.avoidance)
+    return () => this.clearanceListeners.delete(listener)
+  }
 
   replaceMaterial(mesh, material) {
     if (!this.replaced.has(mesh)) this.replaced.set(mesh, { material: mesh.material, bloomMaterial: mesh.userData.bloomMaterial, renderOrder: mesh.renderOrder })
@@ -184,11 +229,8 @@ export class Campus3DEnvironment {
     const asphalt = this.own(new THREE.MeshStandardMaterial({ map: this.noiseTexture('asphalt'), roughness: .96, side: THREE.DoubleSide }))
     const walkway = this.own(new THREE.MeshStandardMaterial({ color: prototypeParams('road.footway').color, roughness: 1, side: THREE.DoubleSide }))
     const roadEdge = this.own(new THREE.MeshStandardMaterial({ color: prototypeParams('road.markings').campus_edge, roughness: 1, side: THREE.DoubleSide }))
-    // The backdrop is only 0.15 m below the campus. At a kilometre-wide overview
-    // those depths can quantise to the same value in an offscreen render target,
-    // producing stripes through otherwise flat grass. Draw it first without
-    // writing depth; the real campus surfaces then always cover the backdrop.
-    const outside = this.own(new THREE.MeshStandardMaterial({ color: prototypeParams('landcover.outside').color, roughness: 1, side: THREE.DoubleSide, depthWrite: false }))
+    // The board now has real metre-scale separation from the campus platform.
+    const outside = this.own(new THREE.MeshStandardMaterial({ color: prototypeParams('landcover.outside').color, roughness: 1, side: THREE.DoubleSide, depthWrite: true }))
     this.scene.traverse(mesh => {
       const kind = mesh.userData.environmentKind || mesh.userData.kind
       if (!mesh.isMesh || !kind) return
@@ -202,7 +244,7 @@ export class Campus3DEnvironment {
     // Also colour existing mixed-source footpaths without changing a single
     // point or edge in the walking graph. This is a shallow rendering ribbon.
     const footpaths = (this.campus.roads || []).filter(road => PATH_TYPES.has(road.highway))
-    if (footpaths.length) this.group.add(new THREE.Mesh(this.own(roadRibbon(footpaths, .205)), walkway))
+    if (footpaths.length) this.group.add(new THREE.Mesh(this.own(roadRibbon(footpaths, L.campusRoad+.005)), walkway))
   }
 
   windowTextures(building, palette) {
@@ -266,7 +308,7 @@ export class Campus3DEnvironment {
         const a = building.polygon[i - 1]
         const b = building.polygon[i]
         const length = Math.hypot(b[0] - a[0], b[1] - a[1])
-        if (length > .5) parapets.push({ x: (a[0] + b[0]) / 2, y: (a[1] + b[1]) / 2, height: building.height_m + .55,
+        if (length > .5) parapets.push({ x: (a[0] + b[0]) / 2, y: (a[1] + b[1]) / 2, height: building.height_m + L.buildingBase + .55,
           length, angle: Math.atan2(-(b[1] - a[1]), b[0] - a[0]), color: palette.accent })
       }
     }
@@ -302,17 +344,17 @@ export class Campus3DEnvironment {
         metalness: water ? .18 : 0, side: THREE.DoubleSide }))
       const mesh = new THREE.Mesh(this.own(new THREE.ShapeGeometry(shape(ring))), material)
       mesh.rotation.x = -Math.PI / 2
-      mesh.position.y = water ? .22 : .24
+      mesh.position.y = water ? L.campusGrass+.015 : L.campusGrass+.08
       mesh.userData.osm_id = feature.osm_id
       mesh.userData.landcover = true
       mesh.receiveShadow = true
       this.landcoverGroup.add(mesh)
-      const line = new THREE.Line(this.own(new THREE.BufferGeometry().setFromPoints(ring.map(([x, y]) => new THREE.Vector3(x, .29, -y)))),
+      const line = new THREE.Line(this.own(new THREE.BufferGeometry().setFromPoints(ring.map(([x, y]) => new THREE.Vector3(x, L.campusGrass+.10, -y)))),
         this.own(new THREE.LineBasicMaterial({ color: water ? 0x9ad3cc : 0xe5e9d4, transparent: true, opacity: .72 })))
       this.landcoverGroup.add(line)
       if (!water && ring.length === 5) {
-        const a = new THREE.Vector3((ring[0][0] + ring[1][0]) / 2, .3, -(ring[0][1] + ring[1][1]) / 2)
-        const b = new THREE.Vector3((ring[2][0] + ring[3][0]) / 2, .3, -(ring[2][1] + ring[3][1]) / 2)
+        const a = new THREE.Vector3((ring[0][0] + ring[1][0]) / 2, L.campusGrass+.11, -(ring[0][1] + ring[1][1]) / 2)
+        const b = new THREE.Vector3((ring[2][0] + ring[3][0]) / 2, L.campusGrass+.11, -(ring[2][1] + ring[3][1]) / 2)
         const net = new THREE.Line(this.own(new THREE.BufferGeometry().setFromPoints([a, b])),
           this.own(new THREE.LineBasicMaterial({ color: 0xeff0dc, transparent: true, opacity: .65 })))
         this.landcoverGroup.add(net)
@@ -324,7 +366,7 @@ export class Campus3DEnvironment {
     const tree = prototypeParams('vegetation.tree')
     // The smaller parcel has fewer safe candidates. Reserve slots for each
     // furniture type instead of filling the complete pool with trees first.
-    this.placements = decorationPlacements(this.campus, { landcovers: this.landcovers,
+    this.placements = decorationPlacements(this.campus, { landcovers: this.landcovers, avoidance:this.avoidance,
       ...(this.displayBounds ? { trees: 100, lamps: 20, benches: 12 } : {}) })
     if (this.displayBounds) {
       for (const [kind, inset] of [['trees', 7], ['lamps', 10], ['benches', 3]]) {
@@ -346,15 +388,15 @@ export class Campus3DEnvironment {
     for (const [i, point] of points.entries()) {
       dummy.rotation.set(0, point.angle, 0)
       dummy.scale.setScalar(point.scale)
-      dummy.position.set(point.x, 2.7 * point.scale, -point.y)
+      dummy.position.set(point.x, L.campusGrass + 2.7 * point.scale, -point.y)
       dummy.updateMatrix()
       trunk.setMatrixAt(i, dummy.matrix)
-      dummy.position.y = 7.3 * point.scale
+      dummy.position.y = L.campusGrass + 7.3 * point.scale
       dummy.scale.set(point.scale, point.scale * .9, point.scale)
       dummy.updateMatrix()
       crown.setMatrixAt(i, dummy.matrix)
       crown.setColorAt(i, colour.set(tree.crown[point.variant]))
-      dummy.position.y = 10 * point.scale
+      dummy.position.y = L.campusGrass + 10 * point.scale
       dummy.scale.set(point.scale * .9, point.scale, point.scale * .9)
       dummy.updateMatrix()
       top.setMatrixAt(i, dummy.matrix)
@@ -365,6 +407,7 @@ export class Campus3DEnvironment {
       if (object.instanceColor) object.instanceColor.needsUpdate = true
       object.castShadow = false
       this.trees.add(object)
+      this.registerDecorationBatch(object, points)
     }
     this.group.add(this.trees)
   }
@@ -392,18 +435,21 @@ export class Campus3DEnvironment {
     for (const [i, point] of lamps.entries()) {
       dummy.rotation.set(0, 0, 0)
       dummy.scale.setScalar(1)
-      dummy.position.set(point.x, 4, -point.y)
+      dummy.position.set(point.x, L.campusGrass + 4, -point.y)
       dummy.updateMatrix()
       stem.setMatrixAt(i, dummy.matrix)
-      dummy.position.y = 8.3
+      dummy.position.y = L.campusGrass + 8.3
       dummy.updateMatrix()
       light.setMatrixAt(i, dummy.matrix)
       dummy.rotation.x = -Math.PI / 2
-      dummy.position.y = .31
+      dummy.position.y = L.campusGrass + .03
       dummy.updateMatrix()
       pools.setMatrixAt(i, dummy.matrix)
     }
-    for (const item of [stem, light, pools]) item.instanceMatrix.needsUpdate = true
+    for (const item of [stem, light, pools]) {
+      item.instanceMatrix.needsUpdate = true
+      this.registerDecorationBatch(item, lamps)
+    }
     this.lightMaterials.push({ material: lightMaterial, colour: new THREE.Color('#ffe0a0'), multiplier: 2.2 }, { material: poolMaterial, opacity: .7 })
     this.group.add(stem, light, pools)
     const seats = this.placements.benches
@@ -416,12 +462,13 @@ export class Campus3DEnvironment {
       const instanced = new THREE.InstancedMesh(this.own(new THREE.BoxGeometry(...size)), material, seats.length)
       for (const [i, point] of seats.entries()) {
         dummy.rotation.set(0, -point.angle, 0)
-        dummy.position.set(point.x, 0, -point.y)
+        dummy.position.set(point.x, L.campusGrass, -point.y)
         dummy.updateMatrix()
         const local = new THREE.Matrix4().makeTranslation(...offset)
         instanced.setMatrixAt(i, dummy.matrix.clone().multiply(local))
       }
       instanced.instanceMatrix.needsUpdate = true
+      this.registerDecorationBatch(instanced, seats)
       this.group.add(instanced)
     }
   }
@@ -459,7 +506,7 @@ export class Campus3DEnvironment {
       if (!building) continue
       const facade = this.shopFacade(building)
       const group = new THREE.Group()
-      group.position.set(facade.x, 0, -facade.y)
+      group.position.set(facade.x, L.buildingBase, -facade.y)
       group.rotation.y = -facade.angle
       const width = Math.min(18, facade.length * .75)
       const [image, context] = canvas(512, 128)
@@ -489,7 +536,7 @@ export class Campus3DEnvironment {
       const glowMaterial = this.own(new THREE.MeshBasicMaterial({ color: colours[index % colours.length], transparent: true, opacity: .25, side: THREE.DoubleSide, depthWrite: false, toneMapped: false }))
       const circle = new THREE.Mesh(this.own(new THREE.RingGeometry(8, 9, 36)), glowMaterial)
       circle.rotation.x = -Math.PI / 2
-      circle.position.set(0, .33, 4)
+      circle.position.set(0, L.campusGrass+.03-L.buildingBase, 4)
       circle.userData.bloom = true
       group.add(circle)
       this.lightMaterials.push({ material: glowMaterial, opacity: .6, minimum: .22 })
@@ -551,6 +598,8 @@ export class Campus3DEnvironment {
     this.sun?.shadow.mapPass?.dispose()
     for (const resource of this.resources) resource.dispose()
     this.resources.clear()
+    this.decorationBatches.length = 0
+    this.clearanceListeners.clear()
     this.group.clear()
     this.renderer.shadowMap.enabled = this.previousShadow.enabled
     this.renderer.shadowMap.type = this.previousShadow.type

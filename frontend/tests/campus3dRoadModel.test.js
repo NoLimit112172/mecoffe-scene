@@ -72,11 +72,18 @@ test('road renderer batches display geometry and releases its own resources with
   assert.ok(display.group.children.length <= 6)
   for (const object of display.group.children) {
     assert.equal(object.castShadow, false)
-    assert.equal(object.material.depthWrite, false, 'nearly coplanar road layers must not compete for depth')
+    assert.equal(object.material.depthWrite, ['sidewalk','curb','asphalt'].includes(object.userData.surroundingRoadLayer), 'solid road volumes write depth; paint and tunnel traces only overlay')
     assert.equal(object.material.depthTest, true, 'buildings and terrain must continue to occlude the road')
     assert.ok([...object.geometry.attributes.position.array].every(Number.isFinite))
   }
   const layer = name => display.group.children.find(object => object.userData.surroundingRoadLayer === name)
+  assert.equal(layer('white').material.polygonOffset,true,'distant lane paint must not fight asphalt depth')
+  const top = name => {
+    const geometry=layer(name).geometry;geometry.computeBoundingBox();return geometry.boundingBox.max.y
+  }
+  assert.ok(top('sidewalk')>top('asphalt'),'sidewalk surface is physically above the road')
+  assert.ok(top('curb')>top('sidewalk'),'kerb tops are physically above sidewalks')
+  assert.ok(top('asphalt')-layer('asphalt').geometry.boundingBox.min.y>.5,'asphalt is a volume, not a plane')
   assert.ok(layer('sidewalk').renderOrder < layer('curb').renderOrder)
   assert.ok(layer('curb').renderOrder < layer('asphalt').renderOrder)
   assert.ok(layer('asphalt').renderOrder < layer('white').renderOrder)

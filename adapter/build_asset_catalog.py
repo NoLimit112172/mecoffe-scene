@@ -49,6 +49,18 @@ def existing_prototypes():
         ('awning','门店遮阳棚',{'generator':'awning','width_m':18,'depth_m':3.2,'colors':['#168b7a','#db784c'],'stripe_color':'#fff2d3'}),
     ]:
         rows.append(prototype(f'building.component.{key}','building',key,params, {'amenity':'cafe'} if 'shop' in key else {}, title=title))
+    for roof_type, title in [('flat', '实体平屋顶：女儿墙与设备'), ('pitched', '实体坡屋顶：屋脊与檐口')]:
+        rows.append(prototype(f'building.component.roof-{roof_type}', 'building', f'roof-{roof_type}',
+          {'generator':f'roof-{roof_type}', 'roof_texture':False, 'seed':2026, 'modeling':'程序生成实体屋顶；高度与设备为展示设计'},
+          variants=([{'id':f'seed-{seed}','params':{'seed':seed},'title':f'固定种子 {seed}'} for seed in [2026,2027,2028]] if roof_type == 'flat' else
+                    [{'id':f'pitched-{model}','params':{'model':model,'width_m':width,'tile_color':color},'title':f'坡顶配色 {model}'}
+                     for model,width,color in [(1,18,'#846342'),(2,22,'#b26648'),(3,26,'#68777f')]]),title=title))
+    rows.append(prototype('building.component.foundation','building','foundation',
+      {'generator':'foundation','top_m':.94,'outline_offset_m':.75,'modeling':'程序生成建筑基座与接触阴影，非实测高程'}, title='建筑基座与接缝'))
+    rows.append(prototype('landcover.layered-base','landcover','layered-base',
+      {'generator':'layered-base','base_bottom_m':-19,'stone_top_m':-13,'earth_top_m':-5.1,'outside_top_m':-3.8,
+       'campus_road_m':.14,'campus_grass_m':.62,'campus_curb_m':.72,'external_road_m':-3,
+       'external_sidewalk_m':-2.48,'external_curb_m':-2.34,'modeling':'展示层分层底座与路槽，非测量高程'},title='分层沙盘底座与道路高差'))
     for key, lanes in [('motorway',4),('trunk',4),('primary',4),('secondary',4),('tertiary',2),('residential',2),('living_street',1),('unclassified',2),('service',1)]:
         rows.append(prototype(f'road.{key}','road',key,{'generator':'road','lanes':lanes,'lane_width_m':3.4 if key in ['motorway','trunk','primary','secondary'] else 3.1,
             'sidewalk_m':0 if key in ['motorway','trunk'] else 1.3 if key=='service' else 2.3,'asphalt':'#444c52'}, {'highway':[key,f'{key}_link']}, title=f'OSM {key} 道路'))
@@ -69,7 +81,7 @@ def existing_prototypes():
     role_colors={'undergraduate_consumer':'#397fca','graduate_consumer':'#8864c5','teacher_consumer':'#39806b','merchant':'#e58b48'}
     variants=[{'id':role,'params':{'role':role}} for role in role_colors]
     rows.append(prototype('character.pixel','character','pixel',{'generator':'pixel-character','height_m':8.5,'fps':10.8,'role_colors':role_colors,'base_role_colors':{'undergraduate_consumer':'#4888bf','graduate_consumer':'#8b6ab0','teacher_consumer':'#4b9a83','merchant':'#dc8a3e'}},{},source=YULAN,kind='mesh',variants=variants,style='pixel',title='YuLan 像素人物'))
-    rows.append(prototype('character.solid','character','solid',{'generator':'solid-character','height_m':8.5,'role_colors':role_colors,'skin':['#efc6a5','#dfb38f','#c9916f','#f2d4b7'],'hair':['#302a2b','#473329','#655049','#2c343a']},{},kind='mesh',variants=variants,style='solid',title='程序立体人物'))
+    rows.append(prototype('character.solid','character','solid',{'generator':'solid-character','height_m':8.5,'role_colors':role_colors,'skin':['#efc6a5','#dfb38f','#c9916f','#f2d4b7'],'hair':['#302a2b','#473329','#655049','#2c343a'],'status':'legacy-gallery-alternative'},{},kind='mesh',variants=variants,style='solid',title='程序立体人物（旧版备选）'))
     for key,color,text,duration in [('post','#54b5ed','••• 发帖',2.2),('comment','#bd85ec','••• 评论',2.4),('follow','#69d2c7','＋ 关注',2.3),('ad','#ffbe58','推广',2.8),('exposure','#ffbe58','收到广告',2.4),('interview','#f3d574','访谈',2.4),('purchase','#70e0b5','到店',2.8)]:
         rows.append(prototype(f'effect.{key}','effect',key,{'generator':'effect','color':color,'text':text,'duration':duration},{},title=f'事件 · {text}'))
     for key,color,title in [('selection','#ffbd49','人物选中光圈'),('walking','#fff7d6','行走光圈'),('route','#168b7a','A* 路线显示'),('relationship','#4c8ba6','关系连线'),('sky','#78b9e5','天空与日夜光照'),('coffee-cup','#fff6de','程序咖啡杯图标')]:
@@ -89,7 +101,10 @@ def yulan_prototypes():
         variants=[{'id':f'model-{model}','params':{'model':model},'title':f'原图集变体 {model}'} for model in [1,2,3]]
         rows.append(prototype(f'building.yulan.{family}{number}','building',f'{family}{number}',
           {'generator':'yulan-building','atlasType':number,'model':1,'moduleWidth':8,'levels':4,'storey_height_m':3.2,
-           'module_source':'native-base-floor-roof' if number<27 else 'documented-derived-villa-bands'},
+           'module_source':'native-base-floor' if number<27 else 'documented-derived-villa-wall-bands',
+           'roof_generator':'procedural-3d','roof_texture':False,
+           'facade_shape_constraints':{'circular_models':{22:[2],24:[2],25:[1,2,3]}.get(number,[]),'noncircular_fallback':'same-family-straight-or-house26'},
+           'modeling':'YuLan 原立面 + 程序实体屋顶；屋顶设备为展示设计'},
           matches[number],source=YULAN,variants=variants,style='yulan',title=f'YuLan {family} {number} 模块套装'))
     sets={
       'bush':('vegetation',['decoration/40/40_1.png','decoration/40/40_2.png','decoration/40/40_16.png']),
@@ -109,6 +124,10 @@ def yulan_prototypes():
     roles=['undergraduate_consumer','graduate_consumer','teacher_consumer','merchant']
     rows.append(prototype('character.voxel','character','voxel',{'generator':'voxel-character','height_m':8.5,'resolution':40,'depth':2,'fps':10.8},
       source=YULAN,kind='mesh',style='voxel',variants=[{'id':role,'params':{'role':role}} for role in roles],title='YuLan 体素人物'))
+    rows.append(prototype('character.yulan3d','character','yulan3d',{'generator':'yulan3d-character','height_m':8.5,'radius_m':3.0,
+      'palette_sampling':'same-2d-atlas-parts','face_texture':'YuLan eyes + mouth','default':True,
+      'modeling':'依据 YuLan 角色配色和头部贴图程序建模；封闭头发、头身、关节四肢和鞋；几何由项目程序生成'},
+      source=YULAN,kind='mesh',style='yulan3d',variants=[{'id':role,'params':{'role':role}} for role in roles],title='立体 YuLan 人物（默认）'))
     return rows
 
 

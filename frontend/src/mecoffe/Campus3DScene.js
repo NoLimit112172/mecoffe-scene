@@ -10,6 +10,11 @@ import { campusBoundaryBounds, fitCampusView } from './campus3dView.js'
 import { layoutLabels, personScaleForCamera } from './campus3dScreen.js'
 import { CharacterBatch } from './Campus3DCharacters.js'
 import { PixelCharacterBatch } from './Campus3DPixelCharacters.js'
+import { YuLanCharacterBatch } from './Campus3DYuLanCharacters.js'
+import { Campus3DBase } from './Campus3DBase.js'
+import { TERRAIN_LEVELS, terrainSurfaceHeight } from './campus3dTerrain.js'
+import { DISPLAY_RADIUS, CROWD_GAP, standingSlots, stepSeparatedCrowd, displayRoutePoints, outsideBuildings, nearestClearPosition } from './campus3dCrowd.js'
+import { displayCrowdDetour } from './campus3dDetour.js'
 import { createDisplayCampus } from './campus3dDisplay.js'
 import { Campus3DSurroundings } from './Campus3DSurroundings.js'
 import { Campus3DEnvironment } from './Campus3DEnvironment.js'
@@ -21,12 +26,6 @@ const ROLE_COLORS = Object.fromEntries(Object.entries(prototypeParams('character
 const WALK_SPEED_M_S = 100 // Playback speed, deliberately not a real walking speed.
 const SHOP_DWELL_S = 0.85
 
-function hash(value) {
-  let result = 2166136261
-  for (const ch of String(value)) result = Math.imul(result ^ ch.codePointAt(0), 16777619)
-  return result >>> 0
-}
-
 function shapeOf(ring, holes = []) {
   const shape = new THREE.Shape(ring.map(([x, y]) => new THREE.Vector2(x, y)))
   for (const hole of holes) shape.holes.push(new THREE.Path(hole.map(([x, y]) => new THREE.Vector2(x, y))))
@@ -36,7 +35,8 @@ function shapeOf(ring, holes = []) {
 // The source has no verified entrances. Pick a point on the building outline
 // facing its road anchor and move just outside it for IDLE presentation only.
 // This does not add a graph edge or pretend that the building-to-road gap is a
-// mapped footpath. Purchase animation still begins at the original OSM node.
+// mapped footpath. Purchase animation connects this display point to the
+// unchanged OSM route using a separate collision-safe display corridor.
 function illustrativeEntrance(anchor) {
   const polygon = anchor.building.polygon
   const road = anchor.node
@@ -143,7 +143,7 @@ export class Campus3DScene {
     const { minX, maxX, minY, maxY } = this.display.bounds
     // A small, independent framing margin exposes the four perimeter roads;
     // the newly downloaded 300 m context never becomes a giant grass parcel.
-    const context = surroundings.length ? 60 : 0
+    const context = surroundings.length ? 135 : 0
     const frameRing = [[minX-context,minY-context], [maxX+context,minY-context],
       [maxX+context,maxY+context], [minX-context,maxY+context], [minX-context,minY-context]]
     this.cameraCampus = { ...this.display.campus, boundary: frameRing, boundary_polygons: [{outer:frameRing,holes:[]}] }
@@ -170,7 +170,7 @@ export class Campus3DScene {
     this.disposed = false
     this.visualSeconds = 0
     this.quality = 'high'
-    this.characterStyle = 'pixel'
+    this.characterStyle = 'yulan3d'
     this.buildingStyle = 'procedural'
     this.lighting = { cycle: true, position: 0, hour: 12 }
     this.representatives = idleRepresentatives(index.scene.people)
@@ -205,12 +205,16 @@ export class Campus3DScene {
     this.createLabelLayer()
     this.drawCampus()
     this.placePeople()
+    this.baseModel = new Campus3DBase({scene:this.scene,campus:this.display.campus,displayBounds:this.display.bounds}).init()
     this.pixelBatch = new PixelCharacterBatch({ scene: this.scene, entries: this.people })
     await this.pixelBatch.init()
+    this.yulanCharacterBatch = new YuLanCharacterBatch({ scene:this.scene, entries:this.people })
+    await this.yulanCharacterBatch.init()
+    if(this.disposed){this.yulanCharacterBatch.dispose();return this}
     this.environment = new Campus3DEnvironment({ scene: this.scene, campus: this.campus,
       displayCampus: this.display.campus, displayBounds: this.display.bounds,
       mapping: this.mapping, buildingMeshes: this.buildingMeshes, renderer: this.renderer,
-      center: this.center, landcovers: this.display.landcovers }).init()
+      center: this.center, landcovers: this.display.landcovers, avoidance:this.decorationAvoidance() }).init()
     this.surroundings = new Campus3DSurroundings({ scene: this.scene, roads: this.surroundingRoads,
       displayBounds: this.display.bounds, campus: this.campus, host: this.host }).init()
     this.eventEffects = new EventEffects({ scene: this.scene, index: this.index,
@@ -249,7 +253,8 @@ export class Campus3DScene {
       this.controls.update()
       this.updateScreenVisuals()
       this.updateRelations()
-      if (this.characterStyle === 'solid') this.characterBatch?.update(this.visualSeconds)
+      if (this.characterStyle === 'yulan3d') this.yulanCharacterBatch?.update(this.visualSeconds)
+      else if (this.characterStyle === 'solid') this.characterBatch?.update(this.visualSeconds)
       else if (this.characterStyle === 'voxel') this.voxelBatch?.update(this.visualSeconds, this.camera)
       else this.pixelBatch?.update(this.visualSeconds, this.camera)
       this.surroundings?.update(this.camera, this.host)
@@ -323,7 +328,7 @@ export class Campus3DScene {
       }), [new THREE.MeshStandardMaterial({ color: roof, roughness: 0.9 }),
         new THREE.MeshStandardMaterial({ color, roughness: 0.95 })])
       mesh.rotation.x = -Math.PI / 2
-      mesh.position.y = 0.18
+      mesh.position.y = TERRAIN_LEVELS.buildingBase
       mesh.userData.building = building
       this.scene.add(mesh)
       this.pickTargets.push(mesh)
@@ -339,7 +344,7 @@ export class Campus3DScene {
         const shopIndex = shopKey ? [...this.brandColors.keys()].indexOf(shopKey.slice(5)) : -1
         const prefix = shopIndex >= 0 ? `门店 ${String.fromCharCode(65 + shopIndex)}（示意）· ` : ''
         this.addCampusLabel(building.osm_id, `${prefix}${name}`,
-          new THREE.Vector3(center.x, building.height_m + 5, -center.y),
+          new THREE.Vector3(center.x, building.height_m + TERRAIN_LEVELS.buildingBase + 5, -center.y),
           shopIndex >= 0 ? `#${BRAND_COLORS[shopIndex % BRAND_COLORS.length].toString(16).padStart(6, '0')}` : '#294e48')
       }
     }
@@ -421,14 +426,26 @@ export class Campus3DScene {
     this.screenWorld.copy(this.camera.matrixWorld)
     this.screenProjection.copy(this.camera.projectionMatrix)
     this.screenSize = { width, height }
-    // Scale only the figure, never its ground position or route. Values are
-    // CSS pixels; renderer pixel ratio must not affect the minimum size.
+    // Reserve the largest walking footprint across the display on camera
+    // changes. Per-frame pixel scaling stays inside this stable reservation;
+    // moving farther from a fixed camera must never teleport its neighbours.
+    if (cameraChanged || !this.cameraCrowdRadius || this.crowdCharacterStyle!==this.characterStyle) {
+      const b=this.display.bounds, samples=[]
+      for(const x of [b.minX-120,b.maxX+120])for(const y of [b.minY-120,b.maxY+120])samples.push(new THREE.Vector3(x,.025,-y))
+      samples.push(...[...this.people.values()].map(entry=>entry.figure.position))
+      this.cameraCrowdRadius=Math.max(DISPLAY_RADIUS,...samples.map(position=>3*(this.characterStyle==='pixel'
+        ? billboardScaleForCamera(this.camera,position,{height,minPixels:12})
+        : personScaleForCamera(this.camera,position,{width,height,minPixels:12}))))+.2
+      this.crowdCharacterStyle=this.characterStyle
+    }
+    if(cameraChanged || [...this.people.values()].some(entry=>entry.collisionRadius !== this.cameraCrowdRadius))this.reflowPeople()
+    // CSS pixels; device pixel ratio must not affect the minimum size.
     for (const entry of this.people.values()) {
       const prominent = Boolean(entry.walker) || entry.person.id === this.selectedId
       entry.presentationVisible = prominent || this.representatives.has(entry.person.id)
       entry.figure.visible = entry.presentationVisible
-      entry.base.visible = prominent || (this.characterStyle !== 'solid' && entry.presentationVisible)
-      const minPixels = this.characterStyle !== 'solid' ? (prominent ? 40 : 30) : (prominent ? 26 : 18)
+      entry.base.visible = entry.presentationVisible
+      const minPixels = 12
       if (cameraChanged || entry.screenMinPixels !== minPixels || !entry.screenPosition?.equals(entry.figure.position)) {
         const scale = this.characterStyle === 'pixel'
           ? billboardScaleForCamera(this.camera, entry.figure.position, { height, minPixels })
@@ -534,6 +551,90 @@ export class Campus3DScene {
     this.selection.renderOrder = 4
     this.scene.add(this.selection)
     this.characterBatch = new CharacterBatch({ scene: this.scene, entries: this.people })
+    const slots = new Map(standingSlots([...this.people].map(([id,entry])=>({id,origin:entry.entrance})),this.campus.buildings,
+      {radius:DISPLAY_RADIUS,roads:this.campus.roads || []}).map(point=>[point.id,point]))
+    for(const [id,entry] of this.people) {
+      const point=slots.get(id)
+      entry.home={x:point.x,y:point.y}
+      entry.figure.position.set(point.x,this.personElevation(point),-point.y)
+      entry.figure.rotation.y=Math.atan2(entry.anchor.node.x-point.x,-entry.anchor.node.y+point.y)
+      entry.collisionRadius=3
+    }
+  }
+
+  personElevation(point) { return terrainSurfaceHeight(point,this.display.campus)+.025 }
+
+  reflowPeople() {
+    const people=[...this.people].map(([id,entry])=>({id,x:entry.figure.position.x,y:-entry.figure.position.z,
+      radius:this.cameraCrowdRadius || Math.max(DISPLAY_RADIUS,entry.figure.scale.x*3),moving:Boolean(entry.walker)}))
+    const invalid=people.some((p,i)=>!outsideBuildings(p,this.campus.buildings,p.radius)
+      || people.slice(0,i).some(q=>Math.hypot(p.x-q.x,p.y-q.y)<p.radius+q.radius+CROWD_GAP-1e-6))
+    // Standing groups leave an additional walking-width corridor between
+    // neighbours. Tight disc packing is collision-free but traps departures.
+    let positions=people
+    if(invalid || this.lastCrowdLayoutRadius!==this.cameraCrowdRadius) {
+      positions=[]
+      const radius=this.cameraCrowdRadius || DISPLAY_RADIUS,roads=this.standingClearanceRoutes(radius)
+      for(const person of [...people].sort((a,b)=>Number(b.moving)-Number(a.moving)||a.id.localeCompare(b.id))) {
+        positions.push({...person,...nearestClearPosition(person,this.campus.buildings,{radius:person.radius,occupied:positions,
+          gap:2*radius+2*CROWD_GAP+6,roads:person.moving?[]:roads,roadClearance:radius+2})})
+      }
+    }
+    this.lastCrowdLayoutRadius=this.cameraCrowdRadius
+    for(const p of positions) {
+      const entry=this.people.get(p.id)
+      entry.figure.position.set(p.x,this.personElevation(p),-p.y)
+      entry.collisionRadius=p.radius
+      if(!entry.walker)entry.home={x:p.x,y:p.y}
+      else if(p.radius>entry.walker.displayRadius) {
+        entry.walker.displayPoints=displayRoutePoints(entry.walker.displayPoints.slice(entry.walker.displayNextPoint),this.campus.buildings,
+          {radius:p.radius,laneOffset:0,start:p})
+        entry.walker.displayNextPoint=1
+        entry.walker.displayRadius=p.radius
+        this.updateWalkerLine(entry.walker)
+      }
+    }
+    this.refreshDecorationClearance()
+  }
+
+  refreshDecorationClearance() {
+    if(!this.environment?.setAgentClearance)return
+    this.environment.setAgentClearance({points:[...this.people.values()].map(entry=>({x:entry.figure.position.x,y:-entry.figure.position.z,radius:entry.collisionRadius})),
+      routes:[...this.people.values()].filter(entry=>entry.walker).map(entry=>entry.walker.displayPoints),clearance:this.cameraCrowdRadius || DISPLAY_RADIUS})
+  }
+
+  updateWalkerLine(walker) {
+    if(!walker.line)return
+    walker.line.geometry.dispose()
+    walker.line.geometry=new THREE.BufferGeometry().setFromPoints(walker.displayPoints.map(point=>new THREE.Vector3(point.x,this.personElevation(point)+.3,-point.y)))
+  }
+
+  standingClearanceRoutes(radius) {
+    if(this.standingRouteRadius===radius)return this.standingRoutes
+    const routes=[]
+    for(const key of this.routing.anchors.keys())if(!key.startsWith('shop_'))for(const shop of this.routing.anchors.keys())if(shop.startsWith('shop_')) {
+      const route=routeBetweenMappings(this.routing,key,shop)
+      if(route) {
+        routes.push(route.points)
+        routes.push(displayRoutePoints(route.points,this.campus.buildings,{radius,laneOffset:4}))
+        routes.push(displayRoutePoints(reverseRoute(route).points,this.campus.buildings,{radius,laneOffset:4}))
+      }
+    }
+    this.standingRouteRadius=radius;this.standingRoutes=routes
+    return routes
+  }
+
+  decorationAvoidance() {
+    const routes=[]
+    for(const key of this.routing.anchors.keys())if(!key.startsWith('shop_'))for(const shop of this.routing.anchors.keys())if(shop.startsWith('shop_')) {
+      const route=routeBetweenMappings(this.routing,key,shop)
+      if(route) {
+        routes.push(route.points)
+        routes.push(displayRoutePoints(route.points,this.campus.buildings,{radius:DISPLAY_RADIUS,laneOffset:4}))
+        routes.push(displayRoutePoints(reverseRoute(route).points,this.campus.buildings,{radius:DISPLAY_RADIUS,laneOffset:4}))
+      }
+    }
+    return {points:[...this.people.values()].map(entry=>({...entry.home,radius:DISPLAY_RADIUS})),routes,clearance:14}
   }
 
   setCursor(cursor) {
@@ -547,7 +648,7 @@ export class Campus3DScene {
       entry.queue.length = 0
       entry.walker = null
       entry.hasCoffee = false
-      entry.figure.position.set(entry.home.x, 0.35, -entry.home.y)
+      entry.figure.position.set(entry.home.x, this.personElevation(entry.home), -entry.home.y)
       entry.body.position.y = 3.2
     }
     this.clearLayer(this.routeLayer)
@@ -555,6 +656,7 @@ export class Campus3DScene {
     this.effects = []
     this.visualSeconds = 0
     this.eventEffects?.reset()
+    this.reflowPeople()
     this.emitVisualActivity()
     this.updateSelection()
     this.emitStats()
@@ -598,65 +700,124 @@ export class Campus3DScene {
     const next = entry.queue.shift()
     if (!next) return
     entry.hasCoffee = false
+    const displayRadius=Math.max(DISPLAY_RADIUS,entry.collisionRadius)
+    const occupied=[...this.people.values()].filter(other=>other!==entry).flatMap(other=>[
+      {x:other.figure.position.x,y:-other.figure.position.z,radius:other.collisionRadius},
+      ...(other.walker?.servicePoint ? [{...other.walker.servicePoint,radius:other.collisionRadius}] : [])])
+    const servicePoint=nearestClearPosition(next.route.points.at(-1),this.campus.buildings,{radius:displayRadius,occupied})
+    const displayPoints=displayRoutePoints(next.route.points,this.campus.buildings,{radius:displayRadius,laneOffset:4,
+      start:{x:entry.figure.position.x,y:-entry.figure.position.z},end:servicePoint})
     const material = new THREE.LineBasicMaterial({ color: this.brandColors.get(next.event.brand_id) || 0xe17943, transparent: true, opacity: 0.75 })
-    const routeLine = new THREE.Line(new THREE.BufferGeometry().setFromPoints(next.route.points.map(point => new THREE.Vector3(point.x, 0.65, -point.y))), material)
+    const routeLine = new THREE.Line(new THREE.BufferGeometry().setFromPoints(displayPoints.map(point => new THREE.Vector3(point.x, this.personElevation(point)+.3, -point.y))), material)
     this.routeLayer.add(routeLine)
-    entry.walker = { ...next, phase: 'outbound', points: next.route.points, nextPoint: 1, dwell: 0, line: routeLine }
-    const start = next.route.points[0]
-    entry.figure.position.set(start.x, 0.35, -start.y)
+    entry.walker = { ...next, phase: 'outbound', points: next.route.points, nextPoint: 1, dwell: 0, line: routeLine,
+      displayPoints,displayNextPoint:1,displayRadius,servicePoint,travelled:0,stalled:0 }
     this.walkers.add(entry.person.id)
+    this.refreshDecorationClearance()
   }
 
   updateWalkers(delta) {
     let changed = false
-    for (const id of [...this.walkers]) {
-      const entry = this.people.get(id)
-      const walker = entry.walker
-      if (!walker) continue
-      if (walker.phase === 'dwell') {
-        walker.dwell += delta
-        if (walker.dwell >= SHOP_DWELL_S) {
-          walker.phase = 'return'
-          walker.points = reverseRoute(walker.route).points
-          walker.nextPoint = 1
+    // Small, swept steps keep both the frame endpoints and the interval safe.
+    // Only display travel is delayed by a queue; replay events/stats are intact.
+    const slices=Math.max(1,Math.ceil(delta/.04)),step=delta/slices
+    for(let slice=0;slice<slices;slice++) {
+      const proposals=[]
+      for(const [id,entry] of this.people) {
+        const p={id,x:entry.figure.position.x,y:-entry.figure.position.z,radius:entry.collisionRadius || 3,progress:entry.walker?.travelled || 0}
+        const walker=entry.walker
+        if(walker) {
+          walker.holdRemaining=Math.max(0,(walker.holdRemaining || 0)-step)
+          walker.yieldCooldown=Math.max(0,(walker.yieldCooldown || 0)-step)
         }
-        continue
-      }
-      let movement = WALK_SPEED_M_S * delta
-      while (walker.nextPoint < walker.points.length && movement > 0) {
-        const point = walker.points[walker.nextPoint]
-        const dx = point.x - entry.figure.position.x
-        const dz = -point.y - entry.figure.position.z
-        const distance = Math.hypot(dx, dz)
-        if (distance <= movement) {
-          entry.figure.position.x = point.x
-          entry.figure.position.z = -point.y
-          movement -= distance
-          walker.nextPoint += 1
-        } else {
-          entry.figure.position.x += dx / distance * movement
-          entry.figure.position.z += dz / distance * movement
-          movement = 0
+        if(walker?.phase==='dwell') {
+          walker.dwell+=step
+          if(walker.dwell>=SHOP_DWELL_S) {
+            walker.phase='return'
+            walker.points=reverseRoute(walker.route).points
+            walker.nextPoint=1
+            walker.displayPoints=displayRoutePoints(walker.points,this.campus.buildings,{radius:walker.displayRadius,laneOffset:4,start:p,end:entry.home})
+            walker.displayNextPoint=1
+            this.updateWalkerLine(walker)
+            this.refreshDecorationClearance()
+          }
         }
-        if (distance > 0) entry.figure.rotation.y = Math.atan2(dx, dz)
+        if(walker && walker.phase!=='dwell' && !walker.holdRemaining) {
+          const goal=walker.displayPoints[walker.displayNextPoint]
+          if(goal) {
+            const d=Math.hypot(goal.x-p.x,goal.y-p.y),fraction=d<=1e-6?1:Math.min(1,WALK_SPEED_M_S*step/d)
+            p.target={x:p.x+(goal.x-p.x)*fraction,y:p.y+(goal.y-p.y)*fraction}
+            p.reachesGoal=fraction===1
+          }
+        }
+        proposals.push(p)
       }
-      entry.body.position.y = 3.2 + Math.sin(performance.now() / 80 + hash(id)) * 0.22
-      if (walker.nextPoint >= walker.points.length) {
-        if (walker.phase === 'outbound') {
-          walker.phase = 'dwell'
-          walker.dwell = 0
-          entry.hasCoffee = true
-          this.eventEffects?.purchaseArrived(walker.event)
-          this.emitVisualActivity()
-        } else {
-          this.routeLayer.remove(walker.line)
-          disposeObject(walker.line)
-          entry.walker = null
-          this.walkers.delete(id)
-          entry.figure.position.set(entry.home.x, 0.35, -entry.home.y)
-          entry.body.position.y = 3.2
-          this.startNextTrip(entry)
-          changed = true
+      const result=stepSeparatedCrowd(proposals,this.campus.buildings)
+      for(const p of result) {
+        const entry=this.people.get(p.id),walker=entry.walker
+        const goal=walker?.displayPoints[walker.displayNextPoint]
+        const beforeGoal=goal?Math.hypot(entry.figure.position.x-goal.x,-entry.figure.position.z-goal.y):0
+        const dx=p.x-entry.figure.position.x,dz=-p.y-entry.figure.position.z,moved=Math.hypot(dx,dz)
+        entry.figure.position.set(p.x,this.personElevation(p),-p.y)
+        entry.presentationWalking=moved>.001
+        if(!walker)continue
+        if(moved>.001)entry.figure.rotation.y=Math.atan2(dx,dz)
+        walker.travelled+=moved
+        walker.waiting=p.waiting
+        walker.moving=moved>.001
+        const improvement=goal?beforeGoal-Math.hypot(p.x-goal.x,p.y-goal.y):0
+        walker.stalled=(walker.stalled || 0)+step
+        if(walker.stalled>.4 && (p.waiting || improvement<moved*.8+.001) && walker.phase!=='dwell' && !walker.holdRemaining) {
+          const obstacles=[...this.people.values()].filter(other=>other!==entry).map(other=>({x:other.figure.position.x,y:-other.figure.position.z,radius:other.collisionRadius}))
+          // Intermediate display corners may be occupied by an idle figure.
+          // Rejoin a later free corner rather than waiting forever at it.
+          let replanned=false
+          for(let i=walker.displayNextPoint;i<walker.displayPoints.length;i++) {
+            const path=displayCrowdDetour(p,walker.displayPoints[i],this.campus.buildings,obstacles,entry.collisionRadius)
+            if(path) {
+              walker.displayPoints=[...path,...walker.displayPoints.slice(i+1)]
+              walker.displayNextPoint=1
+              this.updateWalkerLine(walker)
+              replanned=true
+              break
+            }
+          }
+          // A single-width corridor may have no route around an oncoming
+          // body. The later ID retreats to its reserved home bay, then waits
+          // while the earlier ID passes; never teleport through its neighbour.
+          if(!replanned && !walker.retreating && !walker.yieldCooldown
+            && [...this.people.values()].some(other=>other.walker && other.person.id<entry.person.id
+              && Math.hypot(p.x-other.figure.position.x,p.y+other.figure.position.z)<entry.collisionRadius*6)) {
+            const retreat=displayCrowdDetour(p,entry.home,this.campus.buildings,obstacles,entry.collisionRadius)
+            if(retreat && retreat.length>1) {
+              walker.resumeDisplayPoints=walker.displayPoints.slice(walker.displayNextPoint)
+              walker.displayPoints=retreat;walker.displayNextPoint=1;walker.retreating=true
+              this.updateWalkerLine(walker)
+            }
+          }
+          this.refreshDecorationClearance()
+          walker.stalled=0
+        }
+        if(p.reachesGoal && p.fraction>.9999)walker.displayNextPoint++
+        if(walker.phase!=='dwell' && walker.displayNextPoint>=walker.displayPoints.length) {
+          if(walker.retreating) {
+            walker.displayPoints=displayRoutePoints(walker.resumeDisplayPoints,this.campus.buildings,{radius:walker.displayRadius,laneOffset:0,start:p})
+            walker.displayNextPoint=1;walker.retreating=false;walker.holdRemaining=2;walker.yieldCooldown=8
+            this.updateWalkerLine(walker)
+            this.refreshDecorationClearance()
+            continue
+          }
+          if(walker.phase==='outbound') {
+            walker.phase='dwell';walker.dwell=0;entry.hasCoffee=true
+            this.eventEffects?.purchaseArrived(walker.event)
+            this.emitVisualActivity()
+          } else {
+            this.routeLayer.remove(walker.line);disposeObject(walker.line)
+            entry.walker=null;this.walkers.delete(p.id)
+            entry.home={x:p.x,y:p.y}
+            entry.body.position.y=3.2
+            this.startNextTrip(entry);changed=true
+          }
         }
       }
     }
@@ -788,10 +949,12 @@ export class Campus3DScene {
   setQuality(value) {
     this.quality = value === 'low' ? 'low' : 'high'
     this.environment?.setQuality(this.quality)
+    this.baseModel?.setQuality(this.quality)
     this.yulanStyle?.setQuality(this.quality)
     this.characterBatch?.setQuality(this.quality)
     this.pixelBatch?.setQuality(this.quality)
     this.voxelBatch?.setQuality(this.quality)
+    this.yulanCharacterBatch?.setQuality(this.quality)
     this.eventEffects?.setQuality(this.quality)
     this.bloom?.setQuality(this.quality)
     if (this.renderer) {
@@ -801,10 +964,11 @@ export class Campus3DScene {
   }
 
   setCharacterStyle(value) {
-    this.characterStyle = ['pixel','solid','voxel'].includes(value) ? value : 'pixel'
+    this.characterStyle = ['yulan3d','pixel','solid','voxel'].includes(value) ? value : 'yulan3d'
     if (this.characterBatch) this.characterBatch.group.visible = this.characterStyle === 'solid'
     this.pixelBatch?.setVisible(this.characterStyle === 'pixel')
     this.voxelBatch?.setVisible(this.characterStyle === 'voxel')
+    this.yulanCharacterBatch?.setVisible(this.characterStyle === 'yulan3d')
     for (const entry of this.people.values()) entry.screenMinPixels = null
     this.updateScreenVisuals()
     if (this.characterStyle === 'voxel' && !this.voxelBatch && this.host) {
@@ -938,9 +1102,11 @@ export class Campus3DScene {
     this.bloom?.dispose()
     this.yulanStyle?.dispose()
     this.environment?.dispose()
+    this.baseModel?.dispose()
     this.surroundings?.dispose()
     this.pixelBatch?.dispose()
     this.voxelBatch?.dispose()
+    this.yulanCharacterBatch?.dispose()
     this.characterBatch?.dispose()
     if (this.scene) {
       disposeObject(this.scene)

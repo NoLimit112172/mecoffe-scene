@@ -1,6 +1,8 @@
 import * as THREE from 'three'
 import { atlasFrameDraw, indexPixelAtlases } from './campus3dPixelModel.js'
 import { buildingSuite, cropRectangle, wallModules, voxelizeRGBA, voxelSurface, YULAN_DECORATION_SETS } from './yulanAssetModel.js'
+import { compatibleYuLanFacade, ROUND_FACADE_VARIANTS } from './yulanRoofModel.js'
+import { createYuLanRoof } from './YuLanRoofGeometry.js'
 
 /** Each returned image set has a clear owner; dispose it after adaptation. */
 export async function loadYuLanAssets() {
@@ -104,11 +106,12 @@ export class YuLanAssetFactory {
 
   createBuilding(building, { type = 21, model = 1, moduleWidth = 8 } = {}) {
     if (!this.assets || this.disposed) throw new Error('YuLan factory must be initialized')
-    const suite = buildingSuite(type, model)
+    const facadeSelection = compatibleYuLanFacade(building,{type,model})
+    const suite = buildingSuite(facadeSelection.type, facadeSelection.model)
     const height = Number(building.height_m ?? building.height ?? 9.6)
     const layout = wallModules(building.polygon, { levels:Number(building.levels || 3), height, moduleWidth, holes:building.holes || [] })
     const group = new THREE.Group()
-    group.name = `yulan-modular-${type}-${model}`
+    group.name = `yulan-modular-${suite.type}-${suite.model}`
     const polygon = new THREE.Shape(layout.points.map(([x,y]) => new THREE.Vector2(x,y)))
     for(const ring of layout.holes || [])polygon.holes.push(new THREE.Path(ring.map(([x,y])=>new THREE.Vector2(x,y))))
     const coreGeometry = new THREE.ExtrudeGeometry(polygon, { depth:Math.max(.01,height-.02), steps:1, bevelEnabled:false })
@@ -143,18 +146,11 @@ export class YuLanAssetFactory {
       mesh.castShadow = mesh.receiveShadow = true
       group.add(mesh)
     }
-    const roofGeometry = new THREE.ShapeGeometry(polygon)
-    const box = new THREE.Box2().setFromPoints(layout.points.map(([x,y]) => new THREE.Vector2(x,y)))
-    const size = box.getSize(new THREE.Vector2()), pos = roofGeometry.attributes.position, uv = roofGeometry.attributes.uv
-    for(let i=0;i<pos.count;i++) uv.setXY(i,(pos.getX(i)-box.min.x)/(size.x||1),(pos.getY(i)-box.min.y)/(size.y||1))
-    const roof = new THREE.Mesh(roofGeometry,this.material(suite.roof))
-    roof.rotation.x = -Math.PI / 2
-    roof.position.y = height
-    roof.name = 'yulan-roof-module'
-    roof.receiveShadow = true
+    const roof = createYuLanRoof(building,{type:suite.type,model:suite.model})
     group.add(roof)
     group.userData = { yulanAdaptation:true, suite, moduleCount:layout.modules.length,
-      originalFootprint:building.polygon, originalHeight:height, source:'YuLan-OneSim atlas', license:'Apache-2.0' }
+      originalFootprint:building.polygon, originalHeight:height, source:'YuLan-OneSim atlas', license:'Apache-2.0',
+      facadeSelection,roofType:roof.userData.roofPlan.kind,roofSource:'procedural geometry',roofTextureApplied:false }
     if(layout.holes?.length)group.userData.originalHoles=building.holes
     return group
   }
@@ -183,10 +179,14 @@ export class YuLanAssetFactory {
     Object.assign(params,variant?.params || {})
     if (prototype.category === 'building') {
       const type = Number(params.atlasType || params.type || prototype.id.match(/(?:house|villa)(\d+)/)?.[1] || 21)
-      return this.createBuilding({ polygon:params.polygon || params.footprint || [[-12,-8],[12,-8],[12,8],[-12,8],[-12,-8]],
+      const model=Number(params.model || 1)
+      const previewFootprint=ROUND_FACADE_VARIANTS.includes(`${type}:${model}`)
+        ? Array.from({length:25},(_,i)=>[10*Math.cos(i/24*Math.PI*2),10*Math.sin(i/24*Math.PI*2)])
+        : [[-12,-8],[12,-8],[12,8],[-12,8],[-12,-8]]
+      return this.createBuilding({ polygon:params.polygon || params.footprint || previewFootprint,
         ...(params.holes ? {holes:params.holes} : {}),
         levels:params.levels || 3, height_m:params.height_m || params.height || (params.levels || 3)*(params.storeyHeight || 3.2) },
-      {type,model:Number(params.model || 1),moduleWidth:Number(params.moduleWidth || 8)})
+      {type,model,moduleWidth:Number(params.moduleWidth || 8)})
     }
     const subtype = params.decorationSet || prototype.subtype
     const keys = params.atlasKeys || YULAN_DECORATION_SETS[subtype] || YULAN_DECORATION_SETS.planter

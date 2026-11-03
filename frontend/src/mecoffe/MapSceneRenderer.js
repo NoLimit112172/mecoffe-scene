@@ -84,7 +84,7 @@ export class MapSceneRenderer {
     for(const original of selected){
       const {building,assignment}=original.userData,p={...getPrototype(assignment.prototype_id).params,...assignment.params}
       const object=this.assetFactory.createBuilding(building,{type:p.atlasType,model:p.model,moduleWidth:p.moduleWidth})
-      object.position.y=original.position.y;object.userData={building,assignment};this.assignedGroup.add(object);original.visible=false
+      object.position.y=original.position.y;Object.assign(object.userData,{building,assignment});this.assignedGroup.add(object);original.visible=false
     }
     this.scene.add(this.assignedGroup)
   }

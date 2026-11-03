@@ -1,5 +1,6 @@
 import * as THREE from 'three'
 import { contextRoads, roadNameLabels, roadStyle } from './campus3dRoadModel.js'
+import { TERRAIN_LEVELS as L } from './campus3dTerrain.js'
 
 function ribbon(vertices, points, width, height) {
   const radius = width / 2
@@ -18,7 +19,21 @@ function ribbon(vertices, points, width, height) {
   }
 }
 
-function marks(vertices, points, offset, { dashed = false, height = .27, width = .24 } = {}) {
+function solidRibbon(vertices,points,width,bottom,top,offset=0) {
+  const triangle=(a,b,c)=>vertices.push(...a,...b,...c)
+  for(let i=1;i<points.length;i++) {
+    const a=points[i-1],b=points[i],length=Math.hypot(b[0]-a[0],b[1]-a[1]);if(!length)continue
+    const nx=-(b[1]-a[1])/length,ny=(b[0]-a[0])/length
+    const ring=[[a[0]+nx*(offset-width/2),a[1]+ny*(offset-width/2)],[b[0]+nx*(offset-width/2),b[1]+ny*(offset-width/2)],
+      [b[0]+nx*(offset+width/2),b[1]+ny*(offset+width/2)],[a[0]+nx*(offset+width/2),a[1]+ny*(offset+width/2)]]
+    const hi=ring.map(([x,y])=>[x,top,-y]),lo=ring.map(([x,y])=>[x,bottom,-y])
+    triangle(hi[0],hi[1],hi[2]);triangle(hi[0],hi[2],hi[3])
+    for(let j=0;j<4;j++){const k=(j+1)%4;triangle(hi[j],lo[j],lo[k]);triangle(hi[j],lo[k],hi[k])}
+  }
+  if(offset===0)ribbon(vertices,points,width,top)
+}
+
+function marks(vertices, points, offset, { dashed = false, height = L.externalRoad+.025, width = .24 } = {}) {
   let walked = 0
   for (let i = 1; i < points.length; i += 1) {
     const a = points[i - 1], b = points[i], length = Math.hypot(b[0] - a[0], b[1] - a[1])
@@ -66,12 +81,16 @@ export class Campus3DSurroundings {
       if (style.tunnel) {
         // Underground OSM ways are shown as a faint centre trace, with no
         // fabricated surface pavement, kerbs or pedestrian facilities.
-        marks(layers.tunnel, road.points, 0, { dashed: true, width: .6, height: .24 })
+        marks(layers.tunnel, road.points, 0, { dashed: true, width: .6, height: L.outsideTop+.035 })
         continue
       }
-      if (style.sidewalk) ribbon(layers.sidewalk, road.points, style.width + style.sidewalk * 2 + .7, .15)
-      ribbon(layers.curb, road.points, style.width + .7, .19)
-      ribbon(layers.asphalt, road.points, style.width, .23)
+      // Sidewalks/kerbs are separate side volumes; no full-width raised plane
+      // can cover the lower carriageway. All thicknesses are display defaults.
+      for(const side of [-1,1]) {
+        if(style.sidewalk)solidRibbon(layers.sidewalk,road.points,style.sidewalk,L.externalRoadBottom,L.externalSidewalk,side*(style.width/2+.35+style.sidewalk/2))
+        solidRibbon(layers.curb,road.points,.35,L.externalRoadBottom,L.externalCurb,side*(style.width/2+.175))
+      }
+      solidRibbon(layers.asphalt,road.points,style.width,L.externalRoadBottom,L.externalRoad)
       for (const side of [-1, 1]) marks(layers.white, road.points, side * (style.width / 2 - .28), { width: .2 })
       for (let lane = 1; lane < style.lanes; lane += 1) {
         const centre = !style.oneWay && lane === Math.ceil(style.lanes / 2)
@@ -84,12 +103,11 @@ export class Campus3DSurroundings {
       const color = { sidewalk: '#b9c0b9', curb: '#e0e2d5', asphalt: '#444c52', white: '#e5e8df', yellow: '#e9c45a', tunnel: '#a8b0b5' }[name]
       const material = name === 'tunnel'
         ? new THREE.MeshBasicMaterial({ color, transparent: true, opacity: .35, depthWrite: false, side: THREE.DoubleSide })
-        : new THREE.MeshStandardMaterial({ color, roughness: .96, depthWrite: false, side: THREE.DoubleSide })
+        : new THREE.MeshStandardMaterial({ color, roughness: .96, depthWrite: !['white','yellow'].includes(name), side: THREE.DoubleSide,
+          ...(['white','yellow'].includes(name)?{polygonOffset:true,polygonOffsetFactor:-1,polygonOffsetUnits:-1}:{}) })
       const object = mesh(vertices, material)
-      // At the overview's kilometre-scale distance the four-centimetre gaps
-      // can collapse to one depth value. Composite road layers in a fixed
-      // order without writing depth; retain depth tests against the actual
-      // buildings/terrain so scenery can still occlude the road.
+      // Side volumes now have meaningful height separation and write depth.
+      // Markings remain above their road surface and retain depth tests.
       object.renderOrder = { sidewalk: 2, curb: 3, asphalt: 4, white: 5, yellow: 5, tunnel: 6 }[name]
       object.name = `surrounding-${name}`
       object.userData.surroundingRoadLayer = name
@@ -131,7 +149,7 @@ export class Campus3DSurroundings {
     const occupied = [...host.querySelectorAll('[data-campus-label],[data-person-name]')].filter(element => element.style.display !== 'none')
       .map(element => { const r = element.getBoundingClientRect(); return { x: r.left - rect.left, y: r.top - rect.top, w: r.width, h: r.height } })
     for (const label of this.labels) {
-      const point = new THREE.Vector3(label.x, 3, -label.y).project(camera)
+      const point = new THREE.Vector3(label.x, L.externalRoad+3, -label.y).project(camera)
       const visible = point.z > -1 && point.z < 1 && Math.abs(point.x) < 1.1 && Math.abs(point.y) < 1.1
       label.element.style.display = visible ? 'block' : 'none'
       if (!visible) continue

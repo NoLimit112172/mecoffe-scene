@@ -30,7 +30,7 @@
           <div ref="mapEl" class="map-canvas"></div>
           <div class="map-top"><div class="map-badge"><b>USTC · 高新校区</b><span>{{ campusData?.buildings.length || 0 }} 栋建筑 / {{ campusData?.roads.length || 0 }} 段道路</span></div><div class="map-camera-buttons"><button class="reset-camera" title="放大查看选中人物或当前行人" @click="focusPerson"><i class="fa-solid fa-person-walking"></i> 人物特写</button><button class="reset-camera" title="恢复校园全景" @click="renderer?.resetCamera()"><i class="fa-solid fa-expand"></i> 全景</button></div></div>
           <div v-if="hoverCard" class="hover-card" :style="hoverStyle"><b>{{ hoverCard.name }}</b><template v-if="hoverCard.type === 'building'"><span>OSM {{ hoverCard.building.osm_id }}</span><span>{{ hoverCard.building.levels }} 层 / {{ hoverCard.building.height_m }} 米 · {{ hoverCard.building.levels_source === 'default' ? '展示默认高度' : '来源见地图数据' }}</span></template><span v-else>点击查看人物与事件</span></div>
-          <div class="map-legend"><span><i style="background:#7c9cab"></i>教学 / 科研</span><span><i style="background:#bc7859"></i>住宿</span><span><i style="background:#65a89b"></i>公共设施</span><div class="role-key"><span v-for="(color, role) in CHARACTER_ROLE_COLORS" :key="role"><i :style="{background:color}"></i>{{ roleNames[role] }}</span></div><p>{{ characterStyle === 'pixel' ? '像素外观与二维一致；脚下颜色表示角色' : characterStyle === 'voxel' ? '体素外观与二维一致；脚下颜色表示角色' : '立体人物按衣服颜色区分角色' }}<br>树木、路灯、长椅、草地纹理：<b>装饰</b><br>楼顶人数与光照：展示示意；楼层仍为默认值<br>校外道路仅展示，不参与寻路<br>左键旋转 · 右键平移 · 滚轮缩放</p></div>
+          <div class="map-legend"><span><i style="background:#7c9cab"></i>教学 / 科研</span><span><i style="background:#bc7859"></i>住宿</span><span><i style="background:#65a89b"></i>公共设施</span><div class="role-key"><span v-for="(color, role) in CHARACTER_ROLE_COLORS" :key="role"><i :style="{background:color}"></i>{{ roleNames[role] }}</span></div><p>{{ characterStyle === 'pixel' ? '像素外观与二维一致；脚下颜色表示角色' : characterStyle === 'voxel' ? '体素外观与二维一致；脚下颜色表示角色' : 'YuLan 配色与五官；脚下颜色表示角色' }}<br>树木、路灯、长椅、草地纹理：<b>装饰</b><br>楼顶人数与光照：展示示意；楼层仍为默认值<br>校外道路仅展示，不参与寻路<br>左键旋转 · 右键平移 · 滚轮缩放</p></div>
           <a class="osm-credit" href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener noreferrer">© OpenStreetMap contributors</a>
           <div v-if="loading" class="map-loading">正在构建校园三维体块…</div>
         </section>
@@ -95,7 +95,7 @@ const playing = ref(false)
 const draining = ref(false)
 const speed = ref(1)
 const quality = ref('high')
-const characterStyle = ref('pixel')
+const characterStyle = ref('yulan3d')
 const buildingStyle = ref('procedural')
 const styleBusy = ref(0)
 const styleError = ref('')

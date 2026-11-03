@@ -630,6 +630,214 @@
       "preview": "/mecoffe/assets3d/previews/building.component.awning.svg"
     },
     {
+      "id": "building.component.roof-flat",
+      "title": "实体平屋顶：女儿墙与设备",
+      "category": "building",
+      "subtype": "roof-flat",
+      "kind": "parametric",
+      "style": "procedural",
+      "target": "component",
+      "match": {},
+      "params": {
+        "generator": "roof-flat",
+        "roof_texture": false,
+        "seed": 2026,
+        "modeling": "程序生成实体屋顶；高度与设备为展示设计"
+      },
+      "variants": [
+        {
+          "id": "seed-2026",
+          "params": {
+            "seed": 2026
+          },
+          "title": "固定种子 2026"
+        },
+        {
+          "id": "seed-2027",
+          "params": {
+            "seed": 2027
+          },
+          "title": "固定种子 2027"
+        },
+        {
+          "id": "seed-2028",
+          "params": {
+            "seed": 2028
+          },
+          "title": "固定种子 2028"
+        }
+      ],
+      "source": {
+        "type": "procedural",
+        "title": "MeCoffe 程序生成",
+        "author": "MeCoffe contributors",
+        "path": "frontend/src/mecoffe/"
+      },
+      "license": {
+        "spdx": "LicenseRef-MeCoffe-Project",
+        "path": "NOTICE.md",
+        "note": "项目程序生成，随仓库源码提供；未另行授予外部模型许可"
+      },
+      "preview": "/mecoffe/assets3d/previews/building.component.roof-flat.svg"
+    },
+    {
+      "id": "building.component.roof-pitched",
+      "title": "实体坡屋顶：屋脊与檐口",
+      "category": "building",
+      "subtype": "roof-pitched",
+      "kind": "parametric",
+      "style": "procedural",
+      "target": "component",
+      "match": {},
+      "params": {
+        "generator": "roof-pitched",
+        "roof_texture": false,
+        "seed": 2026,
+        "modeling": "程序生成实体屋顶；高度与设备为展示设计"
+      },
+      "variants": [
+        {
+          "id": "pitched-1",
+          "params": {
+            "model": 1,
+            "width_m": 18,
+            "tile_color": "#846342"
+          },
+          "title": "坡顶配色 1"
+        },
+        {
+          "id": "pitched-2",
+          "params": {
+            "model": 2,
+            "width_m": 22,
+            "tile_color": "#b26648"
+          },
+          "title": "坡顶配色 2"
+        },
+        {
+          "id": "pitched-3",
+          "params": {
+            "model": 3,
+            "width_m": 26,
+            "tile_color": "#68777f"
+          },
+          "title": "坡顶配色 3"
+        }
+      ],
+      "source": {
+        "type": "procedural",
+        "title": "MeCoffe 程序生成",
+        "author": "MeCoffe contributors",
+        "path": "frontend/src/mecoffe/"
+      },
+      "license": {
+        "spdx": "LicenseRef-MeCoffe-Project",
+        "path": "NOTICE.md",
+        "note": "项目程序生成，随仓库源码提供；未另行授予外部模型许可"
+      },
+      "preview": "/mecoffe/assets3d/previews/building.component.roof-pitched.svg"
+    },
+    {
+      "id": "building.component.foundation",
+      "title": "建筑基座与接缝",
+      "category": "building",
+      "subtype": "foundation",
+      "kind": "parametric",
+      "style": "procedural",
+      "target": "component",
+      "match": {},
+      "params": {
+        "generator": "foundation",
+        "top_m": 0.94,
+        "outline_offset_m": 0.75,
+        "modeling": "程序生成建筑基座与接触阴影，非实测高程"
+      },
+      "variants": [
+        {
+          "id": "default",
+          "params": {}
+        },
+        {
+          "id": "compact",
+          "params": {
+            "preview_scale": 0.85
+          }
+        },
+        {
+          "id": "extended",
+          "params": {
+            "preview_scale": 1.15
+          }
+        }
+      ],
+      "source": {
+        "type": "procedural",
+        "title": "MeCoffe 程序生成",
+        "author": "MeCoffe contributors",
+        "path": "frontend/src/mecoffe/"
+      },
+      "license": {
+        "spdx": "LicenseRef-MeCoffe-Project",
+        "path": "NOTICE.md",
+        "note": "项目程序生成，随仓库源码提供；未另行授予外部模型许可"
+      },
+      "preview": "/mecoffe/assets3d/previews/building.component.foundation.svg"
+    },
+    {
+      "id": "landcover.layered-base",
+      "title": "分层沙盘底座与道路高差",
+      "category": "landcover",
+      "subtype": "layered-base",
+      "kind": "parametric",
+      "style": "procedural",
+      "target": "feature",
+      "match": {},
+      "params": {
+        "generator": "layered-base",
+        "base_bottom_m": -19,
+        "stone_top_m": -13,
+        "earth_top_m": -5.1,
+        "outside_top_m": -3.8,
+        "campus_road_m": 0.14,
+        "campus_grass_m": 0.62,
+        "campus_curb_m": 0.72,
+        "external_road_m": -3,
+        "external_sidewalk_m": -2.48,
+        "external_curb_m": -2.34,
+        "modeling": "展示层分层底座与路槽，非测量高程"
+      },
+      "variants": [
+        {
+          "id": "default",
+          "params": {}
+        },
+        {
+          "id": "compact",
+          "params": {
+            "preview_scale": 0.85
+          }
+        },
+        {
+          "id": "extended",
+          "params": {
+            "preview_scale": 1.15
+          }
+        }
+      ],
+      "source": {
+        "type": "procedural",
+        "title": "MeCoffe 程序生成",
+        "author": "MeCoffe contributors",
+        "path": "frontend/src/mecoffe/"
+      },
+      "license": {
+        "spdx": "LicenseRef-MeCoffe-Project",
+        "path": "NOTICE.md",
+        "note": "项目程序生成，随仓库源码提供；未另行授予外部模型许可"
+      },
+      "preview": "/mecoffe/assets3d/previews/landcover.layered-base.svg"
+    },
+    {
       "id": "road.motorway",
       "title": "OSM motorway 道路",
       "category": "road",
@@ -1797,7 +2005,7 @@
     },
     {
       "id": "character.solid",
-      "title": "程序立体人物",
+      "title": "程序立体人物（旧版备选）",
       "category": "character",
       "subtype": "solid",
       "kind": "mesh",
@@ -1824,7 +2032,8 @@
           "#473329",
           "#655049",
           "#2c343a"
-        ]
+        ],
+        "status": "legacy-gallery-alternative"
       },
       "variants": [
         {
@@ -2524,7 +2733,14 @@
         "moduleWidth": 8,
         "levels": 4,
         "storey_height_m": 3.2,
-        "module_source": "native-base-floor-roof"
+        "module_source": "native-base-floor",
+        "roof_generator": "procedural-3d",
+        "roof_texture": false,
+        "facade_shape_constraints": {
+          "circular_models": [],
+          "noncircular_fallback": "same-family-straight-or-house26"
+        },
+        "modeling": "YuLan 原立面 + 程序实体屋顶；屋顶设备为展示设计"
       },
       "variants": [
         {
@@ -2585,7 +2801,16 @@
         "moduleWidth": 8,
         "levels": 4,
         "storey_height_m": 3.2,
-        "module_source": "native-base-floor-roof"
+        "module_source": "native-base-floor",
+        "roof_generator": "procedural-3d",
+        "roof_texture": false,
+        "facade_shape_constraints": {
+          "circular_models": [
+            2
+          ],
+          "noncircular_fallback": "same-family-straight-or-house26"
+        },
+        "modeling": "YuLan 原立面 + 程序实体屋顶；屋顶设备为展示设计"
       },
       "variants": [
         {
@@ -2642,7 +2867,14 @@
         "moduleWidth": 8,
         "levels": 4,
         "storey_height_m": 3.2,
-        "module_source": "native-base-floor-roof"
+        "module_source": "native-base-floor",
+        "roof_generator": "procedural-3d",
+        "roof_texture": false,
+        "facade_shape_constraints": {
+          "circular_models": [],
+          "noncircular_fallback": "same-family-straight-or-house26"
+        },
+        "modeling": "YuLan 原立面 + 程序实体屋顶；屋顶设备为展示设计"
       },
       "variants": [
         {
@@ -2703,7 +2935,16 @@
         "moduleWidth": 8,
         "levels": 4,
         "storey_height_m": 3.2,
-        "module_source": "native-base-floor-roof"
+        "module_source": "native-base-floor",
+        "roof_generator": "procedural-3d",
+        "roof_texture": false,
+        "facade_shape_constraints": {
+          "circular_models": [
+            2
+          ],
+          "noncircular_fallback": "same-family-straight-or-house26"
+        },
+        "modeling": "YuLan 原立面 + 程序实体屋顶；屋顶设备为展示设计"
       },
       "variants": [
         {
@@ -2760,7 +3001,18 @@
         "moduleWidth": 8,
         "levels": 4,
         "storey_height_m": 3.2,
-        "module_source": "native-base-floor-roof"
+        "module_source": "native-base-floor",
+        "roof_generator": "procedural-3d",
+        "roof_texture": false,
+        "facade_shape_constraints": {
+          "circular_models": [
+            1,
+            2,
+            3
+          ],
+          "noncircular_fallback": "same-family-straight-or-house26"
+        },
+        "modeling": "YuLan 原立面 + 程序实体屋顶；屋顶设备为展示设计"
       },
       "variants": [
         {
@@ -2817,7 +3069,14 @@
         "moduleWidth": 8,
         "levels": 4,
         "storey_height_m": 3.2,
-        "module_source": "native-base-floor-roof"
+        "module_source": "native-base-floor",
+        "roof_generator": "procedural-3d",
+        "roof_texture": false,
+        "facade_shape_constraints": {
+          "circular_models": [],
+          "noncircular_fallback": "same-family-straight-or-house26"
+        },
+        "modeling": "YuLan 原立面 + 程序实体屋顶；屋顶设备为展示设计"
       },
       "variants": [
         {
@@ -2874,7 +3133,14 @@
         "moduleWidth": 8,
         "levels": 4,
         "storey_height_m": 3.2,
-        "module_source": "documented-derived-villa-bands"
+        "module_source": "documented-derived-villa-wall-bands",
+        "roof_generator": "procedural-3d",
+        "roof_texture": false,
+        "facade_shape_constraints": {
+          "circular_models": [],
+          "noncircular_fallback": "same-family-straight-or-house26"
+        },
+        "modeling": "YuLan 原立面 + 程序实体屋顶；屋顶设备为展示设计"
       },
       "variants": [
         {
@@ -2934,7 +3200,14 @@
         "moduleWidth": 8,
         "levels": 4,
         "storey_height_m": 3.2,
-        "module_source": "documented-derived-villa-bands"
+        "module_source": "documented-derived-villa-wall-bands",
+        "roof_generator": "procedural-3d",
+        "roof_texture": false,
+        "facade_shape_constraints": {
+          "circular_models": [],
+          "noncircular_fallback": "same-family-straight-or-house26"
+        },
+        "modeling": "YuLan 原立面 + 程序实体屋顶；屋顶设备为展示设计"
       },
       "variants": [
         {
@@ -2994,7 +3267,14 @@
         "moduleWidth": 8,
         "levels": 4,
         "storey_height_m": 3.2,
-        "module_source": "documented-derived-villa-bands"
+        "module_source": "documented-derived-villa-wall-bands",
+        "roof_generator": "procedural-3d",
+        "roof_texture": false,
+        "facade_shape_constraints": {
+          "circular_models": [],
+          "noncircular_fallback": "same-family-straight-or-house26"
+        },
+        "modeling": "YuLan 原立面 + 程序实体屋顶；屋顶设备为展示设计"
       },
       "variants": [
         {
@@ -3051,7 +3331,14 @@
         "moduleWidth": 8,
         "levels": 4,
         "storey_height_m": 3.2,
-        "module_source": "documented-derived-villa-bands"
+        "module_source": "documented-derived-villa-wall-bands",
+        "roof_generator": "procedural-3d",
+        "roof_texture": false,
+        "facade_shape_constraints": {
+          "circular_models": [],
+          "noncircular_fallback": "same-family-straight-or-house26"
+        },
+        "modeling": "YuLan 原立面 + 程序实体屋顶；屋顶设备为展示设计"
       },
       "variants": [
         {
@@ -3576,6 +3863,64 @@
         "path": "YULAN_LICENSE"
       },
       "preview": "/mecoffe/assets3d/previews/character.voxel.svg"
+    },
+    {
+      "id": "character.yulan3d",
+      "title": "立体 YuLan 人物（默认）",
+      "category": "character",
+      "subtype": "yulan3d",
+      "kind": "mesh",
+      "style": "yulan3d",
+      "target": "feature",
+      "match": {},
+      "params": {
+        "generator": "yulan3d-character",
+        "height_m": 8.5,
+        "radius_m": 3.0,
+        "palette_sampling": "same-2d-atlas-parts",
+        "face_texture": "YuLan eyes + mouth",
+        "default": true,
+        "modeling": "依据 YuLan 角色配色和头部贴图程序建模；封闭头发、头身、关节四肢和鞋；几何由项目程序生成"
+      },
+      "variants": [
+        {
+          "id": "undergraduate_consumer",
+          "params": {
+            "role": "undergraduate_consumer"
+          }
+        },
+        {
+          "id": "graduate_consumer",
+          "params": {
+            "role": "graduate_consumer"
+          }
+        },
+        {
+          "id": "teacher_consumer",
+          "params": {
+            "role": "teacher_consumer"
+          }
+        },
+        {
+          "id": "merchant",
+          "params": {
+            "role": "merchant"
+          }
+        }
+      ],
+      "source": {
+        "type": "yulan",
+        "title": "YuLan-OneSim 图集",
+        "author": "RUC-GSAI/YuLan-OneSim",
+        "revision": "9829d72",
+        "path": "frontend/public/assets/bgrd-*.json/png",
+        "url": "https://github.com/RUC-GSAI/YuLan-OneSim"
+      },
+      "license": {
+        "spdx": "Apache-2.0",
+        "path": "YULAN_LICENSE"
+      },
+      "preview": "/mecoffe/assets3d/previews/character.yulan3d.svg"
     }
   ]
 }

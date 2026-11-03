@@ -79,15 +79,17 @@ test('building factory uses repeated real module materials and exact original ge
   const group=factory.createBuilding({polygon,levels:4,height_m:17.5},{type:21,model:2,moduleWidth:8})
   assert.ok(made.includes('house/21/21_2_0.png'))
   assert.ok(made.includes('house/21/21_2_1.png'))
-  assert.ok(made.includes('house/21/21_2_2.png'))
+  assert.ok(!made.includes('house/21/21_2_2.png'), 'The oblique roof image must no longer become a material')
   assert.equal(group.children.length,4)
   assert.ok(group.userData.moduleCount>20)
   assert.equal(group.userData.originalHeight,17.5)
   group.updateMatrixWorld(true)
   const bounds=new THREE.Box3().setFromObject(group)
-  assert.ok(Math.abs(bounds.max.y-17.5)<1e-5)
-  assert.ok(Math.abs(bounds.min.x)<1e-5)
-  assert.ok(Math.abs(bounds.max.x-30)<1e-5)
+  assert.ok(bounds.max.y>17.5, 'The unchanged wall height now supports solid roof details')
+  const coreBounds=new THREE.Box3().setFromObject(group.children[0])
+  assert.ok(Math.abs(coreBounds.min.x)<1e-5)
+  assert.ok(Math.abs(coreBounds.max.x-30)<1e-5)
+  assert.equal(group.userData.roofTextureApplied,false)
   group.traverse(item=>{item.geometry?.dispose();if(item.material)item.material.dispose()})
 })
 
@@ -108,7 +110,7 @@ test('GeoJSON courtyards remain open in both roof and core and receive inward-fa
     factory.material=()=>new THREE.MeshBasicMaterial({side:THREE.DoubleSide})
     const group=factory.createBuilding(building,{type:21,model:1,moduleWidth:5})
     group.updateMatrixWorld(true)
-    const core=group.children[0],roof=group.children.find(child=>child.name==='yulan-roof-module')
+    const core=group.children[0],roof=group.getObjectByName('roof-slab')
     const downward=new THREE.Raycaster(new THREE.Vector3(10,30,-10),new THREE.Vector3(0,-1,0))
     assert.equal(downward.intersectObject(core,false).length,0)
     assert.equal(downward.intersectObject(roof,false).length,0)
@@ -120,10 +122,11 @@ test('GeoJSON courtyards remain open in both roof and core and receive inward-fa
     assert.ok(Math.abs(courtyard.intersectObject(walls,false)[0].distance-4)<1e-5)
     const position=roof.geometry.attributes.position,index=roof.geometry.index
     let area=0
-    for(let i=0;i<index.count;i+=3) {
-      const a=index.getX(i),b=index.getX(i+1),c=index.getX(i+2)
-      area+=Math.abs((position.getX(b)-position.getX(a))*(position.getY(c)-position.getY(a))
-        -(position.getY(b)-position.getY(a))*(position.getX(c)-position.getX(a)))/2
+    for(let i=0;i<(index?.count || position.count);i+=3) {
+      const a=index?index.getX(i):i,b=index?index.getX(i+1):i+1,c=index?index.getX(i+2):i+2
+      if(Math.abs(position.getZ(a)-.42)<1e-5 && Math.abs(position.getZ(b)-.42)<1e-5 && Math.abs(position.getZ(c)-.42)<1e-5)
+        area+=Math.abs((position.getX(b)-position.getX(a))*(position.getY(c)-position.getY(a))
+          -(position.getY(b)-position.getY(a))*(position.getX(c)-position.getX(a)))/2
     }
     assert.equal(area,336)
     assert.deepEqual(building,before)
