@@ -2,6 +2,8 @@
  * inference about the source agent. The original person ID/role stay intact. */
 export const REAL_CHARACTER_HEIGHT = 8.5
 export const REAL_CHARACTER_RADIUS = 3
+// Legacy fixtures for callers that inject their own model sources. The live
+// library and scene always use manifest.models (all 115 human models).
 export const ROCKETBOX_MODELS = Object.freeze(['Female_Adult_01', 'Female_Adult_03', 'Male_Adult_01', 'Male_Adult_14'])
 
 export function rocketboxHash(value) {
@@ -10,13 +12,37 @@ export function rocketboxHash(value) {
   return hash >>> 0
 }
 
-export function rocketboxModelForPerson(person, modelId) {
+export function rocketboxModelForPerson(person, modelId, availableIds = ROCKETBOX_MODELS) {
+  const ids = [...new Set(availableIds)].sort()
+  if (!ids.length) throw new Error('No human Rocketbox models are available')
   if (modelId != null) {
-    if (!ROCKETBOX_MODELS.includes(modelId)) throw new Error(`Unknown Rocketbox model: ${modelId}`)
+    if (!ids.includes(modelId)) throw new Error(`Unknown Rocketbox model: ${modelId}`)
     return modelId
   }
   if (person?.id == null) throw new Error('A source person ID is required')
-  return ROCKETBOX_MODELS[rocketboxHash(person.id) % ROCKETBOX_MODELS.length]
+  return ids[rocketboxHash(person.id) % ids.length]
+}
+
+export function rocketboxHumanModels(manifest) {
+  return (manifest?.models || []).filter(model => model?.id && model.human !== false && model.category !== 'animals'
+    && model.category !== 'animal' && !/^(?:animals?[_/]|dog[_/]|cat[_/]|horse[_/])/i.test(model.id))
+}
+
+/** Stable full-population assignment with no repeated appearance until every
+ * human model has been used. Input ordering and roles never alter the result. */
+export function rocketboxAssignments(people, availableIds = ROCKETBOX_MODELS, explicitModelId) {
+  const ids = [...new Set(availableIds)].sort(), result = new Map(), used = new Set()
+  if (!ids.length) throw new Error('No human Rocketbox models are available')
+  const sorted = [...people].sort((a,b) => rocketboxHash(a.id) - rocketboxHash(b.id) || String(a.id).localeCompare(String(b.id)))
+  for (const person of sorted) {
+    const first = rocketboxModelForPerson(person,explicitModelId,ids)
+    if (explicitModelId) { result.set(String(person.id),first); continue }
+    if (used.size === ids.length) used.clear()
+    let index = ids.indexOf(first)
+    while (used.has(ids[index])) index = (index + 1) % ids.length
+    used.add(ids[index]); result.set(String(person.id),ids[index])
+  }
+  return result
 }
 
 export function rocketboxTextureUrl(url, model, base = '/mecoffe/assets3d/rocketbox/') {

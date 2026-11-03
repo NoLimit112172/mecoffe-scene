@@ -139,18 +139,28 @@ def yulan_prototypes():
 def rocketbox_prototypes():
     manifest=json.loads((OUTPUT/'rocketbox/manifest.json').read_text(encoding='utf8'))
     variants=[{'id':model['id'],'title':model['label'],'params':{'model_id':model['id']}} for model in manifest['models']]
-    return [prototype('character.rocketbox','character','realistic',
+    rows=[prototype('character.rocketbox','character','realistic',
       {'generator':'rocketbox-character','height_m':8.5,'radius_m':3,'default':True,
        'manifest':'/mecoffe/assets3d/rocketbox/manifest.json','animation':'procedural-skeleton-idle-walk-coffee',
        'modeling':'Rocketbox 原始带骨骼人体与服装；外观按ID稳定选型，仅为展示原型，不推断真实人物外貌'},
-      source=ROCKETBOX,kind='mesh',style='realistic',variants=variants,title='Rocketbox 写实人物（试用）')]
+      source=ROCKETBOX,kind='mesh',style='realistic',variants=variants,title='Rocketbox 写实人物全集')]
+    for model in manifest['models']:
+        group=model.get('category','adults')
+        params={'generator':'rocketbox-character','model_id':model['id'],'group':group,'height_m':8.5,'radius_m':3,
+                'preview_pose':'idle','modeling':'原始带骨骼人形；分类仅描述素材外观，不推断模拟人物身份'}
+        row=prototype(f"character.rocketbox.{model['id']}",'character','realistic',params,source=ROCKETBOX,kind='mesh',style='realistic',
+                      variants=[{'id':key,'title':title,'params':{'preview_pose':key}} for key,title in [('idle','站立'),('walk','行走'),('coffee','持杯')]],
+                      title=model['label'])
+        row['source']['path']=f"frontend/public/mecoffe/assets3d/rocketbox/{model['fbx']}"
+        rows.append(row)
+    return rows
 
 
 def thumbnail(item):
     colors={'building':'#76a0a7','road':'#596875','landcover':'#6b9b75','vegetation':'#448b60','street_furniture':'#a2825c','character':'#6d83b1','effect':'#b18ac8'}
     color=item['params'].get('wall',item['params'].get('color',colors[item['category']]))
     label=html.escape(item['title'])
-    if item['id']=='character.rocketbox':
+    if item['source']['type']=='rocketbox':
         return f'''<svg xmlns="http://www.w3.org/2000/svg" width="240" height="170" viewBox="0 0 240 170"><rect width="240" height="170" rx="12" fill="#edf2ed"/><ellipse cx="120" cy="136" rx="48" ry="9" fill="#cedbd1"/><ellipse cx="120" cy="33" rx="12" ry="15" fill="#d0a185"/><path d="M110 22Q120 13 131 24L131 31Q117 22 109 31Z" fill="#49372d"/><path d="M116 46L116 51Q98 51 98 69L94 96L100 99L110 70L110 93L130 93L130 70L140 99L146 96L141 67Q139 51 124 51L124 46" fill="#467b8b"/><path d="M110 91L130 91L133 130L124 132L120 106L116 132L107 130Z" fill="#3b4a60"/><path d="M106 130L116 130L116 137L103 137ZM124 130L134 130L138 137L124 137Z" fill="#302f32"/><text x="120" y="160" text-anchor="middle" fill="#244b46" font-size="12" font-family="sans-serif">{label}</text></svg>'''
     return f'''<svg xmlns="http://www.w3.org/2000/svg" width="240" height="170" viewBox="0 0 240 170"><rect width="240" height="170" rx="12" fill="#edf2ed"/><path d="M50 110L120 145L195 108L125 75Z" fill="#d6e1d8"/><path d="M80 108V55L130 30L175 55V108L130 132Z" fill="{color}"/><path d="M80 55L130 80L175 55L130 30Z" fill="#d7e4df"/><path d="M130 80V132M90 70V108M105 78V116M148 80V115M162 72V108" stroke="#fff" stroke-width="4" opacity=".6"/><text x="120" y="160" text-anchor="middle" fill="#244b46" font-size="12" font-family="sans-serif">{label}</text></svg>'''
 

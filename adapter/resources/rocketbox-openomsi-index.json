@@ -1,0 +1,3745 @@
+{
+  "schema_version": "mecoffe.rocketbox-openomsi-index.v1",
+  "canonical_revision": "0943055db6ec570bcef9f2c8b41c9e5467c808f9",
+  "release_tag": "avatars-1",
+  "release_url": "https://github.com/openOMSI-org/openOMSI/releases/download/avatars-1/openOMSI-avatars-1.zip",
+  "release_bytes": 312516588,
+  "release_sha256_from_GitHub_metadata": "ead00bbfbf66165336dcd40323569840c18e148ee79c3e7d097d198ad4b12d6a",
+  "release_tag_commit": "f4841225a413a32103df312dcaa0e30dc81cbd76",
+  "builder_commit": "07a101ab5d0b5c8f54debefc38ea2584de23695f",
+  "builder_url": "https://github.com/openOMSI-org/openOMSI/blob/07a101ab5d0b5c8f54debefc38ea2584de23695f/tools/avatars/build_pack.py",
+  "builder_note": "Builder first committed after release, at 2026-10-13T04:31:37Z; release 03:44:51Z. Archive metadata is read directly with CRC verified; no whole-archive download or SHA256 verification.",
+  "release_sha256_locally_verified": false,
+  "verification_note": "Selected ZIP directory and notice entries were read by public HTTP Range. Notice CRC32 verified. GitHub provides the expected whole-archive SHA-256; this archive was not downloaded in full. Required colour image entries are verified when fetched.",
+  "model_ids": [
+    "Business_Female_01",
+    "Business_Female_02",
+    "Business_Female_03",
+    "Business_Female_04",
+    "Business_Male_01",
+    "Business_Male_02",
+    "Business_Male_03",
+    "Business_Male_04",
+    "Business_Male_05",
+    "Business_Male_06",
+    "Business_Male_07",
+    "Chef_Female_01",
+    "Construction_Female_01",
+    "Construction_Male_01",
+    "Construction_Male_02",
+    "Construction_Male_03",
+    "Construction_Male_04",
+    "Construction_Male_05",
+    "Construction_Male_06",
+    "Construction_Male_07",
+    "Construction_Male_08",
+    "Delivery_Male_01",
+    "Female_Adult_01",
+    "Female_Adult_02",
+    "Female_Adult_03",
+    "Female_Adult_04",
+    "Female_Adult_05",
+    "Female_Adult_06",
+    "Female_Adult_07",
+    "Female_Adult_08",
+    "Female_Adult_09",
+    "Female_Adult_10",
+    "Female_Adult_11",
+    "Female_Adult_12",
+    "Female_Adult_13",
+    "Female_Adult_14",
+    "Female_Adult_15",
+    "Female_Adult_16",
+    "Female_Adult_17",
+    "Female_Child_01",
+    "Female_Child_02",
+    "Female_Party_01",
+    "Female_Party_02",
+    "Gardener_Male_01",
+    "Male_Adult_01",
+    "Male_Adult_02",
+    "Male_Adult_03",
+    "Male_Adult_04",
+    "Male_Adult_05",
+    "Male_Adult_06",
+    "Male_Adult_07",
+    "Male_Adult_08",
+    "Male_Adult_09",
+    "Male_Adult_10",
+    "Male_Adult_11",
+    "Male_Adult_12",
+    "Male_Adult_13",
+    "Male_Adult_14",
+    "Male_Adult_15",
+    "Male_Adult_16",
+    "Male_Adult_17",
+    "Male_Adult_18",
+    "Male_Adult_19",
+    "Male_Adult_20",
+    "Male_Adult_21",
+    "Male_Child_01",
+    "Male_Child_02",
+    "Medical_Female_01",
+    "Medical_Female_02",
+    "Medical_Female_03",
+    "Medical_Male_01",
+    "Medical_Male_02",
+    "Medical_Male_03",
+    "Pilot_Female_01",
+    "Pilot_Female_02",
+    "Pilot_Male_01",
+    "Pilot_Male_02",
+    "Pilot_Male_03",
+    "Police_Male_01",
+    "Police_Male_03",
+    "Police_Male_04",
+    "Police_Male_05",
+    "Police_Male_06",
+    "Police_Male_07",
+    "Security_Female_01",
+    "Security_Male_01",
+    "Sports_Female_02",
+    "Sports_Male_02",
+    "Sports_Male_03",
+    "Sports_Male_04",
+    "Wood_Male_01"
+  ],
+  "required_texture_matches": [
+    {
+      "model_id": "Female_Adult_01",
+      "source_path": "Assets/Avatars/Adults/Female_Adult_01/Textures/f001_body_color.tga",
+      "source_git_blob_expected": "25852db0db1f44a0de0643ce1e09c88aef587e6f",
+      "archive_entry": {
+        "name": "Female_Adult_01/f001_body_color.jpg",
+        "method": 0,
+        "flags": 0,
+        "crc32": "3412380b",
+        "compressed_size": 859004,
+        "uncompressed_size": 859004,
+        "local_header_offset": 74340076
+      }
+    },
+    {
+      "model_id": "Female_Adult_01",
+      "source_path": "Assets/Avatars/Adults/Female_Adult_01/Textures/f001_head_color.tga",
+      "source_git_blob_expected": "0cdc62ab47da3dca01aff0bb179159865a559c63",
+      "archive_entry": {
+        "name": "Female_Adult_01/f001_head_color.jpg",
+        "method": 0,
+        "flags": 0,
+        "crc32": "bc8bd77a",
+        "compressed_size": 769023,
+        "uncompressed_size": 769023,
+        "local_header_offset": 75412319
+      }
+    },
+    {
+      "model_id": "Female_Adult_01",
+      "source_path": "Assets/Avatars/Adults/Female_Adult_01/Textures/f001_opacity_color.tga",
+      "source_git_blob_expected": "de21a9e69c88e539da6a5050eaceadd026e99b62",
+      "archive_entry": {
+        "name": "Female_Adult_01/f001_opacity_color.png",
+        "method": 0,
+        "flags": 0,
+        "crc32": "73aa6c5b",
+        "compressed_size": 836785,
+        "uncompressed_size": 836785,
+        "local_header_offset": 76370866
+      }
+    },
+    {
+      "model_id": "Female_Adult_02",
+      "source_path": "Assets/Avatars/Adults/Female_Adult_02/Textures/f002_body_color.tga",
+      "source_git_blob_expected": "5eb8ee83281a7526544a80ddf9804507670eb049",
+      "archive_entry": {
+        "name": "Female_Adult_02/f002_body_color.jpg",
+        "method": 0,
+        "flags": 0,
+        "crc32": "dec4b058",
+        "compressed_size": 1004130,
+        "uncompressed_size": 1004130,
+        "local_header_offset": 78343344
+      }
+    },
+    {
+      "model_id": "Female_Adult_02",
+      "source_path": "Assets/Avatars/Adults/Female_Adult_02/Textures/f002_head_color.tga",
+      "source_git_blob_expected": "8f59bb553f24d3581de68bcf4683695c014bcc0f",
+      "archive_entry": {
+        "name": "Female_Adult_02/f002_head_color.jpg",
+        "method": 0,
+        "flags": 0,
+        "crc32": "41f8be68",
+        "compressed_size": 900349,
+        "uncompressed_size": 900349,
+        "local_header_offset": 79579570
+      }
+    },
+    {
+      "model_id": "Female_Adult_02",
+      "source_path": "Assets/Avatars/Adults/Female_Adult_02/Textures/f002_opacity_color.tga",
+      "source_git_blob_expected": "3d930c42ed476ab3f58548e5ee33e10ea9f02a27",
+      "archive_entry": {
+        "name": "Female_Adult_02/f002_opacity_color.png",
+        "method": 0,
+        "flags": 0,
+        "crc32": "9ea7e02b",
+        "compressed_size": 1034712,
+        "uncompressed_size": 1034712,
+        "local_header_offset": 80660598
+      }
+    },
+    {
+      "model_id": "Female_Adult_03",
+      "source_path": "Assets/Avatars/Adults/Female_Adult_03/Textures/f003_body_color.tga",
+      "source_git_blob_expected": "6e7e0bba4a2c5fd119c2f40bf3886ec2ebd89af0",
+      "archive_entry": {
+        "name": "Female_Adult_03/f003_body_color.jpg",
+        "method": 0,
+        "flags": 0,
+        "crc32": "52e91623",
+        "compressed_size": 618573,
+        "uncompressed_size": 618573,
+        "local_header_offset": 83099360
+      }
+    },
+    {
+      "model_id": "Female_Adult_03",
+      "source_path": "Assets/Avatars/Adults/Female_Adult_03/Textures/f003_head_color.tga",
+      "source_git_blob_expected": "b185268832e1b05b2e30434b714ed1a50c79726f",
+      "archive_entry": {
+        "name": "Female_Adult_03/f003_head_color.jpg",
+        "method": 0,
+        "flags": 0,
+        "crc32": "5356b429",
+        "compressed_size": 682438,
+        "uncompressed_size": 682438,
+        "local_header_offset": 83911482
+      }
+    },
+    {
+      "model_id": "Female_Adult_03",
+      "source_path": "Assets/Avatars/Adults/Female_Adult_03/Textures/f003_opacity_color.tga",
+      "source_git_blob_expected": "7967eb62237314e3c76ae437a259f94052a032c3",
+      "archive_entry": {
+        "name": "Female_Adult_03/f003_opacity_color.png",
+        "method": 0,
+        "flags": 0,
+        "crc32": "7a8051fe",
+        "compressed_size": 1170663,
+        "uncompressed_size": 1170663,
+        "local_header_offset": 84793932
+      }
+    },
+    {
+      "model_id": "Female_Adult_04",
+      "source_path": "Assets/Avatars/Adults/Female_Adult_04/Textures/f004_body_color.tga",
+      "source_git_blob_expected": "d087c788a3d06ddff161f7d726e5964d10ab5679",
+      "archive_entry": {
+        "name": "Female_Adult_04/f004_body_color.jpg",
+        "method": 0,
+        "flags": 0,
+        "crc32": "d4fdc999",
+        "compressed_size": 614823,
+        "uncompressed_size": 614823,
+        "local_header_offset": 87220897
+      }
+    },
+    {
+      "model_id": "Female_Adult_04",
+      "source_path": "Assets/Avatars/Adults/Female_Adult_04/Textures/f004_head_color.tga",
+      "source_git_blob_expected": "8431d9774e3d416447096367fecf4a0f75bc7ea5",
+      "archive_entry": {
+        "name": "Female_Adult_04/f004_head_color.jpg",
+        "method": 0,
+        "flags": 0,
+        "crc32": "f11a4dad",
+        "compressed_size": 854486,
+        "uncompressed_size": 854486,
+        "local_header_offset": 88051794
+      }
+    },
+    {
+      "model_id": "Female_Adult_04",
+      "source_path": "Assets/Avatars/Adults/Female_Adult_04/Textures/f004_opacity_color.tga",
+      "source_git_blob_expected": "86f656686004a338b13026515c7395c946170352",
+      "archive_entry": {
+        "name": "Female_Adult_04/f004_opacity_color.png",
+        "method": 0,
+        "flags": 0,
+        "crc32": "57ddcbc9",
+        "compressed_size": 917009,
+        "uncompressed_size": 917009,
+        "local_header_offset": 89071095
+      }
+    },
+    {
+      "model_id": "Female_Adult_05",
+      "source_path": "Assets/Avatars/Adults/Female_Adult_05/Textures/f005_body_color.tga",
+      "source_git_blob_expected": "9d5cbf117974d4b0d72f5c7a5dd690d2da0713f3",
+      "archive_entry": {
+        "name": "Female_Adult_05/f005_body_color.jpg",
+        "method": 0,
+        "flags": 0,
+        "crc32": "e64fa883",
+        "compressed_size": 1241686,
+        "uncompressed_size": 1241686,
+        "local_header_offset": 91165537
+      }
+    },
+    {
+      "model_id": "Female_Adult_05",
+      "source_path": "Assets/Avatars/Adults/Female_Adult_05/Textures/f005_head_color.tga",
+      "source_git_blob_expected": "7cf9fba106546281fba14bb9d67c4234e45b069c",
+      "archive_entry": {
+        "name": "Female_Adult_05/f005_head_color.jpg",
+        "method": 0,
+        "flags": 0,
+        "crc32": "ab48bc98",
+        "compressed_size": 632168,
+        "uncompressed_size": 632168,
+        "local_header_offset": 92620585
+      }
+    },
+    {
+      "model_id": "Female_Adult_05",
+      "source_path": "Assets/Avatars/Adults/Female_Adult_05/Textures/f005_opacity_color.tga",
+      "source_git_blob_expected": "7c94e9b9b0bad515023e5e3509a58c874bce29d6",
+      "archive_entry": {
+        "name": "Female_Adult_05/f005_opacity_color.png",
+        "method": 0,
+        "flags": 0,
+        "crc32": "44571522",
+        "compressed_size": 1194607,
+        "uncompressed_size": 1194607,
+        "local_header_offset": 93390310
+      }
+    },
+    {
+      "model_id": "Female_Adult_06",
+      "source_path": "Assets/Avatars/Adults/Female_Adult_06/Textures/f202_body_color.tga",
+      "source_git_blob_expected": "ef6cb97a6e4fa9c7608d6688e6778384b9419606",
+      "archive_entry": {
+        "name": "Female_Adult_06/f202_body_color.jpg",
+        "method": 0,
+        "flags": 0,
+        "crc32": "ead3cada",
+        "compressed_size": 435205,
+        "uncompressed_size": 435205,
+        "local_header_offset": 95588733
+      }
+    },
+    {
+      "model_id": "Female_Adult_06",
+      "source_path": "Assets/Avatars/Adults/Female_Adult_06/Textures/f202_head_color.tga",
+      "source_git_blob_expected": "a9ba3b91c36f00ab080f18ba9b34794dd43f1dd7",
+      "archive_entry": {
+        "name": "Female_Adult_06/f202_head_color.jpg",
+        "method": 0,
+        "flags": 0,
+        "crc32": "4e789965",
+        "compressed_size": 512570,
+        "uncompressed_size": 512570,
+        "local_header_offset": 96199084
+      }
+    },
+    {
+      "model_id": "Female_Adult_06",
+      "source_path": "Assets/Avatars/Adults/Female_Adult_06/Textures/f202_opacity_color.tga",
+      "source_git_blob_expected": "b776361993d745d54ac6a5d66002c4840254e5d1",
+      "archive_entry": {
+        "name": "Female_Adult_06/f202_opacity_color.png",
+        "method": 0,
+        "flags": 0,
+        "crc32": "77c04500",
+        "compressed_size": 1201345,
+        "uncompressed_size": 1201345,
+        "local_header_offset": 96885155
+      }
+    },
+    {
+      "model_id": "Female_Adult_07",
+      "source_path": "Assets/Avatars/Adults/Female_Adult_07/Textures/f007_body_color.tga",
+      "source_git_blob_expected": "680a60b978fc8cdb769c1b934df002849c9a117f",
+      "archive_entry": {
+        "name": "Female_Adult_07/f007_body_color.jpg",
+        "method": 0,
+        "flags": 0,
+        "crc32": "9605e708",
+        "compressed_size": 721485,
+        "uncompressed_size": 721485,
+        "local_header_offset": 99242222
+      }
+    },
+    {
+      "model_id": "Female_Adult_07",
+      "source_path": "Assets/Avatars/Adults/Female_Adult_07/Textures/f007_head_color.tga",
+      "source_git_blob_expected": "002178145d7acf33268183ceb639c72e60ebb81a",
+      "archive_entry": {
+        "name": "Female_Adult_07/f007_head_color.jpg",
+        "method": 0,
+        "flags": 0,
+        "crc32": "eb1934e7",
+        "compressed_size": 698363,
+        "uncompressed_size": 698363,
+        "local_header_offset": 100235923
+      }
+    },
+    {
+      "model_id": "Female_Adult_07",
+      "source_path": "Assets/Avatars/Adults/Female_Adult_07/Textures/f007_opacity_color.tga",
+      "source_git_blob_expected": "cb855dcfacb50fe670642822d9323513720d70eb",
+      "archive_entry": {
+        "name": "Female_Adult_07/f007_opacity_color.png",
+        "method": 0,
+        "flags": 0,
+        "crc32": "6016c3a7",
+        "compressed_size": 1018343,
+        "uncompressed_size": 1018343,
+        "local_header_offset": 101102828
+      }
+    },
+    {
+      "model_id": "Female_Adult_08",
+      "source_path": "Assets/Avatars/Adults/Female_Adult_08/Textures/f008_body_color.tga",
+      "source_git_blob_expected": "3be6c34c2e052b0da560bfc93e90ca6902c87530",
+      "archive_entry": {
+        "name": "Female_Adult_08/f008_body_color.jpg",
+        "method": 0,
+        "flags": 0,
+        "crc32": "c43953ff",
+        "compressed_size": 740246,
+        "uncompressed_size": 740246,
+        "local_header_offset": 103299228
+      }
+    },
+    {
+      "model_id": "Female_Adult_08",
+      "source_path": "Assets/Avatars/Adults/Female_Adult_08/Textures/f008_head_color.tga",
+      "source_git_blob_expected": "3b23b78796a1ae82557128b85e6c6387b5c521a6",
+      "archive_entry": {
+        "name": "Female_Adult_08/f008_head_color.jpg",
+        "method": 0,
+        "flags": 0,
+        "crc32": "f7f5d5e1",
+        "compressed_size": 703531,
+        "uncompressed_size": 703531,
+        "local_header_offset": 104259240
+      }
+    },
+    {
+      "model_id": "Female_Adult_08",
+      "source_path": "Assets/Avatars/Adults/Female_Adult_08/Textures/f008_opacity_color.tga",
+      "source_git_blob_expected": "bb23136e3a44738487b774cdf798a0d5593a2143",
+      "archive_entry": {
+        "name": "Female_Adult_08/f008_opacity_color.png",
+        "method": 0,
+        "flags": 0,
+        "crc32": "e19e6ebc",
+        "compressed_size": 969668,
+        "uncompressed_size": 969668,
+        "local_header_offset": 105181033
+      }
+    },
+    {
+      "model_id": "Female_Adult_09",
+      "source_path": "Assets/Avatars/Adults/Female_Adult_09/Textures/f009_body_color.tga",
+      "source_git_blob_expected": "a1f63096b3e712c07c6812315f74f4abb79c1fd9",
+      "archive_entry": {
+        "name": "Female_Adult_09/f009_body_color.jpg",
+        "method": 0,
+        "flags": 0,
+        "crc32": "e3003415",
+        "compressed_size": 907295,
+        "uncompressed_size": 907295,
+        "local_header_offset": 107305420
+      }
+    },
+    {
+      "model_id": "Female_Adult_09",
+      "source_path": "Assets/Avatars/Adults/Female_Adult_09/Textures/f009_head_color.tga",
+      "source_git_blob_expected": "946e89b15a23173457d17ae3a7e6627d3e5b2166",
+      "archive_entry": {
+        "name": "Female_Adult_09/f009_head_color.jpg",
+        "method": 0,
+        "flags": 0,
+        "crc32": "e32d9dd8",
+        "compressed_size": 666409,
+        "uncompressed_size": 666409,
+        "local_header_offset": 108462801
+      }
+    },
+    {
+      "model_id": "Female_Adult_09",
+      "source_path": "Assets/Avatars/Adults/Female_Adult_09/Textures/f009_opacity_color.tga",
+      "source_git_blob_expected": "fef407c359ae03e257944ec1b530cdd1b1f921ea",
+      "archive_entry": {
+        "name": "Female_Adult_09/f009_opacity_color.png",
+        "method": 0,
+        "flags": 0,
+        "crc32": "fd5b4b7b",
+        "compressed_size": 1002969,
+        "uncompressed_size": 1002969,
+        "local_header_offset": 109278263
+      }
+    },
+    {
+      "model_id": "Female_Adult_10",
+      "source_path": "Assets/Avatars/Adults/Female_Adult_10/Textures/f201_body_color.tga",
+      "source_git_blob_expected": "cdab97835021bd3c27fe6c134ca4bc073d09a54b",
+      "archive_entry": {
+        "name": "Female_Adult_10/f201_body_color.jpg",
+        "method": 0,
+        "flags": 0,
+        "crc32": "69ad28ad",
+        "compressed_size": 394812,
+        "uncompressed_size": 394812,
+        "local_header_offset": 111286033
+      }
+    },
+    {
+      "model_id": "Female_Adult_10",
+      "source_path": "Assets/Avatars/Adults/Female_Adult_10/Textures/f201_head_color.tga",
+      "source_git_blob_expected": "a57d6e52f4301760c3049a48ea2e1a8b800eb657",
+      "archive_entry": {
+        "name": "Female_Adult_10/f201_head_color.jpg",
+        "method": 0,
+        "flags": 0,
+        "crc32": "7054ec25",
+        "compressed_size": 230110,
+        "uncompressed_size": 230110,
+        "local_header_offset": 111863044
+      }
+    },
+    {
+      "model_id": "Female_Adult_10",
+      "source_path": "Assets/Avatars/Adults/Female_Adult_10/Textures/f201_opacity_color.tga",
+      "source_git_blob_expected": "e7530d9fef155a0e4f7a9ae4ca39a6a6598bd180",
+      "archive_entry": {
+        "name": "Female_Adult_10/f201_opacity_color.png",
+        "method": 0,
+        "flags": 0,
+        "crc32": "b0f7357c",
+        "compressed_size": 39851,
+        "uncompressed_size": 39851,
+        "local_header_offset": 112156800
+      }
+    },
+    {
+      "model_id": "Female_Adult_11",
+      "source_path": "Assets/Avatars/Adults/Female_Adult_11/Textures/f011_body_color.tga",
+      "source_git_blob_expected": "ecf3094eb13c47388c61cc9022eddfedc4004de7",
+      "archive_entry": {
+        "name": "Female_Adult_11/f011_body_color.jpg",
+        "method": 0,
+        "flags": 0,
+        "crc32": "d3606370",
+        "compressed_size": 854498,
+        "uncompressed_size": 854498,
+        "local_header_offset": 113331604
+      }
+    },
+    {
+      "model_id": "Female_Adult_11",
+      "source_path": "Assets/Avatars/Adults/Female_Adult_11/Textures/f011_head_color.tga",
+      "source_git_blob_expected": "f0c90595950a7d7cd677e09960e28a4cec9c03b4",
+      "archive_entry": {
+        "name": "Female_Adult_11/f011_head_color.jpg",
+        "method": 0,
+        "flags": 0,
+        "crc32": "4d8f80c5",
+        "compressed_size": 764710,
+        "uncompressed_size": 764710,
+        "local_header_offset": 114455483
+      }
+    },
+    {
+      "model_id": "Female_Adult_11",
+      "source_path": "Assets/Avatars/Adults/Female_Adult_11/Textures/f011_opacity_color.tga",
+      "source_git_blob_expected": "c2ad85f17b180e2a1da5a08c0b49130222b7af7a",
+      "archive_entry": {
+        "name": "Female_Adult_11/f011_opacity_color.png",
+        "method": 0,
+        "flags": 0,
+        "crc32": "eb34633a",
+        "compressed_size": 806115,
+        "uncompressed_size": 806115,
+        "local_header_offset": 115400930
+      }
+    },
+    {
+      "model_id": "Female_Adult_12",
+      "source_path": "Assets/Avatars/Adults/Female_Adult_12/Textures/f012_body_color.tga",
+      "source_git_blob_expected": "8beaff6c63dd1070d4e903e6c9caeb6915f58a81",
+      "archive_entry": {
+        "name": "Female_Adult_12/f012_body_color.jpg",
+        "method": 0,
+        "flags": 0,
+        "crc32": "70e70b34",
+        "compressed_size": 650043,
+        "uncompressed_size": 650043,
+        "local_header_offset": 117426093
+      }
+    },
+    {
+      "model_id": "Female_Adult_12",
+      "source_path": "Assets/Avatars/Adults/Female_Adult_12/Textures/f012_head_color.tga",
+      "source_git_blob_expected": "e932e4e53f8f5f456d3ca85ad3a0876bbc21dcdd",
+      "archive_entry": {
+        "name": "Female_Adult_12/f012_head_color.jpg",
+        "method": 0,
+        "flags": 0,
+        "crc32": "527752ff",
+        "compressed_size": 766951,
+        "uncompressed_size": 766951,
+        "local_header_offset": 118323528
+      }
+    },
+    {
+      "model_id": "Female_Adult_12",
+      "source_path": "Assets/Avatars/Adults/Female_Adult_12/Textures/f012_opacity_color.tga",
+      "source_git_blob_expected": "8b0f1297045b2d5a448648640a7cc88a2aa9d405",
+      "archive_entry": {
+        "name": "Female_Adult_12/f012_opacity_color.png",
+        "method": 0,
+        "flags": 0,
+        "crc32": "6afda4ac",
+        "compressed_size": 869531,
+        "uncompressed_size": 869531,
+        "local_header_offset": 119245072
+      }
+    },
+    {
+      "model_id": "Female_Adult_13",
+      "source_path": "Assets/Avatars/Adults/Female_Adult_13/Textures/f019_body_color.tga",
+      "source_git_blob_expected": "8ac627d95db5125cabacd38568669aa3b9d674cb",
+      "archive_entry": {
+        "name": "Female_Adult_13/f019_body_color.jpg",
+        "method": 0,
+        "flags": 0,
+        "crc32": "3f71898f",
+        "compressed_size": 706413,
+        "uncompressed_size": 706413,
+        "local_header_offset": 121303178
+      }
+    },
+    {
+      "model_id": "Female_Adult_13",
+      "source_path": "Assets/Avatars/Adults/Female_Adult_13/Textures/f019_head_color.tga",
+      "source_git_blob_expected": "446c2b74e64e073325486113038ee8990aaadb23",
+      "archive_entry": {
+        "name": "Female_Adult_13/f019_head_color.jpg",
+        "method": 0,
+        "flags": 0,
+        "crc32": "560e3ea4",
+        "compressed_size": 714809,
+        "uncompressed_size": 714809,
+        "local_header_offset": 122201222
+      }
+    },
+    {
+      "model_id": "Female_Adult_13",
+      "source_path": "Assets/Avatars/Adults/Female_Adult_13/Textures/f019_opacity_color.tga",
+      "source_git_blob_expected": "55a9e142e667e6c01d5001e6fba7b46413aaf2dd",
+      "archive_entry": {
+        "name": "Female_Adult_13/f019_opacity_color.png",
+        "method": 0,
+        "flags": 0,
+        "crc32": "f7316c92",
+        "compressed_size": 1030333,
+        "uncompressed_size": 1030333,
+        "local_header_offset": 123066617
+      }
+    },
+    {
+      "model_id": "Female_Adult_14",
+      "source_path": "Assets/Avatars/Adults/Female_Adult_14/Textures/f017_body_color.tga",
+      "source_git_blob_expected": "67b1eb46b42cdd38ae974e201003568c21472aa6",
+      "archive_entry": {
+        "name": "Female_Adult_14/f017_body_color.jpg",
+        "method": 0,
+        "flags": 0,
+        "crc32": "7a946a16",
+        "compressed_size": 1201123,
+        "uncompressed_size": 1201123,
+        "local_header_offset": 125252844
+      }
+    },
+    {
+      "model_id": "Female_Adult_14",
+      "source_path": "Assets/Avatars/Adults/Female_Adult_14/Textures/f017_head_color.tga",
+      "source_git_blob_expected": "4905123421ac87d74b15bda7e3e59c944e035e97",
+      "archive_entry": {
+        "name": "Female_Adult_14/f017_head_color.jpg",
+        "method": 0,
+        "flags": 0,
+        "crc32": "1dde22aa",
+        "compressed_size": 714472,
+        "uncompressed_size": 714472,
+        "local_header_offset": 126882265
+      }
+    },
+    {
+      "model_id": "Female_Adult_14",
+      "source_path": "Assets/Avatars/Adults/Female_Adult_14/Textures/f017_opacity_color.tga",
+      "source_git_blob_expected": "9794bd11e6b465fcd140122863204cb9bbd7cb3b",
+      "archive_entry": {
+        "name": "Female_Adult_14/f017_opacity_color.png",
+        "method": 0,
+        "flags": 0,
+        "crc32": "d0920020",
+        "compressed_size": 1283084,
+        "uncompressed_size": 1283084,
+        "local_header_offset": 127760424
+      }
+    },
+    {
+      "model_id": "Female_Adult_15",
+      "source_path": "Assets/Avatars/Adults/Female_Adult_15/Textures/f018_body_color.tga",
+      "source_git_blob_expected": "4636f4dbe6da255187038d7765d8786abdcda393",
+      "archive_entry": {
+        "name": "Female_Adult_15/f018_body_color.jpg",
+        "method": 0,
+        "flags": 0,
+        "crc32": "f44dbb85",
+        "compressed_size": 569079,
+        "uncompressed_size": 569079,
+        "local_header_offset": 130253849
+      }
+    },
+    {
+      "model_id": "Female_Adult_15",
+      "source_path": "Assets/Avatars/Adults/Female_Adult_15/Textures/f018_head_color.tga",
+      "source_git_blob_expected": "5e35ad71ccf6cac670a3c55a8aecfee4e4c7038c",
+      "archive_entry": {
+        "name": "Female_Adult_15/f018_head_color.jpg",
+        "method": 0,
+        "flags": 0,
+        "crc32": "11db0e88",
+        "compressed_size": 1073706,
+        "uncompressed_size": 1073706,
+        "local_header_offset": 130987580
+      }
+    },
+    {
+      "model_id": "Female_Adult_15",
+      "source_path": "Assets/Avatars/Adults/Female_Adult_15/Textures/f018_opacity_color.tga",
+      "source_git_blob_expected": "8fcbb41c3d537049e0ed1b6e07d0c94bb6a8e3fb",
+      "archive_entry": {
+        "name": "Female_Adult_15/f018_opacity_color.png",
+        "method": 0,
+        "flags": 0,
+        "crc32": "d000702f",
+        "compressed_size": 1004419,
+        "uncompressed_size": 1004419,
+        "local_header_offset": 132215828
+      }
+    },
+    {
+      "model_id": "Female_Adult_16",
+      "source_path": "Assets/Avatars/Adults/Female_Adult_16/Textures/f204_color.tga",
+      "source_git_blob_expected": "4002dccf2a8a13147b9f6b75143f3f2a25d1e764",
+      "archive_entry": {
+        "name": "Female_Adult_16/f204_color.jpg",
+        "method": 0,
+        "flags": 0,
+        "crc32": "8ee7bd60",
+        "compressed_size": 609763,
+        "uncompressed_size": 609763,
+        "local_header_offset": 133506898
+      }
+    },
+    {
+      "model_id": "Female_Adult_17",
+      "source_path": "Assets/Avatars/Adults/Female_Adult_17/Textures/f006_body_color.tga",
+      "source_git_blob_expected": "9902508406abee3a281fb8d277456976920d68d4",
+      "archive_entry": {
+        "name": "Female_Adult_17/f006_body_color.jpg",
+        "method": 0,
+        "flags": 0,
+        "crc32": "453fa10c",
+        "compressed_size": 686382,
+        "uncompressed_size": 686382,
+        "local_header_offset": 135463870
+      }
+    },
+    {
+      "model_id": "Female_Adult_17",
+      "source_path": "Assets/Avatars/Adults/Female_Adult_17/Textures/f006_head_color.tga",
+      "source_git_blob_expected": "9c037ab08fb2b95a6d97123e3c558ea1e4ed9280",
+      "archive_entry": {
+        "name": "Female_Adult_17/f006_head_color.jpg",
+        "method": 0,
+        "flags": 0,
+        "crc32": "0b47b0a3",
+        "compressed_size": 748513,
+        "uncompressed_size": 748513,
+        "local_header_offset": 136317106
+      }
+    },
+    {
+      "model_id": "Female_Adult_17",
+      "source_path": "Assets/Avatars/Adults/Female_Adult_17/Textures/f006_opacity_color.tga",
+      "source_git_blob_expected": "912274783a784715593d8ca4c2132b931f994bbd",
+      "archive_entry": {
+        "name": "Female_Adult_17/f006_opacity_color.png",
+        "method": 0,
+        "flags": 0,
+        "crc32": "ae7dab68",
+        "compressed_size": 1382655,
+        "uncompressed_size": 1382655,
+        "local_header_offset": 137243238
+      }
+    },
+    {
+      "model_id": "Female_Party_01",
+      "source_path": "Assets/Avatars/Adults/Female_Party_01/Textures/f010_body_color.tga",
+      "source_git_blob_expected": "035d03a38d07d59a00a90ec6473c06636aa4859e",
+      "archive_entry": {
+        "name": "Female_Party_01/f010_body_color.jpg",
+        "method": 0,
+        "flags": 0,
+        "crc32": "75c981b4",
+        "compressed_size": 542844,
+        "uncompressed_size": 542844,
+        "local_header_offset": 144048487
+      }
+    },
+    {
+      "model_id": "Female_Party_01",
+      "source_path": "Assets/Avatars/Adults/Female_Party_01/Textures/f010_head_color.tga",
+      "source_git_blob_expected": "98487fb717c60cd08abd76af690c26a27909ea2d",
+      "archive_entry": {
+        "name": "Female_Party_01/f010_head_color.jpg",
+        "method": 0,
+        "flags": 0,
+        "crc32": "93b20940",
+        "compressed_size": 922100,
+        "uncompressed_size": 922100,
+        "local_header_offset": 144729791
+      }
+    },
+    {
+      "model_id": "Female_Party_01",
+      "source_path": "Assets/Avatars/Adults/Female_Party_01/Textures/f010_opacity_color.tga",
+      "source_git_blob_expected": "c496373f406817155720b7b76a88c5df3db0277c",
+      "archive_entry": {
+        "name": "Female_Party_01/f010_opacity_color.png",
+        "method": 0,
+        "flags": 0,
+        "crc32": "610d4ded",
+        "compressed_size": 1236112,
+        "uncompressed_size": 1236112,
+        "local_header_offset": 145831924
+      }
+    },
+    {
+      "model_id": "Female_Party_02",
+      "source_path": "Assets/Avatars/Adults/Female_Party_02/Textures/f022_body_color.tga",
+      "source_git_blob_expected": "b18eeaf76bdcd40607b98b656e4e79a35b765168",
+      "archive_entry": {
+        "name": "Female_Party_02/f022_body_color.jpg",
+        "method": 0,
+        "flags": 0,
+        "crc32": "5bf69ad3",
+        "compressed_size": 975123,
+        "uncompressed_size": 975123,
+        "local_header_offset": 147526377
+      }
+    },
+    {
+      "model_id": "Female_Party_02",
+      "source_path": "Assets/Avatars/Adults/Female_Party_02/Textures/f022_head_color.tga",
+      "source_git_blob_expected": "776d044828427f9d7e6ff40dbfd639b6f8712472",
+      "archive_entry": {
+        "name": "Female_Party_02/f022_head_color.jpg",
+        "method": 0,
+        "flags": 0,
+        "crc32": "aac66ed9",
+        "compressed_size": 1062537,
+        "uncompressed_size": 1062537,
+        "local_header_offset": 148677792
+      }
+    },
+    {
+      "model_id": "Female_Party_02",
+      "source_path": "Assets/Avatars/Adults/Female_Party_02/Textures/f022_opacity_color.tga",
+      "source_git_blob_expected": "fa6cbaa121dcd820bfb5fbab9a24792d1e1d708e",
+      "archive_entry": {
+        "name": "Female_Party_02/f022_opacity_color.png",
+        "method": 0,
+        "flags": 0,
+        "crc32": "f6ad5e12",
+        "compressed_size": 1081346,
+        "uncompressed_size": 1081346,
+        "local_header_offset": 150030902
+      }
+    },
+    {
+      "model_id": "Male_Adult_01",
+      "source_path": "Assets/Avatars/Adults/Male_Adult_01/Textures/m002_body_color.tga",
+      "source_git_blob_expected": "818ec72b6c69655c5853ab0eb1efdd6ab40b2bf0",
+      "archive_entry": {
+        "name": "Male_Adult_01/m002_body_color.jpg",
+        "method": 0,
+        "flags": 0,
+        "crc32": "34cc6c91",
+        "compressed_size": 843101,
+        "uncompressed_size": 843101,
+        "local_header_offset": 156360985
+      }
+    },
+    {
+      "model_id": "Male_Adult_01",
+      "source_path": "Assets/Avatars/Adults/Male_Adult_01/Textures/m002_head_color.tga",
+      "source_git_blob_expected": "0becf592ac705b4a2be8a63aa164266ac2a09d9c",
+      "archive_entry": {
+        "name": "Male_Adult_01/m002_head_color.jpg",
+        "method": 0,
+        "flags": 0,
+        "crc32": "3f71091f",
+        "compressed_size": 622101,
+        "uncompressed_size": 622101,
+        "local_header_offset": 157349958
+      }
+    },
+    {
+      "model_id": "Male_Adult_01",
+      "source_path": "Assets/Avatars/Adults/Male_Adult_01/Textures/m002_opacity_color.tga",
+      "source_git_blob_expected": "a4088df07a8896761bd209d304b12310f90e5003",
+      "archive_entry": {
+        "name": "Male_Adult_01/m002_opacity_color.png",
+        "method": 0,
+        "flags": 0,
+        "crc32": "5e7a1220",
+        "compressed_size": 1165330,
+        "uncompressed_size": 1165330,
+        "local_header_offset": 158105066
+      }
+    },
+    {
+      "model_id": "Male_Adult_02",
+      "source_path": "Assets/Avatars/Adults/Male_Adult_02/Textures/m003_body_color.tga",
+      "source_git_blob_expected": "23e54f1b4e06ca411aa166a016d77f7536316151",
+      "archive_entry": {
+        "name": "Male_Adult_02/m003_body_color.jpg",
+        "method": 0,
+        "flags": 0,
+        "crc32": "c91dd8e4",
+        "compressed_size": 685192,
+        "uncompressed_size": 685192,
+        "local_header_offset": 160297838
+      }
+    },
+    {
+      "model_id": "Male_Adult_02",
+      "source_path": "Assets/Avatars/Adults/Male_Adult_02/Textures/m003_head_color.tga",
+      "source_git_blob_expected": "ec68799915ff8aa26cd18a85c09b1e86c51b17a4",
+      "archive_entry": {
+        "name": "Male_Adult_02/m003_head_color.jpg",
+        "method": 0,
+        "flags": 0,
+        "crc32": "e152f15e",
+        "compressed_size": 612179,
+        "uncompressed_size": 612179,
+        "local_header_offset": 161175129
+      }
+    },
+    {
+      "model_id": "Male_Adult_02",
+      "source_path": "Assets/Avatars/Adults/Male_Adult_02/Textures/m003_opacity_color.tga",
+      "source_git_blob_expected": "8860d347a396261f06cbb2f620a28efffe11c334",
+      "archive_entry": {
+        "name": "Male_Adult_02/m003_opacity_color.png",
+        "method": 0,
+        "flags": 0,
+        "crc32": "fc0fb75d",
+        "compressed_size": 924720,
+        "uncompressed_size": 924720,
+        "local_header_offset": 161957275
+      }
+    },
+    {
+      "model_id": "Male_Adult_03",
+      "source_path": "Assets/Avatars/Adults/Male_Adult_03/Textures/m004_body_color.tga",
+      "source_git_blob_expected": "6c74391f617e383371c9cd77775ebbae16998f8e",
+      "archive_entry": {
+        "name": "Male_Adult_03/m004_body_color.jpg",
+        "method": 0,
+        "flags": 0,
+        "crc32": "1a40b659",
+        "compressed_size": 1114238,
+        "uncompressed_size": 1114238,
+        "local_header_offset": 163893221
+      }
+    },
+    {
+      "model_id": "Male_Adult_03",
+      "source_path": "Assets/Avatars/Adults/Male_Adult_03/Textures/m004_head_color.tga",
+      "source_git_blob_expected": "bc8c4b56be8bef30ea204ea772451a03457a9d85",
+      "archive_entry": {
+        "name": "Male_Adult_03/m004_head_color.jpg",
+        "method": 0,
+        "flags": 0,
+        "crc32": "324952a1",
+        "compressed_size": 812611,
+        "uncompressed_size": 812611,
+        "local_header_offset": 165237842
+      }
+    },
+    {
+      "model_id": "Male_Adult_03",
+      "source_path": "Assets/Avatars/Adults/Male_Adult_03/Textures/m004_opacity_color.tga",
+      "source_git_blob_expected": "7a705836b26da41fbd46d5cf41835bcff82b1e0d",
+      "archive_entry": {
+        "name": "Male_Adult_03/m004_opacity_color.png",
+        "method": 0,
+        "flags": 0,
+        "crc32": "61100aa9",
+        "compressed_size": 1539210,
+        "uncompressed_size": 1539210,
+        "local_header_offset": 166284220
+      }
+    },
+    {
+      "model_id": "Male_Adult_04",
+      "source_path": "Assets/Avatars/Adults/Male_Adult_04/Textures/m006_body_color.tga",
+      "source_git_blob_expected": "eb98a1056b856d117f54145abef183c93721b8a7",
+      "archive_entry": {
+        "name": "Male_Adult_04/m006_body_color.jpg",
+        "method": 0,
+        "flags": 0,
+        "crc32": "b3055ea6",
+        "compressed_size": 688255,
+        "uncompressed_size": 688255,
+        "local_header_offset": 169000907
+      }
+    },
+    {
+      "model_id": "Male_Adult_04",
+      "source_path": "Assets/Avatars/Adults/Male_Adult_04/Textures/m006_head_color.tga",
+      "source_git_blob_expected": "b8d9af1e5337c9a5ed8969395e73f8fdd6abdda6",
+      "archive_entry": {
+        "name": "Male_Adult_04/m006_head_color.jpg",
+        "method": 0,
+        "flags": 0,
+        "crc32": "2cf56935",
+        "compressed_size": 763817,
+        "uncompressed_size": 763817,
+        "local_header_offset": 169966133
+      }
+    },
+    {
+      "model_id": "Male_Adult_04",
+      "source_path": "Assets/Avatars/Adults/Male_Adult_04/Textures/m006_opacity_color.tga",
+      "source_git_blob_expected": "dca7411aadf0ba5b62ab314981591fad88dbf1b0",
+      "archive_entry": {
+        "name": "Male_Adult_04/m006_opacity_color.png",
+        "method": 0,
+        "flags": 0,
+        "crc32": "5a4edaab",
+        "compressed_size": 1109191,
+        "uncompressed_size": 1109191,
+        "local_header_offset": 170876749
+      }
+    },
+    {
+      "model_id": "Male_Adult_05",
+      "source_path": "Assets/Avatars/Adults/Male_Adult_05/Textures/m009_body_color.tga",
+      "source_git_blob_expected": "6ec8e41be51f762e55143b706bdde9636c74316e",
+      "archive_entry": {
+        "name": "Male_Adult_05/m009_body_color.jpg",
+        "method": 0,
+        "flags": 0,
+        "crc32": "f6e6ea44",
+        "compressed_size": 819529,
+        "uncompressed_size": 819529,
+        "local_header_offset": 173054453
+      }
+    },
+    {
+      "model_id": "Male_Adult_05",
+      "source_path": "Assets/Avatars/Adults/Male_Adult_05/Textures/m009_head_color.tga",
+      "source_git_blob_expected": "beb0be85c3783d4fbb15e24aba253b67ed10fadc",
+      "archive_entry": {
+        "name": "Male_Adult_05/m009_head_color.jpg",
+        "method": 0,
+        "flags": 0,
+        "crc32": "cdbbce87",
+        "compressed_size": 837348,
+        "uncompressed_size": 837348,
+        "local_header_offset": 174154061
+      }
+    },
+    {
+      "model_id": "Male_Adult_05",
+      "source_path": "Assets/Avatars/Adults/Male_Adult_05/Textures/m009_opacity_color.tga",
+      "source_git_blob_expected": "1eda6be82167a0956c40000eaaabe96094c70dbd",
+      "archive_entry": {
+        "name": "Male_Adult_05/m009_opacity_color.png",
+        "method": 0,
+        "flags": 0,
+        "crc32": "f29dafe5",
+        "compressed_size": 1363361,
+        "uncompressed_size": 1363361,
+        "local_header_offset": 175186159
+      }
+    },
+    {
+      "model_id": "Male_Adult_06",
+      "source_path": "Assets/Avatars/Adults/Male_Adult_06/Textures/m011_body_color.tga",
+      "source_git_blob_expected": "900ab34cf22b1569fe41d5e5e1c656510484fa34",
+      "archive_entry": {
+        "name": "Male_Adult_06/m011_body_color.jpg",
+        "method": 0,
+        "flags": 0,
+        "crc32": "98b70d39",
+        "compressed_size": 844467,
+        "uncompressed_size": 844467,
+        "local_header_offset": 177647136
+      }
+    },
+    {
+      "model_id": "Male_Adult_06",
+      "source_path": "Assets/Avatars/Adults/Male_Adult_06/Textures/m011_head_color.tga",
+      "source_git_blob_expected": "a24a6e2f77473f30d94ae7b4a0a34515cb215ba7",
+      "archive_entry": {
+        "name": "Male_Adult_06/m011_head_color.jpg",
+        "method": 0,
+        "flags": 0,
+        "crc32": "ae7afe82",
+        "compressed_size": 663623,
+        "uncompressed_size": 663623,
+        "local_header_offset": 178688979
+      }
+    },
+    {
+      "model_id": "Male_Adult_06",
+      "source_path": "Assets/Avatars/Adults/Male_Adult_06/Textures/m011_opacity_color.tga",
+      "source_git_blob_expected": "5b304a95d22629e6d9abf3e6515a7e6b236708f6",
+      "archive_entry": {
+        "name": "Male_Adult_06/m011_opacity_color.png",
+        "method": 0,
+        "flags": 0,
+        "crc32": "39909e0b",
+        "compressed_size": 1356545,
+        "uncompressed_size": 1356545,
+        "local_header_offset": 179574350
+      }
+    },
+    {
+      "model_id": "Male_Adult_07",
+      "source_path": "Assets/Avatars/Adults/Male_Adult_07/Textures/m013_body_color.tga",
+      "source_git_blob_expected": "cc86e5dd5fd1247fc15b6965c7e95876ae4074ac",
+      "archive_entry": {
+        "name": "Male_Adult_07/m013_body_color.jpg",
+        "method": 0,
+        "flags": 0,
+        "crc32": "63976a92",
+        "compressed_size": 1010777,
+        "uncompressed_size": 1010777,
+        "local_header_offset": 181927493
+      }
+    },
+    {
+      "model_id": "Male_Adult_07",
+      "source_path": "Assets/Avatars/Adults/Male_Adult_07/Textures/m013_head_color.tga",
+      "source_git_blob_expected": "3a4039e40d02b39fe4de0321d597b3cea42d7556",
+      "archive_entry": {
+        "name": "Male_Adult_07/m013_head_color.jpg",
+        "method": 0,
+        "flags": 0,
+        "crc32": "5236dc18",
+        "compressed_size": 660872,
+        "uncompressed_size": 660872,
+        "local_header_offset": 183230251
+      }
+    },
+    {
+      "model_id": "Male_Adult_07",
+      "source_path": "Assets/Avatars/Adults/Male_Adult_07/Textures/m013_opacity_color.tga",
+      "source_git_blob_expected": "5885f9f683f682ab666290503b3503010fbab8aa",
+      "archive_entry": {
+        "name": "Male_Adult_07/m013_opacity_color.png",
+        "method": 0,
+        "flags": 0,
+        "crc32": "eb0be4cd",
+        "compressed_size": 585141,
+        "uncompressed_size": 585141,
+        "local_header_offset": 184063462
+      }
+    },
+    {
+      "model_id": "Male_Adult_08",
+      "source_path": "Assets/Avatars/Adults/Male_Adult_08/Textures/m014_body_color.tga",
+      "source_git_blob_expected": "c6162d348435623eb44fa0f2114dc9109a0e0a8d",
+      "archive_entry": {
+        "name": "Male_Adult_08/m014_body_color.jpg",
+        "method": 0,
+        "flags": 0,
+        "crc32": "eaa0ea56",
+        "compressed_size": 545678,
+        "uncompressed_size": 545678,
+        "local_header_offset": 185676820
+      }
+    },
+    {
+      "model_id": "Male_Adult_08",
+      "source_path": "Assets/Avatars/Adults/Male_Adult_08/Textures/m014_head_color.tga",
+      "source_git_blob_expected": "66e3ac3c72cfdbd661e36dd9fd98ac611f21a6e4",
+      "archive_entry": {
+        "name": "Male_Adult_08/m014_head_color.jpg",
+        "method": 0,
+        "flags": 0,
+        "crc32": "348e4131",
+        "compressed_size": 657383,
+        "uncompressed_size": 657383,
+        "local_header_offset": 186411777
+      }
+    },
+    {
+      "model_id": "Male_Adult_08",
+      "source_path": "Assets/Avatars/Adults/Male_Adult_08/Textures/m014_opacity_color.tga",
+      "source_git_blob_expected": "e008b9abf4901a2f23f32cb9d1e2bc7ef5a60587",
+      "archive_entry": {
+        "name": "Male_Adult_08/m014_opacity_color.png",
+        "method": 0,
+        "flags": 0,
+        "crc32": "9ebff20c",
+        "compressed_size": 1142394,
+        "uncompressed_size": 1142394,
+        "local_header_offset": 187229905
+      }
+    },
+    {
+      "model_id": "Male_Adult_09",
+      "source_path": "Assets/Avatars/Adults/Male_Adult_09/Textures/m017_body_color.tga",
+      "source_git_blob_expected": "717e91ac80e12c53621c3669ed5602eda6354b3e",
+      "archive_entry": {
+        "name": "Male_Adult_09/m017_body_color.jpg",
+        "method": 0,
+        "flags": 0,
+        "crc32": "945f1104",
+        "compressed_size": 827925,
+        "uncompressed_size": 827925,
+        "local_header_offset": 189398991
+      }
+    },
+    {
+      "model_id": "Male_Adult_09",
+      "source_path": "Assets/Avatars/Adults/Male_Adult_09/Textures/m017_head_color.tga",
+      "source_git_blob_expected": "378695b6c2717f2c2be37db515dbb0ca07e67f81",
+      "archive_entry": {
+        "name": "Male_Adult_09/m017_head_color.jpg",
+        "method": 0,
+        "flags": 0,
+        "crc32": "f050331d",
+        "compressed_size": 667229,
+        "uncompressed_size": 667229,
+        "local_header_offset": 190410182
+      }
+    },
+    {
+      "model_id": "Male_Adult_09",
+      "source_path": "Assets/Avatars/Adults/Male_Adult_09/Textures/m017_opacity_color.tga",
+      "source_git_blob_expected": "36b026f6c66e150cbf89f2ec38071eae60e91081",
+      "archive_entry": {
+        "name": "Male_Adult_09/m017_opacity_color.png",
+        "method": 0,
+        "flags": 0,
+        "crc32": "5c2b8ee7",
+        "compressed_size": 944800,
+        "uncompressed_size": 944800,
+        "local_header_offset": 191248242
+      }
+    },
+    {
+      "model_id": "Male_Adult_10",
+      "source_path": "Assets/Avatars/Adults/Male_Adult_10/Textures/m024_body_color.tga",
+      "source_git_blob_expected": "b978eb0ff3fd3e6cebee133a7a2ff594b4e8eeaf",
+      "archive_entry": {
+        "name": "Male_Adult_10/m024_body_color.jpg",
+        "method": 0,
+        "flags": 0,
+        "crc32": "747fc91d",
+        "compressed_size": 558075,
+        "uncompressed_size": 558075,
+        "local_header_offset": 193200296
+      }
+    },
+    {
+      "model_id": "Male_Adult_10",
+      "source_path": "Assets/Avatars/Adults/Male_Adult_10/Textures/m024_head_color.tga",
+      "source_git_blob_expected": "df934ee3e279fb844e8c8217d214d3d139587dab",
+      "archive_entry": {
+        "name": "Male_Adult_10/m024_head_color.jpg",
+        "method": 0,
+        "flags": 0,
+        "crc32": "a0c6e51f",
+        "compressed_size": 574034,
+        "uncompressed_size": 574034,
+        "local_header_offset": 193973740
+      }
+    },
+    {
+      "model_id": "Male_Adult_10",
+      "source_path": "Assets/Avatars/Adults/Male_Adult_10/Textures/m024_opacity_color.tga",
+      "source_git_blob_expected": "51ddd6bec6e6f3abb9a6ce2522d1416082a31474",
+      "archive_entry": {
+        "name": "Male_Adult_10/m024_opacity_color.png",
+        "method": 0,
+        "flags": 0,
+        "crc32": "e2c376f3",
+        "compressed_size": 1134719,
+        "uncompressed_size": 1134719,
+        "local_header_offset": 194718050
+      }
+    },
+    {
+      "model_id": "Male_Adult_11",
+      "source_path": "Assets/Avatars/Adults/Male_Adult_11/Textures/m001_body_color.tga",
+      "source_git_blob_expected": "43197cfee141efc8ea36052559274b8506242a8c",
+      "archive_entry": {
+        "name": "Male_Adult_11/m001_body_color.jpg",
+        "method": 0,
+        "flags": 0,
+        "crc32": "8a5977bc",
+        "compressed_size": 798797,
+        "uncompressed_size": 798797,
+        "local_header_offset": 196800709
+      }
+    },
+    {
+      "model_id": "Male_Adult_11",
+      "source_path": "Assets/Avatars/Adults/Male_Adult_11/Textures/m001_head_color.tga",
+      "source_git_blob_expected": "c5925e8401109056cd5a5f7cdabef8edf85532e7",
+      "archive_entry": {
+        "name": "Male_Adult_11/m001_head_color.jpg",
+        "method": 0,
+        "flags": 0,
+        "crc32": "c948210e",
+        "compressed_size": 655568,
+        "uncompressed_size": 655568,
+        "local_header_offset": 197808767
+      }
+    },
+    {
+      "model_id": "Male_Adult_12",
+      "source_path": "Assets/Avatars/Adults/Male_Adult_12/Textures/m007_body_color.tga",
+      "source_git_blob_expected": "1757150789a5fdcf733394ff21a60512530b4f1a",
+      "archive_entry": {
+        "name": "Male_Adult_12/m007_body_color.jpg",
+        "method": 0,
+        "flags": 0,
+        "crc32": "9ce18308",
+        "compressed_size": 1271465,
+        "uncompressed_size": 1271465,
+        "local_header_offset": 199524467
+      }
+    },
+    {
+      "model_id": "Male_Adult_12",
+      "source_path": "Assets/Avatars/Adults/Male_Adult_12/Textures/m007_head_color.tga",
+      "source_git_blob_expected": "e5b23c4f55e499893c2a92ec7e52d0252bee2ae3",
+      "archive_entry": {
+        "name": "Male_Adult_12/m007_head_color.jpg",
+        "method": 0,
+        "flags": 0,
+        "crc32": "3883e887",
+        "compressed_size": 691137,
+        "uncompressed_size": 691137,
+        "local_header_offset": 201074067
+      }
+    },
+    {
+      "model_id": "Male_Adult_13",
+      "source_path": "Assets/Avatars/Adults/Male_Adult_13/Textures/m010_body_color.tga",
+      "source_git_blob_expected": "9edfa935aa69262f295606088495df34d777b746",
+      "archive_entry": {
+        "name": "Male_Adult_13/m010_body_color.jpg",
+        "method": 0,
+        "flags": 0,
+        "crc32": "54de1119",
+        "compressed_size": 1016159,
+        "uncompressed_size": 1016159,
+        "local_header_offset": 202846186
+      }
+    },
+    {
+      "model_id": "Male_Adult_13",
+      "source_path": "Assets/Avatars/Adults/Male_Adult_13/Textures/m010_head_color.tga",
+      "source_git_blob_expected": "6f53314c60a01d1ae8f425178c7ab4148603e9d3",
+      "archive_entry": {
+        "name": "Male_Adult_13/m010_head_color.jpg",
+        "method": 0,
+        "flags": 0,
+        "crc32": "b3a7f4e6",
+        "compressed_size": 667600,
+        "uncompressed_size": 667600,
+        "local_header_offset": 204080843
+      }
+    },
+    {
+      "model_id": "Male_Adult_14",
+      "source_path": "Assets/Avatars/Adults/Male_Adult_14/Textures/m012_body_color.tga",
+      "source_git_blob_expected": "5c1fbd9f483d84ac97feec84a72773bb3b90762c",
+      "archive_entry": {
+        "name": "Male_Adult_14/m012_body_color.jpg",
+        "method": 0,
+        "flags": 0,
+        "crc32": "d52f1c28",
+        "compressed_size": 645526,
+        "uncompressed_size": 645526,
+        "local_header_offset": 205906280
+      }
+    },
+    {
+      "model_id": "Male_Adult_14",
+      "source_path": "Assets/Avatars/Adults/Male_Adult_14/Textures/m012_head_color.tga",
+      "source_git_blob_expected": "d3a74ca56b46de52af2d1c8cb49c874f094785b6",
+      "archive_entry": {
+        "name": "Male_Adult_14/m012_head_color.jpg",
+        "method": 0,
+        "flags": 0,
+        "crc32": "eec5637e",
+        "compressed_size": 725035,
+        "uncompressed_size": 725035,
+        "local_header_offset": 206807660
+      }
+    },
+    {
+      "model_id": "Male_Adult_15",
+      "source_path": "Assets/Avatars/Adults/Male_Adult_15/Textures/m204_body_color.tga",
+      "source_git_blob_expected": "f7c95bfe928b5fc20a191921e1515596fb73caea",
+      "archive_entry": {
+        "name": "Male_Adult_15/m204_body_color.jpg",
+        "method": 0,
+        "flags": 0,
+        "crc32": "bf8ea7d5",
+        "compressed_size": 523333,
+        "uncompressed_size": 523333,
+        "local_header_offset": 208693622
+      }
+    },
+    {
+      "model_id": "Male_Adult_15",
+      "source_path": "Assets/Avatars/Adults/Male_Adult_15/Textures/m204_head_color.tga",
+      "source_git_blob_expected": "08011be46ab1f8a76768d633378b8ba4cb326906",
+      "archive_entry": {
+        "name": "Male_Adult_15/m204_head_color.jpg",
+        "method": 0,
+        "flags": 0,
+        "crc32": "9956dbca",
+        "compressed_size": 711553,
+        "uncompressed_size": 711553,
+        "local_header_offset": 209454619
+      }
+    },
+    {
+      "model_id": "Male_Adult_16",
+      "source_path": "Assets/Avatars/Adults/Male_Adult_16/Textures/m019_body_color.tga",
+      "source_git_blob_expected": "459b042cc353d69bb4d2f1a1186f28e9f5e6b4e7",
+      "archive_entry": {
+        "name": "Male_Adult_16/m019_body_color.jpg",
+        "method": 0,
+        "flags": 0,
+        "crc32": "730996b4",
+        "compressed_size": 912863,
+        "uncompressed_size": 912863,
+        "local_header_offset": 211340295
+      }
+    },
+    {
+      "model_id": "Male_Adult_16",
+      "source_path": "Assets/Avatars/Adults/Male_Adult_16/Textures/m019_head_color.tga",
+      "source_git_blob_expected": "a7bc5e6aa018e5ddcc96fa2303cf395ac1bbe863",
+      "archive_entry": {
+        "name": "Male_Adult_16/m019_head_color.jpg",
+        "method": 0,
+        "flags": 0,
+        "crc32": "7e31477c",
+        "compressed_size": 675355,
+        "uncompressed_size": 675355,
+        "local_header_offset": 212401522
+      }
+    },
+    {
+      "model_id": "Male_Adult_17",
+      "source_path": "Assets/Avatars/Adults/Male_Adult_17/Textures/m022_body_color.tga",
+      "source_git_blob_expected": "b3ddf7e662510eff72bc06603b53bef6f67c01e2",
+      "archive_entry": {
+        "name": "Male_Adult_17/m022_body_color.jpg",
+        "method": 0,
+        "flags": 0,
+        "crc32": "9eedc8d0",
+        "compressed_size": 797864,
+        "uncompressed_size": 797864,
+        "local_header_offset": 214216266
+      }
+    },
+    {
+      "model_id": "Male_Adult_17",
+      "source_path": "Assets/Avatars/Adults/Male_Adult_17/Textures/m022_head_color.tga",
+      "source_git_blob_expected": "625d89815c5f74ea80a7718849393f7182906e71",
+      "archive_entry": {
+        "name": "Male_Adult_17/m022_head_color.jpg",
+        "method": 0,
+        "flags": 0,
+        "crc32": "5c3f3175",
+        "compressed_size": 689647,
+        "uncompressed_size": 689647,
+        "local_header_offset": 215287595
+      }
+    },
+    {
+      "model_id": "Male_Adult_18",
+      "source_path": "Assets/Avatars/Adults/Male_Adult_18/Textures/m023_body_color.tga",
+      "source_git_blob_expected": "5bd02815a216aa092c6cd30454aa057ac05242eb",
+      "archive_entry": {
+        "name": "Male_Adult_18/m023_body_color.jpg",
+        "method": 0,
+        "flags": 0,
+        "crc32": "bc3ada0d",
+        "compressed_size": 757058,
+        "uncompressed_size": 757058,
+        "local_header_offset": 217125532
+      }
+    },
+    {
+      "model_id": "Male_Adult_18",
+      "source_path": "Assets/Avatars/Adults/Male_Adult_18/Textures/m023_head_color.tga",
+      "source_git_blob_expected": "1053c0d4b0710a3c0b6c1b8941a93269e6276767",
+      "archive_entry": {
+        "name": "Male_Adult_18/m023_head_color.jpg",
+        "method": 0,
+        "flags": 0,
+        "crc32": "adbe5ef1",
+        "compressed_size": 316788,
+        "uncompressed_size": 316788,
+        "local_header_offset": 218151081
+      }
+    },
+    {
+      "model_id": "Male_Adult_19",
+      "source_path": "Assets/Avatars/Adults/Male_Adult_19/Textures/m250_body_color.tga",
+      "source_git_blob_expected": "1b98fe126abc6b54c4f327228c965946694efc3b",
+      "archive_entry": {
+        "name": "Male_Adult_19/m250_body_color.jpg",
+        "method": 0,
+        "flags": 0,
+        "crc32": "7a115bca",
+        "compressed_size": 384597,
+        "uncompressed_size": 384597,
+        "local_header_offset": 219556089
+      }
+    },
+    {
+      "model_id": "Male_Adult_19",
+      "source_path": "Assets/Avatars/Adults/Male_Adult_19/Textures/m250_head_color.tga",
+      "source_git_blob_expected": "cb63f7cc1b1e50ea88552a4e46dd2b3664e8a3ca",
+      "archive_entry": {
+        "name": "Male_Adult_19/m250_head_color.jpg",
+        "method": 0,
+        "flags": 0,
+        "crc32": "306f7c57",
+        "compressed_size": 296437,
+        "uncompressed_size": 296437,
+        "local_header_offset": 220113546
+      }
+    },
+    {
+      "model_id": "Male_Adult_19",
+      "source_path": "Assets/Avatars/Adults/Male_Adult_19/Textures/m250_keffiyeh_color.tga",
+      "source_git_blob_expected": "b4c382cf6eb360d760954aced4c30f6015618a4d",
+      "archive_entry": {
+        "name": "Male_Adult_19/m250_keffiyeh_color.jpg",
+        "method": 0,
+        "flags": 0,
+        "crc32": "75fa1047",
+        "compressed_size": 828156,
+        "uncompressed_size": 828156,
+        "local_header_offset": 220518239
+      }
+    },
+    {
+      "model_id": "Male_Adult_20",
+      "source_path": "Assets/Avatars/Adults/Male_Adult_20/Textures/m027_body_color.tga",
+      "source_git_blob_expected": "7258cf12c5bd20635df1fd443dc21eef27037dad",
+      "archive_entry": {
+        "name": "Male_Adult_20/m027_body_color.jpg",
+        "method": 0,
+        "flags": 0,
+        "crc32": "f3a7a3f0",
+        "compressed_size": 728612,
+        "uncompressed_size": 728612,
+        "local_header_offset": 222422376
+      }
+    },
+    {
+      "model_id": "Male_Adult_20",
+      "source_path": "Assets/Avatars/Adults/Male_Adult_20/Textures/m027_head_color.tga",
+      "source_git_blob_expected": "9efe471b09ab2b10bb79c75bfb98d2467e6dcb78",
+      "archive_entry": {
+        "name": "Male_Adult_20/m027_head_color.jpg",
+        "method": 0,
+        "flags": 0,
+        "crc32": "a182a0cf",
+        "compressed_size": 648531,
+        "uncompressed_size": 648531,
+        "local_header_offset": 223389772
+      }
+    },
+    {
+      "model_id": "Male_Adult_21",
+      "source_path": "Assets/Avatars/Adults/Male_Adult_21/Textures/m251_body_color.tga",
+      "source_git_blob_expected": "4bea33e6fcb94c54192514e7a2c706a21d8dbd8e",
+      "archive_entry": {
+        "name": "Male_Adult_21/m251_body_color.jpg",
+        "method": 0,
+        "flags": 0,
+        "crc32": "b016fdc0",
+        "compressed_size": 370427,
+        "uncompressed_size": 370427,
+        "local_header_offset": 225169269
+      }
+    },
+    {
+      "model_id": "Male_Adult_21",
+      "source_path": "Assets/Avatars/Adults/Male_Adult_21/Textures/m251_head_color.tga",
+      "source_git_blob_expected": "103118ea646490375ef6aabeb072c8c76325395d",
+      "archive_entry": {
+        "name": "Male_Adult_21/m251_head_color.jpg",
+        "method": 0,
+        "flags": 0,
+        "crc32": "03280c2e",
+        "compressed_size": 293312,
+        "uncompressed_size": 293312,
+        "local_header_offset": 225720395
+      }
+    },
+    {
+      "model_id": "Male_Adult_21",
+      "source_path": "Assets/Avatars/Adults/Male_Adult_21/Textures/m251_keffiyeh_color.tga",
+      "source_git_blob_expected": "d660cf6c46694d8eb165f372bd9672448525bb8d",
+      "archive_entry": {
+        "name": "Male_Adult_21/m251_keffiyeh_color.jpg",
+        "method": 0,
+        "flags": 0,
+        "crc32": "5e542a9f",
+        "compressed_size": 1024517,
+        "uncompressed_size": 1024517,
+        "local_header_offset": 226097206
+      }
+    },
+    {
+      "model_id": "Female_Child_01",
+      "source_path": "Assets/Avatars/Children/Female_Child_01/Textures/cf001_body_color.tga",
+      "source_git_blob_expected": "ef91edfdcbc95ef6a26e5b3fa4b4f4f8388b0348",
+      "archive_entry": {
+        "name": "Female_Child_01/cf001_body_color.jpg",
+        "method": 0,
+        "flags": 0,
+        "crc32": "2933c840",
+        "compressed_size": 565424,
+        "uncompressed_size": 565424,
+        "local_header_offset": 139585168
+      }
+    },
+    {
+      "model_id": "Female_Child_01",
+      "source_path": "Assets/Avatars/Children/Female_Child_01/Textures/cf001_head_color.tga",
+      "source_git_blob_expected": "611ce1b19a1a12207b3ee1dc0a467e95af0e59c3",
+      "archive_entry": {
+        "name": "Female_Child_01/cf001_head_color.jpg",
+        "method": 0,
+        "flags": 0,
+        "crc32": "bd328243",
+        "compressed_size": 616691,
+        "uncompressed_size": 616691,
+        "local_header_offset": 140310681
+      }
+    },
+    {
+      "model_id": "Female_Child_02",
+      "source_path": "Assets/Avatars/Children/Female_Child_02/Textures/cf011_body_color.tga",
+      "source_git_blob_expected": "8764e6f4749f9c526c909f1130fd2e54b0fef888",
+      "archive_entry": {
+        "name": "Female_Child_02/cf011_body_color.jpg",
+        "method": 0,
+        "flags": 0,
+        "crc32": "ac5d7636",
+        "compressed_size": 464868,
+        "uncompressed_size": 464868,
+        "local_header_offset": 142096744
+      }
+    },
+    {
+      "model_id": "Female_Child_02",
+      "source_path": "Assets/Avatars/Children/Female_Child_02/Textures/cf011_head_color.tga",
+      "source_git_blob_expected": "72953e211787f725ed047efafc8d195ae7f62dbd",
+      "archive_entry": {
+        "name": "Female_Child_02/cf011_head_color.jpg",
+        "method": 0,
+        "flags": 0,
+        "crc32": "089f0fca",
+        "compressed_size": 631749,
+        "uncompressed_size": 631749,
+        "local_header_offset": 142724151
+      }
+    },
+    {
+      "model_id": "Male_Child_01",
+      "source_path": "Assets/Avatars/Children/Male_Child_01/Textures/cm001_body_color.tga",
+      "source_git_blob_expected": "afee29cc2289eb1403cbe6e6a68c26b8d7618c31",
+      "archive_entry": {
+        "name": "Male_Child_01/cm001_body_color.jpg",
+        "method": 0,
+        "flags": 0,
+        "crc32": "95b8b42f",
+        "compressed_size": 773513,
+        "uncompressed_size": 773513,
+        "local_header_offset": 228232148
+      }
+    },
+    {
+      "model_id": "Male_Child_01",
+      "source_path": "Assets/Avatars/Children/Male_Child_01/Textures/cm001_head_color.tga",
+      "source_git_blob_expected": "aa7d4cb1931eab13a6227562038b1ecb34110dbb",
+      "archive_entry": {
+        "name": "Male_Child_01/cm001_head_color.jpg",
+        "method": 0,
+        "flags": 0,
+        "crc32": "a8d4c85b",
+        "compressed_size": 447683,
+        "uncompressed_size": 447683,
+        "local_header_offset": 229218871
+      }
+    },
+    {
+      "model_id": "Male_Child_02",
+      "source_path": "Assets/Avatars/Children/Male_Child_02/Textures/cm012_body_color.tga",
+      "source_git_blob_expected": "11e5406d5270364089ed7489f1497c994ad7cf81",
+      "archive_entry": {
+        "name": "Male_Child_02/cm012_body_color.jpg",
+        "method": 0,
+        "flags": 0,
+        "crc32": "83d83f0b",
+        "compressed_size": 641915,
+        "uncompressed_size": 641915,
+        "local_header_offset": 230843097
+      }
+    },
+    {
+      "model_id": "Male_Child_02",
+      "source_path": "Assets/Avatars/Children/Male_Child_02/Textures/cm012_head_color.tga",
+      "source_git_blob_expected": "899fac07d89cf85696beb33ee0b782a6056420f3",
+      "archive_entry": {
+        "name": "Male_Child_02/cm012_head_color.jpg",
+        "method": 0,
+        "flags": 0,
+        "crc32": "e821e7f7",
+        "compressed_size": 692919,
+        "uncompressed_size": 692919,
+        "local_header_offset": 231626158
+      }
+    },
+    {
+      "model_id": "Business_Female_01",
+      "source_path": "Assets/Avatars/Professions/Business_Female_01/Textures/f014_body_color.tga",
+      "source_git_blob_expected": "0af4f272bb58a0108eb5b67fca27a4529be9bc46",
+      "archive_entry": {
+        "name": "Business_Female_01/f014_body_color.jpg",
+        "method": 0,
+        "flags": 0,
+        "crc32": "a43f9cd6",
+        "compressed_size": 534334,
+        "uncompressed_size": 534334,
+        "local_header_offset": 1189218
+      }
+    },
+    {
+      "model_id": "Business_Female_01",
+      "source_path": "Assets/Avatars/Professions/Business_Female_01/Textures/f014_head_color.tga",
+      "source_git_blob_expected": "e9c636056a5c8414347653757656f8af4b102b88",
+      "archive_entry": {
+        "name": "Business_Female_01/f014_head_color.jpg",
+        "method": 0,
+        "flags": 0,
+        "crc32": "12ce6933",
+        "compressed_size": 761312,
+        "uncompressed_size": 761312,
+        "local_header_offset": 1885644
+      }
+    },
+    {
+      "model_id": "Business_Female_01",
+      "source_path": "Assets/Avatars/Professions/Business_Female_01/Textures/f014_opacity_color.tga",
+      "source_git_blob_expected": "6b87a2b0f9e53a843a39112013ef9785e0110742",
+      "archive_entry": {
+        "name": "Business_Female_01/f014_opacity_color.png",
+        "method": 0,
+        "flags": 0,
+        "crc32": "4db8bbd2",
+        "compressed_size": 1000586,
+        "uncompressed_size": 1000586,
+        "local_header_offset": 2859595
+      }
+    },
+    {
+      "model_id": "Business_Female_02",
+      "source_path": "Assets/Avatars/Professions/Business_Female_02/Textures/f015_body_color.tga",
+      "source_git_blob_expected": "9a3d5fbd2b69e34628ec0220572b64cb314c51d7",
+      "archive_entry": {
+        "name": "Business_Female_02/f015_body_color.jpg",
+        "method": 0,
+        "flags": 0,
+        "crc32": "4a3970b6",
+        "compressed_size": 890228,
+        "uncompressed_size": 890228,
+        "local_header_offset": 5038594
+      }
+    },
+    {
+      "model_id": "Business_Female_02",
+      "source_path": "Assets/Avatars/Professions/Business_Female_02/Textures/f015_glasses_opacity_color.tga",
+      "source_git_blob_expected": "4041db975842d4655e0fb76ff673ee59fd9a7c3d",
+      "archive_entry": {
+        "name": "Business_Female_02/f015_glasses_opacity_color.png",
+        "method": 0,
+        "flags": 0,
+        "crc32": "aa9ad7ff",
+        "compressed_size": 125133,
+        "uncompressed_size": 125133,
+        "local_header_offset": 6185509
+      }
+    },
+    {
+      "model_id": "Business_Female_02",
+      "source_path": "Assets/Avatars/Professions/Business_Female_02/Textures/f015_head_color.tga",
+      "source_git_blob_expected": "41eac4aaed7ed8f36b32d53ae96599694a7fd687",
+      "archive_entry": {
+        "name": "Business_Female_02/f015_head_color.jpg",
+        "method": 0,
+        "flags": 0,
+        "crc32": "9b8681b0",
+        "compressed_size": 1051058,
+        "uncompressed_size": 1051058,
+        "local_header_offset": 6310721
+      }
+    },
+    {
+      "model_id": "Business_Female_02",
+      "source_path": "Assets/Avatars/Professions/Business_Female_02/Textures/f015_opacity_color.tga",
+      "source_git_blob_expected": "b96abab3f5c8fae7bd72fab26a17a31b91c70ac5",
+      "archive_entry": {
+        "name": "Business_Female_02/f015_opacity_color.png",
+        "method": 0,
+        "flags": 0,
+        "crc32": "9c719bb0",
+        "compressed_size": 1480639,
+        "uncompressed_size": 1480639,
+        "local_header_offset": 7536467
+      }
+    },
+    {
+      "model_id": "Business_Female_03",
+      "source_path": "Assets/Avatars/Professions/Business_Female_03/Textures/f016_body_color.tga",
+      "source_git_blob_expected": "a6ab28709927f82df72e32e4d61c0ba575998832",
+      "archive_entry": {
+        "name": "Business_Female_03/f016_body_color.jpg",
+        "method": 0,
+        "flags": 0,
+        "crc32": "11c435d7",
+        "compressed_size": 487463,
+        "uncompressed_size": 487463,
+        "local_header_offset": 10132352
+      }
+    },
+    {
+      "model_id": "Business_Female_03",
+      "source_path": "Assets/Avatars/Professions/Business_Female_03/Textures/f016_head_color.tga",
+      "source_git_blob_expected": "7ce72e3977de2cd0fa4d05a67743b783d8c4dc05",
+      "archive_entry": {
+        "name": "Business_Female_03/f016_head_color.jpg",
+        "method": 0,
+        "flags": 0,
+        "crc32": "51980f52",
+        "compressed_size": 592751,
+        "uncompressed_size": 592751,
+        "local_header_offset": 10744957
+      }
+    },
+    {
+      "model_id": "Business_Female_03",
+      "source_path": "Assets/Avatars/Professions/Business_Female_03/Textures/f016_opacity_color.tga",
+      "source_git_blob_expected": "1ca7fcd8030c6630cf000e6e9ce39057838251bc",
+      "archive_entry": {
+        "name": "Business_Female_03/f016_opacity_color.png",
+        "method": 0,
+        "flags": 0,
+        "crc32": "f6265663",
+        "compressed_size": 1060415,
+        "uncompressed_size": 1060415,
+        "local_header_offset": 11523221
+      }
+    },
+    {
+      "model_id": "Business_Female_04",
+      "source_path": "Assets/Avatars/Professions/Business_Female_04/Textures/f020_body_color.tga",
+      "source_git_blob_expected": "560b52b40ddd056def5385176a76897645ea322a",
+      "archive_entry": {
+        "name": "Business_Female_04/f020_body_color.jpg",
+        "method": 0,
+        "flags": 0,
+        "crc32": "82c60482",
+        "compressed_size": 489680,
+        "uncompressed_size": 489680,
+        "local_header_offset": 13715585
+      }
+    },
+    {
+      "model_id": "Business_Female_04",
+      "source_path": "Assets/Avatars/Professions/Business_Female_04/Textures/f020_head_color.tga",
+      "source_git_blob_expected": "8ea1df2f4d723f98548c5456e3cb7a17e8f8120e",
+      "archive_entry": {
+        "name": "Business_Female_04/f020_head_color.jpg",
+        "method": 0,
+        "flags": 0,
+        "crc32": "abec60a6",
+        "compressed_size": 652872,
+        "uncompressed_size": 652872,
+        "local_header_offset": 14346211
+      }
+    },
+    {
+      "model_id": "Business_Female_04",
+      "source_path": "Assets/Avatars/Professions/Business_Female_04/Textures/f020_opacity_color.tga",
+      "source_git_blob_expected": "e3d2d54055c606fac90d5c176a71377bd8d8bf60",
+      "archive_entry": {
+        "name": "Business_Female_04/f020_opacity_color.png",
+        "method": 0,
+        "flags": 0,
+        "crc32": "3e95e6d1",
+        "compressed_size": 593975,
+        "uncompressed_size": 593975,
+        "local_header_offset": 15161916
+      }
+    },
+    {
+      "model_id": "Business_Male_01",
+      "source_path": "Assets/Avatars/Professions/Business_Male_01/Textures/m005_body_color.tga",
+      "source_git_blob_expected": "3ae157b9ee900809770d4754cc7fd5ccefbbe106",
+      "archive_entry": {
+        "name": "Business_Male_01/m005_body_color.jpg",
+        "method": 0,
+        "flags": 0,
+        "crc32": "ade89e0a",
+        "compressed_size": 418436,
+        "uncompressed_size": 418436,
+        "local_header_offset": 16779727
+      }
+    },
+    {
+      "model_id": "Business_Male_01",
+      "source_path": "Assets/Avatars/Professions/Business_Male_01/Textures/m005_head_color.tga",
+      "source_git_blob_expected": "25473b6a8daf5b92f13be239ac6c758c41e9b466",
+      "archive_entry": {
+        "name": "Business_Male_01/m005_head_color.jpg",
+        "method": 0,
+        "flags": 0,
+        "crc32": "f8786879",
+        "compressed_size": 580954,
+        "uncompressed_size": 580954,
+        "local_header_offset": 17370252
+      }
+    },
+    {
+      "model_id": "Business_Male_01",
+      "source_path": "Assets/Avatars/Professions/Business_Male_01/Textures/m005_opacity_color.tga",
+      "source_git_blob_expected": "85521bcee9b307ca431fdad86926e997ce7d3e0a",
+      "archive_entry": {
+        "name": "Business_Male_01/m005_opacity_color.png",
+        "method": 0,
+        "flags": 0,
+        "crc32": "5540c59a",
+        "compressed_size": 1605380,
+        "uncompressed_size": 1605380,
+        "local_header_offset": 18092849
+      }
+    },
+    {
+      "model_id": "Business_Male_02",
+      "source_path": "Assets/Avatars/Professions/Business_Male_02/Textures/m008_body_color.tga",
+      "source_git_blob_expected": "9269c2726510ad15a348bbca9ff27ac2672353f6",
+      "archive_entry": {
+        "name": "Business_Male_02/m008_body_color.jpg",
+        "method": 0,
+        "flags": 0,
+        "crc32": "5c14565d",
+        "compressed_size": 455715,
+        "uncompressed_size": 455715,
+        "local_header_offset": 20730839
+      }
+    },
+    {
+      "model_id": "Business_Male_02",
+      "source_path": "Assets/Avatars/Professions/Business_Male_02/Textures/m008_head_color.tga",
+      "source_git_blob_expected": "c5b559bf94fa6ed2cfd99393bcced92ed790ef0e",
+      "archive_entry": {
+        "name": "Business_Male_02/m008_head_color.jpg",
+        "method": 0,
+        "flags": 0,
+        "crc32": "3259d072",
+        "compressed_size": 591190,
+        "uncompressed_size": 591190,
+        "local_header_offset": 21380641
+      }
+    },
+    {
+      "model_id": "Business_Male_02",
+      "source_path": "Assets/Avatars/Professions/Business_Male_02/Textures/m008_opacity_color.tga",
+      "source_git_blob_expected": "ea9aa0391466411756111e880f0cfed25bbd7f58",
+      "archive_entry": {
+        "name": "Business_Male_02/m008_opacity_color.png",
+        "method": 0,
+        "flags": 0,
+        "crc32": "2efc57e5",
+        "compressed_size": 802768,
+        "uncompressed_size": 802768,
+        "local_header_offset": 22135580
+      }
+    },
+    {
+      "model_id": "Business_Male_03",
+      "source_path": "Assets/Avatars/Professions/Business_Male_03/Textures/m020_body_color.tga",
+      "source_git_blob_expected": "67e0fdf3f2c94386f490c2cb00b2576fe479c572",
+      "archive_entry": {
+        "name": "Business_Male_03/m020_body_color.jpg",
+        "method": 0,
+        "flags": 0,
+        "crc32": "197c8912",
+        "compressed_size": 463673,
+        "uncompressed_size": 463673,
+        "local_header_offset": 24010470
+      }
+    },
+    {
+      "model_id": "Business_Male_03",
+      "source_path": "Assets/Avatars/Professions/Business_Male_03/Textures/m020_head_color.tga",
+      "source_git_blob_expected": "2a9997ac7f28cdd63bc34b8607725f488be37351",
+      "archive_entry": {
+        "name": "Business_Male_03/m020_head_color.jpg",
+        "method": 0,
+        "flags": 0,
+        "crc32": "5b0b4253",
+        "compressed_size": 749795,
+        "uncompressed_size": 749795,
+        "local_header_offset": 24630133
+      }
+    },
+    {
+      "model_id": "Business_Male_03",
+      "source_path": "Assets/Avatars/Professions/Business_Male_03/Textures/m020_opacity_color.tga",
+      "source_git_blob_expected": "72972c248d2ebbd5b744914ccf17a0f28ad06e02",
+      "archive_entry": {
+        "name": "Business_Male_03/m020_opacity_color.png",
+        "method": 0,
+        "flags": 0,
+        "crc32": "0a1a9b2f",
+        "compressed_size": 874790,
+        "uncompressed_size": 874790,
+        "local_header_offset": 25572186
+      }
+    },
+    {
+      "model_id": "Business_Male_04",
+      "source_path": "Assets/Avatars/Professions/Business_Male_04/Textures/m015_body_color.tga",
+      "source_git_blob_expected": "8b5bce3ea6ced893565cac1d9668654eaee0f06b",
+      "archive_entry": {
+        "name": "Business_Male_04/m015_body_color.jpg",
+        "method": 0,
+        "flags": 0,
+        "crc32": "de6b37c0",
+        "compressed_size": 584672,
+        "uncompressed_size": 584672,
+        "local_header_offset": 27409264
+      }
+    },
+    {
+      "model_id": "Business_Male_04",
+      "source_path": "Assets/Avatars/Professions/Business_Male_04/Textures/m015_head_color.tga",
+      "source_git_blob_expected": "4b4b314a1ce905f9d47d4eb83b2c97d3494f2d1e",
+      "archive_entry": {
+        "name": "Business_Male_04/m015_head_color.jpg",
+        "method": 0,
+        "flags": 0,
+        "crc32": "6c444a64",
+        "compressed_size": 607011,
+        "uncompressed_size": 607011,
+        "local_header_offset": 28268714
+      }
+    },
+    {
+      "model_id": "Business_Male_05",
+      "source_path": "Assets/Avatars/Professions/Business_Male_05/Textures/m016_body_color.tga",
+      "source_git_blob_expected": "349b93755c48862d47b2fe6aba9094ea07693d51",
+      "archive_entry": {
+        "name": "Business_Male_05/m016_body_color.jpg",
+        "method": 0,
+        "flags": 0,
+        "crc32": "b677f807",
+        "compressed_size": 479911,
+        "uncompressed_size": 479911,
+        "local_header_offset": 29985950
+      }
+    },
+    {
+      "model_id": "Business_Male_05",
+      "source_path": "Assets/Avatars/Professions/Business_Male_05/Textures/m016_head_color.tga",
+      "source_git_blob_expected": "a9f6b6f4a36352089639dcd42c7e3b0fcea128ea",
+      "archive_entry": {
+        "name": "Business_Male_05/m016_head_color.jpg",
+        "method": 0,
+        "flags": 0,
+        "crc32": "88d2f4fc",
+        "compressed_size": 755766,
+        "uncompressed_size": 755766,
+        "local_header_offset": 30607273
+      }
+    },
+    {
+      "model_id": "Business_Male_06",
+      "source_path": "Assets/Avatars/Professions/Business_Male_06/Textures/m025_body_color.tga",
+      "source_git_blob_expected": "cec2659255236a8fc25232ba19073e313921a4c2",
+      "archive_entry": {
+        "name": "Business_Male_06/m025_body_color.jpg",
+        "method": 0,
+        "flags": 0,
+        "crc32": "a7642804",
+        "compressed_size": 461076,
+        "uncompressed_size": 461076,
+        "local_header_offset": 32523607
+      }
+    },
+    {
+      "model_id": "Business_Male_06",
+      "source_path": "Assets/Avatars/Professions/Business_Male_06/Textures/m025_head_color.tga",
+      "source_git_blob_expected": "90de47970d57dcb4ff2e8657656b52fb8cbd8217",
+      "archive_entry": {
+        "name": "Business_Male_06/m025_head_color.jpg",
+        "method": 0,
+        "flags": 0,
+        "crc32": "88500b51",
+        "compressed_size": 583959,
+        "uncompressed_size": 583959,
+        "local_header_offset": 33140461
+      }
+    },
+    {
+      "model_id": "Business_Male_07",
+      "source_path": "Assets/Avatars/Professions/Business_Male_07/Textures/m018_body_color.tga",
+      "source_git_blob_expected": "d81c12017038658f81bc7940306a9118052f519f",
+      "archive_entry": {
+        "name": "Business_Male_07/m018_body_color.jpg",
+        "method": 0,
+        "flags": 0,
+        "crc32": "685359b8",
+        "compressed_size": 769284,
+        "uncompressed_size": 769284,
+        "local_header_offset": 34859855
+      }
+    },
+    {
+      "model_id": "Business_Male_07",
+      "source_path": "Assets/Avatars/Professions/Business_Male_07/Textures/m018_head_color.tga",
+      "source_git_blob_expected": "22b418ad5270d11747c66f27b0217b19691d7c0a",
+      "archive_entry": {
+        "name": "Business_Male_07/m018_head_color.jpg",
+        "method": 0,
+        "flags": 0,
+        "crc32": "10515378",
+        "compressed_size": 859953,
+        "uncompressed_size": 859953,
+        "local_header_offset": 35814207
+      }
+    },
+    {
+      "model_id": "Chef_Female_01",
+      "source_path": "Assets/Avatars/Professions/Chef_Female_01/Textures/f110_body_color.tga",
+      "source_git_blob_expected": "4dee4a0a54a06918cf17eff6801c8c9a17086d93",
+      "archive_entry": {
+        "name": "Chef_Female_01/f110_body_color.jpg",
+        "method": 0,
+        "flags": 0,
+        "crc32": "da498d97",
+        "compressed_size": 449624,
+        "uncompressed_size": 449624,
+        "local_header_offset": 37848087
+      }
+    },
+    {
+      "model_id": "Chef_Female_01",
+      "source_path": "Assets/Avatars/Professions/Chef_Female_01/Textures/f110_head_color_a.tga",
+      "source_git_blob_expected": "4de4a886c8e92d20a085e47dfcc1e216961790bb",
+      "archive_entry": {
+        "name": "Chef_Female_01/f110_head_color_a.jpg",
+        "method": 0,
+        "flags": 0,
+        "crc32": "ee2a0d9c",
+        "compressed_size": 479327,
+        "uncompressed_size": 479327,
+        "local_header_offset": 38520159
+      }
+    },
+    {
+      "model_id": "Construction_Female_01",
+      "source_path": "Assets/Avatars/Professions/Construction_Female_01/Textures/f101_body_color.tga",
+      "source_git_blob_expected": "50d49e1d549ba369d1a69964b584b7d1c83248f3",
+      "archive_entry": {
+        "name": "Construction_Female_01/f101_body_color.jpg",
+        "method": 0,
+        "flags": 0,
+        "crc32": "caacf7be",
+        "compressed_size": 755904,
+        "uncompressed_size": 755904,
+        "local_header_offset": 40299817
+      }
+    },
+    {
+      "model_id": "Construction_Female_01",
+      "source_path": "Assets/Avatars/Professions/Construction_Female_01/Textures/f101_head_color.tga",
+      "source_git_blob_expected": "79c9c380b8496a3a839ba9fe6900c23d57413599",
+      "archive_entry": {
+        "name": "Construction_Female_01/f101_head_color.jpg",
+        "method": 0,
+        "flags": 0,
+        "crc32": "3310b3c7",
+        "compressed_size": 711867,
+        "uncompressed_size": 711867,
+        "local_header_offset": 41274231
+      }
+    },
+    {
+      "model_id": "Construction_Female_01",
+      "source_path": "Assets/Avatars/Professions/Construction_Female_01/Textures/f101_helmet_color.tga",
+      "source_git_blob_expected": "3f51f17cc0b7f783993b132463a17391fecd04e2",
+      "archive_entry": {
+        "name": "Construction_Female_01/f101_helmet_color.jpg",
+        "method": 0,
+        "flags": 0,
+        "crc32": "9d93b670",
+        "compressed_size": 126690,
+        "uncompressed_size": 126690,
+        "local_header_offset": 42135134
+      }
+    },
+    {
+      "model_id": "Construction_Male_01",
+      "source_path": "Assets/Avatars/Professions/Construction_Male_01/Textures/m111_body_color.tga",
+      "source_git_blob_expected": "ea180a862d949f5f16c1c430362ae199b8d572df",
+      "archive_entry": {
+        "name": "Construction_Male_01/m111_body_color.jpg",
+        "method": 0,
+        "flags": 0,
+        "crc32": "a8232ddf",
+        "compressed_size": 1249320,
+        "uncompressed_size": 1249320,
+        "local_header_offset": 43557144
+      }
+    },
+    {
+      "model_id": "Construction_Male_01",
+      "source_path": "Assets/Avatars/Professions/Construction_Male_01/Textures/m111_head_color.tga",
+      "source_git_blob_expected": "bb0038aba62407f7823420e1a6114f8980a81888",
+      "archive_entry": {
+        "name": "Construction_Male_01/m111_head_color.jpg",
+        "method": 0,
+        "flags": 0,
+        "crc32": "6e521d71",
+        "compressed_size": 844255,
+        "uncompressed_size": 844255,
+        "local_header_offset": 45005484
+      }
+    },
+    {
+      "model_id": "Construction_Male_01",
+      "source_path": "Assets/Avatars/Professions/Construction_Male_01/Textures/m111_helmet_color.tga",
+      "source_git_blob_expected": "45f8a87ad06cc30d215e4071b228622b1588c9e1",
+      "archive_entry": {
+        "name": "Construction_Male_01/m111_helmet_color.jpg",
+        "method": 0,
+        "flags": 0,
+        "crc32": "9a824d9e",
+        "compressed_size": 223236,
+        "uncompressed_size": 223236,
+        "local_header_offset": 46044587
+      }
+    },
+    {
+      "model_id": "Construction_Male_01",
+      "source_path": "Assets/Avatars/Professions/Construction_Male_01/Textures/m111_opacity_color.tga",
+      "source_git_blob_expected": "bf2c986d67533db898c19b2e9f0e695a0043623e",
+      "archive_entry": {
+        "name": "Construction_Male_01/m111_opacity_color.png",
+        "method": 0,
+        "flags": 0,
+        "crc32": "07584003",
+        "compressed_size": 273873,
+        "uncompressed_size": 273873,
+        "local_header_offset": 46373374
+      }
+    },
+    {
+      "model_id": "Construction_Male_01",
+      "source_path": "Assets/Avatars/Professions/Construction_Male_01/Textures/m111_tools_color.tga",
+      "source_git_blob_expected": "ae5872a6808aa115c84aff5a5d8859ac7bedab6f",
+      "archive_entry": {
+        "name": "Construction_Male_01/m111_tools_color.jpg",
+        "method": 0,
+        "flags": 0,
+        "crc32": "c9224244",
+        "compressed_size": 212288,
+        "uncompressed_size": 212288,
+        "local_header_offset": 46940622
+      }
+    },
+    {
+      "model_id": "Construction_Male_02",
+      "source_path": "Assets/Avatars/Professions/Construction_Male_02/Textures/m101_body_color.tga",
+      "source_git_blob_expected": "a10ff14d5e2bf334abd423af3b39259621d7a36e",
+      "archive_entry": {
+        "name": "Construction_Male_02/m101_body_color.jpg",
+        "method": 0,
+        "flags": 0,
+        "crc32": "9a3921f2",
+        "compressed_size": 649245,
+        "uncompressed_size": 649245,
+        "local_header_offset": 48460229
+      }
+    },
+    {
+      "model_id": "Construction_Male_02",
+      "source_path": "Assets/Avatars/Professions/Construction_Male_02/Textures/m101_head_color.tga",
+      "source_git_blob_expected": "8d685c4e7d7cb58007dfcaea56b1d6067bb7f729",
+      "archive_entry": {
+        "name": "Construction_Male_02/m101_head_color.jpg",
+        "method": 0,
+        "flags": 0,
+        "crc32": "950c215c",
+        "compressed_size": 816218,
+        "uncompressed_size": 816218,
+        "local_header_offset": 49304297
+      }
+    },
+    {
+      "model_id": "Construction_Male_02",
+      "source_path": "Assets/Avatars/Professions/Construction_Male_02/Textures/m101_helmet_color.tga",
+      "source_git_blob_expected": "3f51f17cc0b7f783993b132463a17391fecd04e2",
+      "archive_entry": {
+        "name": "Construction_Male_02/m101_helmet_color.jpg",
+        "method": 0,
+        "flags": 0,
+        "crc32": "9d93b670",
+        "compressed_size": 126690,
+        "uncompressed_size": 126690,
+        "local_header_offset": 50306345
+      }
+    },
+    {
+      "model_id": "Construction_Male_03",
+      "source_path": "Assets/Avatars/Professions/Construction_Male_03/Textures/m102_body_color.tga",
+      "source_git_blob_expected": "72ab212168030695e77020e209435527bb132ddb",
+      "archive_entry": {
+        "name": "Construction_Male_03/m102_body_color.jpg",
+        "method": 0,
+        "flags": 0,
+        "crc32": "5d86d092",
+        "compressed_size": 660136,
+        "uncompressed_size": 660136,
+        "local_header_offset": 51611201
+      }
+    },
+    {
+      "model_id": "Construction_Male_03",
+      "source_path": "Assets/Avatars/Professions/Construction_Male_03/Textures/m102_head_color.tga",
+      "source_git_blob_expected": "98a6141e24e4653b8046d3d35b3f5e4a225d896a",
+      "archive_entry": {
+        "name": "Construction_Male_03/m102_head_color.jpg",
+        "method": 0,
+        "flags": 0,
+        "crc32": "a3c6f825",
+        "compressed_size": 620047,
+        "uncompressed_size": 620047,
+        "local_header_offset": 52483416
+      }
+    },
+    {
+      "model_id": "Construction_Male_03",
+      "source_path": "Assets/Avatars/Professions/Construction_Male_03/Textures/m102_helmet_color.tga",
+      "source_git_blob_expected": "3f51f17cc0b7f783993b132463a17391fecd04e2",
+      "archive_entry": {
+        "name": "Construction_Male_03/m102_helmet_color.jpg",
+        "method": 0,
+        "flags": 0,
+        "crc32": "9d93b670",
+        "compressed_size": 126690,
+        "uncompressed_size": 126690,
+        "local_header_offset": 53247867
+      }
+    },
+    {
+      "model_id": "Construction_Male_03",
+      "source_path": "Assets/Avatars/Professions/Construction_Male_03/Textures/m102_tools_color.tga",
+      "source_git_blob_expected": "ae5872a6808aa115c84aff5a5d8859ac7bedab6f",
+      "archive_entry": {
+        "name": "Construction_Male_03/m102_tools_color.jpg",
+        "method": 0,
+        "flags": 0,
+        "crc32": "c9224244",
+        "compressed_size": 212288,
+        "uncompressed_size": 212288,
+        "local_header_offset": 53430450
+      }
+    },
+    {
+      "model_id": "Construction_Male_04",
+      "source_path": "Assets/Avatars/Professions/Construction_Male_04/Textures/m103_body_color.tga",
+      "source_git_blob_expected": "e47c4561400e27cbe7c5c6baf196b3fc024f2c3e",
+      "archive_entry": {
+        "name": "Construction_Male_04/m103_body_color.jpg",
+        "method": 0,
+        "flags": 0,
+        "crc32": "0a233bf2",
+        "compressed_size": 622361,
+        "uncompressed_size": 622361,
+        "local_header_offset": 55026035
+      }
+    },
+    {
+      "model_id": "Construction_Male_04",
+      "source_path": "Assets/Avatars/Professions/Construction_Male_04/Textures/m103_head_color.tga",
+      "source_git_blob_expected": "73c53324532962e42a97b5dfc31270e9115acc6d",
+      "archive_entry": {
+        "name": "Construction_Male_04/m103_head_color.jpg",
+        "method": 0,
+        "flags": 0,
+        "crc32": "070c1bcc",
+        "compressed_size": 613896,
+        "uncompressed_size": 613896,
+        "local_header_offset": 55861446
+      }
+    },
+    {
+      "model_id": "Construction_Male_04",
+      "source_path": "Assets/Avatars/Professions/Construction_Male_04/Textures/m103_helmet_color.tga",
+      "source_git_blob_expected": "3f51f17cc0b7f783993b132463a17391fecd04e2",
+      "archive_entry": {
+        "name": "Construction_Male_04/m103_helmet_color.jpg",
+        "method": 0,
+        "flags": 0,
+        "crc32": "9d93b670",
+        "compressed_size": 126690,
+        "uncompressed_size": 126690,
+        "local_header_offset": 56644907
+      }
+    },
+    {
+      "model_id": "Construction_Male_04",
+      "source_path": "Assets/Avatars/Professions/Construction_Male_04/Textures/m103_tools_color.tga",
+      "source_git_blob_expected": "ae5872a6808aa115c84aff5a5d8859ac7bedab6f",
+      "archive_entry": {
+        "name": "Construction_Male_04/m103_tools_color.jpg",
+        "method": 0,
+        "flags": 0,
+        "crc32": "c9224244",
+        "compressed_size": 212288,
+        "uncompressed_size": 212288,
+        "local_header_offset": 56827490
+      }
+    },
+    {
+      "model_id": "Construction_Male_05",
+      "source_path": "Assets/Avatars/Professions/Construction_Male_05/Textures/m104_body_color.tga",
+      "source_git_blob_expected": "45defc19c6d6823d2c2e4f4e256c4ec1d40caf6a",
+      "archive_entry": {
+        "name": "Construction_Male_05/m104_body_color.jpg",
+        "method": 0,
+        "flags": 0,
+        "crc32": "edec8485",
+        "compressed_size": 622129,
+        "uncompressed_size": 622129,
+        "local_header_offset": 58340281
+      }
+    },
+    {
+      "model_id": "Construction_Male_05",
+      "source_path": "Assets/Avatars/Professions/Construction_Male_05/Textures/m104_head_color.tga",
+      "source_git_blob_expected": "6cecb6232d4009dd151ad2b3fa424b14ee338792",
+      "archive_entry": {
+        "name": "Construction_Male_05/m104_head_color.jpg",
+        "method": 0,
+        "flags": 0,
+        "crc32": "0d3b8d48",
+        "compressed_size": 672318,
+        "uncompressed_size": 672318,
+        "local_header_offset": 59164232
+      }
+    },
+    {
+      "model_id": "Construction_Male_05",
+      "source_path": "Assets/Avatars/Professions/Construction_Male_05/Textures/m104_helmet_color.tga",
+      "source_git_blob_expected": "3f51f17cc0b7f783993b132463a17391fecd04e2",
+      "archive_entry": {
+        "name": "Construction_Male_05/m104_helmet_color.jpg",
+        "method": 0,
+        "flags": 0,
+        "crc32": "9d93b670",
+        "compressed_size": 126690,
+        "uncompressed_size": 126690,
+        "local_header_offset": 60050981
+      }
+    },
+    {
+      "model_id": "Construction_Male_06",
+      "source_path": "Assets/Avatars/Professions/Construction_Male_06/Textures/m105_body_color.tga",
+      "source_git_blob_expected": "de255e5ceaec0be29449f303ed584c8831d4a1cf",
+      "archive_entry": {
+        "name": "Construction_Male_06/m105_body_color.jpg",
+        "method": 0,
+        "flags": 0,
+        "crc32": "14a469f5",
+        "compressed_size": 590211,
+        "uncompressed_size": 590211,
+        "local_header_offset": 61352678
+      }
+    },
+    {
+      "model_id": "Construction_Male_06",
+      "source_path": "Assets/Avatars/Professions/Construction_Male_06/Textures/m105_head_color.tga",
+      "source_git_blob_expected": "c0150a7d1e3cfa03ddcf1504240bce6f7a37385d",
+      "archive_entry": {
+        "name": "Construction_Male_06/m105_head_color.jpg",
+        "method": 0,
+        "flags": 0,
+        "crc32": "9da1bae8",
+        "compressed_size": 569046,
+        "uncompressed_size": 569046,
+        "local_header_offset": 62161159
+      }
+    },
+    {
+      "model_id": "Construction_Male_06",
+      "source_path": "Assets/Avatars/Professions/Construction_Male_06/Textures/m105_helmet_color.tga",
+      "source_git_blob_expected": "3f51f17cc0b7f783993b132463a17391fecd04e2",
+      "archive_entry": {
+        "name": "Construction_Male_06/m105_helmet_color.jpg",
+        "method": 0,
+        "flags": 0,
+        "crc32": "9d93b670",
+        "compressed_size": 126690,
+        "uncompressed_size": 126690,
+        "local_header_offset": 62864149
+      }
+    },
+    {
+      "model_id": "Construction_Male_06",
+      "source_path": "Assets/Avatars/Professions/Construction_Male_06/Textures/m105_tools_color.tga",
+      "source_git_blob_expected": "ae5872a6808aa115c84aff5a5d8859ac7bedab6f",
+      "archive_entry": {
+        "name": "Construction_Male_06/m105_tools_color.jpg",
+        "method": 0,
+        "flags": 0,
+        "crc32": "c9224244",
+        "compressed_size": 212288,
+        "uncompressed_size": 212288,
+        "local_header_offset": 63046732
+      }
+    },
+    {
+      "model_id": "Construction_Male_07",
+      "source_path": "Assets/Avatars/Professions/Construction_Male_07/Textures/m107_body_color.tga",
+      "source_git_blob_expected": "a9b22e98dfee3a045aa63e8a684acc16e782393c",
+      "archive_entry": {
+        "name": "Construction_Male_07/m107_body_color.jpg",
+        "method": 0,
+        "flags": 0,
+        "crc32": "793344b4",
+        "compressed_size": 750353,
+        "uncompressed_size": 750353,
+        "local_header_offset": 64550458
+      }
+    },
+    {
+      "model_id": "Construction_Male_07",
+      "source_path": "Assets/Avatars/Professions/Construction_Male_07/Textures/m107_head_color.tga",
+      "source_git_blob_expected": "e532a84c2cbdd8d6ed15e2f5ef5fd7c795f34206",
+      "archive_entry": {
+        "name": "Construction_Male_07/m107_head_color.jpg",
+        "method": 0,
+        "flags": 0,
+        "crc32": "428904fb",
+        "compressed_size": 595394,
+        "uncompressed_size": 595394,
+        "local_header_offset": 65505591
+      }
+    },
+    {
+      "model_id": "Construction_Male_07",
+      "source_path": "Assets/Avatars/Professions/Construction_Male_07/Textures/m107_helmet_color.tga",
+      "source_git_blob_expected": "52091bfe4c47827b572910761452d380fad80824",
+      "archive_entry": {
+        "name": "Construction_Male_07/m107_helmet_color.jpg",
+        "method": 0,
+        "flags": 0,
+        "crc32": "304af414",
+        "compressed_size": 163309,
+        "uncompressed_size": 163309,
+        "local_header_offset": 66264714
+      }
+    },
+    {
+      "model_id": "Construction_Male_08",
+      "source_path": "Assets/Avatars/Professions/Construction_Male_08/Textures/m108_body_color.tga",
+      "source_git_blob_expected": "50d49e1d549ba369d1a69964b584b7d1c83248f3",
+      "archive_entry": {
+        "name": "Construction_Male_08/m108_body_color.jpg",
+        "method": 0,
+        "flags": 0,
+        "crc32": "caacf7be",
+        "compressed_size": 755904,
+        "uncompressed_size": 755904,
+        "local_header_offset": 67564348
+      }
+    },
+    {
+      "model_id": "Construction_Male_08",
+      "source_path": "Assets/Avatars/Professions/Construction_Male_08/Textures/m108_head_color.tga",
+      "source_git_blob_expected": "d792a53251663a7ac4c9091a214fca7ea3a23954",
+      "archive_entry": {
+        "name": "Construction_Male_08/m108_head_color.jpg",
+        "method": 0,
+        "flags": 0,
+        "crc32": "9e396d2e",
+        "compressed_size": 852346,
+        "uncompressed_size": 852346,
+        "local_header_offset": 68538758
+      }
+    },
+    {
+      "model_id": "Construction_Male_08",
+      "source_path": "Assets/Avatars/Professions/Construction_Male_08/Textures/m108_helmet_color.tga",
+      "source_git_blob_expected": "3f51f17cc0b7f783993b132463a17391fecd04e2",
+      "archive_entry": {
+        "name": "Construction_Male_08/m108_helmet_color.jpg",
+        "method": 0,
+        "flags": 0,
+        "crc32": "9d93b670",
+        "compressed_size": 126690,
+        "uncompressed_size": 126690,
+        "local_header_offset": 69574784
+      }
+    },
+    {
+      "model_id": "Delivery_Male_01",
+      "source_path": "Assets/Avatars/Professions/Delivery_Male_01/Textures/m112_body_color.tga",
+      "source_git_blob_expected": "a2453085d7c7050948e3b5a80a080f1c3ae329b2",
+      "archive_entry": {
+        "name": "Delivery_Male_01/m112_body_color.jpg",
+        "method": 0,
+        "flags": 0,
+        "crc32": "965b839c",
+        "compressed_size": 1221276,
+        "uncompressed_size": 1221276,
+        "local_header_offset": 70696675
+      }
+    },
+    {
+      "model_id": "Delivery_Male_01",
+      "source_path": "Assets/Avatars/Professions/Delivery_Male_01/Textures/m112_head_color.tga",
+      "source_git_blob_expected": "5e6ef334c1a4af3f8670201d35c0edf7d34725e2",
+      "archive_entry": {
+        "name": "Delivery_Male_01/m112_head_color.jpg",
+        "method": 0,
+        "flags": 0,
+        "crc32": "d05189f0",
+        "compressed_size": 743395,
+        "uncompressed_size": 743395,
+        "local_header_offset": 72119216
+      }
+    },
+    {
+      "model_id": "Gardener_Male_01",
+      "source_path": "Assets/Avatars/Professions/Gardener_Male_01/Textures/m106_body_color.tga",
+      "source_git_blob_expected": "5ccd297d5609765d8d6cfccbc34113a94944d27a",
+      "archive_entry": {
+        "name": "Gardener_Male_01/m106_body_color.jpg",
+        "method": 0,
+        "flags": 0,
+        "crc32": "fce104da",
+        "compressed_size": 558927,
+        "uncompressed_size": 558927,
+        "local_header_offset": 152170940
+      }
+    },
+    {
+      "model_id": "Gardener_Male_01",
+      "source_path": "Assets/Avatars/Professions/Gardener_Male_01/Textures/m106_head_color.tga",
+      "source_git_blob_expected": "cbcb8b66787378c76bb74c810f14208d721606ba",
+      "archive_entry": {
+        "name": "Gardener_Male_01/m106_head_color.jpg",
+        "method": 0,
+        "flags": 0,
+        "crc32": "f3757b8a",
+        "compressed_size": 831160,
+        "uncompressed_size": 831160,
+        "local_header_offset": 152924109
+      }
+    },
+    {
+      "model_id": "Gardener_Male_01",
+      "source_path": "Assets/Avatars/Professions/Gardener_Male_01/Textures/m106_opacity_color.tga",
+      "source_git_blob_expected": "1eda6be82167a0956c40000eaaabe96094c70dbd",
+      "archive_entry": {
+        "name": "Gardener_Male_01/m106_opacity_color.png",
+        "method": 0,
+        "flags": 0,
+        "crc32": "f29dafe5",
+        "compressed_size": 1363361,
+        "uncompressed_size": 1363361,
+        "local_header_offset": 153952655
+      }
+    },
+    {
+      "model_id": "Medical_Female_01",
+      "source_path": "Assets/Avatars/Professions/Medical_Female_01/Textures/f152_body_color.tga",
+      "source_git_blob_expected": "6eda5f78c726625bad60516b742e524637ee3459",
+      "archive_entry": {
+        "name": "Medical_Female_01/f152_body_color.jpg",
+        "method": 0,
+        "flags": 0,
+        "crc32": "d5c60205",
+        "compressed_size": 455811,
+        "uncompressed_size": 455811,
+        "local_header_offset": 233673022
+      }
+    },
+    {
+      "model_id": "Medical_Female_01",
+      "source_path": "Assets/Avatars/Professions/Medical_Female_01/Textures/f152_head_color.tga",
+      "source_git_blob_expected": "13a42d44b341c9f122230bfd16868d7e3dc619d9",
+      "archive_entry": {
+        "name": "Medical_Female_01/f152_head_color.jpg",
+        "method": 0,
+        "flags": 0,
+        "crc32": "e7eb8d5b",
+        "compressed_size": 760255,
+        "uncompressed_size": 760255,
+        "local_header_offset": 234288174
+      }
+    },
+    {
+      "model_id": "Medical_Female_01",
+      "source_path": "Assets/Avatars/Professions/Medical_Female_01/Textures/f152_opacity_color.tga",
+      "source_git_blob_expected": "c2ad85f17b180e2a1da5a08c0b49130222b7af7a",
+      "archive_entry": {
+        "name": "Medical_Female_01/f152_opacity_color.png",
+        "method": 0,
+        "flags": 0,
+        "crc32": "eb34633a",
+        "compressed_size": 806115,
+        "uncompressed_size": 806115,
+        "local_header_offset": 235228247
+      }
+    },
+    {
+      "model_id": "Medical_Female_02",
+      "source_path": "Assets/Avatars/Professions/Medical_Female_02/Textures/f153_body_color.tga",
+      "source_git_blob_expected": "c2440cb565374f0e9780a9f36b14e286d8b77f58",
+      "archive_entry": {
+        "name": "Medical_Female_02/f153_body_color.jpg",
+        "method": 0,
+        "flags": 0,
+        "crc32": "21be3c66",
+        "compressed_size": 541314,
+        "uncompressed_size": 541314,
+        "local_header_offset": 237206246
+      }
+    },
+    {
+      "model_id": "Medical_Female_02",
+      "source_path": "Assets/Avatars/Professions/Medical_Female_02/Textures/f153_head_color.tga",
+      "source_git_blob_expected": "6a51a9a4970b1c8fbc5829ed8e88ad9c394aa3cb",
+      "archive_entry": {
+        "name": "Medical_Female_02/f153_head_color.jpg",
+        "method": 0,
+        "flags": 0,
+        "crc32": "c1ad68cc",
+        "compressed_size": 627729,
+        "uncompressed_size": 627729,
+        "local_header_offset": 237916765
+      }
+    },
+    {
+      "model_id": "Medical_Female_02",
+      "source_path": "Assets/Avatars/Professions/Medical_Female_02/Textures/f153_opacity_color.tga",
+      "source_git_blob_expected": "e3d2d54055c606fac90d5c176a71377bd8d8bf60",
+      "archive_entry": {
+        "name": "Medical_Female_02/f153_opacity_color.png",
+        "method": 0,
+        "flags": 0,
+        "crc32": "3e95e6d1",
+        "compressed_size": 593975,
+        "uncompressed_size": 593975,
+        "local_header_offset": 238687859
+      }
+    },
+    {
+      "model_id": "Medical_Female_02",
+      "source_path": "Assets/Avatars/Professions/Medical_Female_02/Textures/f153_stetoskop_color.tga",
+      "source_git_blob_expected": "9e5a7f7d898bdf8a1ec046dce5591664966ee0d9",
+      "archive_entry": {
+        "name": "Medical_Female_02/f153_stetoskop_color.jpg",
+        "method": 0,
+        "flags": 0,
+        "crc32": "83fa1cbe",
+        "compressed_size": 21557,
+        "uncompressed_size": 21557,
+        "local_header_offset": 239281904
+      }
+    },
+    {
+      "model_id": "Medical_Female_03",
+      "source_path": "Assets/Avatars/Professions/Medical_Female_03/Textures/f154_body_color_blue.tga",
+      "source_git_blob_expected": "f63937f66d033f1a4d854b280bc77847687edc75",
+      "archive_entry": {
+        "name": "Medical_Female_03/f154_body_color_blue.jpg",
+        "method": 0,
+        "flags": 0,
+        "crc32": "37b06f0e",
+        "compressed_size": 669519,
+        "uncompressed_size": 669519,
+        "local_header_offset": 240416555
+      }
+    },
+    {
+      "model_id": "Medical_Female_03",
+      "source_path": "Assets/Avatars/Professions/Medical_Female_03/Textures/f154_head_color.tga",
+      "source_git_blob_expected": "68111c2a73a3c7a5f0d4915f86461faf0e03dcd6",
+      "archive_entry": {
+        "name": "Medical_Female_03/f154_head_color.jpg",
+        "method": 0,
+        "flags": 0,
+        "crc32": "5ca00b8f",
+        "compressed_size": 656646,
+        "uncompressed_size": 656646,
+        "local_header_offset": 241339641
+      }
+    },
+    {
+      "model_id": "Medical_Female_03",
+      "source_path": "Assets/Avatars/Professions/Medical_Female_03/Textures/f154_opacity_color.tga",
+      "source_git_blob_expected": "fef407c359ae03e257944ec1b530cdd1b1f921ea",
+      "archive_entry": {
+        "name": "Medical_Female_03/f154_opacity_color.png",
+        "method": 0,
+        "flags": 0,
+        "crc32": "fd5b4b7b",
+        "compressed_size": 1002969,
+        "uncompressed_size": 1002969,
+        "local_header_offset": 242130441
+      }
+    },
+    {
+      "model_id": "Medical_Male_01",
+      "source_path": "Assets/Avatars/Professions/Medical_Male_01/Textures/m152_body_color.tga",
+      "source_git_blob_expected": "aee1de062c7a59c96fa8528ef97b51ba574a742e",
+      "archive_entry": {
+        "name": "Medical_Male_01/m152_body_color.jpg",
+        "method": 0,
+        "flags": 0,
+        "crc32": "21350105",
+        "compressed_size": 701237,
+        "uncompressed_size": 701237,
+        "local_header_offset": 244152336
+      }
+    },
+    {
+      "model_id": "Medical_Male_01",
+      "source_path": "Assets/Avatars/Professions/Medical_Male_01/Textures/m152_head_color.tga",
+      "source_git_blob_expected": "7d53da68e92a39a224b5df11ab429f9cd1f32e72",
+      "archive_entry": {
+        "name": "Medical_Male_01/m152_head_color.jpg",
+        "method": 0,
+        "flags": 0,
+        "crc32": "84919fa3",
+        "compressed_size": 637461,
+        "uncompressed_size": 637461,
+        "local_header_offset": 245028668
+      }
+    },
+    {
+      "model_id": "Medical_Male_01",
+      "source_path": "Assets/Avatars/Professions/Medical_Male_01/Textures/m152_opacity_color.tga",
+      "source_git_blob_expected": "85521bcee9b307ca431fdad86926e997ce7d3e0a",
+      "archive_entry": {
+        "name": "Medical_Male_01/m152_opacity_color.png",
+        "method": 0,
+        "flags": 0,
+        "crc32": "5540c59a",
+        "compressed_size": 1605380,
+        "uncompressed_size": 1605380,
+        "local_header_offset": 245846680
+      }
+    },
+    {
+      "model_id": "Medical_Male_02",
+      "source_path": "Assets/Avatars/Professions/Medical_Male_02/Textures/m154_body_color_blue.tga",
+      "source_git_blob_expected": "19be527a4ef0b40fa6fa7cec3613d05b349247bc",
+      "archive_entry": {
+        "name": "Medical_Male_02/m154_body_color_blue.jpg",
+        "method": 0,
+        "flags": 0,
+        "crc32": "cb199201",
+        "compressed_size": 661816,
+        "uncompressed_size": 661816,
+        "local_header_offset": 248547485
+      }
+    },
+    {
+      "model_id": "Medical_Male_02",
+      "source_path": "Assets/Avatars/Professions/Medical_Male_02/Textures/m154_head_color.tga",
+      "source_git_blob_expected": "5529918adebc20d594946fb078be05324e8a4468",
+      "archive_entry": {
+        "name": "Medical_Male_02/m154_head_color.jpg",
+        "method": 0,
+        "flags": 0,
+        "crc32": "f05db94a",
+        "compressed_size": 643745,
+        "uncompressed_size": 643745,
+        "local_header_offset": 249462214
+      }
+    },
+    {
+      "model_id": "Medical_Male_02",
+      "source_path": "Assets/Avatars/Professions/Medical_Male_02/Textures/m154_opacity_color.tga",
+      "source_git_blob_expected": "5b304a95d22629e6d9abf3e6515a7e6b236708f6",
+      "archive_entry": {
+        "name": "Medical_Male_02/m154_opacity_color.png",
+        "method": 0,
+        "flags": 0,
+        "crc32": "39909e0b",
+        "compressed_size": 1356545,
+        "uncompressed_size": 1356545,
+        "local_header_offset": 250321373
+      }
+    },
+    {
+      "model_id": "Medical_Male_03",
+      "source_path": "Assets/Avatars/Professions/Medical_Male_03/Textures/m153_body_color.tga",
+      "source_git_blob_expected": "2159913d68a2feadef620ab9bfab838cc7b909b2",
+      "archive_entry": {
+        "name": "Medical_Male_03/m153_body_color.jpg",
+        "method": 0,
+        "flags": 0,
+        "crc32": "0d079af0",
+        "compressed_size": 610746,
+        "uncompressed_size": 610746,
+        "local_header_offset": 252717703
+      }
+    },
+    {
+      "model_id": "Medical_Male_03",
+      "source_path": "Assets/Avatars/Professions/Medical_Male_03/Textures/m153_head_color.tga",
+      "source_git_blob_expected": "1e5156289e3e51e9d38bbb3fbd55f2b631ce2f26",
+      "archive_entry": {
+        "name": "Medical_Male_03/m153_head_color.jpg",
+        "method": 0,
+        "flags": 0,
+        "crc32": "2c40783b",
+        "compressed_size": 673576,
+        "uncompressed_size": 673576,
+        "local_header_offset": 253511418
+      }
+    },
+    {
+      "model_id": "Medical_Male_03",
+      "source_path": "Assets/Avatars/Professions/Medical_Male_03/Textures/m153_stetoskop_color.tga",
+      "source_git_blob_expected": "9e5a7f7d898bdf8a1ec046dce5591664966ee0d9",
+      "archive_entry": {
+        "name": "Medical_Male_03/m153_stetoskop_color.jpg",
+        "method": 0,
+        "flags": 0,
+        "crc32": "83fa1cbe",
+        "compressed_size": 21557,
+        "uncompressed_size": 21557,
+        "local_header_offset": 254349388
+      }
+    },
+    {
+      "model_id": "Pilot_Female_01",
+      "source_path": "Assets/Avatars/Professions/Pilot_Female_01/Textures/f168_body_color.tga",
+      "source_git_blob_expected": "84d87a8e429206a257751be36c036778dc0f64c4",
+      "archive_entry": {
+        "name": "Pilot_Female_01/f168_body_color.jpg",
+        "method": 0,
+        "flags": 0,
+        "crc32": "37f5b3f6",
+        "compressed_size": 395045,
+        "uncompressed_size": 395045,
+        "local_header_offset": 255502029
+      }
+    },
+    {
+      "model_id": "Pilot_Female_01",
+      "source_path": "Assets/Avatars/Professions/Pilot_Female_01/Textures/f168_hat_color.tga",
+      "source_git_blob_expected": "a1295ef41480de2564178f2721111f75d5fc7c5d",
+      "archive_entry": {
+        "name": "Pilot_Female_01/f168_hat_color.jpg",
+        "method": 0,
+        "flags": 0,
+        "crc32": "d31d8947",
+        "compressed_size": 198921,
+        "uncompressed_size": 198921,
+        "local_header_offset": 256069604
+      }
+    },
+    {
+      "model_id": "Pilot_Female_01",
+      "source_path": "Assets/Avatars/Professions/Pilot_Female_01/Textures/f168_head_color.tga",
+      "source_git_blob_expected": "cace14df59675757fe29e9f19db0302d565a1479",
+      "archive_entry": {
+        "name": "Pilot_Female_01/f168_head_color.jpg",
+        "method": 0,
+        "flags": 0,
+        "crc32": "4859002e",
+        "compressed_size": 665467,
+        "uncompressed_size": 665467,
+        "local_header_offset": 256421054
+      }
+    },
+    {
+      "model_id": "Pilot_Female_02",
+      "source_path": "Assets/Avatars/Professions/Pilot_Female_02/Textures/f169_body_color.tga",
+      "source_git_blob_expected": "6d3bc988c3477a454819968f81762d974e87515b",
+      "archive_entry": {
+        "name": "Pilot_Female_02/f169_body_color.jpg",
+        "method": 0,
+        "flags": 0,
+        "crc32": "3e6d0b84",
+        "compressed_size": 426075,
+        "uncompressed_size": 426075,
+        "local_header_offset": 258322414
+      }
+    },
+    {
+      "model_id": "Pilot_Female_02",
+      "source_path": "Assets/Avatars/Professions/Pilot_Female_02/Textures/f169_hat_color.tga",
+      "source_git_blob_expected": "a1295ef41480de2564178f2721111f75d5fc7c5d",
+      "archive_entry": {
+        "name": "Pilot_Female_02/f169_hat_color.jpg",
+        "method": 0,
+        "flags": 0,
+        "crc32": "d31d8947",
+        "compressed_size": 198921,
+        "uncompressed_size": 198921,
+        "local_header_offset": 258911098
+      }
+    },
+    {
+      "model_id": "Pilot_Female_02",
+      "source_path": "Assets/Avatars/Professions/Pilot_Female_02/Textures/f169_head_color.tga",
+      "source_git_blob_expected": "e9c636056a5c8414347653757656f8af4b102b88",
+      "archive_entry": {
+        "name": "Pilot_Female_02/f169_head_color.jpg",
+        "method": 0,
+        "flags": 0,
+        "crc32": "12ce6933",
+        "compressed_size": 761312,
+        "uncompressed_size": 761312,
+        "local_header_offset": 259262548
+      }
+    },
+    {
+      "model_id": "Pilot_Male_01",
+      "source_path": "Assets/Avatars/Professions/Pilot_Male_01/Textures/m150_body_color.tga",
+      "source_git_blob_expected": "91330ca081a2f7f7485f5dcd5b11b599918d7455",
+      "archive_entry": {
+        "name": "Pilot_Male_01/m150_body_color.jpg",
+        "method": 0,
+        "flags": 0,
+        "crc32": "06ea1925",
+        "compressed_size": 364045,
+        "uncompressed_size": 364045,
+        "local_header_offset": 261258633
+      }
+    },
+    {
+      "model_id": "Pilot_Male_01",
+      "source_path": "Assets/Avatars/Professions/Pilot_Male_01/Textures/m150_head_color.tga",
+      "source_git_blob_expected": "319e83895866dfa947dae881da501aec425098c7",
+      "archive_entry": {
+        "name": "Pilot_Male_01/m150_head_color.jpg",
+        "method": 0,
+        "flags": 0,
+        "crc32": "83259a9a",
+        "compressed_size": 485217,
+        "uncompressed_size": 485217,
+        "local_header_offset": 261792028
+      }
+    },
+    {
+      "model_id": "Pilot_Male_02",
+      "source_path": "Assets/Avatars/Professions/Pilot_Male_02/Textures/m151_body_color.tga",
+      "source_git_blob_expected": "448639d2e8dfd34f3d514fd26d5046f6be7136cf",
+      "archive_entry": {
+        "name": "Pilot_Male_02/m151_body_color.jpg",
+        "method": 0,
+        "flags": 0,
+        "crc32": "5e3264bf",
+        "compressed_size": 410263,
+        "uncompressed_size": 410263,
+        "local_header_offset": 263461053
+      }
+    },
+    {
+      "model_id": "Pilot_Male_02",
+      "source_path": "Assets/Avatars/Professions/Pilot_Male_02/Textures/m151_head_color.tga",
+      "source_git_blob_expected": "6db564101b548a69646b85daa28f40b5bd14206f",
+      "archive_entry": {
+        "name": "Pilot_Male_02/m151_head_color.jpg",
+        "method": 0,
+        "flags": 0,
+        "crc32": "7d4bd9c9",
+        "compressed_size": 537550,
+        "uncompressed_size": 537550,
+        "local_header_offset": 264072717
+      }
+    },
+    {
+      "model_id": "Pilot_Male_03",
+      "source_path": "Assets/Avatars/Professions/Pilot_Male_03/Textures/m167_body_color.tga",
+      "source_git_blob_expected": "65edde4de8b240f9573f9a5587fe0820cc726618",
+      "archive_entry": {
+        "name": "Pilot_Male_03/m167_body_color.jpg",
+        "method": 0,
+        "flags": 0,
+        "crc32": "8ad9327b",
+        "compressed_size": 404859,
+        "uncompressed_size": 404859,
+        "local_header_offset": 265777084
+      }
+    },
+    {
+      "model_id": "Pilot_Male_03",
+      "source_path": "Assets/Avatars/Professions/Pilot_Male_03/Textures/m167_head_color.tga",
+      "source_git_blob_expected": "c6751e09735ff9a98d9dd5579bcf77e25f89bbe7",
+      "archive_entry": {
+        "name": "Pilot_Male_03/m167_head_color.jpg",
+        "method": 0,
+        "flags": 0,
+        "crc32": "e5885305",
+        "compressed_size": 821808,
+        "uncompressed_size": 821808,
+        "local_header_offset": 266346473
+      }
+    },
+    {
+      "model_id": "Police_Male_01",
+      "source_path": "Assets/Avatars/Professions/Police_Male_01/Textures/m220_body_color.tga",
+      "source_git_blob_expected": "70959d9c199e1f463f3e237988db9dd36747578d",
+      "archive_entry": {
+        "name": "Police_Male_01/m220_body_color.jpg",
+        "method": 0,
+        "flags": 0,
+        "crc32": "870f483a",
+        "compressed_size": 529414,
+        "uncompressed_size": 529414,
+        "local_header_offset": 268477688
+      }
+    },
+    {
+      "model_id": "Police_Male_01",
+      "source_path": "Assets/Avatars/Professions/Police_Male_01/Textures/m220_equipment_color.tga",
+      "source_git_blob_expected": "1bd58770e8519ec8d6eee8735c67d4f5818a4712",
+      "archive_entry": {
+        "name": "Police_Male_01/m220_equipment_color.jpg",
+        "method": 0,
+        "flags": 0,
+        "crc32": "2d96146f",
+        "compressed_size": 47894,
+        "uncompressed_size": 47894,
+        "local_header_offset": 269197118
+      }
+    },
+    {
+      "model_id": "Police_Male_01",
+      "source_path": "Assets/Avatars/Professions/Police_Male_01/Textures/m220_head_color.tga",
+      "source_git_blob_expected": "f9cf251380ed8822667ec6f42e05c66e406b9bf2",
+      "archive_entry": {
+        "name": "Police_Male_01/m220_head_color.jpg",
+        "method": 0,
+        "flags": 0,
+        "crc32": "1f08cea7",
+        "compressed_size": 760520,
+        "uncompressed_size": 760520,
+        "local_header_offset": 269393245
+      }
+    },
+    {
+      "model_id": "Police_Male_01",
+      "source_path": "Assets/Avatars/Professions/Police_Male_01/Textures/m220_pistol_color.tga",
+      "source_git_blob_expected": "18ba972ac37c4c06e0d0ae8c2315555075a80cda",
+      "archive_entry": {
+        "name": "Police_Male_01/m220_pistol_color.jpg",
+        "method": 0,
+        "flags": 0,
+        "crc32": "46ae4ff9",
+        "compressed_size": 122975,
+        "uncompressed_size": 122975,
+        "local_header_offset": 270443183
+      }
+    },
+    {
+      "model_id": "Police_Male_03",
+      "source_path": "Assets/Avatars/Professions/Police_Male_03/Textures/m156_body_color.tga",
+      "source_git_blob_expected": "45d54ac0866faf0a7457148a01e3f289a906e9ef",
+      "archive_entry": {
+        "name": "Police_Male_03/m156_body_color.jpg",
+        "method": 0,
+        "flags": 0,
+        "crc32": "f7e8a1ee",
+        "compressed_size": 433432,
+        "uncompressed_size": 433432,
+        "local_header_offset": 271983218
+      }
+    },
+    {
+      "model_id": "Police_Male_03",
+      "source_path": "Assets/Avatars/Professions/Police_Male_03/Textures/m156_equipment_color.tga",
+      "source_git_blob_expected": "cb71d60868d4724b4fd19ba7038f8daeb391398a",
+      "archive_entry": {
+        "name": "Police_Male_03/m156_equipment_color.jpg",
+        "method": 0,
+        "flags": 0,
+        "crc32": "a5f1e48a",
+        "compressed_size": 157700,
+        "uncompressed_size": 157700,
+        "local_header_offset": 272608090
+      }
+    },
+    {
+      "model_id": "Police_Male_03",
+      "source_path": "Assets/Avatars/Professions/Police_Male_03/Textures/m156_head_color.tga",
+      "source_git_blob_expected": "99dbc738640d40548f9b99bc752ee8d2a3d55c0f",
+      "archive_entry": {
+        "name": "Police_Male_03/m156_head_color.jpg",
+        "method": 0,
+        "flags": 0,
+        "crc32": "3ec957b4",
+        "compressed_size": 864129,
+        "uncompressed_size": 864129,
+        "local_header_offset": 272963147
+      }
+    },
+    {
+      "model_id": "Police_Male_03",
+      "source_path": "Assets/Avatars/Professions/Police_Male_03/Textures/m156_pistol_color.tga",
+      "source_git_blob_expected": "18ba972ac37c4c06e0d0ae8c2315555075a80cda",
+      "archive_entry": {
+        "name": "Police_Male_03/m156_pistol_color.jpg",
+        "method": 0,
+        "flags": 0,
+        "crc32": "46ae4ff9",
+        "compressed_size": 122975,
+        "uncompressed_size": 122975,
+        "local_header_offset": 274067991
+      }
+    },
+    {
+      "model_id": "Police_Male_03",
+      "source_path": "Assets/Avatars/Professions/Police_Male_03/Textures/m172_body_color.tga",
+      "source_git_blob_expected": "6f8deafd4ffd6f82527f0020034a369940af3164",
+      "archive_entry": {
+        "name": "Police_Male_03/m172_body_color.jpg",
+        "method": 0,
+        "flags": 0,
+        "crc32": "cbf30f6a",
+        "compressed_size": 477712,
+        "uncompressed_size": 477712,
+        "local_header_offset": 274379403
+      }
+    },
+    {
+      "model_id": "Police_Male_03",
+      "source_path": "Assets/Avatars/Professions/Police_Male_03/Textures/m172_equipment_color.tga",
+      "source_git_blob_expected": "658394654e35207e8711f4608e5e5944dc2a7a2a",
+      "archive_entry": {
+        "name": "Police_Male_03/m172_equipment_color.jpg",
+        "method": 0,
+        "flags": 0,
+        "crc32": "2e9e9e92",
+        "compressed_size": 660866,
+        "uncompressed_size": 660866,
+        "local_header_offset": 275063020
+      }
+    },
+    {
+      "model_id": "Police_Male_03",
+      "source_path": "Assets/Avatars/Professions/Police_Male_03/Textures/m172_head_color.tga",
+      "source_git_blob_expected": "a587e64c6599f5283e8c3b1597db87792ec1ba44",
+      "archive_entry": {
+        "name": "Police_Male_03/m172_head_color.jpg",
+        "method": 0,
+        "flags": 0,
+        "crc32": "3109a438",
+        "compressed_size": 804808,
+        "uncompressed_size": 804808,
+        "local_header_offset": 275961590
+      }
+    },
+    {
+      "model_id": "Police_Male_03",
+      "source_path": "Assets/Avatars/Professions/Police_Male_03/Textures/m172_pistol_color.tga",
+      "source_git_blob_expected": "18ba972ac37c4c06e0d0ae8c2315555075a80cda",
+      "archive_entry": {
+        "name": "Police_Male_03/m172_pistol_color.jpg",
+        "method": 0,
+        "flags": 0,
+        "crc32": "46ae4ff9",
+        "compressed_size": 122975,
+        "uncompressed_size": 122975,
+        "local_header_offset": 276981610
+      }
+    },
+    {
+      "model_id": "Police_Male_04",
+      "source_path": "Assets/Avatars/Professions/Police_Male_04/Textures/m173_body_color.tga",
+      "source_git_blob_expected": "028f96e627b0bfccc521d1548c6d8619b7a1f7a7",
+      "archive_entry": {
+        "name": "Police_Male_04/m173_body_color.jpg",
+        "method": 0,
+        "flags": 0,
+        "crc32": "595999b4",
+        "compressed_size": 415679,
+        "uncompressed_size": 415679,
+        "local_header_offset": 278523406
+      }
+    },
+    {
+      "model_id": "Police_Male_04",
+      "source_path": "Assets/Avatars/Professions/Police_Male_04/Textures/m173_equipment_color.tga",
+      "source_git_blob_expected": "0b336228145ea996b7cfdad7d2f2e3a597ea6157",
+      "archive_entry": {
+        "name": "Police_Male_04/m173_equipment_color.jpg",
+        "method": 0,
+        "flags": 0,
+        "crc32": "a18ca280",
+        "compressed_size": 699049,
+        "uncompressed_size": 699049,
+        "local_header_offset": 279156001
+      }
+    },
+    {
+      "model_id": "Police_Male_04",
+      "source_path": "Assets/Avatars/Professions/Police_Male_04/Textures/m173_head_color.tga",
+      "source_git_blob_expected": "2377ff350e4a27d424a29e39c48d7c58fe5e962c",
+      "archive_entry": {
+        "name": "Police_Male_04/m173_head_color.jpg",
+        "method": 0,
+        "flags": 0,
+        "crc32": "d4045837",
+        "compressed_size": 851432,
+        "uncompressed_size": 851432,
+        "local_header_offset": 280149951
+      }
+    },
+    {
+      "model_id": "Police_Male_04",
+      "source_path": "Assets/Avatars/Professions/Police_Male_04/Textures/m173_pistol_color.tga",
+      "source_git_blob_expected": "d49278e4164b4b733b6474af7794cb5ae9253781",
+      "archive_entry": {
+        "name": "Police_Male_04/m173_pistol_color.jpg",
+        "method": 0,
+        "flags": 0,
+        "crc32": "5408ba7a",
+        "compressed_size": 130301,
+        "uncompressed_size": 130301,
+        "local_header_offset": 281209641
+      }
+    },
+    {
+      "model_id": "Police_Male_05",
+      "source_path": "Assets/Avatars/Professions/Police_Male_05/Textures/m169_body_color.tga",
+      "source_git_blob_expected": "f545ec40c2287fd0bc06ec5e07eecd4361b7e6da",
+      "archive_entry": {
+        "name": "Police_Male_05/m169_body_color.jpg",
+        "method": 0,
+        "flags": 0,
+        "crc32": "59e6581b",
+        "compressed_size": 399558,
+        "uncompressed_size": 399558,
+        "local_header_offset": 282519743
+      }
+    },
+    {
+      "model_id": "Police_Male_05",
+      "source_path": "Assets/Avatars/Professions/Police_Male_05/Textures/m169_head_color.tga",
+      "source_git_blob_expected": "920c0c2e44daac6e113d980e074c55f1c857fdeb",
+      "archive_entry": {
+        "name": "Police_Male_05/m169_head_color.jpg",
+        "method": 0,
+        "flags": 0,
+        "crc32": "30805837",
+        "compressed_size": 711814,
+        "uncompressed_size": 711814,
+        "local_header_offset": 283089274
+      }
+    },
+    {
+      "model_id": "Police_Male_06",
+      "source_path": "Assets/Avatars/Professions/Police_Male_06/Textures/m175_body_color.tga",
+      "source_git_blob_expected": "fd98bccd5f4108c115edb99bac6a326a220f7a6b",
+      "archive_entry": {
+        "name": "Police_Male_06/m175_body_color.jpg",
+        "method": 0,
+        "flags": 0,
+        "crc32": "3be188c4",
+        "compressed_size": 679528,
+        "uncompressed_size": 679528,
+        "local_header_offset": 284992871
+      }
+    },
+    {
+      "model_id": "Police_Male_06",
+      "source_path": "Assets/Avatars/Professions/Police_Male_06/Textures/m175_head_color.tga",
+      "source_git_blob_expected": "c3fbe4583740095e031c9e148749cb74703b655c",
+      "archive_entry": {
+        "name": "Police_Male_06/m175_head_color.jpg",
+        "method": 0,
+        "flags": 0,
+        "crc32": "47abbf85",
+        "compressed_size": 681888,
+        "uncompressed_size": 681888,
+        "local_header_offset": 285914179
+      }
+    },
+    {
+      "model_id": "Police_Male_07",
+      "source_path": "Assets/Avatars/Professions/Police_Male_07/Textures/m176_body_color.tga",
+      "source_git_blob_expected": "a9223e6b8ef5c5573c9b4641a4400d9be9a497ea",
+      "archive_entry": {
+        "name": "Police_Male_07/m176_body_color.jpg",
+        "method": 0,
+        "flags": 0,
+        "crc32": "70d20450",
+        "compressed_size": 520436,
+        "uncompressed_size": 520436,
+        "local_header_offset": 287729547
+      }
+    },
+    {
+      "model_id": "Police_Male_07",
+      "source_path": "Assets/Avatars/Professions/Police_Male_07/Textures/m176_head_color.tga",
+      "source_git_blob_expected": "3296dd95e172fe14a070da43438d422b71d3284e",
+      "archive_entry": {
+        "name": "Police_Male_07/m176_head_color.jpg",
+        "method": 0,
+        "flags": 0,
+        "crc32": "fd6f559c",
+        "compressed_size": 649082,
+        "uncompressed_size": 649082,
+        "local_header_offset": 288413753
+      }
+    },
+    {
+      "model_id": "Security_Female_01",
+      "source_path": "Assets/Avatars/Professions/Security_Female_01/Textures/f170_body_color.tga",
+      "source_git_blob_expected": "8971067dc0b6b33ccc2c9e70e7c93d6ee8d9775f",
+      "archive_entry": {
+        "name": "Security_Female_01/f170_body_color.jpg",
+        "method": 0,
+        "flags": 0,
+        "crc32": "cfdc9353",
+        "compressed_size": 429895,
+        "uncompressed_size": 429895,
+        "local_header_offset": 290456176
+      }
+    },
+    {
+      "model_id": "Security_Female_01",
+      "source_path": "Assets/Avatars/Professions/Security_Female_01/Textures/f170_hat_color.tga",
+      "source_git_blob_expected": "efd7c886f7f0bc14fcb23fe74069de470ebb0e73",
+      "archive_entry": {
+        "name": "Security_Female_01/f170_hat_color.jpg",
+        "method": 0,
+        "flags": 0,
+        "crc32": "10b8671c",
+        "compressed_size": 193604,
+        "uncompressed_size": 193604,
+        "local_header_offset": 291127707
+      }
+    },
+    {
+      "model_id": "Security_Female_01",
+      "source_path": "Assets/Avatars/Professions/Security_Female_01/Textures/f170_head_color.tga",
+      "source_git_blob_expected": "6ce3ce689f5960fe0f657d5b1755e6c1795b09d0",
+      "archive_entry": {
+        "name": "Security_Female_01/f170_head_color.jpg",
+        "method": 0,
+        "flags": 0,
+        "crc32": "fb42b5c3",
+        "compressed_size": 695105,
+        "uncompressed_size": 695105,
+        "local_header_offset": 291474818
+      }
+    },
+    {
+      "model_id": "Security_Female_01",
+      "source_path": "Assets/Avatars/Professions/Security_Female_01/Textures/f170_pistol_color.tga",
+      "source_git_blob_expected": "18ba972ac37c4c06e0d0ae8c2315555075a80cda",
+      "archive_entry": {
+        "name": "Security_Female_01/f170_pistol_color.jpg",
+        "method": 0,
+        "flags": 0,
+        "crc32": "46ae4ff9",
+        "compressed_size": 122975,
+        "uncompressed_size": 122975,
+        "local_header_offset": 292345405
+      }
+    },
+    {
+      "model_id": "Security_Male_01",
+      "source_path": "Assets/Avatars/Professions/Security_Male_01/Textures/m171_body_color.tga",
+      "source_git_blob_expected": "d4a45f13114d5d802e70ee9256b71c8642344246",
+      "archive_entry": {
+        "name": "Security_Male_01/m171_body_color.jpg",
+        "method": 0,
+        "flags": 0,
+        "crc32": "3a74d17e",
+        "compressed_size": 394988,
+        "uncompressed_size": 394988,
+        "local_header_offset": 293752428
+      }
+    },
+    {
+      "model_id": "Security_Male_01",
+      "source_path": "Assets/Avatars/Professions/Security_Male_01/Textures/m171_equipment_color.tga",
+      "source_git_blob_expected": "dfaf5db3ac28095341f841b480cecba3eba516b4",
+      "archive_entry": {
+        "name": "Security_Male_01/m171_equipment_color.jpg",
+        "method": 0,
+        "flags": 0,
+        "crc32": "d51c4648",
+        "compressed_size": 526984,
+        "uncompressed_size": 526984,
+        "local_header_offset": 294324593
+      }
+    },
+    {
+      "model_id": "Security_Male_01",
+      "source_path": "Assets/Avatars/Professions/Security_Male_01/Textures/m171_head_color.tga",
+      "source_git_blob_expected": "6b0e168501ef16e81e21feab7ac6a3d8c613d945",
+      "archive_entry": {
+        "name": "Security_Male_01/m171_head_color.jpg",
+        "method": 0,
+        "flags": 0,
+        "crc32": "bb74a65d",
+        "compressed_size": 906231,
+        "uncompressed_size": 906231,
+        "local_header_offset": 295188951
+      }
+    },
+    {
+      "model_id": "Sports_Female_02",
+      "source_path": "Assets/Avatars/Professions/Sports_Female_02/Textures/f013_body_color.tga",
+      "source_git_blob_expected": "73b94869174021c871b8efc199b1b78d23e43559",
+      "archive_entry": {
+        "name": "Sports_Female_02/f013_body_color.jpg",
+        "method": 0,
+        "flags": 0,
+        "crc32": "417f80f4",
+        "compressed_size": 519199,
+        "uncompressed_size": 519199,
+        "local_header_offset": 297519461
+      }
+    },
+    {
+      "model_id": "Sports_Female_02",
+      "source_path": "Assets/Avatars/Professions/Sports_Female_02/Textures/f013_head_color.tga",
+      "source_git_blob_expected": "1985d9eb2cdc1df50020cf73848dce1716c6165e",
+      "archive_entry": {
+        "name": "Sports_Female_02/f013_head_color.jpg",
+        "method": 0,
+        "flags": 0,
+        "crc32": "6dc49e40",
+        "compressed_size": 614111,
+        "uncompressed_size": 614111,
+        "local_header_offset": 298238183
+      }
+    },
+    {
+      "model_id": "Sports_Female_02",
+      "source_path": "Assets/Avatars/Professions/Sports_Female_02/Textures/f013_opacity_color.tga",
+      "source_git_blob_expected": "8897f1280689b5aab5ed6ea089880a3a7d17319c",
+      "archive_entry": {
+        "name": "Sports_Female_02/f013_opacity_color.png",
+        "method": 0,
+        "flags": 0,
+        "crc32": "647075f0",
+        "compressed_size": 931772,
+        "uncompressed_size": 931772,
+        "local_header_offset": 299016956
+      }
+    },
+    {
+      "model_id": "Sports_Male_02",
+      "source_path": "Assets/Avatars/Professions/Sports_Male_02/Textures/m301_body_color.tga",
+      "source_git_blob_expected": "88777511e802c39a97701393aca916c8ca7b3ff8",
+      "archive_entry": {
+        "name": "Sports_Male_02/m301_body_color.jpg",
+        "method": 0,
+        "flags": 0,
+        "crc32": "9bbc34cf",
+        "compressed_size": 733158,
+        "uncompressed_size": 733158,
+        "local_header_offset": 300945138
+      }
+    },
+    {
+      "model_id": "Sports_Male_02",
+      "source_path": "Assets/Avatars/Professions/Sports_Male_02/Textures/m301_head_color.tga",
+      "source_git_blob_expected": "27b77586c21bb0920a26fc0f0796ea595177cdff",
+      "archive_entry": {
+        "name": "Sports_Male_02/m301_head_color.jpg",
+        "method": 0,
+        "flags": 0,
+        "crc32": "88a99ab6",
+        "compressed_size": 693004,
+        "uncompressed_size": 693004,
+        "local_header_offset": 301873102
+      }
+    },
+    {
+      "model_id": "Sports_Male_03",
+      "source_path": "Assets/Avatars/Professions/Sports_Male_03/Textures/m300_body_color.tga",
+      "source_git_blob_expected": "6c4920e8c657e9e829326fce37c6e65447922259",
+      "archive_entry": {
+        "name": "Sports_Male_03/m300_body_color.jpg",
+        "method": 0,
+        "flags": 0,
+        "crc32": "cfcb269e",
+        "compressed_size": 757918,
+        "uncompressed_size": 757918,
+        "local_header_offset": 303936997
+      }
+    },
+    {
+      "model_id": "Sports_Male_03",
+      "source_path": "Assets/Avatars/Professions/Sports_Male_03/Textures/m300_head_color.tga",
+      "source_git_blob_expected": "8acd8ddcbc5d2ede2756d30afcc1d84c75b299c5",
+      "archive_entry": {
+        "name": "Sports_Male_03/m300_head_color.jpg",
+        "method": 0,
+        "flags": 0,
+        "crc32": "dfddf365",
+        "compressed_size": 836190,
+        "uncompressed_size": 836190,
+        "local_header_offset": 304896117
+      }
+    },
+    {
+      "model_id": "Sports_Male_03",
+      "source_path": "Assets/Avatars/Professions/Sports_Male_03/Textures/m300_opacity_color.tga",
+      "source_git_blob_expected": "7cc874572152015161e98069bd1400dc301b6ebd",
+      "archive_entry": {
+        "name": "Sports_Male_03/m300_opacity_color.png",
+        "method": 0,
+        "flags": 0,
+        "crc32": "1b557129",
+        "compressed_size": 759988,
+        "uncompressed_size": 759988,
+        "local_header_offset": 305912435
+      }
+    },
+    {
+      "model_id": "Sports_Male_04",
+      "source_path": "Assets/Avatars/Professions/Sports_Male_04/Textures/m026_body_color.tga",
+      "source_git_blob_expected": "60558a42a11ede73bd6f612d5119640de2836c6e",
+      "archive_entry": {
+        "name": "Sports_Male_04/m026_body_color.jpg",
+        "method": 0,
+        "flags": 0,
+        "crc32": "a40585f5",
+        "compressed_size": 663988,
+        "uncompressed_size": 663988,
+        "local_header_offset": 307641742
+      }
+    },
+    {
+      "model_id": "Sports_Male_04",
+      "source_path": "Assets/Avatars/Professions/Sports_Male_04/Textures/m026_head_color.tga",
+      "source_git_blob_expected": "17383635513bfbca88dcf6514a6ea9c8c101052a",
+      "archive_entry": {
+        "name": "Sports_Male_04/m026_head_color.jpg",
+        "method": 0,
+        "flags": 0,
+        "crc32": "7abf38d5",
+        "compressed_size": 711402,
+        "uncompressed_size": 711402,
+        "local_header_offset": 308477089
+      }
+    },
+    {
+      "model_id": "Wood_Male_01",
+      "source_path": "Assets/Avatars/Professions/Wood_Male_01/Textures/m110_body_color.tga",
+      "source_git_blob_expected": "0af41e390f173cdf145acb21a84d49e78449f389",
+      "archive_entry": {
+        "name": "Wood_Male_01/m110_body_color.jpg",
+        "method": 0,
+        "flags": 0,
+        "crc32": "3d6bf804",
+        "compressed_size": 832638,
+        "uncompressed_size": 832638,
+        "local_header_offset": 310382709
+      }
+    },
+    {
+      "model_id": "Wood_Male_01",
+      "source_path": "Assets/Avatars/Professions/Wood_Male_01/Textures/m110_head_color.tga",
+      "source_git_blob_expected": "6e878ffd5c130f72692e7173de09c1f60cfffb98",
+      "archive_entry": {
+        "name": "Wood_Male_01/m110_head_color.jpg",
+        "method": 0,
+        "flags": 0,
+        "crc32": "452cc3be",
+        "compressed_size": 816326,
+        "uncompressed_size": 816326,
+        "local_header_offset": 311446544
+      }
+    }
+  ],
+  "entries": [
+    {
+      "name": "CREDITS.md",
+      "method": 8,
+      "flags": 0,
+      "crc32": "7b1ec992",
+      "compressed_size": 692,
+      "uncompressed_size": 2110,
+      "local_header_offset": 0
+    },
+    {
+      "name": "LICENSE.md",
+      "method": 8,
+      "flags": 0,
+      "crc32": "cbe1c9fb",
+      "compressed_size": 625,
+      "uncompressed_size": 1066,
+      "local_header_offset": 732
+    }
+  ],
+  "metadata": {
+    "LICENSE.md": "MIT License\n\nCopyright (c) 2020 Microsoft\n\nPermission is hereby granted, free of charge, to any person obtaining a copy\nof this software and associated documentation files (the \"Software\"), to deal\nin the Software without restriction, including without limitation the rights\nto use, copy, modify, merge, publish, distribute, sublicense, and/or sell\ncopies of the Software, and to permit persons to whom the Software is\nfurnished to do so, subject to the following conditions:\n\nThe above copyright notice and this permission notice shall be included in all\ncopies or substantial portions of the Software.\n\nTHE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR\nIMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,\nFITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE\nAUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER\nLIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,\nOUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE\nSOFTWARE.\n",
+    "CREDITS.md": "# Passenger avatars\n\nThe Microsoft Rocketbox Avatar Library, (c) Microsoft Corporation,\nMIT License (LICENSE.md), https://github.com/microsoft/Microsoft-Rocketbox.\nGonzalez-Franco et al., \"The Rocketbox library and the utility of freely available rigged avatars\",\nFrontiers in Virtual Reality, 2020, doi:10.3389/frvir.2020.561558.\n\nTaken unchanged: the `_facial.fbx` meshes with their blend shapes (ARKit blend shapes by Fang Ma and\nMatias Volonte). The textures are converted from TGA (colour as JPEG / PNG, normal maps at half size).\n\n91 avatars: Female_Adult_01, Female_Adult_02, Female_Adult_03, Female_Adult_04, Female_Adult_05, Female_Adult_06, Female_Adult_07, Female_Adult_08, Female_Adult_09, Female_Adult_10, Female_Adult_11, Female_Adult_12, Female_Adult_13, Female_Adult_14, Female_Adult_15, Female_Adult_16, Female_Adult_17, Female_Party_01, Female_Party_02, Male_Adult_01, Male_Adult_02, Male_Adult_03, Male_Adult_04, Male_Adult_05, Male_Adult_06, Male_Adult_07, Male_Adult_08, Male_Adult_09, Male_Adult_10, Male_Adult_11, Male_Adult_12, Male_Adult_13, Male_Adult_14, Male_Adult_15, Male_Adult_16, Male_Adult_17, Male_Adult_18, Male_Adult_19, Male_Adult_20, Male_Adult_21, Female_Child_01, Female_Child_02, Male_Child_01, Male_Child_02, Business_Female_01, Business_Female_02, Business_Female_03, Business_Female_04, Business_Male_01, Business_Male_02, Business_Male_03, Business_Male_04, Business_Male_05, Business_Male_06, Business_Male_07, Chef_Female_01, Construction_Female_01, Construction_Male_01, Construction_Male_02, Construction_Male_03, Construction_Male_04, Construction_Male_05, Construction_Male_06, Construction_Male_07, Construction_Male_08, Delivery_Male_01, Gardener_Male_01, Medical_Female_01, Medical_Female_02, Medical_Female_03, Medical_Male_01, Medical_Male_02, Medical_Male_03, Pilot_Female_01, Pilot_Female_02, Pilot_Male_01, Pilot_Male_02, Pilot_Male_03, Police_Male_01, Police_Male_03, Police_Male_04, Police_Male_05, Police_Male_06, Police_Male_07, Security_Female_01, Security_Male_01, Sports_Female_02, Sports_Male_02, Sports_Male_03, Sports_Male_04, Wood_Male_01.\n"
+  }
+}

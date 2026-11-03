@@ -218,10 +218,11 @@ test('switching realistic, YuLan, pixel and legacy solid characters preserves tr
   const walker = entry.walker
   const queue = [...entry.queue]
   const statistics = renderer.getStats()
-  const visible = [], yulan = [], realistic = []
+  const visible = [], yulan = [], realistic = [], filters=[]
+  let ready=false
   renderer.pixelBatch = { setVisible: value => visible.push(value) }
-  renderer.yulanCharacterBatch = { setVisible: value => yulan.push(value) }
-  renderer.realCharacterBatch = { setVisible: value => realistic.push(value) }
+  renderer.yulanCharacterBatch = { setVisible: value => yulan.push(value),setEntryFilter:filter=>filters.push(filter) }
+  renderer.realCharacterBatch = { setVisible: value => realistic.push(value),isReady:()=>ready }
   for (const style of ['realistic', 'pixel', 'solid', 'yulan3d', 'pixel']) {
     renderer.setCharacterStyle(style)
     assert.deepEqual(entry.figure.position, position)
@@ -232,8 +233,22 @@ test('switching realistic, YuLan, pixel and legacy solid characters preserves tr
     assert.equal(renderer.characterBatch.group.visible, style === 'solid')
   }
   assert.deepEqual(visible, [false, true, false, false, true])
-  assert.deepEqual(yulan, [false, false, false, true, false])
+  assert.deepEqual(yulan, [true, false, false, true, false])
   assert.deepEqual(realistic, [true, false, false, false, false])
+  assert.equal(filters[0](entry),true,'pending real models retain a visible fallback')
+  ready=true;assert.equal(filters[0](entry),false,'fallback disappears when the real actor becomes ready')
+  assert.deepEqual(filters.slice(1),[null,null,null,null])
+})
+
+test('changing the appearance pool preserves current movement, queues and replay state',async()=>{
+  const {renderer,entry}=world();renderer.playEvent(purchase('pool-a'));renderer.playEvent(purchase('pool-b','merchant_002'))
+  renderer.updateWalkers(.1);renderer.setPlaying(false)
+  const before=entry.figure.position.clone(),trip=entry.walker,queue=[...entry.queue],stats=renderer.getStats(),pools=[]
+  renderer.realCharacterBatch={setPool:async pool=>pools.push(pool),getStats:()=>({available:115,visibleReady:0,visibleTotal:1})}
+  for(const pool of ['adults','children','professions','all'])await renderer.setCharacterPool(pool)
+  assert.deepEqual(pools,['adults','children','professions','all'])
+  assert.deepEqual(entry.figure.position,before);assert.equal(entry.walker,trip);assert.deepEqual(entry.queue,queue)
+  assert.deepEqual(renderer.getStats(),stats);assert.equal(renderer.playing,false)
 })
 
 test('optional voxel characters and YuLan buildings keep the same paused trip, queues and time', async () => {

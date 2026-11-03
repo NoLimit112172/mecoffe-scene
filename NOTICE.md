@@ -45,10 +45,12 @@ decor40–45 与备选体素人物的 RGBA 通过有限厚度挤出、透明过�
 
 里程碑 5 的分层底座、校园与校外路面高度、人物碰撞半径、门口站位、额外绕行与等待均属于展示层。原始 OSM 文件、步行图、地点映射、回放数据与 A* 返回路径不因这些显示调整而修改。相机改变时可能重新排布显示人物，以容纳最小屏幕尺寸；不得把该排布或动画用时作为 OASIS 位置、通行或消费决策结果。
 
-## Microsoft Rocketbox 写实人物试用
+## Microsoft Rocketbox 写实人物全集
 
-四个便装人物 `Female_Adult_01`、`Female_Adult_03`、`Male_Adult_01`、`Male_Adult_14` 来自 [Microsoft Rocketbox Avatar Library](https://github.com/microsoft/Microsoft-Rocketbox)，固定提交 `0943055db6ec570bcef9f2c8b41c9e5467c808f9`，按上游 MIT License 使用，Copyright (c) 2020 Microsoft。完整原许可位于 `frontend/public/mecoffe/assets3d/rocketbox/LICENSE.md`，保留版权及许可声明。原 FBX、配套贴图来源、下载哈希与运行文件派生步骤记录在同目录 `manifest.json`。
+115套标准人形模型（40成年人、4儿童、71职业装）来自 [Microsoft Rocketbox Avatar Library](https://github.com/microsoft/Microsoft-Rocketbox)，固定提交 `0943055db6ec570bcef9f2c8b41c9e5467c808f9`，按上游 MIT License 使用，Copyright (c) 2020 Microsoft。完整原许可为 `frontend/public/mecoffe/assets3d/rocketbox/LICENSE.md`。所有标准FBX均保存原字节并核对官方Git blob，逐条来源见manifest。动物、重复facial导出、动画和制作源不属于本次人形库。
 
-本轮只获取四个人物网格及必要的颜色/透明贴图，未获取动画包。运行时采用原骨骼及项目程序生成的走路、待机与持杯姿态。TGA 派生为最长边1024的本地 PNG，记录尺寸、重采样与哈希；此处理不改变原模型许可。人物 ID 的外观选型为展示用途，不代表团队画像中的真实人像。
+贴图有两种可追溯的准备路径：已取得原TGA者核对官方blob与原始SHA256后本地转换；其他部分来自 [openOMSI avatars-1](https://github.com/openOMSI-org/openOMSI/releases/tag/avatars-1) 的同源预转换色图（JPEG或PNG），再本地缩小。后一路逐条保留release/tag、条目CRC、实际文件SHA256及二次JPEG有损说明；未取得的原TGA原始SHA256留空，不声称本地完整验证。派生包只取所需ZIP条目，GitHub公布的整包SHA256作为出处记录，不冒充已完整下载验证。额外许可、CREDITS及详细说明保存在 `rocketbox/derivatives/openomsi/`，原Microsoft许可同样保留。
 
-Three.js FBXLoader、SkeletonUtils 与既有 Three.js 同属其 MIT 代码，使用当前已安装版本，没有新增模型云服务、运行时外链或软件依赖。
+所有运行贴图均为本地PNG：脸/合图最长1024像素，身体与透明部件最长512，保留透明通道。这些格式/分辨率处理不改变原许可。待机、行走及持杯姿态由项目程序驱动骨骼，没有导入外部动作包。显示外观按ID稳定复用，不代表团队画像中人物的真实人像，也不推断性别、年龄或职业。
+
+Three.js FBXLoader、SkeletonUtils与既有Three.js同属其MIT代码；没有新增模型云服务或运行时外链。预下载/转换脚本仅在准备素材时使用来源中记录的公开仓库、发布包与内容分发镜像，并校验相应原始或派生文件；网页运行不依赖这些远程地址。

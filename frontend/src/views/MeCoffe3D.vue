@@ -6,9 +6,10 @@
         <nav aria-label="场景数据模式" class="mode-switch">
           <button v-for="mode in modes" :key="mode.key" :class="{ active: requestedMode === mode.key }" :aria-pressed="requestedMode === mode.key" :disabled="loading" @click="loadScene(mode.key)">{{ mode.label }}</button>
         </nav>
-        <Campus3DVisualControls v-model:character-style="characterStyle" v-model:quality="quality" v-model:cycle="dayCycle" v-model:hour="previewHour" :clock="lightClock.label" />
+        <Campus3DVisualControls v-model:character-style="characterStyle" v-model:character-pool="characterPool" v-model:quality="quality" v-model:cycle="dayCycle" v-model:hour="previewHour" :clock="lightClock.label" />
         <span v-if="styleBusy" role="status" class="style-status">正在准备三维素材…</span>
         <RouterLink to="/mecoffe" class="old-page">二维沙盘 ↗</RouterLink>
+        <RouterLink to="/mecoffe3d/assets?source=rocketbox" class="old-page">人物素材库 ↗</RouterLink>
       </div>
     </header>
 
@@ -18,6 +19,7 @@
 
     <template v-if="index && !loadError">
       <div class="data-notice" :class="requestedMode" data-testid="data-notice">{{ dataNotice }}</div>
+      <div v-if="characterStyle === 'realistic'" class="data-notice character-loading" role="status"><span>写实外观库 {{ characterStatus.available || 115 }} 款 · 当前可见 {{ characterStatus.visibleReady || 0 }}/{{ characterStatus.visibleTotal || 0 }} 已就绪。<template v-if="characterStatus.visibleReady < characterStatus.visibleTotal">其余暂用 YuLan 外观，模型就绪后自动替换。</template></span><button v-if="characterStatus.failed" @click="renderer?.retryCharacters()">重试 {{ characterStatus.failed }} 个模型</button></div>
       <section class="kpis" aria-label="回放指标">
         <div><span>{{ isNetwork ? '人物关系输入' : currentDay.label }}</span><strong>{{ scene.people.length }}<small> 人</small></strong><em>快照 {{ meta.snapshot_revision ? `v${meta.snapshot_revision}` : '历史版本' }}</em></div>
         <div><span>初始关注关系</span><strong>{{ follows.length }}<small> 条</small></strong><em>{{ isNetwork ? '静态网络，尚未运行' : '与原数据保持一致' }}</em></div>
@@ -57,7 +59,7 @@
       </main>
 
       <footer class="timeline-panel">
-        <div class="playback-controls"><button class="play-button" :disabled="loading || isNetwork" :aria-label="playing || draining ? '暂停回放' : '播放回放'" @click="togglePlay"><i :class="playing || draining ? 'fa-solid fa-pause' : 'fa-solid fa-play'"></i>{{ playing || draining ? '暂停' : '播放' }}</button><button :disabled="loading || isNetwork" title="上一天" @click="jumpDay(-1)">上一天</button><button :disabled="loading || isNetwork || cursor >= scene.events.length" @click="stepEvent">下一事件</button><button :disabled="loading || isNetwork" title="下一天" @click="jumpDay(1)">下一天</button><label>速度 <select v-model.number="speed" :disabled="isNetwork"><option v-for="n in [0.5, 1, 2, 4, 8]" :key="n" :value="n">{{ n }}×</option></select></label><strong class="current-day" data-testid="current-day">{{ currentDay.label }}<small v-if="!currentDay.complete"> · 记录不完整</small><small v-else-if="atEnd"> · {{ draining ? '等待人物返回' : '已到末尾' }}</small></strong></div>
+        <div class="playback-controls"><button class="play-button" :disabled="loading || isNetwork" :aria-label="playing || draining ? '暂停回放' : '播放回放'" @click="togglePlay"><i :class="playing || draining ? 'fa-solid fa-pause' : 'fa-solid fa-play'"></i>{{ playing || draining ? '暂停' : '播放' }}</button><button :disabled="loading || isNetwork" title="上一天" @click="jumpDay(-1)">上一天</button><button :disabled="loading || isNetwork || cursor >= scene.events.length" @click="stepEvent">下一事件</button><button :disabled="loading || isNetwork" title="下一天" @click="jumpDay(1)">下一天</button><button :disabled="loading || isNetwork" title="跳转到首笔购买事件并播放人物往返" @click="previewWalking">看人物行走</button><label>速度 <select v-model.number="speed" :disabled="isNetwork"><option v-for="n in [0.5, 1, 2, 4, 8]" :key="n" :value="n">{{ n }}×</option></select></label><strong class="current-day" data-testid="current-day">{{ currentDay.label }}<small v-if="!currentDay.complete"> · 记录不完整</small><small v-else-if="atEnd"> · {{ draining ? '等待人物返回' : '已到末尾' }}</small></strong></div>
         <div v-if="!isNetwork" class="timeline-track"><input :disabled="loading" :value="dayPosition" :max="days.length" min="0" step="0.001" type="range" aria-label="回放时间进度" @input="seek(Number($event.target.value))" /><span>{{ Math.round(progressPercent) }}%</span></div>
         <div v-if="!isNetwork" class="day-buttons" aria-label="按天跳转"><button v-for="(day, k) in days" :key="day.step" :disabled="loading" :class="{ active: dayIndex === k, partial: !day.complete }" :title="`${day.label}${day.complete ? '' : '（不完整）'}`" :aria-label="`跳转到${day.label}`" @click="seek(k)">{{ day.step === 0 ? '初' : day.step }}</button></div><p v-else class="network-footer">关系网络模式没有时间轨迹；购买、发帖、访谈结果均为零，不借用旧运行。</p>
       </footer>
@@ -96,6 +98,8 @@ const draining = ref(false)
 const speed = ref(1)
 const quality = ref('high')
 const characterStyle = ref('realistic')
+const characterPool = ref('all')
+const characterStatus = ref({available:0,visibleReady:0,visibleTotal:0,failed:0})
 const styleBusy = ref(0)
 const styleError = ref('')
 const dayCycle = ref(true)
@@ -207,6 +211,15 @@ function stepEvent() {
   animateRange(before, cursor.value)
   draining.value = hasPendingAnimation()
 }
+function previewWalking() {
+  if(loading.value || isNetwork.value || !index.value)return
+  const next=scene.value.events.findIndex(event=>event.type==='purchase')
+  if(next<0)return
+  seek(positionAtCursor(index.value,next))
+  stepEvent()
+  selectPerson(scene.value.events[next].actor)
+  renderer?.resetCamera()
+}
 watch([playing, draining], () => renderer?.setPlaying(playing.value || draining.value))
 watch(speed, value => renderer?.setSpeed(value))
 watch(quality, value => renderer?.setQuality(value))
@@ -219,6 +232,7 @@ async function applyStyle(method,value) {
   finally{styleBusy.value--}
 }
 watch(characterStyle, value => void applyStyle('setCharacterStyle',value))
+watch(characterPool, value => void applyStyle('setCharacterPool',value))
 watch([dayPosition, dayCycle, previewHour], () => renderer?.setLighting({position:dayPosition.value,cycle:dayCycle.value,hour:previewHour.value}))
 
 async function fetchJson(file, signal) {
@@ -241,6 +255,7 @@ async function loadScene(mode) {
   dayPosition.value = 0
   motion.value = { active: 0, queued: 0, unreachable: 0 }
   pendingEffects.value = 0
+  characterStatus.value={available:0,visibleReady:0,visibleTotal:0,failed:0}
   requestedMode.value = mode
   activeTab.value = isNetwork.value ? 'people' : 'events'
   loading.value = true
@@ -255,10 +270,11 @@ async function loadScene(mode) {
     index.value = indexScene(data)
     await nextTick()
     if (current !== generation) return
-    view = new Campus3DScene({ host: mapEl.value, campus, mapping, index: index.value, landcovers:landcover.features, surroundings:surroundings.roads,
+    view = new Campus3DScene({ host: mapEl.value, campus, mapping, index: index.value, landcovers:landcover.features, surroundings:surroundings.roads,characterPool:characterPool.value,
       onHover: card => { hoverCard.value = card }, onSelect: selectPerson,
       onStats: stats => { motion.value = stats; if (draining.value && !hasPendingAnimation()) draining.value = false },
       onVisualActivity: count => { pendingEffects.value = count; if (draining.value && !hasPendingAnimation()) draining.value = false },
+      onCharacters: status=>{characterStatus.value=status},
     })
     await view.init()
     if (current !== generation) { view.dispose(); return }
@@ -266,6 +282,7 @@ async function loadScene(mode) {
     view.setSpeed(speed.value)
     view.setQuality(quality.value)
     await view.setCharacterStyle(characterStyle.value)
+    await view.setCharacterPool(characterPool.value)
     await view.setBuildingStyle('yulan')
     if(current !== generation || renderer !== view){view.dispose();return}
     view.setLighting({position:dayPosition.value,cycle:dayCycle.value,hour:previewHour.value})
@@ -293,4 +310,8 @@ onBeforeUnmount(() => { generation += 1; controller?.abort(); stopTimeline(); re
 @media(min-width:1600px){.side-panel{width:350px}.page-header h1{font-size:22px}.kpis>div{padding:12px 16px}.side-content{padding:15px}.event-row{font-size:12px}.main-layout{min-height:360px}}
 @media(max-width:1000px){.page-header h1{font-size:16px}.side-panel{width:265px}.old-page{display:none}.kpis>div{padding:8px}.kpis strong{font-size:20px}.kpis em{font-size:9px}.current-day{font-size:11px}.mode-switch button{padding:7px 8px}}
 @media(max-width:720px){.campus3d-page{padding:9px;gap:7px}.page-header{flex-wrap:wrap}.page-header h1{font-size:16px}.header-actions{width:100%;justify-content:space-between}.old-page{display:block}.spatial-notice{font-size:11px}.kpis{grid-template-columns:repeat(2,minmax(0,1fr))}.main-layout{flex-direction:column;min-height:650px}.map-panel{min-height:370px}.side-panel{width:100%;height:260px}.map-legend{max-width:230px}.playback-controls{flex-wrap:wrap;gap:5px}.playback-controls>button{padding:6px 7px}.current-day{margin-left:0}.timeline-panel{padding:8px}.north-indicator{display:none}}
+</style>
+
+<style scoped>
+.character-loading{display:flex;align-items:center;justify-content:space-between;gap:10px}.character-loading button{border:1px solid #b7cbbb;border-radius:5px;padding:3px 8px;background:white;color:#376e59}
 </style>

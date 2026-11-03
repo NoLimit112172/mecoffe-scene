@@ -132,7 +132,7 @@ function roadGeometry(roads, extraWidth = 0, elevation = 0.14) {
 }
 
 export class Campus3DScene {
-  constructor({ host, campus, mapping, index, landcovers = [], surroundings = [], onHover, onSelect, onStats, onVisualActivity } = {}) {
+  constructor({ host, campus, mapping, index, landcovers = [], surroundings = [], onHover, onSelect, onStats, onVisualActivity, onCharacters, characterPool = 'all' } = {}) {
     this.host = host
     this.campus = campus
     this.mapping = mapping
@@ -151,6 +151,8 @@ export class Campus3DScene {
     this.onSelect = onSelect
     this.onStats = onStats
     this.onVisualActivity = onVisualActivity
+    this.onCharacters = onCharacters
+    this.characterPool = ['all','adults','professions','children'].includes(characterPool)?characterPool:'all'
     this.pendingVisualCount = 0
     this.routing = createRouting(campus, mapping)
     this.people = new Map()
@@ -254,7 +256,11 @@ export class Campus3DScene {
       this.controls.update()
       this.updateScreenVisuals()
       this.updateRelations()
-      if (this.characterStyle === 'realistic') this.realCharacterBatch?.update(this.visualSeconds)
+      if (this.characterStyle === 'realistic') {
+        this.realCharacterBatch?.update(this.visualSeconds)
+        this.yulanCharacterBatch?.update(this.visualSeconds)
+        this.emitCharacterStatus()
+      }
       else if (this.characterStyle === 'yulan3d') this.yulanCharacterBatch?.update(this.visualSeconds)
       else if (this.characterStyle === 'solid') this.characterBatch?.update(this.visualSeconds)
       else if (this.characterStyle === 'voxel') this.voxelBatch?.update(this.visualSeconds, this.camera)
@@ -971,20 +977,23 @@ export class Campus3DScene {
     if (this.characterBatch) this.characterBatch.group.visible = this.characterStyle === 'solid'
     this.pixelBatch?.setVisible(this.characterStyle === 'pixel')
     this.voxelBatch?.setVisible(this.characterStyle === 'voxel')
-    this.yulanCharacterBatch?.setVisible(this.characterStyle === 'yulan3d')
+    this.yulanCharacterBatch?.setVisible(this.characterStyle === 'yulan3d' || this.characterStyle === 'realistic')
+    this.yulanCharacterBatch?.setEntryFilter?.(this.characterStyle === 'realistic' ? entry=>!this.realCharacterBatch?.isReady?.(entry.person.id) : null)
     this.realCharacterBatch?.setVisible(this.characterStyle === 'realistic')
     for (const entry of this.people.values()) entry.screenMinPixels = null
     this.updateScreenVisuals()
     if (this.characterStyle === 'realistic' && !this.realCharacterBatch && this.host) {
       if(!this.realPromise)this.realPromise=import('./Campus3DRealCharacters.js').then(async({RealCharacterBatch})=>{
         if(this.disposed)return
-        this.realCharacterBatch=new RealCharacterBatch({scene:this.scene,entries:this.people})
+        this.realCharacterBatch=new RealCharacterBatch({scene:this.scene,entries:this.people,pool:this.characterPool,
+          onReady:()=>this.emitCharacterStatus()})
         await this.realCharacterBatch.init()
         if(this.disposed){this.realCharacterBatch.dispose();return}
         this.realCharacterBatch.setQuality(this.quality)
         this.realCharacterBatch.setVisible(this.characterStyle==='realistic')
         this.realCharacterBatch.update(this.visualSeconds)
         this.updateScreenVisuals()
+        this.emitCharacterStatus()
       }).catch(error=>{this.realCharacterBatch?.dispose();this.realCharacterBatch=null;this.realPromise=null;throw error})
       return this.realPromise
     }
@@ -1003,6 +1012,21 @@ export class Campus3DScene {
     }
     return Promise.resolve()
   }
+
+  emitCharacterStatus() {
+    const status=this.realCharacterBatch?.getStats?.()
+    if(!status)return
+    const key=JSON.stringify(status)
+    if(key!==this.lastCharacterStatus){this.lastCharacterStatus=key;this.onCharacters?.(status)}
+  }
+
+  async setCharacterPool(value) {
+    this.characterPool=['all','adults','professions','children'].includes(value)?value:'all'
+    if(this.realCharacterBatch)await this.realCharacterBatch.setPool(this.characterPool)
+    this.emitCharacterStatus()
+  }
+
+  retryCharacters() { this.realCharacterBatch?.retryFailed?.();this.emitCharacterStatus() }
 
   setBuildingStyle(value) {
     this.buildingStyle=value==='yulan'?'yulan':'procedural'

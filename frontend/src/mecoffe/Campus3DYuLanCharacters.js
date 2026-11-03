@@ -159,7 +159,7 @@ export class YuLanCharacterBatch {
     this.group.updateWorldMatrix(true, false); this.inverse.copy(this.group.matrixWorld).invert()
     for (const [index, entry] of this.actors.entries()) {
       const face = this.faces[index]
-      if (entry.presentationVisible === false || entry.figure.visible === false) {
+      if (entry.presentationVisible === false || entry.figure.visible === false || this.entryFilter?.(entry) === false) {
         for (const mesh of this.meshes.values()) mesh.setMatrixAt(index, this.hidden)
         face.visible = false; continue
       }
@@ -215,6 +215,7 @@ export class YuLanCharacterBatch {
   }
 
   setVisible(visible) { this.group.visible = Boolean(visible) }
+  setEntryFilter(filter) { this.entryFilter = typeof filter === 'function' ? filter : null }
   setQuality(quality) { this.quality = quality === 'low' ? 'low' : 'high'; for (const mesh of this.meshes.values()) mesh.castShadow = this.quality === 'high' }
   dispose() {
     if (this.disposed) return

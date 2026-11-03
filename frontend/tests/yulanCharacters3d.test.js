@@ -94,6 +94,18 @@ test('full-volume YuLan bodies have closed head, torso, articulated arms, knees,
   } finally { batch.dispose() }
 })
 
+test('per-person fallback filtering hides ready real actors and restores the same YuLan instance',async()=>{
+  const scene=new THREE.Scene(),figure=new THREE.Group();scene.add(figure)
+  const entry={person,figure,presentationVisible:true}
+  const batch=await new YuLanCharacterBatch({scene,entries:new Map([[person.id,entry]])}).init({assets:{atlas,images:[]},rasterize:fakeRasterize})
+  try{
+    const matrix=new THREE.Matrix4();batch.setEntryFilter(()=>false);batch.update(0)
+    batch.meshes.get('torso').getMatrixAt(0,matrix);assert.equal(matrix.determinant(),0);assert.equal(batch.faces[0].visible,false)
+    batch.setEntryFilter(null);batch.update(0);batch.meshes.get('torso').getMatrixAt(0,matrix)
+    assert.ok(matrix.determinant()>0);assert.equal(batch.faces[0].visible,true);assert.equal(batch.actors[0],entry)
+  }finally{batch.dispose()}
+})
+
 test('YuLan actors read root pose without modifying routes and freeze when paused, including idle', async () => {
   const scene = new THREE.Scene(), figure = new THREE.Group()
   figure.position.set(23, 1.2, -55); figure.rotation.y = 1.1; figure.scale.setScalar(2); scene.add(figure)

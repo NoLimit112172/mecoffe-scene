@@ -19,3 +19,5 @@ frontend/public/mecoffe/assets3d/rocketbox/**/*.fbx binary
 frontend/public/mecoffe/assets3d/rocketbox/**/*.png binary
 # Vendored upstream documentation intentionally keeps its original whitespace.
 frontend/public/mecoffe/assets3d/rocketbox/UPSTREAM_README.md -whitespace
+frontend/public/mecoffe/assets3d/rocketbox/derivatives/openomsi/*.md -text diff
+frontend/public/mecoffe/assets3d/rocketbox/derivatives/openomsi/CREDITS.md -whitespace

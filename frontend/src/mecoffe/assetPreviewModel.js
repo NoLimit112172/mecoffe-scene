@@ -37,3 +37,11 @@ export function describeMatch(match) {
   if (!match || !Object.keys(match).length) return '手动选取 / 默认原型'
   return Object.entries(match).map(([key, value]) => `${key}=${Array.isArray(value) ? value.join('|') : value}`).join(' · ')
 }
+
+// Limit live WebGL previews to one page; filtering never changes the catalog.
+export function paginateAssets(items, page = 1, pageSize = 12) {
+  const size=Number.isFinite(pageSize)?Math.max(1,Math.min(48,Math.floor(pageSize))):12
+  const total=items.length,pageCount=Math.max(1,Math.ceil(total/size))
+  const current=Math.min(pageCount,Math.max(1,Number.isFinite(page)?Math.floor(page):1))
+  return {items:items.slice((current-1)*size,current*size),page:current,pageCount,total,pageSize:size}
+}

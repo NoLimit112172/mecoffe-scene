@@ -223,9 +223,10 @@ export function createProceduralPreview(prototype, variant) {
   return group
 }
 
-export async function createAssetPreview(prototype, variant) {
+export async function createAssetPreview(prototype, variant, {signal} = {}) {
+  if(signal?.aborted)throw Object.assign(new Error('Preview request cancelled'),{name:'AbortError'})
   const factory=factories.get(prototype.params?.generator)||factories.get(prototype.generator)||factories.get(prototype.id)
-  if(factory) return factory(prototype,variant)
+  if(factory) return factory(prototype,variant,{signal})
   if(prototype.category==='character') {
     const p=previewParams(prototype,variant)
     const previewScene=new THREE.Scene()
@@ -267,6 +268,7 @@ export class AssetPreviewRenderer {
   setItems(items) {
     this.items=items
     const keys=new Set(items.map(item=>this.key(item)))
+    for(const [key,controller] of this.pending) if(!keys.has(key)) {controller.abort();this.pending.delete(key)}
     for(const [key,view] of this.views) if(!keys.has(key)) {this.remove(view);this.views.delete(key)}
   }
 
@@ -274,12 +276,13 @@ export class AssetPreviewRenderer {
 
   async prepare(item) {
     const key=this.key(item)
-    if(this.pending.has(key)||this.views.has(key)||this.failed.has(key)) return
-    this.pending.set(key,true)
+    if(this.disposed||this.pending.has(key)||this.views.has(key)||this.failed.has(key)) return
+    const controller=new AbortController()
+    this.pending.set(key,controller)
     try {
-      const model=await createAssetPreview(item.prototype,item.variant)
+      const model=await createAssetPreview(item.prototype,item.variant,{signal:controller.signal})
       const current=this.items.find(candidate=>this.key(candidate)===key)
-      if(this.disposed||!current?.element?.isConnected) {model.dispose?.();return}
+      if(this.disposed||controller.signal.aborted||this.pending.get(key)!==controller||!current?.element?.isConnected) {model.dispose?.();return}
       item=current
       const scene=new THREE.Scene()
       const normalized=new THREE.Group();normalized.add(model.object)
@@ -302,8 +305,14 @@ export class AssetPreviewRenderer {
       for(const [type,handler] of Object.entries(view.handlers)) item.element.addEventListener(type,handler)
       this.views.set(key,view)
       this.onCaption?.(item.prototype.id,model.caption || '三维原型 · 拖动旋转')
-    } catch(error) {this.failed.add(key);if(!this.disposed)this.onError?.(item.prototype.id,error.message || String(error))}
-    finally {this.pending.delete(key)}
+    } catch(error) {
+      // A replaced page/variant must not overwrite the current card's caption,
+      // poison its retry state, or delete a newer request for the same key.
+      if(!this.disposed&&!controller.signal.aborted&&this.pending.get(key)===controller) {
+        this.failed.add(key);this.onError?.(item.prototype.id,error.message || String(error))
+      }
+    }
+    finally {if(this.pending.get(key)===controller)this.pending.delete(key)}
   }
 
   animate(now) {
@@ -340,6 +349,8 @@ export class AssetPreviewRenderer {
   dispose() {
     if(this.disposed)return
     this.disposed=true;cancelAnimationFrame(this.frame)
+    for(const controller of this.pending.values())controller.abort()
+    this.pending.clear()
     for(const view of this.views.values())this.remove(view)
     this.views.clear();this.items=[]
     this.renderer.dispose();this.renderer.forceContextLoss();this.renderer.domElement.remove()

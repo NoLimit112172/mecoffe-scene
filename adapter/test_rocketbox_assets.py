@@ -27,8 +27,12 @@ class RocketboxAssetsTests(unittest.TestCase):
         self.assertEqual(manifest['schema_version'], 'mecoffe.rocketbox-assets.v1')
         self.assertEqual(manifest['revision'], '0943055db6ec570bcef9f2c8b41c9e5467c808f9')
         self.assertEqual(manifest['license'], 'MIT')
-        self.assertEqual({model['id'] for model in manifest['models']},
-                         {'Female_Adult_01', 'Female_Adult_03', 'Male_Adult_01', 'Male_Adult_14'})
+        models=manifest['models']
+        self.assertEqual(len(models),115)
+        self.assertEqual(len({model['id'] for model in models}),115)
+        self.assertEqual({group:sum(model['category']==group for model in models) for group in ['adults','children','professions']},
+                         {'adults':40,'children':4,'professions':71})
+        self.assertTrue(all(model.get('human',True) for model in models))
         for record in manifest['source_files']:
             content = self.checked_file(record['path'], record['sha256'], record['bytes'])
             if record['path'] == manifest['license_file']:
@@ -47,8 +51,21 @@ class RocketboxAssetsTests(unittest.TestCase):
                 self.assertTrue(content.startswith(b'\x89PNG\r\n\x1a\n'))
                 width, height = struct.unpack('>II', content[16:24])
                 self.assertEqual((width, height), (texture['width'], texture['height']))
-                self.assertLessEqual(max(width, height), 1024)
-                self.assertEqual(len(texture['source_sha256']), 64)
+                self.assertLessEqual(max(width, height),1024 if texture['kind'] in ['head','combined','atlas'] else 512)
+                self.assertEqual(len(texture['source_git_blob']),40)
+                if texture['source_sha256'] is None:
+                    derivative=texture['derivative']
+                    self.assertEqual(derivative['provider'],'openOMSI')
+                    self.assertEqual(derivative['release_tag'],'avatars-1')
+                    self.assertEqual(derivative['expected_archive_sha256'],'ead00bbfbf66165336dcd40323569840c18e148ee79c3e7d097d198ad4b12d6a')
+                    self.assertFalse(derivative['whole_archive_verified'])
+                    self.assertTrue(derivative['crc32_verified'])
+                    self.assertEqual(len(derivative['sha256_actual_entry']),64)
+                    self.assertFalse(texture['source_git_blob_locally_verified'])
+                    self.assertTrue((ASSETS/derivative['license_file']).is_file())
+                    self.assertTrue((ASSETS/derivative['credits_file']).is_file())
+                else:
+                    self.assertEqual(len(texture['source_sha256']), 64)
                 self.assertIn(self.manifest['revision'], texture['source_url'])
                 self.assertNotIn(texture['source_name'].lower(), names)
                 names.add(texture['source_name'].lower())

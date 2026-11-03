@@ -1,7 +1,7 @@
 import * as THREE from 'three'
 import { FBXLoader } from 'three/addons/loaders/FBXLoader.js'
 import { clone as cloneSkeleton } from 'three/addons/utils/SkeletonUtils.js'
-import { REAL_CHARACTER_HEIGHT, REAL_CHARACTER_RADIUS, rocketboxModelForPerson, rocketboxHash,
+import { REAL_CHARACTER_HEIGHT, REAL_CHARACTER_RADIUS, ROCKETBOX_MODELS, rocketboxAssignments, rocketboxHumanModels, rocketboxHash,
   rocketboxTextureUrl, rocketboxLodNames, normalizeRocketboxBounds, rocketboxCharacterPose } from './rocketboxCharacterModel.js'
 
 export { REAL_CHARACTER_HEIGHT, REAL_CHARACTER_RADIUS } from './rocketboxCharacterModel.js'
@@ -9,6 +9,8 @@ export { REAL_CHARACTER_HEIGHT, REAL_CHARACTER_RADIUS } from './rocketboxCharact
 const BASE = `${import.meta.env?.BASE_URL || '/'}mecoffe/assets3d/rocketbox/`
 const BLANK = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQIHWP4////fwAJ+wP9KobjigAAAABJRU5ErkJggg=='
 const sources = new Map()
+const loadQueue = []
+let activeLoads = 0
 let manifestPromise
 const slots = ['map','alphaMap','normalMap','bumpMap','specularMap','emissiveMap','aoMap','roughnessMap','metalnessMap']
 
@@ -57,13 +59,25 @@ async function loadSource(record) {
   return source
 }
 
-async function acquireModel(id, loader) {
-  if (loader) return { source: await loader(id), release() {} }
+function queueLoad(work) {
+  return new Promise((resolve,reject) => { loadQueue.push({work,resolve,reject}); drainLoads() })
+}
+function drainLoads() {
+  while (activeLoads < 3 && loadQueue.length) {
+    const task = loadQueue.shift(); activeLoads++
+    Promise.resolve().then(task.work).then(task.resolve,task.reject).finally(() => { activeLoads--; drainLoads() })
+  }
+}
+function loadManifest() {
   if (!manifestPromise) manifestPromise = fetch(`${BASE}manifest.json`).then(response => {
     if (!response.ok) throw new Error(`Rocketbox manifest: HTTP ${response.status}`)
     return response.json()
   }).catch(error => { manifestPromise = null; throw error })
-  const manifest = await manifestPromise, record = manifest.models.find(model => model.id === id)
+  return manifestPromise
+}
+
+async function acquireModel(id, loader, record) {
+  if (loader) return { source: await loader(id), release() {} }
   if (!record) throw new Error(`Rocketbox manifest is missing ${id}`)
   let cached = sources.get(id)
   if (!cached) { cached = { refs: 0, promise: loadSource(record) }; sources.set(id,cached); cached.promise.catch(() => { if (sources.get(id) === cached) sources.delete(id) }) }
@@ -76,7 +90,7 @@ async function acquireModel(id, loader) {
 
 function rigFor(model) {
   const bones = new Map(), rest = []
-  model.traverse(bone => { if (bone.isBone) { bones.set(bone.name.replace(/\s/g,'_'),bone); rest.push({bone,quaternion:bone.quaternion.clone(),position:bone.position.clone()}) } })
+  model.traverse(bone => { if (bone.isBone) { bones.set(bone.name.replace(/\s/g,'_').replace(/^Bip\d+_/,'Bip01_'),bone); rest.push({bone,quaternion:bone.quaternion.clone(),position:bone.position.clone()}) } })
   return { model, bones, rest, world: new THREE.Quaternion(), parent: new THREE.Quaternion(), delta: new THREE.Quaternion(), from: new THREE.Vector3(), to: new THREE.Vector3(), origin: new THREE.Vector3() }
 }
 
@@ -128,74 +142,140 @@ function normalizedModel(source, cachedNormalization) {
 }
 
 export class RealCharacterBatch {
-  constructor({scene,entries,modelId}={}) {
+  constructor({scene,entries,modelId,pool='all',onReady}={}) {
     if(!scene||!entries)throw new Error('RealCharacterBatch requires a scene and entries')
-    this.scene=scene;this.entries=entries;this.modelId=modelId
+    this.scene=scene;this.entries=entries;this.modelId=modelId;this.pool=pool;this.onReady=onReady
     this.group=new THREE.Group();this.group.name='mecoffe-rocketbox-real-characters'
-    this.actors=[];this.resources=[];this.leases=[];this.quality='high';this.disposed=false;this.initialized=false
-    this.inverse=new THREE.Matrix4();this.cupPosition=new THREE.Vector3()
+    this.actors=[];this.resources=[];this.records=new Map();this.readyIds=new Set();this.pending=new Set()
+    this.normalizations=new Map();this.quality='high';this.disposed=false;this.initialized=false
+    this.generation=0;this.epoch=0;this.lastSeconds=0;this.inverse=new THREE.Matrix4();this.cupPosition=new THREE.Vector3()
   }
 
-  async init({assets,loader,modelId=this.modelId}={}) {
+  async init(options={}) {
     if(this.disposed||this.initialized)return this
-    if(this.promise)return this.promise
-    this.promise=this.initialize({assets,loader,modelId})
+    if(!this.promise)this.promise=this.initialize(options)
     return this.promise
   }
 
-  async initialize({assets,loader,modelId}) {
+  async initialize({assets,loader,manifest,modelId=this.modelId,lazy=false}) {
     try {
-      const entries=[...this.entries.values()].sort((a,b)=>String(a.person.id).localeCompare(String(b.person.id)))
-      const ids=[...new Set(entries.map(entry=>rocketboxModelForPerson(entry.person,modelId)))],models=new Map()
-      const provided=assets?.models || assets
-      for(const id of ids){
-        const source=provided instanceof Map?provided.get(id):provided?.[id]
-        const lease=source?{source,release(){}}:await acquireModel(id,loader)
-        if(this.disposed){lease.release();return this}
-        this.leases.push(lease);models.set(id,lease.source)
-      }
-      const cupGeometry=new THREE.CylinderGeometry(.20,.16,.44,12),lidGeometry=new THREE.CylinderGeometry(.22,.22,.06,12)
-      const cupMaterial=new THREE.MeshStandardMaterial({color:'#fff5df',roughness:.8}),lidMaterial=new THREE.MeshStandardMaterial({color:'#3c3028',roughness:.8})
-      this.resources.push(cupGeometry,lidGeometry,cupMaterial,lidMaterial)
-      const normalizations=new Map()
-      for(const entry of entries){
-        const id=rocketboxModelForPerson(entry.person,modelId),actor=normalizedModel(models.get(id),normalizations.get(id)),root=new THREE.Group()
-        normalizations.set(id,actor.normalization)
-        root.name=`rocketbox-${entry.person.id}`;root.matrixAutoUpdate=false;root.userData={person:entry.person,modelId:id,displayAvatar:true}
-        const cup=new THREE.Group(),body=new THREE.Mesh(cupGeometry,cupMaterial),lid=new THREE.Mesh(lidGeometry,lidMaterial)
-        lid.position.y=.25;cup.add(body,lid);cup.visible=false;cup.name='held-coffee'
-        root.add(actor.pivot,cup);this.group.add(root)
-        actor.model.traverse(object=>{if(object.isMesh){object.castShadow=this.quality==='high';object.receiveShadow=true;object.frustumCulled=false;object.userData.person=entry.person}})
-        this.actors.push({...actor,entry,root,cup,modelId:id,phase:(rocketboxHash(entry.person.id)%1024)/1024*Math.PI*2})
-      }
-      this.scene.add(this.group);this.initialized=true;this.update(0);return this
+      this.modelId=modelId;this.loader=loader;this.provided=assets?.models||assets
+      const suppliedIds=this.provided instanceof Map?[...this.provided.keys()]:Object.keys(this.provided||{})
+      this.manifest=manifest||assets?.manifest||((assets||loader)?{models:(suppliedIds.length?suppliedIds:ROCKETBOX_MODELS).map(id=>({id,human:true,category:'adults'}))}:await loadManifest())
+      if(this.disposed)return this
+      this.eager=Boolean(modelId||((assets||loader)&&!lazy));this.strictVisibility=!this.eager
+      this.cupGeometry=new THREE.CylinderGeometry(.20,.16,.44,12);this.lidGeometry=new THREE.CylinderGeometry(.22,.22,.06,12)
+      this.cupMaterial=new THREE.MeshStandardMaterial({color:'#fff5df',roughness:.8});this.lidMaterial=new THREE.MeshStandardMaterial({color:'#3c3028',roughness:.8})
+      this.resources.push(this.cupGeometry,this.lidGeometry,this.cupMaterial,this.lidMaterial)
+      this.configureRecords();this.scene.add(this.group);this.initialized=true
+      if(this.eager){for(const record of this.records.values())this.request(record,true);await this.whenIdle();const failed=[...this.records.values()].find(r=>r.state==='failed');if(failed)throw failed.error}
+      this.update(0);return this
     }catch(error){this.dispose();throw error}
   }
 
+  configureRecords() {
+    const humans=rocketboxHumanModels(this.manifest)
+    this.counts=humans.reduce((counts,model)=>{const category=model.category||'adults';counts[category]=(counts[category]||0)+1;return counts},{})
+    const candidates=this.modelId||this.pool==='all'?humans:humans.filter(model=>model.category===this.pool)
+    if(!candidates.length)throw new Error(`No Rocketbox avatars in pool ${this.pool}`)
+    this.available=humans.length;this.candidateCount=candidates.length
+    this.modelRecords=new Map(humans.map(model=>[model.id,model]))
+    this.assignments=rocketboxAssignments([...this.entries.values()].map(entry=>entry.person),candidates.map(model=>model.id),this.modelId)
+    this.records=new Map([...this.entries.values()].map(entry=>[String(entry.person.id),{entry,modelId:this.assignments.get(String(entry.person.id)),state:'idle',lastUsed:0}]))
+  }
+
+  wanted(record) {
+    const entry=record.entry
+    return this.group.visible&&entry.figure.visible!==false&&(this.strictVisibility?entry.presentationVisible===true:entry.presentationVisible!==false)
+  }
+
+  buildActor(record,source) {
+    const {entry,modelId}=record,actor=normalizedModel(source,this.normalizations.get(modelId)),root=new THREE.Group()
+    this.normalizations.set(modelId,actor.normalization)
+    root.name=`rocketbox-${entry.person.id}`;root.matrixAutoUpdate=false;root.userData={person:entry.person,modelId,displayAvatar:true}
+    const cup=new THREE.Group(),body=new THREE.Mesh(this.cupGeometry,this.cupMaterial),lid=new THREE.Mesh(this.lidGeometry,this.lidMaterial)
+    lid.position.y=.25;cup.add(body,lid);cup.visible=false;cup.name='held-coffee'
+    root.add(actor.pivot,cup);this.group.add(root)
+    actor.model.traverse(object=>{if(object.isMesh){object.castShadow=this.quality==='high';object.receiveShadow=true;object.frustumCulled=false;object.userData.person=entry.person}})
+    return {...actor,entry,root,cup,modelId,phase:(rocketboxHash(entry.person.id)%1024)/1024*Math.PI*2}
+  }
+
+  request(record,force=false) {
+    if(this.disposed||record.state!=='idle')return
+    const generation=this.generation
+    record.state='queued'
+    const task=queueLoad(async()=>{
+      if(this.disposed||generation!==this.generation)return
+      if(!force&&!this.wanted(record)){record.state='idle';return}
+      record.state='loading';let lease
+      try {
+        const source=this.provided instanceof Map?this.provided.get(record.modelId):this.provided?.[record.modelId]
+        lease=source?{source,release(){}}:await acquireModel(record.modelId,this.loader,this.modelRecords.get(record.modelId))
+        if(this.disposed||generation!==this.generation){lease.release();return}
+        record.actor=this.buildActor(record,lease.source);record.lease=lease;record.state='ready';record.lastUsed=this.epoch
+        this.actors.push(record.actor);this.readyIds.add(String(record.entry.person.id));this.update(this.lastSeconds)
+        this.onReady?.({entry:record.entry,modelId:record.modelId,status:'ready'})
+      }catch(error){
+        if(lease&&!record.lease)lease.release()
+        if(this.disposed||generation!==this.generation)return
+        record.error=error;record.state='failed';this.onReady?.({entry:record.entry,modelId:record.modelId,status:'failed',error})
+      }
+    })
+    this.pending.add(task);task.finally(()=>this.pending.delete(task))
+  }
+
+  releaseRecord(record) {
+    if(record.actor){record.actor.root.removeFromParent();record.actor.model.traverse(object=>{if(object.isSkinnedMesh)object.skeleton.dispose()});this.actors=this.actors.filter(actor=>actor!==record.actor)}
+    record.lease?.release();record.lease=null;record.actor=null;record.state='idle';this.readyIds.delete(String(record.entry.person.id))
+  }
+
+  evictHidden() {
+    // Retain a small warm set. Exploring all 115 cards/agents must not leave all
+    // high-resolution textures resident after they disappear from the scene.
+    const hidden=[...this.records.values()].filter(record=>record.actor&&!this.wanted(record)).sort((a,b)=>b.lastUsed-a.lastUsed)
+    for(const record of hidden.slice(8))this.releaseRecord(record)
+  }
+
   update(seconds=0) {
+    this.lastSeconds=seconds
     if(this.disposed||!this.initialized||!this.group.visible)return
-    this.group.updateWorldMatrix(true,false);this.inverse.copy(this.group.matrixWorld).invert()
-    for(const actor of this.actors){
-      const {entry,root,rig,cup}=actor
-      root.visible=entry.presentationVisible!==false&&entry.figure.visible!==false
+    this.epoch++;this.group.updateWorldMatrix(true,false);this.inverse.copy(this.group.matrixWorld).invert()
+    for(const record of this.records.values()){
+      if(this.wanted(record)){record.lastUsed=this.epoch;this.request(record)}
+      const actor=record.actor;if(!actor)continue
+      const {entry,root,rig,cup}=actor;root.visible=this.wanted(record)
       if(!root.visible)continue
       entry.figure.updateWorldMatrix(true,false);root.matrix.multiplyMatrices(this.inverse,entry.figure.matrixWorld);root.matrixWorldNeedsUpdate=true
       const walking=Boolean(entry.walker&&entry.walker.phase!=='dwell'&&entry.walker.moving!==false)
-      const pose=rocketboxCharacterPose(seconds,actor.phase,walking,Boolean(entry.hasCoffee))
-      applyPose(rig,pose)
+      const pose=rocketboxCharacterPose(seconds,actor.phase,walking,Boolean(entry.hasCoffee));applyPose(rig,pose)
       cup.visible=pose.coffee
       if(cup.visible){const hand=rig.bones.get('Bip01_R_Hand');if(hand){hand.getWorldPosition(this.cupPosition);root.worldToLocal(this.cupPosition);cup.position.copy(this.cupPosition);cup.position.y+=.10;cup.position.z+=.12}else cup.position.set(.85,4.4,.8)}
     }
+    if(!this.eager)this.evictHidden()
   }
 
-  setVisible(value){this.group.visible=Boolean(value)}
+  isReady(personId){return this.readyIds.has(String(personId))}
+  getStats(){
+    const result={total:this.records.size,ready:0,loading:0,queued:0,failed:0,visibleTotal:0,visibleReady:0,available:this.available||0,candidates:this.candidateCount||0,counts:{...this.counts},pool:this.pool}
+    for(const record of this.records.values()){if(record.state in result)result[record.state]++;if(this.wanted(record)){result.visibleTotal++;if(record.state==='ready')result.visibleReady++}}
+    return result
+  }
+  async whenIdle(){while(!this.disposed&&this.pending.size)await Promise.allSettled([...this.pending]);return this.getStats()}
+  retryFailed(){for(const record of this.records.values())if(record.state==='failed'){record.state='idle';record.error=null}this.update(this.lastSeconds);return this.whenIdle()}
+  async setPool(pool){
+    if(!['all','adults','children','professions'].includes(pool))throw new Error(`Unknown Rocketbox pool: ${pool}`)
+    if(this.disposed||pool===this.pool||this.modelId)return this
+    if(!rocketboxHumanModels(this.manifest).some(model=>pool==='all'||model.category===pool))throw new Error(`No Rocketbox avatars in pool ${pool}`)
+    this.generation++;for(const record of this.records.values())this.releaseRecord(record)
+    this.pool=pool;this.configureRecords();this.onReady?.({status:'reset',pool});this.update(this.lastSeconds);return this
+  }
+  setVisible(value){this.group.visible=Boolean(value);if(value)this.update(this.lastSeconds);else this.evictHidden()}
   setQuality(value){this.quality=value==='low'?'low':'high';this.group.traverse(object=>{if(object.isMesh)object.castShadow=this.quality==='high'})}
   dispose(){
     if(this.disposed)return
-    this.disposed=true;this.group.removeFromParent()
-    for(const actor of this.actors)actor.model.traverse(object=>{if(object.isSkinnedMesh)object.skeleton.dispose()})
+    this.disposed=true;this.generation++;this.group.removeFromParent()
+    for(const record of this.records.values())this.releaseRecord(record)
     for(const resource of this.resources)resource.dispose()
-    for(const lease of this.leases)lease.release()
-    this.resources.length=0;this.leases.length=0;this.actors.length=0;this.group.clear()
+    this.resources.length=0;this.actors.length=0;this.readyIds.clear();this.group.clear()
   }
 }
