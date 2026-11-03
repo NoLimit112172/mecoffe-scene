@@ -74,7 +74,7 @@ test('100 real campus figures safely drain 12 simultaneous two-shop purchases at
   renderer.placePeople()
   overview(renderer)
   assert.equal(renderer.people.size, 100)
-  assert.equal(renderer.characterStyle, 'yulan3d')
+  assert.equal(renderer.characterStyle, 'realistic')
   assertFrame(renderer, null, 0)
 
   const receipts = [], events = [], routes = new Map()

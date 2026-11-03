@@ -11,3 +11,11 @@ frontend/public/mecoffe/campuses/**/*.json -text diff
 
 # Keep downloaded OSM bytes identical to the recorded SHA-256 on Windows.
 data/osm/*.osm -text diff
+
+# Keep the pinned model bundle byte-identical for offline integrity tests.
+frontend/public/mecoffe/assets3d/rocketbox/*.md -text diff
+frontend/public/mecoffe/assets3d/rocketbox/*.json -text diff
+frontend/public/mecoffe/assets3d/rocketbox/**/*.fbx binary
+frontend/public/mecoffe/assets3d/rocketbox/**/*.png binary
+# Vendored upstream documentation intentionally keeps its original whitespace.
+frontend/public/mecoffe/assets3d/rocketbox/UPSTREAM_README.md -whitespace

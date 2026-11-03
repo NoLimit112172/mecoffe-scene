@@ -170,7 +170,7 @@ export class Campus3DScene {
     this.disposed = false
     this.visualSeconds = 0
     this.quality = 'high'
-    this.characterStyle = 'yulan3d'
+    this.characterStyle = 'realistic'
     this.buildingStyle = 'procedural'
     this.lighting = { cycle: true, position: 0, hour: 12 }
     this.representatives = idleRepresentatives(index.scene.people)
@@ -222,7 +222,8 @@ export class Campus3DScene {
     this.bloom = new SelectiveBloom({ renderer: this.renderer, scene: this.scene, camera: this.camera,
       width: this.host.clientWidth, height: this.host.clientHeight })
     this.setQuality(this.quality)
-    this.setCharacterStyle(this.characterStyle)
+    await this.setCharacterStyle(this.characterStyle)
+    if(this.disposed)return this
     this.resetCamera()
     this.resize()
     this.raycaster = new THREE.Raycaster()
@@ -253,7 +254,8 @@ export class Campus3DScene {
       this.controls.update()
       this.updateScreenVisuals()
       this.updateRelations()
-      if (this.characterStyle === 'yulan3d') this.yulanCharacterBatch?.update(this.visualSeconds)
+      if (this.characterStyle === 'realistic') this.realCharacterBatch?.update(this.visualSeconds)
+      else if (this.characterStyle === 'yulan3d') this.yulanCharacterBatch?.update(this.visualSeconds)
       else if (this.characterStyle === 'solid') this.characterBatch?.update(this.visualSeconds)
       else if (this.characterStyle === 'voxel') this.voxelBatch?.update(this.visualSeconds, this.camera)
       else this.pixelBatch?.update(this.visualSeconds, this.camera)
@@ -955,6 +957,7 @@ export class Campus3DScene {
     this.pixelBatch?.setQuality(this.quality)
     this.voxelBatch?.setQuality(this.quality)
     this.yulanCharacterBatch?.setQuality(this.quality)
+    this.realCharacterBatch?.setQuality(this.quality)
     this.eventEffects?.setQuality(this.quality)
     this.bloom?.setQuality(this.quality)
     if (this.renderer) {
@@ -964,13 +967,27 @@ export class Campus3DScene {
   }
 
   setCharacterStyle(value) {
-    this.characterStyle = ['yulan3d','pixel','solid','voxel'].includes(value) ? value : 'yulan3d'
+    this.characterStyle = ['realistic','yulan3d','pixel','solid','voxel'].includes(value) ? value : 'realistic'
     if (this.characterBatch) this.characterBatch.group.visible = this.characterStyle === 'solid'
     this.pixelBatch?.setVisible(this.characterStyle === 'pixel')
     this.voxelBatch?.setVisible(this.characterStyle === 'voxel')
     this.yulanCharacterBatch?.setVisible(this.characterStyle === 'yulan3d')
+    this.realCharacterBatch?.setVisible(this.characterStyle === 'realistic')
     for (const entry of this.people.values()) entry.screenMinPixels = null
     this.updateScreenVisuals()
+    if (this.characterStyle === 'realistic' && !this.realCharacterBatch && this.host) {
+      if(!this.realPromise)this.realPromise=import('./Campus3DRealCharacters.js').then(async({RealCharacterBatch})=>{
+        if(this.disposed)return
+        this.realCharacterBatch=new RealCharacterBatch({scene:this.scene,entries:this.people})
+        await this.realCharacterBatch.init()
+        if(this.disposed){this.realCharacterBatch.dispose();return}
+        this.realCharacterBatch.setQuality(this.quality)
+        this.realCharacterBatch.setVisible(this.characterStyle==='realistic')
+        this.realCharacterBatch.update(this.visualSeconds)
+        this.updateScreenVisuals()
+      }).catch(error=>{this.realCharacterBatch?.dispose();this.realCharacterBatch=null;this.realPromise=null;throw error})
+      return this.realPromise
+    }
     if (this.characterStyle === 'voxel' && !this.voxelBatch && this.host) {
       if (!this.voxelPromise) this.voxelPromise = import('./Campus3DVoxelCharacters.js').then(async({VoxelCharacterBatch})=>{
         if(this.disposed)return
@@ -1107,6 +1124,7 @@ export class Campus3DScene {
     this.pixelBatch?.dispose()
     this.voxelBatch?.dispose()
     this.yulanCharacterBatch?.dispose()
+    this.realCharacterBatch?.dispose()
     this.characterBatch?.dispose()
     if (this.scene) {
       disposeObject(this.scene)

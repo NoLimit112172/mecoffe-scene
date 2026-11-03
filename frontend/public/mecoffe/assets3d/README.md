@@ -1,6 +1,6 @@
 # 三维视觉资源清单
 
-版本化目录为 `catalog.json`，交互浏览页为 `/mecoffe3d/assets`。里程碑 5 共 **73 个原型**：建筑26、道路14、地表6、植被3、街道家具7、人物4、特效13。每个原型记录源路径、许可、变体、参数与匹配规则；`target: component` 的屋顶、基座等部件不参加整栋楼的自动匹配。程序来源52、YuLan图集改编20、OSM几何1；实例所用地图几何与模型原型的许可分别记录。
+版本化目录为 `catalog.json`，交互浏览页为 `/mecoffe3d/assets`。当前共 **74 个原型**：建筑26、道路14、地表6、植被3、街道家具7、人物5、特效13。每个原型记录源路径、许可、变体、参数与匹配规则；`target: component` 的屋顶、基座等部件不参加整栋楼的自动匹配。程序来源52、YuLan图集改编20、Rocketbox模型1、OSM几何1；实例所用地图几何与模型原型的许可分别记录。
 
 本轮没有新增下载 GLB、GLTF、PNG 或 JPEG 美术资产。YuLan 原图仍来自上游提交 `9829d72` 的 `public/assets/bgrd-0..2.json/png`，按 Apache-2.0 保留根目录 `NOTICE.md` / `YULAN_LICENSE`，未修改或重新授权原图。程序输出以 `LicenseRef-MeCoffe-Project` 标记，不能称为外部 CC0 素材。
 
@@ -22,6 +22,12 @@
 
 新增原型为 `character.yulan3d`、`building.component.roof-flat`、`building.component.roof-pitched`、`building.component.foundation`、`landcover.layered-base`。屋顶卡片显示实际实体几何；同一建筑的校正前后原型与理由记录在运行时 `userData`，不覆盖原始地图分配文件。
 
-中科大三维回放页面统一使用 YuLan 立面与三维实体屋顶；默认人物为“立体 YuLan”，可切换“像素贴图 / 体素”。通用地图预览按各自的素材分配加载。程序生成几何不会把原图许可变成 CC0，也不会把 YuLan 原型许可套到 OSM 几何上。
+中科大三维回放页面统一使用 YuLan 立面与三维实体屋顶；默认试用“写实人物”，可切换“立体 YuLan / 像素贴图 / 体素”。通用地图预览按各自的素材分配加载。程序生成几何不会把原图许可变成 CC0，也不会把 YuLan 原型许可套到 OSM 几何上。
 
 角色位置、楼栋归属、到店行走、门口排队、额外绕行、装饰设施和光照均为展示层安排。人物按缩放后的半径预留间距；相机改变时可调整显示站位，固定相机播放不因尺寸重新排布。原始 A* 图与返回路径、映射和回放数据保持不变，OASIS 没有提供人物位置。建筑层高、屋顶形式及沙盘层次均不表示测量结果。详细验证与本轮限制见根目录 `docs/milestone5-delivery.md`。
+
+## Rocketbox 写实人物
+
+`character.rocketbox` 使用 Microsoft Rocketbox 原始带骨骼人物，四个模型及本地贴图在 `rocketbox/`；来源固定提交、原下载/运行资源哈希、贴图转换记录在 `rocketbox/manifest.json`，许可原文为 `rocketbox/LICENSE.md`（MIT）。TGA转换并缩小至最长边1024的PNG供网页使用，原下载保留在本机忽略目录；未改源库或其他 YuLan 图集。
+
+人物使用原网格的皮肤、头发和衣服，程序仅驱动原骨骼做待机、步行和持杯；没有引入外部动作包。所有人物仍按已有ID/位置/回放事件绘制，四外观为稳定分配的展示原型，不表达真实人物外貌或性别推断。

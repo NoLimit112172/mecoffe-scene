@@ -1,7 +1,7 @@
 import rawCatalog from '../../public/mecoffe/assets3d/catalog.json' with { type: 'json' }
 
 const CATEGORIES = new Set(['building','road','landcover','vegetation','street_furniture','character','effect'])
-const SOURCES = new Set(['procedural','yulan','osm'])
+const SOURCES = new Set(['procedural','yulan','osm','rocketbox'])
 
 export function validateCatalog(catalog) {
   if (catalog?.schema_version !== 'mecoffe.asset-catalog.v1' || !Array.isArray(catalog.prototypes)) throw new Error('素材目录 schema_version 或 prototypes 无效')

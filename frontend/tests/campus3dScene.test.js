@@ -208,7 +208,7 @@ test('portrait camera avoids a foreground obstruction without moving the actor o
   obstruction.material.dispose()
 })
 
-test('switching default YuLan, pixel and legacy solid characters preserves trips, queues and pause state', () => {
+test('switching realistic, YuLan, pixel and legacy solid characters preserves trips, queues and pause state', () => {
   const { renderer, entry } = world()
   renderer.playEvent(purchase('first-style'))
   renderer.playEvent(purchase('second-style', 'merchant_002'))
@@ -218,10 +218,11 @@ test('switching default YuLan, pixel and legacy solid characters preserves trips
   const walker = entry.walker
   const queue = [...entry.queue]
   const statistics = renderer.getStats()
-  const visible = [], yulan = []
+  const visible = [], yulan = [], realistic = []
   renderer.pixelBatch = { setVisible: value => visible.push(value) }
   renderer.yulanCharacterBatch = { setVisible: value => yulan.push(value) }
-  for (const style of ['pixel', 'solid', 'yulan3d', 'pixel']) {
+  renderer.realCharacterBatch = { setVisible: value => realistic.push(value) }
+  for (const style of ['realistic', 'pixel', 'solid', 'yulan3d', 'pixel']) {
     renderer.setCharacterStyle(style)
     assert.deepEqual(entry.figure.position, position)
     assert.equal(entry.walker, walker)
@@ -230,8 +231,9 @@ test('switching default YuLan, pixel and legacy solid characters preserves trips
     assert.equal(renderer.playing, false)
     assert.equal(renderer.characterBatch.group.visible, style === 'solid')
   }
-  assert.deepEqual(visible, [true, false, false, true])
-  assert.deepEqual(yulan, [false, false, true, false])
+  assert.deepEqual(visible, [false, true, false, false, true])
+  assert.deepEqual(yulan, [false, false, false, true, false])
+  assert.deepEqual(realistic, [true, false, false, false, false])
 })
 
 test('optional voxel characters and YuLan buildings keep the same paused trip, queues and time', async () => {
@@ -255,11 +257,12 @@ test('optional voxel characters and YuLan buildings keep the same paused trip, q
 
 test('default procedural style never starts an atlas building or voxel loader', async () => {
   const {renderer}=world()
-  assert.equal(renderer.characterStyle, 'yulan3d')
+  assert.equal(renderer.characterStyle, 'realistic')
   await renderer.setBuildingStyle('procedural')
   await renderer.setCharacterStyle('pixel')
   assert.equal(renderer.yulanPromise,undefined)
   assert.equal(renderer.voxelPromise,undefined)
+  assert.equal(renderer.realPromise,undefined)
 })
 
 test('surrounding roads and cropped display never extend or replace the original walking graph', () => {

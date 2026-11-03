@@ -3866,7 +3866,7 @@
     },
     {
       "id": "character.yulan3d",
-      "title": "立体 YuLan 人物（默认）",
+      "title": "立体 YuLan 人物",
       "category": "character",
       "subtype": "yulan3d",
       "kind": "mesh",
@@ -3879,7 +3879,7 @@
         "radius_m": 3.0,
         "palette_sampling": "same-2d-atlas-parts",
         "face_texture": "YuLan eyes + mouth",
-        "default": true,
+        "default": false,
         "modeling": "依据 YuLan 角色配色和头部贴图程序建模；封闭头发、头身、关节四肢和鞋；几何由项目程序生成"
       },
       "variants": [
@@ -3921,6 +3921,69 @@
         "path": "YULAN_LICENSE"
       },
       "preview": "/mecoffe/assets3d/previews/character.yulan3d.svg"
+    },
+    {
+      "id": "character.rocketbox",
+      "title": "Rocketbox 写实人物（试用）",
+      "category": "character",
+      "subtype": "realistic",
+      "kind": "mesh",
+      "style": "realistic",
+      "target": "feature",
+      "match": {},
+      "params": {
+        "generator": "rocketbox-character",
+        "height_m": 8.5,
+        "radius_m": 3,
+        "default": true,
+        "manifest": "/mecoffe/assets3d/rocketbox/manifest.json",
+        "animation": "procedural-skeleton-idle-walk-coffee",
+        "modeling": "Rocketbox 原始带骨骼人体与服装；外观按ID稳定选型，仅为展示原型，不推断真实人物外貌"
+      },
+      "variants": [
+        {
+          "id": "Female_Adult_01",
+          "title": "粉色上衣 / 牛仔长裤",
+          "params": {
+            "model_id": "Female_Adult_01"
+          }
+        },
+        {
+          "id": "Female_Adult_03",
+          "title": "紫色上衣 / 黑色长裤",
+          "params": {
+            "model_id": "Female_Adult_03"
+          }
+        },
+        {
+          "id": "Male_Adult_01",
+          "title": "条纹短袖 / 短裤",
+          "params": {
+            "model_id": "Male_Adult_01"
+          }
+        },
+        {
+          "id": "Male_Adult_14",
+          "title": "衬衫 / 浅色长裤",
+          "params": {
+            "model_id": "Male_Adult_14"
+          }
+        }
+      ],
+      "source": {
+        "type": "rocketbox",
+        "title": "Microsoft Rocketbox Avatar Library",
+        "author": "Microsoft / Rocketbox Studios",
+        "revision": "0943055db6ec570bcef9f2c8b41c9e5467c808f9",
+        "path": "frontend/public/mecoffe/assets3d/rocketbox/manifest.json",
+        "url": "https://github.com/microsoft/Microsoft-Rocketbox"
+      },
+      "license": {
+        "spdx": "MIT",
+        "path": "frontend/public/mecoffe/assets3d/rocketbox/LICENSE.md",
+        "note": "Microsoft (c) 2020；原模型与贴图按固定提交保存，TGA无损转换PNG；动作由项目程序驱动骨骼"
+      },
+      "preview": "/mecoffe/assets3d/previews/character.rocketbox.svg"
     }
   ]
 }

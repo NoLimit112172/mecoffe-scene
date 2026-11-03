@@ -7,7 +7,7 @@
     <section class="library-toolbar" aria-label="素材筛选">
       <label class="search-label"><span>搜索</span><input v-model="search" type="search" aria-label="搜索素材" placeholder="名称、类型或原型 ID" /></label>
       <label><span>类别</span><select v-model="category" aria-label="素材类别"><option value="">全部类别</option><option v-for="(label,key) in categories" :key="key" :value="key">{{ label }} · {{ stats.categories[key] || 0 }}</option></select></label>
-      <label><span>来源</span><select v-model="source" aria-label="素材来源"><option value="">全部来源</option><option value="procedural">程序生成</option><option value="yulan">YuLan · Apache-2.0</option><option value="osm">OSM · ODbL</option></select></label>
+      <label><span>来源</span><select v-model="source" aria-label="素材来源"><option value="">全部来源</option><option value="procedural">程序生成</option><option value="yulan">YuLan · Apache-2.0</option><option value="osm">OSM · ODbL</option><option value="rocketbox">Rocketbox · MIT</option></select></label>
       <span class="result-count" data-testid="asset-count">{{ filtered.length }} / {{ stats.total }} 个原型</span>
       <span class="renderer-note">单一 WebGL 画布 · 拖动卡片旋转</span>
     </section>
@@ -45,7 +45,7 @@ import { ASSET_CATEGORY_LABELS, describeMatch, previewParams, safeSourceUrl } fr
 const rootEl=ref(null),search=ref(''),category=ref(''),source=ref(''),pageError=ref('')
 const variants=reactive({}),captions=reactive({}),errors=reactive({})
 const elements=new Map(),categories=ASSET_CATEGORY_LABELS,stats=catalogStats()
-const sourceLabels={procedural:'程序生成',yulan:'YuLan 图集',osm:'OpenStreetMap'}
+const sourceLabels={procedural:'程序生成',yulan:'YuLan 图集',osm:'OpenStreetMap',rocketbox:'Microsoft Rocketbox'}
 let renderer=null,disposed=false,removeYuLanFactories=null
 const filtered=computed(()=>queryPrototypes(null,{category:category.value || undefined,text:search.value}).filter(item=>!source.value||item.source.type===source.value))
 const pretty=value=>JSON.stringify(value,null,2)
