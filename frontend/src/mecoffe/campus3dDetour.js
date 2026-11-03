@@ -44,12 +44,12 @@ class MinHeap {
  * when the target is occupied, no local corridor is found, or the cap is hit.
  * No "nearest free target" is substituted: a waiting shopper must keep its goal.
  */
-export function displayCrowdDetour(start, goal, buildings = [], people = [], radius = 8) {
+export function displayCrowdDetour(start, goal, buildings = [], people = [], radius = 8, {maxVisited=MAX_VISITED}={}) {
   if (!finite(start) || !finite(goal) || !Number.isFinite(radius) || radius < 0) return null
   const circles = people.filter(finite).map(p => ({ x: p.x, y: p.y,
     radius: radius + Math.max(0, Number.isFinite(p.radius) ? p.radius : radius) + CROWD_GAP }))
   const pointClear = p => outsideBuildings(p, buildings, radius)
-    && circles.every(c => distance(p, c) >= c.radius - EPS)
+    && circles.every(c => Math.abs(p.x-c.x)>=c.radius || Math.abs(p.y-c.y)>=c.radius || distance(p, c) >= c.radius - EPS)
   if (!pointClear(start) || !pointClear(goal)) return null
   const edgeClear = (a, b) => {
     const dx = b.x - a.x, dy = b.y - a.y, lengthSquared = dx * dx + dy * dy
@@ -82,7 +82,7 @@ export function displayCrowdDetour(start, goal, buildings = [], people = [], rad
   const firstSteps = []
   for (let x = -3; x <= 3; x++) for (let y = -3; y <= 3; y++) if (x || y) firstSteps.push([x, y])
   let visited = 0
-  while (heap.length && visited < MAX_VISITED) {
+  while (heap.length && visited < Math.min(MAX_VISITED,Math.max(0,maxVisited))) {
     const next = heap.pop()
     if (closed.has(next.key)) continue
     const node = nodes.get(next.key)

@@ -72,7 +72,11 @@ export function dayLighting(fraction = .25) {
   return result
 }
 
+const ringBounds=new WeakMap()
 export function pointInRing(point, ring) {
+  let bounds=ringBounds.get(ring)
+  if(!bounds){bounds={minX:Infinity,maxX:-Infinity,minY:Infinity,maxY:-Infinity};for(const p of ring){bounds.minX=Math.min(bounds.minX,p[0]);bounds.maxX=Math.max(bounds.maxX,p[0]);bounds.minY=Math.min(bounds.minY,p[1]);bounds.maxY=Math.max(bounds.maxY,p[1])}ringBounds.set(ring,bounds)}
+  if(point.x<bounds.minX||point.x>bounds.maxX||point.y<bounds.minY||point.y>bounds.maxY)return false
   let inside = false
   for (let i = 0, j = ring.length - 1; i < ring.length; j = i++) {
     const [xi, yi] = ring[i]

@@ -1,12 +1,12 @@
 <template>
   <div class="campus3d-page">
     <header class="page-header">
-      <div class="title-group"><span class="logo"><i class="fa-solid fa-cubes"></i></span><div><h1>中科大高新校区 · 三维校园沙盘</h1><p>MeCoffe / 阶段 1 · OSM 建筑体块与步行路网</p></div></div>
+      <div class="title-group"><span class="logo"><i class="fa-solid fa-cubes"></i></span><div><h1>{{scenario?.manifest.title || '中科大高新校区 · 三维校园沙盘'}}</h1><p>MeCoffe / 阶段 1 · OSM 建筑体块与步行路网</p></div></div>
       <div class="header-actions">
-        <nav aria-label="场景数据模式" class="mode-switch">
+        <nav v-if="!scenario" aria-label="场景数据模式" class="mode-switch">
           <button v-for="mode in modes" :key="mode.key" :class="{ active: requestedMode === mode.key }" :aria-pressed="requestedMode === mode.key" :disabled="loading" @click="loadScene(mode.key)">{{ mode.label }}</button>
         </nav>
-        <Campus3DVisualControls v-model:character-pool="characterPool" v-model:quality="quality" v-model:cycle="dayCycle" v-model:hour="previewHour" :clock="lightClock.label" />
+        <Campus3DVisualControls :building-style="scenario?.manifest.style?.buildings || 'yulan'" v-model:character-pool="characterPool" :quality="quality" @update:quality="chooseQuality" v-model:cycle="dayCycle" v-model:hour="previewHour" :clock="lightClock.label" />
         <span v-if="styleBusy" role="status" class="style-status">正在准备三维素材…</span>
         <RouterLink to="/mecoffe" class="old-page">二维沙盘 ↗</RouterLink>
         <RouterLink to="/mecoffe3d/assets" class="old-page">场景素材库 ↗</RouterLink>
@@ -18,8 +18,10 @@
     <p v-if="styleError" role="alert" class="data-notice">{{styleError}}</p>
 
     <template v-if="index && !loadError">
+      <div v-if="scenario" class="data-notice" data-testid="simulation-time">{{simulatedClock.label}} · {{simulatedClock.timezone}}</div>
       <div class="data-notice" :class="requestedMode" data-testid="data-notice">{{ dataNotice }}</div>
-      <div class="data-notice character-loading" role="status"><span>校园师生外观 {{ characterStatus.available || 9 }} 款 · 按画像性别匹配 · 当前可见 {{ characterStatus.visibleReady || 0 }}/{{ characterStatus.visibleTotal || 0 }} 已就绪。<template v-if="characterStatus.visibleReady < characterStatus.visibleTotal">正在按需加载人物；就绪前显示脚下身份标记。</template></span><button v-if="characterStatus.failed" @click="renderer?.retryCharacters()">重试 {{ characterStatus.failed }} 个模型</button></div>
+
+      <p v-if="qualityNotice" role="status" class="data-notice">{{ qualityNotice }}</p>
       <section class="kpis" aria-label="回放指标">
         <div><span>{{ isNetwork ? '人物关系输入' : currentDay.label }}</span><strong>{{ scene.people.length }}<small> 人</small></strong><em>快照 {{ meta.snapshot_revision ? `v${meta.snapshot_revision}` : '历史版本' }}</em></div>
         <div><span>初始关注关系</span><strong>{{ follows.length }}<small> 条</small></strong><em>{{ isNetwork ? '静态网络，尚未运行' : '与原数据保持一致' }}</em></div>
@@ -34,6 +36,7 @@
           <div v-if="hoverCard" class="hover-card" :style="hoverStyle"><b>{{ hoverCard.name }}</b><template v-if="hoverCard.type === 'building'"><span>OSM {{ hoverCard.building.osm_id }}</span><span>{{ hoverCard.building.levels }} 层 / {{ hoverCard.building.height_m }} 米 · {{ hoverCard.building.levels_source === 'default' ? '展示默认高度' : '来源见地图数据' }}</span></template><span v-else>点击查看人物与事件</span></div>
           <div class="map-legend"><span><i style="background:#7c9cab"></i>教学 / 科研</span><span><i style="background:#bc7859"></i>住宿</span><span><i style="background:#65a89b"></i>公共设施</span><div class="role-key"><span v-for="(color, role) in CHARACTER_ROLE_COLORS" :key="role"><i :style="{background:color}"></i>{{ roleNames[role] }}</span></div><p>写实人物为外观示意；脚下颜色表示角色<br>人物活动限制在建成区校界内<br>水域不可行走，仅跨水道路 / 桥面可通行<br>跑道外圈、球场排布、桥型与水深：展示设定<br>树木、路灯、长椅、草地纹理：<b>装饰</b><br>楼顶人数与光照：展示示意；楼层仍为默认值<br>校外道路仅展示，不参与寻路<br>左键旋转 · 右键平移 · 滚轮缩放</p></div>
           <a class="osm-credit" href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener noreferrer">© OpenStreetMap contributors</a>
+      <div v-if="characterStatus.visibleReady < characterStatus.visibleTotal || characterStatus.failed" class="data-notice character-loading" role="status"><span>正在加载人物 {{ characterStatus.visibleReady || 0 }}/{{ characterStatus.visibleTotal || 0 }}…</span><button v-if="characterStatus.failed" @click="renderer?.retryCharacters()">重试 {{ characterStatus.failed }} 个模型</button></div>
           <div v-if="loading" class="map-loading">正在构建校园三维体块…</div>
         </section>
 
@@ -48,7 +51,7 @@
           </div>
           <div v-else-if="activeTab === 'people'" class="side-content">
             <label class="search"><i class="fa-solid fa-magnifying-glass"></i><input v-model="query" placeholder="搜索人物姓名或编号" aria-label="搜索人物" /></label>
-            <div v-if="selected" class="person-detail"><div class="person-title"><span class="person-dot" :style="{ background: roleColor(selected.role) }"></span><h2>{{ selected.name }}</h2><small>{{ selected.role_label }}</small></div><code>{{ selected.id }}</code><p>示意所在楼栋：<b>{{ mappedBuilding(selected)?.name || '未映射' }}</b></p><p class="mapping-note">{{ mappingEntry(selected)?.note }}</p><p>画像性别：{{ selected.gender === 'm' ? '男' : selected.gender === 'f' ? '女' : '未提供（商家代理）' }} · {{ selected.role === 'teacher_consumer' ? '教师通勤外观' : selected.role === 'merchant' ? '店员示意外观' : '学生便装外观' }}</p><p class="person-bio">{{ selected.bio }}</p><p>关注 {{ selectedFollowing.length }} 人 · 被关注 {{ selectedFollowers.length }} 人</p><div class="relation-buttons"><button v-for="person in selectedFollowing" :key="person.id" @click="selectPerson(person.id)">{{ person.name }}</button></div><div v-if="selectedHistory.length" class="person-history"><h3>截至当前的行为</h3><p v-for="event in selectedHistory.slice(0, 5)" :key="event.key">{{ describeEvent(index, event) }}</p></div></div>
+            <div v-if="selected" class="person-detail"><div class="person-title"><span class="person-dot" :style="{ background: roleColor(selected.role) }"></span><h2>{{ selected.name }}</h2><small>{{ selected.role_label }}</small></div><code>{{ selected.id }}</code><p>示意所在楼栋：<b>{{ mappedBuilding(selected)?.name || '未映射' }}</b></p><p class="mapping-note">{{ mappingEntry(selected)?.note }}</p><p class="person-bio">{{ selected.bio }}</p><p>关注 {{ selectedFollowing.length }} 人 · 被关注 {{ selectedFollowers.length }} 人</p><div class="relation-buttons"><button v-for="person in selectedFollowing" :key="person.id" @click="selectPerson(person.id)">{{ person.name }}</button></div><div v-if="selectedHistory.length" class="person-history"><h3>截至当前的行为</h3><p v-for="event in selectedHistory.slice(0, 5)" :key="event.key">{{ describeEvent(index, event) }}</p></div></div>
             <div class="roster" aria-label="人物名册"><button v-for="person in roster" :key="person.id" :class="{ selected: selectedId === person.id }" @click="selectPerson(person.id)"><span class="person-dot" :style="{ background: roleColor(person.role) }"></span><span>{{ person.name }}<small>{{ mappedBuilding(person)?.name || person.role_label }}</small></span><i v-if="selectedId === person.id" class="fa-solid fa-chevron-right"></i></button></div>
           </div>
           <div v-else class="side-content">
@@ -77,8 +80,10 @@ import { describeEvent, EVENT_LABELS, indexScene, personHistory, stateAt } from 
 import { advancePosition, clampPosition, cursorAtPosition, dataFileForMode, positionAtCursor, validateDataMode } from '../mecoffe/campus3dPlayback.js'
 import { resolveHomeKey } from '../mecoffe/campus3dRouting.js'
 import { CHARACTER_ROLE_COLORS } from '../mecoffe/characterDisplay.js'
+import {scenarioTime} from '../mecoffe/scenario.js'
 import { visualClock } from '../mecoffe/campus3dPresentation.js'
 
+const props=defineProps({scenario:{type:Object,default:null}})
 const modes = [{ key: 'demo', label: '新版演示' }, { key: 'network', label: '关系网络' }, { key: 'history', label: '历史回放' }]
 const tabs = [{ key: 'events', label: '事件' }, { key: 'people', label: '人物' }, { key: 'mapping', label: '地点映射' }]
 const brandColors = ['#22856e', '#bd7545']
@@ -97,6 +102,9 @@ const playing = ref(false)
 const draining = ref(false)
 const speed = ref(1)
 const quality = ref('high')
+const qualityNotice=ref('')
+let manualQuality=false
+function chooseQuality(value){qualityNotice.value='';manualQuality=true;quality.value=value;renderer?.performancePolicy.chooseManually();renderer?.setQuality(value)}
 const characterPool = ref('campus')
 const characterStatus = ref({available:0,visibleReady:0,visibleTotal:0,failed:0})
 const styleBusy = ref(0)
@@ -123,7 +131,9 @@ const cursor = computed(() => index.value ? cursorAtPosition(index.value, dayPos
 const atEnd = computed(() => index.value && dayPosition.value >= days.value.length)
 const dayIndex = computed(() => Math.max(0, Math.min(days.value.length - 1, Math.floor(dayPosition.value))))
 const currentDay = computed(() => days.value[dayIndex.value] || { label: '', complete: true })
-const lightClock = computed(() => visualClock(dayPosition.value, {cycle:dayCycle.value,hour:previewHour.value}))
+const simulatedClock=computed(()=>props.scenario?scenarioTime(props.scenario.manifest.simulation_time,Math.max(0,dayPosition.value-(days.value[0]?.step===0?1:0))):null)
+const lightClock = computed(() => simulatedClock.value && dayCycle.value ? {...simulatedClock.value,label:simulatedClock.value.label.slice(11)} : visualClock(dayPosition.value,{cycle:dayCycle.value,hour:previewHour.value}))
+function lightSettings(){return simulatedClock.value && dayCycle.value?{cycle:false,hour:simulatedClock.value.hour}:{position:dayPosition.value,cycle:dayCycle.value,hour:previewHour.value}}
 const state = computed(() => index.value ? stateAt(index.value, cursor.value) : null)
 const revenue = computed(() => (Object.values(state.value?.revenueFen || {}).reduce((sum, n) => sum + n, 0) / 100).toFixed(2))
 const follows = computed(() => (scene.value?.relationships || []).filter(edge => edge.relation === 'follow'))
@@ -170,6 +180,7 @@ function animateRange(from, to) {
 }
 function loop(now) {
   if (!playing.value || !index.value) return
+  if(lastTime && now-lastTime<200){frame=requestAnimationFrame(loop);return}
   const before = cursor.value
   const elapsed = lastTime ? now - lastTime : 0
   lastTime = now
@@ -231,9 +242,10 @@ async function applyStyle(method,value) {
   finally{styleBusy.value--}
 }
 watch(characterPool, value => void applyStyle('setCharacterPool',value))
-watch([dayPosition, dayCycle, previewHour], () => renderer?.setLighting({position:dayPosition.value,cycle:dayCycle.value,hour:previewHour.value}))
+watch([dayPosition, dayCycle, previewHour], () => renderer?.setLighting(lightSettings()))
 
 async function fetchJson(file, signal) {
+  if(props.scenario){const key=({'scene.json':'trajectory.json','campus3d_mapping.json':'location_mapping.json','campus3d_landcover.json':'landcover.json','campus3d_surroundings.json':'surroundings.json'})[file]||file;return props.scenario.files[key] || (key==='surroundings.json'?{roads:[]}:null)}
   const response = await fetch(`${import.meta.env.BASE_URL}mecoffe/${file}`, { cache: 'no-store', signal })
   if (!response.ok) throw new Error(`${file}: HTTP ${response.status}`)
   return response.json()
@@ -269,6 +281,7 @@ async function loadScene(mode) {
     await nextTick()
     if (current !== generation) return
     view = new Campus3DScene({ host: mapEl.value, campus, mapping, index: index.value, landcovers:landcover.features, surroundings:surroundings.roads,characterPool:characterPool.value,
+      onQuality: value=>{quality.value=value;qualityNotice.value='已调整画质，让回放更流畅。'},
       onHover: card => { hoverCard.value = card }, onSelect: selectPerson,
       onStats: stats => { motion.value = stats; if (draining.value && !hasPendingAnimation()) draining.value = false },
       onVisualActivity: count => { pendingEffects.value = count; if (draining.value && !hasPendingAnimation()) draining.value = false },
@@ -282,12 +295,13 @@ async function loadScene(mode) {
     await view.init()
     if (current !== generation) { view.dispose(); return }
     renderer = view
+    if(manualQuality)view.performancePolicy.chooseManually()
     view.setSpeed(speed.value)
     view.setQuality(quality.value)
     await view.setCharacterPool(characterPool.value)
-    await view.setBuildingStyle('yulan')
+    await view.setBuildingStyle(props.scenario?.manifest.style?.buildings || 'yulan')
     if(current !== generation || renderer !== view){view.dispose();return}
-    view.setLighting({position:dayPosition.value,cycle:dayCycle.value,hour:previewHour.value})
+    view.setLighting(lightSettings())
     view.setPlaying(false)
     view.setCursor(0)
     if (import.meta.env.DEV) window.__mecoffe3d = { view, index: index.value, campus, mapping }
@@ -295,12 +309,12 @@ async function loadScene(mode) {
     view?.dispose()
     if (current !== generation || error.name === 'AbortError') return
     renderer = null
-    loadError.value = `${error.message || error}。请确认已运行 python -X utf8 adapter/osm_to_campus3d.py；三维显示需要浏览器支持 WebGL。`
+    loadError.value = `场景数据暂时无法读取：${error.message || error}。请点击“重新加载”重试。`
   } finally {
     if (current === generation) loading.value = false
   }
 }
-onMounted(() => { document.title = 'MeCoffe · 中科大高新校区三维沙盘'; void loadScene('demo') })
+onMounted(() => { document.title = props.scenario?.manifest.title || 'MeCoffe · 中科大高新校区三维沙盘'; void loadScene(props.scenario?'history':'demo') })
 onBeforeUnmount(() => { generation += 1; controller?.abort(); stopTimeline(); renderer?.dispose(); renderer = null; if (import.meta.env.DEV) delete window.__mecoffe3d })
 </script>
 
@@ -315,5 +329,5 @@ onBeforeUnmount(() => { generation += 1; controller?.abort(); stopTimeline(); re
 </style>
 
 <style scoped>
-.character-loading{display:flex;align-items:center;justify-content:space-between;gap:10px}.character-loading button{border:1px solid #b7cbbb;border-radius:5px;padding:3px 8px;background:white;color:#376e59}
+.character-loading{position:absolute;z-index:8;top:70px;left:14px;max-width:340px;display:flex;align-items:center;justify-content:space-between;gap:10px}.character-loading button{border:1px solid #b7cbbb;border-radius:5px;padding:3px 8px;background:white;color:#376e59}
 </style>

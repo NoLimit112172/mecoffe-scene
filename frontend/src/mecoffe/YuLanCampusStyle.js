@@ -1,3 +1,4 @@
+import {batchStaticMeshes} from './renderPerformance.js'
 // Optional presentation only. Construction and init leave the accepted
 // procedural campus visible; enabling this layer never writes to map data.
 import * as THREE from 'three'
@@ -57,6 +58,7 @@ export class YuLanCampusStyle {
       this.group.add(group)
       this.savedVisibility.set(mesh,mesh.visible)
     }
+    this.staticBatches=batchStaticMeshes(this.group)
     this.createDecorations()
     this.removeClearanceListener = this.environment?.onAgentClearance?.(value => this.setAgentClearance(value))
     this.setAgentClearance(this.agentClearance)

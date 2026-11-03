@@ -63,3 +63,9 @@ decor40–45 的 RGBA 通过有限厚度挤出、透明过滤与合并表面转�
 所有运行贴图均为本地PNG：脸/合图最长1024像素，身体与透明部件最长512，保留透明通道。这些格式/分辨率处理不改变原许可。待机、行走及持杯姿态由项目程序驱动骨骼，没有导入外部动作包。显示外观按ID稳定复用，不代表团队画像中人物的真实人像，也不推断性别、年龄或职业。
 
 Three.js FBXLoader、SkeletonUtils与既有Three.js同属其MIT代码；没有新增模型云服务或运行时外链。预下载/转换脚本仅在准备素材时使用来源中记录的公开仓库、发布包与内容分发镜像，并校验相应原始或派生文件；网页运行不依赖这些远程地址。
+
+## 里程碑 6：第三方许可复核（2026-11-03）
+
+- Kenney Nature Kit 2.1：官方 <https://kenney.nl/assets/nature-kit> 标记 Creative Commons CC0；归档原始 License.txt 同样明确署名不是强制要求。保留 Kenney / www.kenney.nl 自愿致谢和完整原文，不添加署名义务。
+- VALID：逐字复核固定提交的 [MIT LICENSE](https://github.com/google/valid-avatar-library/blob/c76d2547b5b464415283169d18dffb16bb584eee/LICENSE)，版权人为 Copyright (c) 2022 Tiffany Do。MIT 要求分发副本或实质部分时附带上述版权声明和许可文本；已在 public/mecoffe/assets3d/valid/LICENSE 原样保留，构建会随模型一起分发。原始 FBX 未更改；运行时骨骼、索引 LOD 和动画属于展示适配，不改变源文件和许可。
+- 每个 Kenney / VALID 原型（含校内实例）均从 adapter/build_asset_catalog.py 的来源与许可记录生成；catalog.json 不以项目程序生成许可覆盖上游模型。

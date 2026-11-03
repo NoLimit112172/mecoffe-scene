@@ -39,7 +39,17 @@ function edgesIntersect(a,b,c,d) {
   return p*q < -EPS && r*s < -EPS
 }
 
+const segmentCaches=new WeakMap()
 export function clearDisplaySegment(a,b,buildings,radius=0) {
+  let cache=segmentCaches.get(buildings)
+  if(!cache){cache=new Map();segmentCaches.set(buildings,cache)}
+  const key=`${a.x},${a.y}:${b.x},${b.y}:${radius}`
+  if(cache.has(key))return cache.get(key)
+  const value=uncachedClearDisplaySegment(a,b,buildings,radius)
+  if(cache.size>50000)cache.clear()
+  cache.set(key,value);return value
+}
+function uncachedClearDisplaySegment(a,b,buildings,radius=0) {
   if(!outsideBuildings(a,buildings,radius)||!outsideBuildings(b,buildings,radius))return false
   for(const obstacle of crowdObstacles(buildings)) {
     if(obstacle.boundary){if(!campusSegmentClear(a,b,obstacle.boundary,radius))return false;continue}
@@ -48,6 +58,7 @@ export function clearDisplaySegment(a,b,buildings,radius=0) {
     if(obstacle.water){if(!waterSegmentClear(a,b,obstacle.water,radius))return false;continue}
     for(const ring of [obstacle.ring,...obstacle.holes])for(let i=0;i<ring.length;i++) {
       const c={x:ring[i][0],y:ring[i][1]},d={x:ring[(i+1)%ring.length][0],y:ring[(i+1)%ring.length][1]}
+      if(Math.max(c.x,d.x)<Math.min(a.x,b.x)-radius || Math.min(c.x,d.x)>Math.max(a.x,b.x)+radius || Math.max(c.y,d.y)<Math.min(a.y,b.y)-radius || Math.min(c.y,d.y)>Math.max(a.y,b.y)+radius)continue
       if(edgesIntersect(a,b,c,d))return false
       if(Math.min(segmentDistance(a,array(c),array(d)),segmentDistance(b,array(c),array(d)),
         segmentDistance(c,array(a),array(b)),segmentDistance(d,array(a),array(b)))<radius-EPS)return false

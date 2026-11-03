@@ -11338,7 +11338,7 @@
       "license": {
         "spdx": "MIT",
         "path": "frontend/public/mecoffe/assets3d/valid/LICENSE",
-        "note": "Copyright 2022 Tiffany Do；Asian/gender 为上游合成人物标签，不推断模拟人物真实族群"
+        "note": "Copyright (c) 2022 Tiffany Do；MIT：分发副本或实质部分时须保留版权声明和完整许可文本；上游合成人物标签随原模型保留"
       },
       "preview": "/mecoffe/assets3d/previews/character.valid.Asian_F_1_Busi.svg",
       "scene_scope": "ustc"
@@ -11394,7 +11394,7 @@
       "license": {
         "spdx": "MIT",
         "path": "frontend/public/mecoffe/assets3d/valid/LICENSE",
-        "note": "Copyright 2022 Tiffany Do；Asian/gender 为上游合成人物标签，不推断模拟人物真实族群"
+        "note": "Copyright (c) 2022 Tiffany Do；MIT：分发副本或实质部分时须保留版权声明和完整许可文本；上游合成人物标签随原模型保留"
       },
       "preview": "/mecoffe/assets3d/previews/character.valid.Asian_F_1_Casual.svg",
       "scene_scope": "ustc"
@@ -11450,7 +11450,7 @@
       "license": {
         "spdx": "MIT",
         "path": "frontend/public/mecoffe/assets3d/valid/LICENSE",
-        "note": "Copyright 2022 Tiffany Do；Asian/gender 为上游合成人物标签，不推断模拟人物真实族群"
+        "note": "Copyright (c) 2022 Tiffany Do；MIT：分发副本或实质部分时须保留版权声明和完整许可文本；上游合成人物标签随原模型保留"
       },
       "preview": "/mecoffe/assets3d/previews/character.valid.Asian_F_2_Busi.svg",
       "scene_scope": "ustc"
@@ -11506,7 +11506,7 @@
       "license": {
         "spdx": "MIT",
         "path": "frontend/public/mecoffe/assets3d/valid/LICENSE",
-        "note": "Copyright 2022 Tiffany Do；Asian/gender 为上游合成人物标签，不推断模拟人物真实族群"
+        "note": "Copyright (c) 2022 Tiffany Do；MIT：分发副本或实质部分时须保留版权声明和完整许可文本；上游合成人物标签随原模型保留"
       },
       "preview": "/mecoffe/assets3d/previews/character.valid.Asian_F_2_Casual.svg",
       "scene_scope": "ustc"
@@ -11562,7 +11562,7 @@
       "license": {
         "spdx": "MIT",
         "path": "frontend/public/mecoffe/assets3d/valid/LICENSE",
-        "note": "Copyright 2022 Tiffany Do；Asian/gender 为上游合成人物标签，不推断模拟人物真实族群"
+        "note": "Copyright (c) 2022 Tiffany Do；MIT：分发副本或实质部分时须保留版权声明和完整许可文本；上游合成人物标签随原模型保留"
       },
       "preview": "/mecoffe/assets3d/previews/character.valid.Asian_M_1_Busi.svg",
       "scene_scope": "ustc"
@@ -11618,7 +11618,7 @@
       "license": {
         "spdx": "MIT",
         "path": "frontend/public/mecoffe/assets3d/valid/LICENSE",
-        "note": "Copyright 2022 Tiffany Do；Asian/gender 为上游合成人物标签，不推断模拟人物真实族群"
+        "note": "Copyright (c) 2022 Tiffany Do；MIT：分发副本或实质部分时须保留版权声明和完整许可文本；上游合成人物标签随原模型保留"
       },
       "preview": "/mecoffe/assets3d/previews/character.valid.Asian_M_1_Casual.svg",
       "scene_scope": "ustc"
@@ -11674,7 +11674,7 @@
       "license": {
         "spdx": "MIT",
         "path": "frontend/public/mecoffe/assets3d/valid/LICENSE",
-        "note": "Copyright 2022 Tiffany Do；Asian/gender 为上游合成人物标签，不推断模拟人物真实族群"
+        "note": "Copyright (c) 2022 Tiffany Do；MIT：分发副本或实质部分时须保留版权声明和完整许可文本；上游合成人物标签随原模型保留"
       },
       "preview": "/mecoffe/assets3d/previews/character.valid.Asian_M_2_Busi.svg",
       "scene_scope": "ustc"
@@ -11730,7 +11730,7 @@
       "license": {
         "spdx": "MIT",
         "path": "frontend/public/mecoffe/assets3d/valid/LICENSE",
-        "note": "Copyright 2022 Tiffany Do；Asian/gender 为上游合成人物标签，不推断模拟人物真实族群"
+        "note": "Copyright (c) 2022 Tiffany Do；MIT：分发副本或实质部分时须保留版权声明和完整许可文本；上游合成人物标签随原模型保留"
       },
       "preview": "/mecoffe/assets3d/previews/character.valid.Asian_M_2_Casual.svg",
       "scene_scope": "ustc"
@@ -11786,7 +11786,7 @@
       "license": {
         "spdx": "MIT",
         "path": "frontend/public/mecoffe/assets3d/valid/LICENSE",
-        "note": "Copyright 2022 Tiffany Do；Asian/gender 为上游合成人物标签，不推断模拟人物真实族群"
+        "note": "Copyright (c) 2022 Tiffany Do；MIT：分发副本或实质部分时须保留版权声明和完整许可文本；上游合成人物标签随原模型保留"
       },
       "preview": "/mecoffe/assets3d/previews/character.valid.Asian_M_3_Casual.svg",
       "scene_scope": "ustc"
@@ -11836,7 +11836,8 @@
       },
       "license": {
         "spdx": "CC0-1.0",
-        "path": "frontend/public/mecoffe/assets3d/kenney/License.txt"
+        "path": "frontend/public/mecoffe/assets3d/kenney/License.txt",
+        "note": "Kenney Nature Kit 2.1；原包 CC0；署名 Kenney / www.kenney.nl 属于自愿致谢，不是许可义务；保留原始 License.txt"
       },
       "preview": "/mecoffe/assets3d/previews/vegetation.kenney.tree_oak.svg",
       "scene_scope": "ustc"
@@ -11886,7 +11887,8 @@
       },
       "license": {
         "spdx": "CC0-1.0",
-        "path": "frontend/public/mecoffe/assets3d/kenney/License.txt"
+        "path": "frontend/public/mecoffe/assets3d/kenney/License.txt",
+        "note": "Kenney Nature Kit 2.1；原包 CC0；署名 Kenney / www.kenney.nl 属于自愿致谢，不是许可义务；保留原始 License.txt"
       },
       "preview": "/mecoffe/assets3d/previews/vegetation.kenney.tree_default.svg",
       "scene_scope": "ustc"
@@ -11936,7 +11938,8 @@
       },
       "license": {
         "spdx": "CC0-1.0",
-        "path": "frontend/public/mecoffe/assets3d/kenney/License.txt"
+        "path": "frontend/public/mecoffe/assets3d/kenney/License.txt",
+        "note": "Kenney Nature Kit 2.1；原包 CC0；署名 Kenney / www.kenney.nl 属于自愿致谢，不是许可义务；保留原始 License.txt"
       },
       "preview": "/mecoffe/assets3d/previews/vegetation.kenney.tree_detailed.svg",
       "scene_scope": "ustc"
@@ -11986,7 +11989,8 @@
       },
       "license": {
         "spdx": "CC0-1.0",
-        "path": "frontend/public/mecoffe/assets3d/kenney/License.txt"
+        "path": "frontend/public/mecoffe/assets3d/kenney/License.txt",
+        "note": "Kenney Nature Kit 2.1；原包 CC0；署名 Kenney / www.kenney.nl 属于自愿致谢，不是许可义务；保留原始 License.txt"
       },
       "preview": "/mecoffe/assets3d/previews/vegetation.kenney.tree_pineRoundD.svg",
       "scene_scope": "ustc"
@@ -12036,7 +12040,8 @@
       },
       "license": {
         "spdx": "CC0-1.0",
-        "path": "frontend/public/mecoffe/assets3d/kenney/License.txt"
+        "path": "frontend/public/mecoffe/assets3d/kenney/License.txt",
+        "note": "Kenney Nature Kit 2.1；原包 CC0；署名 Kenney / www.kenney.nl 属于自愿致谢，不是许可义务；保留原始 License.txt"
       },
       "preview": "/mecoffe/assets3d/previews/vegetation.kenney.tree_pineDefaultA.svg",
       "scene_scope": "ustc"
@@ -12086,7 +12091,8 @@
       },
       "license": {
         "spdx": "CC0-1.0",
-        "path": "frontend/public/mecoffe/assets3d/kenney/License.txt"
+        "path": "frontend/public/mecoffe/assets3d/kenney/License.txt",
+        "note": "Kenney Nature Kit 2.1；原包 CC0；署名 Kenney / www.kenney.nl 属于自愿致谢，不是许可义务；保留原始 License.txt"
       },
       "preview": "/mecoffe/assets3d/previews/vegetation.kenney.plant_bush.svg",
       "scene_scope": "ustc"
@@ -12136,7 +12142,8 @@
       },
       "license": {
         "spdx": "CC0-1.0",
-        "path": "frontend/public/mecoffe/assets3d/kenney/License.txt"
+        "path": "frontend/public/mecoffe/assets3d/kenney/License.txt",
+        "note": "Kenney Nature Kit 2.1；原包 CC0；署名 Kenney / www.kenney.nl 属于自愿致谢，不是许可义务；保留原始 License.txt"
       },
       "preview": "/mecoffe/assets3d/previews/vegetation.kenney.plant_bushDetailed.svg",
       "scene_scope": "ustc"
@@ -12186,7 +12193,8 @@
       },
       "license": {
         "spdx": "CC0-1.0",
-        "path": "frontend/public/mecoffe/assets3d/kenney/License.txt"
+        "path": "frontend/public/mecoffe/assets3d/kenney/License.txt",
+        "note": "Kenney Nature Kit 2.1；原包 CC0；署名 Kenney / www.kenney.nl 属于自愿致谢，不是许可义务；保留原始 License.txt"
       },
       "preview": "/mecoffe/assets3d/previews/vegetation.kenney.plant_bushSmall.svg",
       "scene_scope": "ustc"
@@ -14854,7 +14862,7 @@
       "license": {
         "spdx": "MIT",
         "path": "frontend/public/mecoffe/assets3d/valid/LICENSE",
-        "note": "Copyright 2022 Tiffany Do；Asian/gender 为上游合成人物标签，不推断模拟人物真实族群"
+        "note": "Copyright (c) 2022 Tiffany Do；MIT：分发副本或实质部分时须保留版权声明和完整许可文本；上游合成人物标签随原模型保留"
       },
       "preview": "/mecoffe/assets3d/previews/character.campus.merchant_001.svg",
       "scene_scope": "ustc",
@@ -14915,7 +14923,7 @@
       "license": {
         "spdx": "MIT",
         "path": "frontend/public/mecoffe/assets3d/valid/LICENSE",
-        "note": "Copyright 2022 Tiffany Do；Asian/gender 为上游合成人物标签，不推断模拟人物真实族群"
+        "note": "Copyright (c) 2022 Tiffany Do；MIT：分发副本或实质部分时须保留版权声明和完整许可文本；上游合成人物标签随原模型保留"
       },
       "preview": "/mecoffe/assets3d/previews/character.campus.merchant_002.svg",
       "scene_scope": "ustc",
@@ -14976,7 +14984,7 @@
       "license": {
         "spdx": "MIT",
         "path": "frontend/public/mecoffe/assets3d/valid/LICENSE",
-        "note": "Copyright 2022 Tiffany Do；Asian/gender 为上游合成人物标签，不推断模拟人物真实族群"
+        "note": "Copyright (c) 2022 Tiffany Do；MIT：分发副本或实质部分时须保留版权声明和完整许可文本；上游合成人物标签随原模型保留"
       },
       "preview": "/mecoffe/assets3d/previews/character.campus.undergraduate_consumer_001.svg",
       "scene_scope": "ustc",
@@ -15037,7 +15045,7 @@
       "license": {
         "spdx": "MIT",
         "path": "frontend/public/mecoffe/assets3d/valid/LICENSE",
-        "note": "Copyright 2022 Tiffany Do；Asian/gender 为上游合成人物标签，不推断模拟人物真实族群"
+        "note": "Copyright (c) 2022 Tiffany Do；MIT：分发副本或实质部分时须保留版权声明和完整许可文本；上游合成人物标签随原模型保留"
       },
       "preview": "/mecoffe/assets3d/previews/character.campus.undergraduate_consumer_002.svg",
       "scene_scope": "ustc",
@@ -15098,7 +15106,7 @@
       "license": {
         "spdx": "MIT",
         "path": "frontend/public/mecoffe/assets3d/valid/LICENSE",
-        "note": "Copyright 2022 Tiffany Do；Asian/gender 为上游合成人物标签，不推断模拟人物真实族群"
+        "note": "Copyright (c) 2022 Tiffany Do；MIT：分发副本或实质部分时须保留版权声明和完整许可文本；上游合成人物标签随原模型保留"
       },
       "preview": "/mecoffe/assets3d/previews/character.campus.undergraduate_consumer_003.svg",
       "scene_scope": "ustc",
@@ -15159,7 +15167,7 @@
       "license": {
         "spdx": "MIT",
         "path": "frontend/public/mecoffe/assets3d/valid/LICENSE",
-        "note": "Copyright 2022 Tiffany Do；Asian/gender 为上游合成人物标签，不推断模拟人物真实族群"
+        "note": "Copyright (c) 2022 Tiffany Do；MIT：分发副本或实质部分时须保留版权声明和完整许可文本；上游合成人物标签随原模型保留"
       },
       "preview": "/mecoffe/assets3d/previews/character.campus.undergraduate_consumer_004.svg",
       "scene_scope": "ustc",
@@ -15220,7 +15228,7 @@
       "license": {
         "spdx": "MIT",
         "path": "frontend/public/mecoffe/assets3d/valid/LICENSE",
-        "note": "Copyright 2022 Tiffany Do；Asian/gender 为上游合成人物标签，不推断模拟人物真实族群"
+        "note": "Copyright (c) 2022 Tiffany Do；MIT：分发副本或实质部分时须保留版权声明和完整许可文本；上游合成人物标签随原模型保留"
       },
       "preview": "/mecoffe/assets3d/previews/character.campus.undergraduate_consumer_005.svg",
       "scene_scope": "ustc",
@@ -15281,7 +15289,7 @@
       "license": {
         "spdx": "MIT",
         "path": "frontend/public/mecoffe/assets3d/valid/LICENSE",
-        "note": "Copyright 2022 Tiffany Do；Asian/gender 为上游合成人物标签，不推断模拟人物真实族群"
+        "note": "Copyright (c) 2022 Tiffany Do；MIT：分发副本或实质部分时须保留版权声明和完整许可文本；上游合成人物标签随原模型保留"
       },
       "preview": "/mecoffe/assets3d/previews/character.campus.undergraduate_consumer_006.svg",
       "scene_scope": "ustc",
@@ -15342,7 +15350,7 @@
       "license": {
         "spdx": "MIT",
         "path": "frontend/public/mecoffe/assets3d/valid/LICENSE",
-        "note": "Copyright 2022 Tiffany Do；Asian/gender 为上游合成人物标签，不推断模拟人物真实族群"
+        "note": "Copyright (c) 2022 Tiffany Do；MIT：分发副本或实质部分时须保留版权声明和完整许可文本；上游合成人物标签随原模型保留"
       },
       "preview": "/mecoffe/assets3d/previews/character.campus.undergraduate_consumer_007.svg",
       "scene_scope": "ustc",
@@ -15403,7 +15411,7 @@
       "license": {
         "spdx": "MIT",
         "path": "frontend/public/mecoffe/assets3d/valid/LICENSE",
-        "note": "Copyright 2022 Tiffany Do；Asian/gender 为上游合成人物标签，不推断模拟人物真实族群"
+        "note": "Copyright (c) 2022 Tiffany Do；MIT：分发副本或实质部分时须保留版权声明和完整许可文本；上游合成人物标签随原模型保留"
       },
       "preview": "/mecoffe/assets3d/previews/character.campus.undergraduate_consumer_008.svg",
       "scene_scope": "ustc",
@@ -15464,7 +15472,7 @@
       "license": {
         "spdx": "MIT",
         "path": "frontend/public/mecoffe/assets3d/valid/LICENSE",
-        "note": "Copyright 2022 Tiffany Do；Asian/gender 为上游合成人物标签，不推断模拟人物真实族群"
+        "note": "Copyright (c) 2022 Tiffany Do；MIT：分发副本或实质部分时须保留版权声明和完整许可文本；上游合成人物标签随原模型保留"
       },
       "preview": "/mecoffe/assets3d/previews/character.campus.undergraduate_consumer_009.svg",
       "scene_scope": "ustc",
@@ -15525,7 +15533,7 @@
       "license": {
         "spdx": "MIT",
         "path": "frontend/public/mecoffe/assets3d/valid/LICENSE",
-        "note": "Copyright 2022 Tiffany Do；Asian/gender 为上游合成人物标签，不推断模拟人物真实族群"
+        "note": "Copyright (c) 2022 Tiffany Do；MIT：分发副本或实质部分时须保留版权声明和完整许可文本；上游合成人物标签随原模型保留"
       },
       "preview": "/mecoffe/assets3d/previews/character.campus.undergraduate_consumer_010.svg",
       "scene_scope": "ustc",
@@ -15586,7 +15594,7 @@
       "license": {
         "spdx": "MIT",
         "path": "frontend/public/mecoffe/assets3d/valid/LICENSE",
-        "note": "Copyright 2022 Tiffany Do；Asian/gender 为上游合成人物标签，不推断模拟人物真实族群"
+        "note": "Copyright (c) 2022 Tiffany Do；MIT：分发副本或实质部分时须保留版权声明和完整许可文本；上游合成人物标签随原模型保留"
       },
       "preview": "/mecoffe/assets3d/previews/character.campus.undergraduate_consumer_011.svg",
       "scene_scope": "ustc",
@@ -15647,7 +15655,7 @@
       "license": {
         "spdx": "MIT",
         "path": "frontend/public/mecoffe/assets3d/valid/LICENSE",
-        "note": "Copyright 2022 Tiffany Do；Asian/gender 为上游合成人物标签，不推断模拟人物真实族群"
+        "note": "Copyright (c) 2022 Tiffany Do；MIT：分发副本或实质部分时须保留版权声明和完整许可文本；上游合成人物标签随原模型保留"
       },
       "preview": "/mecoffe/assets3d/previews/character.campus.undergraduate_consumer_012.svg",
       "scene_scope": "ustc",
@@ -15708,7 +15716,7 @@
       "license": {
         "spdx": "MIT",
         "path": "frontend/public/mecoffe/assets3d/valid/LICENSE",
-        "note": "Copyright 2022 Tiffany Do；Asian/gender 为上游合成人物标签，不推断模拟人物真实族群"
+        "note": "Copyright (c) 2022 Tiffany Do；MIT：分发副本或实质部分时须保留版权声明和完整许可文本；上游合成人物标签随原模型保留"
       },
       "preview": "/mecoffe/assets3d/previews/character.campus.undergraduate_consumer_013.svg",
       "scene_scope": "ustc",
@@ -15769,7 +15777,7 @@
       "license": {
         "spdx": "MIT",
         "path": "frontend/public/mecoffe/assets3d/valid/LICENSE",
-        "note": "Copyright 2022 Tiffany Do；Asian/gender 为上游合成人物标签，不推断模拟人物真实族群"
+        "note": "Copyright (c) 2022 Tiffany Do；MIT：分发副本或实质部分时须保留版权声明和完整许可文本；上游合成人物标签随原模型保留"
       },
       "preview": "/mecoffe/assets3d/previews/character.campus.undergraduate_consumer_014.svg",
       "scene_scope": "ustc",
@@ -15830,7 +15838,7 @@
       "license": {
         "spdx": "MIT",
         "path": "frontend/public/mecoffe/assets3d/valid/LICENSE",
-        "note": "Copyright 2022 Tiffany Do；Asian/gender 为上游合成人物标签，不推断模拟人物真实族群"
+        "note": "Copyright (c) 2022 Tiffany Do；MIT：分发副本或实质部分时须保留版权声明和完整许可文本；上游合成人物标签随原模型保留"
       },
       "preview": "/mecoffe/assets3d/previews/character.campus.undergraduate_consumer_015.svg",
       "scene_scope": "ustc",
@@ -15891,7 +15899,7 @@
       "license": {
         "spdx": "MIT",
         "path": "frontend/public/mecoffe/assets3d/valid/LICENSE",
-        "note": "Copyright 2022 Tiffany Do；Asian/gender 为上游合成人物标签，不推断模拟人物真实族群"
+        "note": "Copyright (c) 2022 Tiffany Do；MIT：分发副本或实质部分时须保留版权声明和完整许可文本；上游合成人物标签随原模型保留"
       },
       "preview": "/mecoffe/assets3d/previews/character.campus.undergraduate_consumer_016.svg",
       "scene_scope": "ustc",
@@ -15952,7 +15960,7 @@
       "license": {
         "spdx": "MIT",
         "path": "frontend/public/mecoffe/assets3d/valid/LICENSE",
-        "note": "Copyright 2022 Tiffany Do；Asian/gender 为上游合成人物标签，不推断模拟人物真实族群"
+        "note": "Copyright (c) 2022 Tiffany Do；MIT：分发副本或实质部分时须保留版权声明和完整许可文本；上游合成人物标签随原模型保留"
       },
       "preview": "/mecoffe/assets3d/previews/character.campus.undergraduate_consumer_017.svg",
       "scene_scope": "ustc",
@@ -16013,7 +16021,7 @@
       "license": {
         "spdx": "MIT",
         "path": "frontend/public/mecoffe/assets3d/valid/LICENSE",
-        "note": "Copyright 2022 Tiffany Do；Asian/gender 为上游合成人物标签，不推断模拟人物真实族群"
+        "note": "Copyright (c) 2022 Tiffany Do；MIT：分发副本或实质部分时须保留版权声明和完整许可文本；上游合成人物标签随原模型保留"
       },
       "preview": "/mecoffe/assets3d/previews/character.campus.undergraduate_consumer_018.svg",
       "scene_scope": "ustc",
@@ -16074,7 +16082,7 @@
       "license": {
         "spdx": "MIT",
         "path": "frontend/public/mecoffe/assets3d/valid/LICENSE",
-        "note": "Copyright 2022 Tiffany Do；Asian/gender 为上游合成人物标签，不推断模拟人物真实族群"
+        "note": "Copyright (c) 2022 Tiffany Do；MIT：分发副本或实质部分时须保留版权声明和完整许可文本；上游合成人物标签随原模型保留"
       },
       "preview": "/mecoffe/assets3d/previews/character.campus.undergraduate_consumer_019.svg",
       "scene_scope": "ustc",
@@ -16135,7 +16143,7 @@
       "license": {
         "spdx": "MIT",
         "path": "frontend/public/mecoffe/assets3d/valid/LICENSE",
-        "note": "Copyright 2022 Tiffany Do；Asian/gender 为上游合成人物标签，不推断模拟人物真实族群"
+        "note": "Copyright (c) 2022 Tiffany Do；MIT：分发副本或实质部分时须保留版权声明和完整许可文本；上游合成人物标签随原模型保留"
       },
       "preview": "/mecoffe/assets3d/previews/character.campus.undergraduate_consumer_020.svg",
       "scene_scope": "ustc",
@@ -16196,7 +16204,7 @@
       "license": {
         "spdx": "MIT",
         "path": "frontend/public/mecoffe/assets3d/valid/LICENSE",
-        "note": "Copyright 2022 Tiffany Do；Asian/gender 为上游合成人物标签，不推断模拟人物真实族群"
+        "note": "Copyright (c) 2022 Tiffany Do；MIT：分发副本或实质部分时须保留版权声明和完整许可文本；上游合成人物标签随原模型保留"
       },
       "preview": "/mecoffe/assets3d/previews/character.campus.undergraduate_consumer_021.svg",
       "scene_scope": "ustc",
@@ -16257,7 +16265,7 @@
       "license": {
         "spdx": "MIT",
         "path": "frontend/public/mecoffe/assets3d/valid/LICENSE",
-        "note": "Copyright 2022 Tiffany Do；Asian/gender 为上游合成人物标签，不推断模拟人物真实族群"
+        "note": "Copyright (c) 2022 Tiffany Do；MIT：分发副本或实质部分时须保留版权声明和完整许可文本；上游合成人物标签随原模型保留"
       },
       "preview": "/mecoffe/assets3d/previews/character.campus.undergraduate_consumer_022.svg",
       "scene_scope": "ustc",
@@ -16318,7 +16326,7 @@
       "license": {
         "spdx": "MIT",
         "path": "frontend/public/mecoffe/assets3d/valid/LICENSE",
-        "note": "Copyright 2022 Tiffany Do；Asian/gender 为上游合成人物标签，不推断模拟人物真实族群"
+        "note": "Copyright (c) 2022 Tiffany Do；MIT：分发副本或实质部分时须保留版权声明和完整许可文本；上游合成人物标签随原模型保留"
       },
       "preview": "/mecoffe/assets3d/previews/character.campus.undergraduate_consumer_023.svg",
       "scene_scope": "ustc",
@@ -16379,7 +16387,7 @@
       "license": {
         "spdx": "MIT",
         "path": "frontend/public/mecoffe/assets3d/valid/LICENSE",
-        "note": "Copyright 2022 Tiffany Do；Asian/gender 为上游合成人物标签，不推断模拟人物真实族群"
+        "note": "Copyright (c) 2022 Tiffany Do；MIT：分发副本或实质部分时须保留版权声明和完整许可文本；上游合成人物标签随原模型保留"
       },
       "preview": "/mecoffe/assets3d/previews/character.campus.undergraduate_consumer_024.svg",
       "scene_scope": "ustc",
@@ -16440,7 +16448,7 @@
       "license": {
         "spdx": "MIT",
         "path": "frontend/public/mecoffe/assets3d/valid/LICENSE",
-        "note": "Copyright 2022 Tiffany Do；Asian/gender 为上游合成人物标签，不推断模拟人物真实族群"
+        "note": "Copyright (c) 2022 Tiffany Do；MIT：分发副本或实质部分时须保留版权声明和完整许可文本；上游合成人物标签随原模型保留"
       },
       "preview": "/mecoffe/assets3d/previews/character.campus.undergraduate_consumer_025.svg",
       "scene_scope": "ustc",
@@ -16501,7 +16509,7 @@
       "license": {
         "spdx": "MIT",
         "path": "frontend/public/mecoffe/assets3d/valid/LICENSE",
-        "note": "Copyright 2022 Tiffany Do；Asian/gender 为上游合成人物标签，不推断模拟人物真实族群"
+        "note": "Copyright (c) 2022 Tiffany Do；MIT：分发副本或实质部分时须保留版权声明和完整许可文本；上游合成人物标签随原模型保留"
       },
       "preview": "/mecoffe/assets3d/previews/character.campus.undergraduate_consumer_026.svg",
       "scene_scope": "ustc",
@@ -16562,7 +16570,7 @@
       "license": {
         "spdx": "MIT",
         "path": "frontend/public/mecoffe/assets3d/valid/LICENSE",
-        "note": "Copyright 2022 Tiffany Do；Asian/gender 为上游合成人物标签，不推断模拟人物真实族群"
+        "note": "Copyright (c) 2022 Tiffany Do；MIT：分发副本或实质部分时须保留版权声明和完整许可文本；上游合成人物标签随原模型保留"
       },
       "preview": "/mecoffe/assets3d/previews/character.campus.undergraduate_consumer_027.svg",
       "scene_scope": "ustc",
@@ -16623,7 +16631,7 @@
       "license": {
         "spdx": "MIT",
         "path": "frontend/public/mecoffe/assets3d/valid/LICENSE",
-        "note": "Copyright 2022 Tiffany Do；Asian/gender 为上游合成人物标签，不推断模拟人物真实族群"
+        "note": "Copyright (c) 2022 Tiffany Do；MIT：分发副本或实质部分时须保留版权声明和完整许可文本；上游合成人物标签随原模型保留"
       },
       "preview": "/mecoffe/assets3d/previews/character.campus.undergraduate_consumer_028.svg",
       "scene_scope": "ustc",
@@ -16684,7 +16692,7 @@
       "license": {
         "spdx": "MIT",
         "path": "frontend/public/mecoffe/assets3d/valid/LICENSE",
-        "note": "Copyright 2022 Tiffany Do；Asian/gender 为上游合成人物标签，不推断模拟人物真实族群"
+        "note": "Copyright (c) 2022 Tiffany Do；MIT：分发副本或实质部分时须保留版权声明和完整许可文本；上游合成人物标签随原模型保留"
       },
       "preview": "/mecoffe/assets3d/previews/character.campus.undergraduate_consumer_029.svg",
       "scene_scope": "ustc",
@@ -16745,7 +16753,7 @@
       "license": {
         "spdx": "MIT",
         "path": "frontend/public/mecoffe/assets3d/valid/LICENSE",
-        "note": "Copyright 2022 Tiffany Do；Asian/gender 为上游合成人物标签，不推断模拟人物真实族群"
+        "note": "Copyright (c) 2022 Tiffany Do；MIT：分发副本或实质部分时须保留版权声明和完整许可文本；上游合成人物标签随原模型保留"
       },
       "preview": "/mecoffe/assets3d/previews/character.campus.undergraduate_consumer_030.svg",
       "scene_scope": "ustc",
@@ -16806,7 +16814,7 @@
       "license": {
         "spdx": "MIT",
         "path": "frontend/public/mecoffe/assets3d/valid/LICENSE",
-        "note": "Copyright 2022 Tiffany Do；Asian/gender 为上游合成人物标签，不推断模拟人物真实族群"
+        "note": "Copyright (c) 2022 Tiffany Do；MIT：分发副本或实质部分时须保留版权声明和完整许可文本；上游合成人物标签随原模型保留"
       },
       "preview": "/mecoffe/assets3d/previews/character.campus.undergraduate_consumer_031.svg",
       "scene_scope": "ustc",
@@ -16867,7 +16875,7 @@
       "license": {
         "spdx": "MIT",
         "path": "frontend/public/mecoffe/assets3d/valid/LICENSE",
-        "note": "Copyright 2022 Tiffany Do；Asian/gender 为上游合成人物标签，不推断模拟人物真实族群"
+        "note": "Copyright (c) 2022 Tiffany Do；MIT：分发副本或实质部分时须保留版权声明和完整许可文本；上游合成人物标签随原模型保留"
       },
       "preview": "/mecoffe/assets3d/previews/character.campus.undergraduate_consumer_032.svg",
       "scene_scope": "ustc",
@@ -16928,7 +16936,7 @@
       "license": {
         "spdx": "MIT",
         "path": "frontend/public/mecoffe/assets3d/valid/LICENSE",
-        "note": "Copyright 2022 Tiffany Do；Asian/gender 为上游合成人物标签，不推断模拟人物真实族群"
+        "note": "Copyright (c) 2022 Tiffany Do；MIT：分发副本或实质部分时须保留版权声明和完整许可文本；上游合成人物标签随原模型保留"
       },
       "preview": "/mecoffe/assets3d/previews/character.campus.undergraduate_consumer_033.svg",
       "scene_scope": "ustc",
@@ -16989,7 +16997,7 @@
       "license": {
         "spdx": "MIT",
         "path": "frontend/public/mecoffe/assets3d/valid/LICENSE",
-        "note": "Copyright 2022 Tiffany Do；Asian/gender 为上游合成人物标签，不推断模拟人物真实族群"
+        "note": "Copyright (c) 2022 Tiffany Do；MIT：分发副本或实质部分时须保留版权声明和完整许可文本；上游合成人物标签随原模型保留"
       },
       "preview": "/mecoffe/assets3d/previews/character.campus.undergraduate_consumer_034.svg",
       "scene_scope": "ustc",
@@ -17050,7 +17058,7 @@
       "license": {
         "spdx": "MIT",
         "path": "frontend/public/mecoffe/assets3d/valid/LICENSE",
-        "note": "Copyright 2022 Tiffany Do；Asian/gender 为上游合成人物标签，不推断模拟人物真实族群"
+        "note": "Copyright (c) 2022 Tiffany Do；MIT：分发副本或实质部分时须保留版权声明和完整许可文本；上游合成人物标签随原模型保留"
       },
       "preview": "/mecoffe/assets3d/previews/character.campus.undergraduate_consumer_035.svg",
       "scene_scope": "ustc",
@@ -17111,7 +17119,7 @@
       "license": {
         "spdx": "MIT",
         "path": "frontend/public/mecoffe/assets3d/valid/LICENSE",
-        "note": "Copyright 2022 Tiffany Do；Asian/gender 为上游合成人物标签，不推断模拟人物真实族群"
+        "note": "Copyright (c) 2022 Tiffany Do；MIT：分发副本或实质部分时须保留版权声明和完整许可文本；上游合成人物标签随原模型保留"
       },
       "preview": "/mecoffe/assets3d/previews/character.campus.undergraduate_consumer_036.svg",
       "scene_scope": "ustc",
@@ -17172,7 +17180,7 @@
       "license": {
         "spdx": "MIT",
         "path": "frontend/public/mecoffe/assets3d/valid/LICENSE",
-        "note": "Copyright 2022 Tiffany Do；Asian/gender 为上游合成人物标签，不推断模拟人物真实族群"
+        "note": "Copyright (c) 2022 Tiffany Do；MIT：分发副本或实质部分时须保留版权声明和完整许可文本；上游合成人物标签随原模型保留"
       },
       "preview": "/mecoffe/assets3d/previews/character.campus.undergraduate_consumer_037.svg",
       "scene_scope": "ustc",
@@ -17233,7 +17241,7 @@
       "license": {
         "spdx": "MIT",
         "path": "frontend/public/mecoffe/assets3d/valid/LICENSE",
-        "note": "Copyright 2022 Tiffany Do；Asian/gender 为上游合成人物标签，不推断模拟人物真实族群"
+        "note": "Copyright (c) 2022 Tiffany Do；MIT：分发副本或实质部分时须保留版权声明和完整许可文本；上游合成人物标签随原模型保留"
       },
       "preview": "/mecoffe/assets3d/previews/character.campus.undergraduate_consumer_038.svg",
       "scene_scope": "ustc",
@@ -17294,7 +17302,7 @@
       "license": {
         "spdx": "MIT",
         "path": "frontend/public/mecoffe/assets3d/valid/LICENSE",
-        "note": "Copyright 2022 Tiffany Do；Asian/gender 为上游合成人物标签，不推断模拟人物真实族群"
+        "note": "Copyright (c) 2022 Tiffany Do；MIT：分发副本或实质部分时须保留版权声明和完整许可文本；上游合成人物标签随原模型保留"
       },
       "preview": "/mecoffe/assets3d/previews/character.campus.undergraduate_consumer_039.svg",
       "scene_scope": "ustc",
@@ -17355,7 +17363,7 @@
       "license": {
         "spdx": "MIT",
         "path": "frontend/public/mecoffe/assets3d/valid/LICENSE",
-        "note": "Copyright 2022 Tiffany Do；Asian/gender 为上游合成人物标签，不推断模拟人物真实族群"
+        "note": "Copyright (c) 2022 Tiffany Do；MIT：分发副本或实质部分时须保留版权声明和完整许可文本；上游合成人物标签随原模型保留"
       },
       "preview": "/mecoffe/assets3d/previews/character.campus.undergraduate_consumer_040.svg",
       "scene_scope": "ustc",
@@ -17416,7 +17424,7 @@
       "license": {
         "spdx": "MIT",
         "path": "frontend/public/mecoffe/assets3d/valid/LICENSE",
-        "note": "Copyright 2022 Tiffany Do；Asian/gender 为上游合成人物标签，不推断模拟人物真实族群"
+        "note": "Copyright (c) 2022 Tiffany Do；MIT：分发副本或实质部分时须保留版权声明和完整许可文本；上游合成人物标签随原模型保留"
       },
       "preview": "/mecoffe/assets3d/previews/character.campus.undergraduate_consumer_041.svg",
       "scene_scope": "ustc",
@@ -17477,7 +17485,7 @@
       "license": {
         "spdx": "MIT",
         "path": "frontend/public/mecoffe/assets3d/valid/LICENSE",
-        "note": "Copyright 2022 Tiffany Do；Asian/gender 为上游合成人物标签，不推断模拟人物真实族群"
+        "note": "Copyright (c) 2022 Tiffany Do；MIT：分发副本或实质部分时须保留版权声明和完整许可文本；上游合成人物标签随原模型保留"
       },
       "preview": "/mecoffe/assets3d/previews/character.campus.undergraduate_consumer_042.svg",
       "scene_scope": "ustc",
@@ -17538,7 +17546,7 @@
       "license": {
         "spdx": "MIT",
         "path": "frontend/public/mecoffe/assets3d/valid/LICENSE",
-        "note": "Copyright 2022 Tiffany Do；Asian/gender 为上游合成人物标签，不推断模拟人物真实族群"
+        "note": "Copyright (c) 2022 Tiffany Do；MIT：分发副本或实质部分时须保留版权声明和完整许可文本；上游合成人物标签随原模型保留"
       },
       "preview": "/mecoffe/assets3d/previews/character.campus.undergraduate_consumer_043.svg",
       "scene_scope": "ustc",
@@ -17599,7 +17607,7 @@
       "license": {
         "spdx": "MIT",
         "path": "frontend/public/mecoffe/assets3d/valid/LICENSE",
-        "note": "Copyright 2022 Tiffany Do；Asian/gender 为上游合成人物标签，不推断模拟人物真实族群"
+        "note": "Copyright (c) 2022 Tiffany Do；MIT：分发副本或实质部分时须保留版权声明和完整许可文本；上游合成人物标签随原模型保留"
       },
       "preview": "/mecoffe/assets3d/previews/character.campus.undergraduate_consumer_044.svg",
       "scene_scope": "ustc",
@@ -17660,7 +17668,7 @@
       "license": {
         "spdx": "MIT",
         "path": "frontend/public/mecoffe/assets3d/valid/LICENSE",
-        "note": "Copyright 2022 Tiffany Do；Asian/gender 为上游合成人物标签，不推断模拟人物真实族群"
+        "note": "Copyright (c) 2022 Tiffany Do；MIT：分发副本或实质部分时须保留版权声明和完整许可文本；上游合成人物标签随原模型保留"
       },
       "preview": "/mecoffe/assets3d/previews/character.campus.undergraduate_consumer_045.svg",
       "scene_scope": "ustc",
@@ -17721,7 +17729,7 @@
       "license": {
         "spdx": "MIT",
         "path": "frontend/public/mecoffe/assets3d/valid/LICENSE",
-        "note": "Copyright 2022 Tiffany Do；Asian/gender 为上游合成人物标签，不推断模拟人物真实族群"
+        "note": "Copyright (c) 2022 Tiffany Do；MIT：分发副本或实质部分时须保留版权声明和完整许可文本；上游合成人物标签随原模型保留"
       },
       "preview": "/mecoffe/assets3d/previews/character.campus.undergraduate_consumer_046.svg",
       "scene_scope": "ustc",
@@ -17782,7 +17790,7 @@
       "license": {
         "spdx": "MIT",
         "path": "frontend/public/mecoffe/assets3d/valid/LICENSE",
-        "note": "Copyright 2022 Tiffany Do；Asian/gender 为上游合成人物标签，不推断模拟人物真实族群"
+        "note": "Copyright (c) 2022 Tiffany Do；MIT：分发副本或实质部分时须保留版权声明和完整许可文本；上游合成人物标签随原模型保留"
       },
       "preview": "/mecoffe/assets3d/previews/character.campus.undergraduate_consumer_047.svg",
       "scene_scope": "ustc",
@@ -17843,7 +17851,7 @@
       "license": {
         "spdx": "MIT",
         "path": "frontend/public/mecoffe/assets3d/valid/LICENSE",
-        "note": "Copyright 2022 Tiffany Do；Asian/gender 为上游合成人物标签，不推断模拟人物真实族群"
+        "note": "Copyright (c) 2022 Tiffany Do；MIT：分发副本或实质部分时须保留版权声明和完整许可文本；上游合成人物标签随原模型保留"
       },
       "preview": "/mecoffe/assets3d/previews/character.campus.undergraduate_consumer_048.svg",
       "scene_scope": "ustc",
@@ -17904,7 +17912,7 @@
       "license": {
         "spdx": "MIT",
         "path": "frontend/public/mecoffe/assets3d/valid/LICENSE",
-        "note": "Copyright 2022 Tiffany Do；Asian/gender 为上游合成人物标签，不推断模拟人物真实族群"
+        "note": "Copyright (c) 2022 Tiffany Do；MIT：分发副本或实质部分时须保留版权声明和完整许可文本；上游合成人物标签随原模型保留"
       },
       "preview": "/mecoffe/assets3d/previews/character.campus.undergraduate_consumer_049.svg",
       "scene_scope": "ustc",
@@ -17965,7 +17973,7 @@
       "license": {
         "spdx": "MIT",
         "path": "frontend/public/mecoffe/assets3d/valid/LICENSE",
-        "note": "Copyright 2022 Tiffany Do；Asian/gender 为上游合成人物标签，不推断模拟人物真实族群"
+        "note": "Copyright (c) 2022 Tiffany Do；MIT：分发副本或实质部分时须保留版权声明和完整许可文本；上游合成人物标签随原模型保留"
       },
       "preview": "/mecoffe/assets3d/previews/character.campus.undergraduate_consumer_050.svg",
       "scene_scope": "ustc",
@@ -18026,7 +18034,7 @@
       "license": {
         "spdx": "MIT",
         "path": "frontend/public/mecoffe/assets3d/valid/LICENSE",
-        "note": "Copyright 2022 Tiffany Do；Asian/gender 为上游合成人物标签，不推断模拟人物真实族群"
+        "note": "Copyright (c) 2022 Tiffany Do；MIT：分发副本或实质部分时须保留版权声明和完整许可文本；上游合成人物标签随原模型保留"
       },
       "preview": "/mecoffe/assets3d/previews/character.campus.undergraduate_consumer_051.svg",
       "scene_scope": "ustc",
@@ -18087,7 +18095,7 @@
       "license": {
         "spdx": "MIT",
         "path": "frontend/public/mecoffe/assets3d/valid/LICENSE",
-        "note": "Copyright 2022 Tiffany Do；Asian/gender 为上游合成人物标签，不推断模拟人物真实族群"
+        "note": "Copyright (c) 2022 Tiffany Do；MIT：分发副本或实质部分时须保留版权声明和完整许可文本；上游合成人物标签随原模型保留"
       },
       "preview": "/mecoffe/assets3d/previews/character.campus.undergraduate_consumer_052.svg",
       "scene_scope": "ustc",
@@ -18148,7 +18156,7 @@
       "license": {
         "spdx": "MIT",
         "path": "frontend/public/mecoffe/assets3d/valid/LICENSE",
-        "note": "Copyright 2022 Tiffany Do；Asian/gender 为上游合成人物标签，不推断模拟人物真实族群"
+        "note": "Copyright (c) 2022 Tiffany Do；MIT：分发副本或实质部分时须保留版权声明和完整许可文本；上游合成人物标签随原模型保留"
       },
       "preview": "/mecoffe/assets3d/previews/character.campus.undergraduate_consumer_053.svg",
       "scene_scope": "ustc",
@@ -18209,7 +18217,7 @@
       "license": {
         "spdx": "MIT",
         "path": "frontend/public/mecoffe/assets3d/valid/LICENSE",
-        "note": "Copyright 2022 Tiffany Do；Asian/gender 为上游合成人物标签，不推断模拟人物真实族群"
+        "note": "Copyright (c) 2022 Tiffany Do；MIT：分发副本或实质部分时须保留版权声明和完整许可文本；上游合成人物标签随原模型保留"
       },
       "preview": "/mecoffe/assets3d/previews/character.campus.undergraduate_consumer_054.svg",
       "scene_scope": "ustc",
@@ -18270,7 +18278,7 @@
       "license": {
         "spdx": "MIT",
         "path": "frontend/public/mecoffe/assets3d/valid/LICENSE",
-        "note": "Copyright 2022 Tiffany Do；Asian/gender 为上游合成人物标签，不推断模拟人物真实族群"
+        "note": "Copyright (c) 2022 Tiffany Do；MIT：分发副本或实质部分时须保留版权声明和完整许可文本；上游合成人物标签随原模型保留"
       },
       "preview": "/mecoffe/assets3d/previews/character.campus.undergraduate_consumer_055.svg",
       "scene_scope": "ustc",
@@ -18331,7 +18339,7 @@
       "license": {
         "spdx": "MIT",
         "path": "frontend/public/mecoffe/assets3d/valid/LICENSE",
-        "note": "Copyright 2022 Tiffany Do；Asian/gender 为上游合成人物标签，不推断模拟人物真实族群"
+        "note": "Copyright (c) 2022 Tiffany Do；MIT：分发副本或实质部分时须保留版权声明和完整许可文本；上游合成人物标签随原模型保留"
       },
       "preview": "/mecoffe/assets3d/previews/character.campus.undergraduate_consumer_056.svg",
       "scene_scope": "ustc",
@@ -18392,7 +18400,7 @@
       "license": {
         "spdx": "MIT",
         "path": "frontend/public/mecoffe/assets3d/valid/LICENSE",
-        "note": "Copyright 2022 Tiffany Do；Asian/gender 为上游合成人物标签，不推断模拟人物真实族群"
+        "note": "Copyright (c) 2022 Tiffany Do；MIT：分发副本或实质部分时须保留版权声明和完整许可文本；上游合成人物标签随原模型保留"
       },
       "preview": "/mecoffe/assets3d/previews/character.campus.undergraduate_consumer_057.svg",
       "scene_scope": "ustc",
@@ -18453,7 +18461,7 @@
       "license": {
         "spdx": "MIT",
         "path": "frontend/public/mecoffe/assets3d/valid/LICENSE",
-        "note": "Copyright 2022 Tiffany Do；Asian/gender 为上游合成人物标签，不推断模拟人物真实族群"
+        "note": "Copyright (c) 2022 Tiffany Do；MIT：分发副本或实质部分时须保留版权声明和完整许可文本；上游合成人物标签随原模型保留"
       },
       "preview": "/mecoffe/assets3d/previews/character.campus.undergraduate_consumer_058.svg",
       "scene_scope": "ustc",
@@ -18514,7 +18522,7 @@
       "license": {
         "spdx": "MIT",
         "path": "frontend/public/mecoffe/assets3d/valid/LICENSE",
-        "note": "Copyright 2022 Tiffany Do；Asian/gender 为上游合成人物标签，不推断模拟人物真实族群"
+        "note": "Copyright (c) 2022 Tiffany Do；MIT：分发副本或实质部分时须保留版权声明和完整许可文本；上游合成人物标签随原模型保留"
       },
       "preview": "/mecoffe/assets3d/previews/character.campus.undergraduate_consumer_059.svg",
       "scene_scope": "ustc",
@@ -18575,7 +18583,7 @@
       "license": {
         "spdx": "MIT",
         "path": "frontend/public/mecoffe/assets3d/valid/LICENSE",
-        "note": "Copyright 2022 Tiffany Do；Asian/gender 为上游合成人物标签，不推断模拟人物真实族群"
+        "note": "Copyright (c) 2022 Tiffany Do；MIT：分发副本或实质部分时须保留版权声明和完整许可文本；上游合成人物标签随原模型保留"
       },
       "preview": "/mecoffe/assets3d/previews/character.campus.undergraduate_consumer_060.svg",
       "scene_scope": "ustc",
@@ -18636,7 +18644,7 @@
       "license": {
         "spdx": "MIT",
         "path": "frontend/public/mecoffe/assets3d/valid/LICENSE",
-        "note": "Copyright 2022 Tiffany Do；Asian/gender 为上游合成人物标签，不推断模拟人物真实族群"
+        "note": "Copyright (c) 2022 Tiffany Do；MIT：分发副本或实质部分时须保留版权声明和完整许可文本；上游合成人物标签随原模型保留"
       },
       "preview": "/mecoffe/assets3d/previews/character.campus.undergraduate_consumer_061.svg",
       "scene_scope": "ustc",
@@ -18697,7 +18705,7 @@
       "license": {
         "spdx": "MIT",
         "path": "frontend/public/mecoffe/assets3d/valid/LICENSE",
-        "note": "Copyright 2022 Tiffany Do；Asian/gender 为上游合成人物标签，不推断模拟人物真实族群"
+        "note": "Copyright (c) 2022 Tiffany Do；MIT：分发副本或实质部分时须保留版权声明和完整许可文本；上游合成人物标签随原模型保留"
       },
       "preview": "/mecoffe/assets3d/previews/character.campus.undergraduate_consumer_062.svg",
       "scene_scope": "ustc",
@@ -18758,7 +18766,7 @@
       "license": {
         "spdx": "MIT",
         "path": "frontend/public/mecoffe/assets3d/valid/LICENSE",
-        "note": "Copyright 2022 Tiffany Do；Asian/gender 为上游合成人物标签，不推断模拟人物真实族群"
+        "note": "Copyright (c) 2022 Tiffany Do；MIT：分发副本或实质部分时须保留版权声明和完整许可文本；上游合成人物标签随原模型保留"
       },
       "preview": "/mecoffe/assets3d/previews/character.campus.undergraduate_consumer_063.svg",
       "scene_scope": "ustc",
@@ -18819,7 +18827,7 @@
       "license": {
         "spdx": "MIT",
         "path": "frontend/public/mecoffe/assets3d/valid/LICENSE",
-        "note": "Copyright 2022 Tiffany Do；Asian/gender 为上游合成人物标签，不推断模拟人物真实族群"
+        "note": "Copyright (c) 2022 Tiffany Do；MIT：分发副本或实质部分时须保留版权声明和完整许可文本；上游合成人物标签随原模型保留"
       },
       "preview": "/mecoffe/assets3d/previews/character.campus.undergraduate_consumer_064.svg",
       "scene_scope": "ustc",
@@ -18880,7 +18888,7 @@
       "license": {
         "spdx": "MIT",
         "path": "frontend/public/mecoffe/assets3d/valid/LICENSE",
-        "note": "Copyright 2022 Tiffany Do；Asian/gender 为上游合成人物标签，不推断模拟人物真实族群"
+        "note": "Copyright (c) 2022 Tiffany Do；MIT：分发副本或实质部分时须保留版权声明和完整许可文本；上游合成人物标签随原模型保留"
       },
       "preview": "/mecoffe/assets3d/previews/character.campus.undergraduate_consumer_065.svg",
       "scene_scope": "ustc",
@@ -18941,7 +18949,7 @@
       "license": {
         "spdx": "MIT",
         "path": "frontend/public/mecoffe/assets3d/valid/LICENSE",
-        "note": "Copyright 2022 Tiffany Do；Asian/gender 为上游合成人物标签，不推断模拟人物真实族群"
+        "note": "Copyright (c) 2022 Tiffany Do；MIT：分发副本或实质部分时须保留版权声明和完整许可文本；上游合成人物标签随原模型保留"
       },
       "preview": "/mecoffe/assets3d/previews/character.campus.undergraduate_consumer_066.svg",
       "scene_scope": "ustc",
@@ -19002,7 +19010,7 @@
       "license": {
         "spdx": "MIT",
         "path": "frontend/public/mecoffe/assets3d/valid/LICENSE",
-        "note": "Copyright 2022 Tiffany Do；Asian/gender 为上游合成人物标签，不推断模拟人物真实族群"
+        "note": "Copyright (c) 2022 Tiffany Do；MIT：分发副本或实质部分时须保留版权声明和完整许可文本；上游合成人物标签随原模型保留"
       },
       "preview": "/mecoffe/assets3d/previews/character.campus.undergraduate_consumer_067.svg",
       "scene_scope": "ustc",
@@ -19063,7 +19071,7 @@
       "license": {
         "spdx": "MIT",
         "path": "frontend/public/mecoffe/assets3d/valid/LICENSE",
-        "note": "Copyright 2022 Tiffany Do；Asian/gender 为上游合成人物标签，不推断模拟人物真实族群"
+        "note": "Copyright (c) 2022 Tiffany Do；MIT：分发副本或实质部分时须保留版权声明和完整许可文本；上游合成人物标签随原模型保留"
       },
       "preview": "/mecoffe/assets3d/previews/character.campus.undergraduate_consumer_068.svg",
       "scene_scope": "ustc",
@@ -19124,7 +19132,7 @@
       "license": {
         "spdx": "MIT",
         "path": "frontend/public/mecoffe/assets3d/valid/LICENSE",
-        "note": "Copyright 2022 Tiffany Do；Asian/gender 为上游合成人物标签，不推断模拟人物真实族群"
+        "note": "Copyright (c) 2022 Tiffany Do；MIT：分发副本或实质部分时须保留版权声明和完整许可文本；上游合成人物标签随原模型保留"
       },
       "preview": "/mecoffe/assets3d/previews/character.campus.undergraduate_consumer_069.svg",
       "scene_scope": "ustc",
@@ -19185,7 +19193,7 @@
       "license": {
         "spdx": "MIT",
         "path": "frontend/public/mecoffe/assets3d/valid/LICENSE",
-        "note": "Copyright 2022 Tiffany Do；Asian/gender 为上游合成人物标签，不推断模拟人物真实族群"
+        "note": "Copyright (c) 2022 Tiffany Do；MIT：分发副本或实质部分时须保留版权声明和完整许可文本；上游合成人物标签随原模型保留"
       },
       "preview": "/mecoffe/assets3d/previews/character.campus.undergraduate_consumer_070.svg",
       "scene_scope": "ustc",
@@ -19246,7 +19254,7 @@
       "license": {
         "spdx": "MIT",
         "path": "frontend/public/mecoffe/assets3d/valid/LICENSE",
-        "note": "Copyright 2022 Tiffany Do；Asian/gender 为上游合成人物标签，不推断模拟人物真实族群"
+        "note": "Copyright (c) 2022 Tiffany Do；MIT：分发副本或实质部分时须保留版权声明和完整许可文本；上游合成人物标签随原模型保留"
       },
       "preview": "/mecoffe/assets3d/previews/character.campus.graduate_consumer_001.svg",
       "scene_scope": "ustc",
@@ -19307,7 +19315,7 @@
       "license": {
         "spdx": "MIT",
         "path": "frontend/public/mecoffe/assets3d/valid/LICENSE",
-        "note": "Copyright 2022 Tiffany Do；Asian/gender 为上游合成人物标签，不推断模拟人物真实族群"
+        "note": "Copyright (c) 2022 Tiffany Do；MIT：分发副本或实质部分时须保留版权声明和完整许可文本；上游合成人物标签随原模型保留"
       },
       "preview": "/mecoffe/assets3d/previews/character.campus.graduate_consumer_002.svg",
       "scene_scope": "ustc",
@@ -19368,7 +19376,7 @@
       "license": {
         "spdx": "MIT",
         "path": "frontend/public/mecoffe/assets3d/valid/LICENSE",
-        "note": "Copyright 2022 Tiffany Do；Asian/gender 为上游合成人物标签，不推断模拟人物真实族群"
+        "note": "Copyright (c) 2022 Tiffany Do；MIT：分发副本或实质部分时须保留版权声明和完整许可文本；上游合成人物标签随原模型保留"
       },
       "preview": "/mecoffe/assets3d/previews/character.campus.graduate_consumer_003.svg",
       "scene_scope": "ustc",
@@ -19429,7 +19437,7 @@
       "license": {
         "spdx": "MIT",
         "path": "frontend/public/mecoffe/assets3d/valid/LICENSE",
-        "note": "Copyright 2022 Tiffany Do；Asian/gender 为上游合成人物标签，不推断模拟人物真实族群"
+        "note": "Copyright (c) 2022 Tiffany Do；MIT：分发副本或实质部分时须保留版权声明和完整许可文本；上游合成人物标签随原模型保留"
       },
       "preview": "/mecoffe/assets3d/previews/character.campus.graduate_consumer_004.svg",
       "scene_scope": "ustc",
@@ -19490,7 +19498,7 @@
       "license": {
         "spdx": "MIT",
         "path": "frontend/public/mecoffe/assets3d/valid/LICENSE",
-        "note": "Copyright 2022 Tiffany Do；Asian/gender 为上游合成人物标签，不推断模拟人物真实族群"
+        "note": "Copyright (c) 2022 Tiffany Do；MIT：分发副本或实质部分时须保留版权声明和完整许可文本；上游合成人物标签随原模型保留"
       },
       "preview": "/mecoffe/assets3d/previews/character.campus.graduate_consumer_005.svg",
       "scene_scope": "ustc",
@@ -19551,7 +19559,7 @@
       "license": {
         "spdx": "MIT",
         "path": "frontend/public/mecoffe/assets3d/valid/LICENSE",
-        "note": "Copyright 2022 Tiffany Do；Asian/gender 为上游合成人物标签，不推断模拟人物真实族群"
+        "note": "Copyright (c) 2022 Tiffany Do；MIT：分发副本或实质部分时须保留版权声明和完整许可文本；上游合成人物标签随原模型保留"
       },
       "preview": "/mecoffe/assets3d/previews/character.campus.graduate_consumer_006.svg",
       "scene_scope": "ustc",
@@ -19612,7 +19620,7 @@
       "license": {
         "spdx": "MIT",
         "path": "frontend/public/mecoffe/assets3d/valid/LICENSE",
-        "note": "Copyright 2022 Tiffany Do；Asian/gender 为上游合成人物标签，不推断模拟人物真实族群"
+        "note": "Copyright (c) 2022 Tiffany Do；MIT：分发副本或实质部分时须保留版权声明和完整许可文本；上游合成人物标签随原模型保留"
       },
       "preview": "/mecoffe/assets3d/previews/character.campus.graduate_consumer_007.svg",
       "scene_scope": "ustc",
@@ -19673,7 +19681,7 @@
       "license": {
         "spdx": "MIT",
         "path": "frontend/public/mecoffe/assets3d/valid/LICENSE",
-        "note": "Copyright 2022 Tiffany Do；Asian/gender 为上游合成人物标签，不推断模拟人物真实族群"
+        "note": "Copyright (c) 2022 Tiffany Do；MIT：分发副本或实质部分时须保留版权声明和完整许可文本；上游合成人物标签随原模型保留"
       },
       "preview": "/mecoffe/assets3d/previews/character.campus.graduate_consumer_008.svg",
       "scene_scope": "ustc",
@@ -19734,7 +19742,7 @@
       "license": {
         "spdx": "MIT",
         "path": "frontend/public/mecoffe/assets3d/valid/LICENSE",
-        "note": "Copyright 2022 Tiffany Do；Asian/gender 为上游合成人物标签，不推断模拟人物真实族群"
+        "note": "Copyright (c) 2022 Tiffany Do；MIT：分发副本或实质部分时须保留版权声明和完整许可文本；上游合成人物标签随原模型保留"
       },
       "preview": "/mecoffe/assets3d/previews/character.campus.graduate_consumer_009.svg",
       "scene_scope": "ustc",
@@ -19795,7 +19803,7 @@
       "license": {
         "spdx": "MIT",
         "path": "frontend/public/mecoffe/assets3d/valid/LICENSE",
-        "note": "Copyright 2022 Tiffany Do；Asian/gender 为上游合成人物标签，不推断模拟人物真实族群"
+        "note": "Copyright (c) 2022 Tiffany Do；MIT：分发副本或实质部分时须保留版权声明和完整许可文本；上游合成人物标签随原模型保留"
       },
       "preview": "/mecoffe/assets3d/previews/character.campus.graduate_consumer_010.svg",
       "scene_scope": "ustc",
@@ -19856,7 +19864,7 @@
       "license": {
         "spdx": "MIT",
         "path": "frontend/public/mecoffe/assets3d/valid/LICENSE",
-        "note": "Copyright 2022 Tiffany Do；Asian/gender 为上游合成人物标签，不推断模拟人物真实族群"
+        "note": "Copyright (c) 2022 Tiffany Do；MIT：分发副本或实质部分时须保留版权声明和完整许可文本；上游合成人物标签随原模型保留"
       },
       "preview": "/mecoffe/assets3d/previews/character.campus.graduate_consumer_011.svg",
       "scene_scope": "ustc",
@@ -19917,7 +19925,7 @@
       "license": {
         "spdx": "MIT",
         "path": "frontend/public/mecoffe/assets3d/valid/LICENSE",
-        "note": "Copyright 2022 Tiffany Do；Asian/gender 为上游合成人物标签，不推断模拟人物真实族群"
+        "note": "Copyright (c) 2022 Tiffany Do；MIT：分发副本或实质部分时须保留版权声明和完整许可文本；上游合成人物标签随原模型保留"
       },
       "preview": "/mecoffe/assets3d/previews/character.campus.graduate_consumer_012.svg",
       "scene_scope": "ustc",
@@ -19978,7 +19986,7 @@
       "license": {
         "spdx": "MIT",
         "path": "frontend/public/mecoffe/assets3d/valid/LICENSE",
-        "note": "Copyright 2022 Tiffany Do；Asian/gender 为上游合成人物标签，不推断模拟人物真实族群"
+        "note": "Copyright (c) 2022 Tiffany Do；MIT：分发副本或实质部分时须保留版权声明和完整许可文本；上游合成人物标签随原模型保留"
       },
       "preview": "/mecoffe/assets3d/previews/character.campus.graduate_consumer_013.svg",
       "scene_scope": "ustc",
@@ -20039,7 +20047,7 @@
       "license": {
         "spdx": "MIT",
         "path": "frontend/public/mecoffe/assets3d/valid/LICENSE",
-        "note": "Copyright 2022 Tiffany Do；Asian/gender 为上游合成人物标签，不推断模拟人物真实族群"
+        "note": "Copyright (c) 2022 Tiffany Do；MIT：分发副本或实质部分时须保留版权声明和完整许可文本；上游合成人物标签随原模型保留"
       },
       "preview": "/mecoffe/assets3d/previews/character.campus.graduate_consumer_014.svg",
       "scene_scope": "ustc",
@@ -20100,7 +20108,7 @@
       "license": {
         "spdx": "MIT",
         "path": "frontend/public/mecoffe/assets3d/valid/LICENSE",
-        "note": "Copyright 2022 Tiffany Do；Asian/gender 为上游合成人物标签，不推断模拟人物真实族群"
+        "note": "Copyright (c) 2022 Tiffany Do；MIT：分发副本或实质部分时须保留版权声明和完整许可文本；上游合成人物标签随原模型保留"
       },
       "preview": "/mecoffe/assets3d/previews/character.campus.graduate_consumer_015.svg",
       "scene_scope": "ustc",
@@ -20161,7 +20169,7 @@
       "license": {
         "spdx": "MIT",
         "path": "frontend/public/mecoffe/assets3d/valid/LICENSE",
-        "note": "Copyright 2022 Tiffany Do；Asian/gender 为上游合成人物标签，不推断模拟人物真实族群"
+        "note": "Copyright (c) 2022 Tiffany Do；MIT：分发副本或实质部分时须保留版权声明和完整许可文本；上游合成人物标签随原模型保留"
       },
       "preview": "/mecoffe/assets3d/previews/character.campus.graduate_consumer_016.svg",
       "scene_scope": "ustc",
@@ -20222,7 +20230,7 @@
       "license": {
         "spdx": "MIT",
         "path": "frontend/public/mecoffe/assets3d/valid/LICENSE",
-        "note": "Copyright 2022 Tiffany Do；Asian/gender 为上游合成人物标签，不推断模拟人物真实族群"
+        "note": "Copyright (c) 2022 Tiffany Do；MIT：分发副本或实质部分时须保留版权声明和完整许可文本；上游合成人物标签随原模型保留"
       },
       "preview": "/mecoffe/assets3d/previews/character.campus.graduate_consumer_017.svg",
       "scene_scope": "ustc",
@@ -20283,7 +20291,7 @@
       "license": {
         "spdx": "MIT",
         "path": "frontend/public/mecoffe/assets3d/valid/LICENSE",
-        "note": "Copyright 2022 Tiffany Do；Asian/gender 为上游合成人物标签，不推断模拟人物真实族群"
+        "note": "Copyright (c) 2022 Tiffany Do；MIT：分发副本或实质部分时须保留版权声明和完整许可文本；上游合成人物标签随原模型保留"
       },
       "preview": "/mecoffe/assets3d/previews/character.campus.graduate_consumer_018.svg",
       "scene_scope": "ustc",
@@ -20344,7 +20352,7 @@
       "license": {
         "spdx": "MIT",
         "path": "frontend/public/mecoffe/assets3d/valid/LICENSE",
-        "note": "Copyright 2022 Tiffany Do；Asian/gender 为上游合成人物标签，不推断模拟人物真实族群"
+        "note": "Copyright (c) 2022 Tiffany Do；MIT：分发副本或实质部分时须保留版权声明和完整许可文本；上游合成人物标签随原模型保留"
       },
       "preview": "/mecoffe/assets3d/previews/character.campus.graduate_consumer_019.svg",
       "scene_scope": "ustc",
@@ -20405,7 +20413,7 @@
       "license": {
         "spdx": "MIT",
         "path": "frontend/public/mecoffe/assets3d/valid/LICENSE",
-        "note": "Copyright 2022 Tiffany Do；Asian/gender 为上游合成人物标签，不推断模拟人物真实族群"
+        "note": "Copyright (c) 2022 Tiffany Do；MIT：分发副本或实质部分时须保留版权声明和完整许可文本；上游合成人物标签随原模型保留"
       },
       "preview": "/mecoffe/assets3d/previews/character.campus.graduate_consumer_020.svg",
       "scene_scope": "ustc",
@@ -20466,7 +20474,7 @@
       "license": {
         "spdx": "MIT",
         "path": "frontend/public/mecoffe/assets3d/valid/LICENSE",
-        "note": "Copyright 2022 Tiffany Do；Asian/gender 为上游合成人物标签，不推断模拟人物真实族群"
+        "note": "Copyright (c) 2022 Tiffany Do；MIT：分发副本或实质部分时须保留版权声明和完整许可文本；上游合成人物标签随原模型保留"
       },
       "preview": "/mecoffe/assets3d/previews/character.campus.teacher_consumer_001.svg",
       "scene_scope": "ustc",
@@ -20527,7 +20535,7 @@
       "license": {
         "spdx": "MIT",
         "path": "frontend/public/mecoffe/assets3d/valid/LICENSE",
-        "note": "Copyright 2022 Tiffany Do；Asian/gender 为上游合成人物标签，不推断模拟人物真实族群"
+        "note": "Copyright (c) 2022 Tiffany Do；MIT：分发副本或实质部分时须保留版权声明和完整许可文本；上游合成人物标签随原模型保留"
       },
       "preview": "/mecoffe/assets3d/previews/character.campus.teacher_consumer_002.svg",
       "scene_scope": "ustc",
@@ -20588,7 +20596,7 @@
       "license": {
         "spdx": "MIT",
         "path": "frontend/public/mecoffe/assets3d/valid/LICENSE",
-        "note": "Copyright 2022 Tiffany Do；Asian/gender 为上游合成人物标签，不推断模拟人物真实族群"
+        "note": "Copyright (c) 2022 Tiffany Do；MIT：分发副本或实质部分时须保留版权声明和完整许可文本；上游合成人物标签随原模型保留"
       },
       "preview": "/mecoffe/assets3d/previews/character.campus.teacher_consumer_003.svg",
       "scene_scope": "ustc",
@@ -20649,7 +20657,7 @@
       "license": {
         "spdx": "MIT",
         "path": "frontend/public/mecoffe/assets3d/valid/LICENSE",
-        "note": "Copyright 2022 Tiffany Do；Asian/gender 为上游合成人物标签，不推断模拟人物真实族群"
+        "note": "Copyright (c) 2022 Tiffany Do；MIT：分发副本或实质部分时须保留版权声明和完整许可文本；上游合成人物标签随原模型保留"
       },
       "preview": "/mecoffe/assets3d/previews/character.campus.teacher_consumer_004.svg",
       "scene_scope": "ustc",
@@ -20710,7 +20718,7 @@
       "license": {
         "spdx": "MIT",
         "path": "frontend/public/mecoffe/assets3d/valid/LICENSE",
-        "note": "Copyright 2022 Tiffany Do；Asian/gender 为上游合成人物标签，不推断模拟人物真实族群"
+        "note": "Copyright (c) 2022 Tiffany Do；MIT：分发副本或实质部分时须保留版权声明和完整许可文本；上游合成人物标签随原模型保留"
       },
       "preview": "/mecoffe/assets3d/previews/character.campus.teacher_consumer_005.svg",
       "scene_scope": "ustc",
@@ -20771,7 +20779,7 @@
       "license": {
         "spdx": "MIT",
         "path": "frontend/public/mecoffe/assets3d/valid/LICENSE",
-        "note": "Copyright 2022 Tiffany Do；Asian/gender 为上游合成人物标签，不推断模拟人物真实族群"
+        "note": "Copyright (c) 2022 Tiffany Do；MIT：分发副本或实质部分时须保留版权声明和完整许可文本；上游合成人物标签随原模型保留"
       },
       "preview": "/mecoffe/assets3d/previews/character.campus.teacher_consumer_006.svg",
       "scene_scope": "ustc",
@@ -20832,7 +20840,7 @@
       "license": {
         "spdx": "MIT",
         "path": "frontend/public/mecoffe/assets3d/valid/LICENSE",
-        "note": "Copyright 2022 Tiffany Do；Asian/gender 为上游合成人物标签，不推断模拟人物真实族群"
+        "note": "Copyright (c) 2022 Tiffany Do；MIT：分发副本或实质部分时须保留版权声明和完整许可文本；上游合成人物标签随原模型保留"
       },
       "preview": "/mecoffe/assets3d/previews/character.campus.teacher_consumer_007.svg",
       "scene_scope": "ustc",
@@ -20893,7 +20901,7 @@
       "license": {
         "spdx": "MIT",
         "path": "frontend/public/mecoffe/assets3d/valid/LICENSE",
-        "note": "Copyright 2022 Tiffany Do；Asian/gender 为上游合成人物标签，不推断模拟人物真实族群"
+        "note": "Copyright (c) 2022 Tiffany Do；MIT：分发副本或实质部分时须保留版权声明和完整许可文本；上游合成人物标签随原模型保留"
       },
       "preview": "/mecoffe/assets3d/previews/character.campus.teacher_consumer_008.svg",
       "scene_scope": "ustc",

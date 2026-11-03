@@ -114,6 +114,12 @@
       "options": { "cwd": "${workspaceFolder}" },
       "problemMatcher": [],
       "group": { "kind": "build", "isDefault": true }
+    },
+    {
+      "label": "MeCoffe：按场景清单搭建场景",
+      "type": "process", "command": "python",
+      "args": ["-X", "utf8", "-m", "adapter.scene_builder", "scenario", "--manifest", "${input:scenarioManifest}"],
+      "options": { "cwd": "${workspaceFolder}" }, "problemMatcher": []
     }
   ],
   "inputs": [
@@ -127,6 +133,7 @@
     { "id": "minLat", "type": "promptString", "description": "OSM 范围：最小纬度 minLat（WGS84 / 南边界）", "default": "1.295" },
     { "id": "maxLon", "type": "promptString", "description": "OSM 范围：最大经度 maxLon（WGS84 / 东边界）", "default": "103.775" },
     { "id": "maxLat", "type": "promptString", "description": "OSM 范围：最大纬度 maxLat（WGS84 / 北边界）", "default": "1.296" },
-    { "id": "geojsonPath", "type": "promptString", "description": "WGS84 GeoJSON 文件路径：绝对路径或相对项目根目录；带空格也不用加引号", "default": "campus.geojson" }
+    { "id": "geojsonPath", "type": "promptString", "description": "WGS84 GeoJSON 文件路径：绝对路径或相对项目根目录；带空格也不用加引号", "default": "campus.geojson" },
+    { "id": "scenarioManifest", "type": "promptString", "description": "场景清单路径（相对项目根目录或绝对路径）", "default": "scenarios/ustc-history.json" }
   ]
 }

@@ -76,13 +76,13 @@ export function roadCorridors(roads, extraWidth=0) {
   return shapes
 }
 
+const terrainRoadCache=new WeakMap()
 export function terrainSurfaceHeight(point, campus) {
   const p=Array.isArray(point)?{x:point[0],y:point[1]}:point
   if(!Number.isFinite(p?.x)||!Number.isFinite(p?.y))throw new Error('Terrain point must be finite')
-  for(const road of campus.roads||[]) {
-    const radius=campusRoadWidth(road)/2
-    for(let i=1;i<(road.points||[]).length;i++)if(segmentDistance(p,road.points[i-1],road.points[i])<=radius+EPS)return TERRAIN_LEVELS.campusRoad
-  }
+  let segments=terrainRoadCache.get(campus)
+  if(!segments){segments=[];for(const road of campus.roads||[]){const radius=campusRoadWidth(road)/2;for(let i=1;i<(road.points||[]).length;i++){const a=road.points[i-1],b=road.points[i];segments.push({a,b,radius,minX:Math.min(a[0],b[0])-radius-EPS,maxX:Math.max(a[0],b[0])+radius+EPS,minY:Math.min(a[1],b[1])-radius-EPS,maxY:Math.max(a[1],b[1])+radius+EPS})}}terrainRoadCache.set(campus,segments)}
+  for(const s of segments)if(p.x>=s.minX&&p.x<=s.maxX&&p.y>=s.minY&&p.y<=s.maxY&&segmentDistance(p,s.a,s.b)<=s.radius+EPS)return TERRAIN_LEVELS.campusRoad
   const polygons=campus.boundary_polygons?.length?campus.boundary_polygons:[{outer:campus.boundary||[],holes:[]}]
   return polygons.some(poly=>pointInRing(p,poly.outer)&&!(poly.holes||[]).some(hole=>pointInRing(p,hole)))?TERRAIN_LEVELS.campusGrass:TERRAIN_LEVELS.outsideTop
 }

@@ -1,0 +1,22 @@
+{
+  "id": "ustc-history",
+  "title": "中科大高新校区 · 历史回放",
+  "map": {
+    "type": "bundle",
+    "id": "ustc",
+    "landcover": "../frontend/public/mecoffe/campus3d_landcover.json",
+    "surroundings": "../frontend/public/mecoffe/campus3d_surroundings.json"
+  },
+  "simulation_time": {
+    "start": "2026-10-01T06:00:00+08:00",
+    "timezone": "Asia/Shanghai",
+    "step_unit": "day",
+    "steps": 30
+  },
+  "trajectory": "../frontend/public/mecoffe/scene.json",
+  "location_rules": "../frontend/public/mecoffe/campus3d_mapping.json",
+  "style": {
+    "buildings": "yulan",
+    "characters": "campus"
+  }
+}

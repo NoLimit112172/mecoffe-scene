@@ -1,0 +1,7 @@
+{
+  "schema_version": "mecoffe.location-map.v1",
+  "status": "draft",
+  "mappings": {},
+  "note": "Caller IDs are authoritative labels, not proof of an agent location. Rule matches require caller approval.",
+  "campus_id": "nus"
+}

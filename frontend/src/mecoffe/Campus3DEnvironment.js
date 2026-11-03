@@ -1,3 +1,4 @@
+import {shadowNeedsRefresh} from './renderPerformance.js'
 // Procedural scenery only. None of these materials, decorations or light
 // presets are written back to OSM, person placement, the graph or OASIS data.
 import * as THREE from 'three'
@@ -93,6 +94,8 @@ export class Campus3DEnvironment {
     this.lightMaterials = []
     this.quality = 'high'
     this.phase = .25
+    this.shadowPhase=null
+    this.shadowDirty=true
     this.disposed = false
     this.previousFog = scene.fog
     this.previousBackground = scene.background
@@ -131,7 +134,7 @@ export class Campus3DEnvironment {
       }
       batch.visible = visible
       batch.mesh.userData.decorationVisibility = [...visible]
-      if (changed) batch.mesh.instanceMatrix.needsUpdate = true
+      if (changed) {batch.mesh.instanceMatrix.needsUpdate = true;this.shadowDirty=true}
     }
     for (const listener of this.clearanceListeners) listener(avoidance)
   }
@@ -549,7 +552,9 @@ export class Campus3DEnvironment {
   update(phase = this.phase, camera = null) {
     if (this.disposed) return
     this.phase = phase
-    this.renderer.shadowMap.needsUpdate = this.quality === 'high'
+    if(this.quality==='high' && shadowNeedsRefresh(this.shadowPhase,phase,this.shadowDirty)){
+      this.renderer.shadowMap.needsUpdate=true;this.shadowPhase=phase;this.shadowDirty=false
+    }
     const light = dayLighting(phase)
     this.hemisphere.color.set(light.ambientSky)
     this.hemisphere.groundColor.set(light.ambientGround)
@@ -577,6 +582,7 @@ export class Campus3DEnvironment {
   }
 
   setQuality(quality) {
+    this.shadowDirty=true
     this.quality = quality === 'low' ? 'low' : 'high'
     if (this.trees) this.trees.visible = this.quality === 'high'
     this.renderer.shadowMap.enabled = this.quality === 'high'

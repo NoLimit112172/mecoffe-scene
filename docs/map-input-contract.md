@@ -159,3 +159,46 @@ python -X utf8 -m adapter.scene_builder osm --osm data/osm/ustc_gaoxin.osm --met
 4. 模拟空间状态是否由后端持有，agent 位置、移动动作与环境反馈协议另行定义；本文件不默认地图移动参与决策。
 5. 调度器提供的 GeoJSON 使用权、署名和保存期限，以及是否允许保留原输入与哈希用于复现。
 6. 原型风格、种子、缺省高度等参数的配置归属；真实高度缺失时是否接受当前展示默认值。
+
+## 场景清单 v1（里程碑 6 草案，待确认）
+
+地图与模拟时钟通过一个清单交接；仍只使用 OSM 或调用方有权提供的 GeoJSON，不生成 agent 决策。
+
+```json
+{
+  "id": "my-campus-run",
+  "title": "校园场景",
+  "map": { "type": "bundle", "id": "nus" },
+  "simulation_time": {
+    "start": "2026-11-03T06:00:00+08:00",
+    "timezone": "Asia/Singapore",
+    "step_unit": "hour",
+    "steps": 24
+  },
+  "style": { "buildings": "procedural", "characters": "campus" }
+}
+```
+
+- `id`：1–64 位字母、数字、下划线或短横线，首位为字母或数字；对应输出目录与 URL。
+- `map.type`：`bundle` + `id` 读取 campuses 下已生成的场景包，先验证文件哈希；`geojson` + `path` 读取调用方文件；`osm` + `bbox: [west,south,east,north]` 下载并归档官方 OSM，或用 `osm`、`metadata` 路径读取归档。新地图可指定 `campus_id`，默认等于场景 id。只用官方 OSM 数据，不调用高德/Google。
+- `map.profile: "ustc_legacy"` 用于原中科大 OSM 兼容转换；可选 `map.landcover` / `map.surroundings` 指向同一地图的地表与校外道路上下文，不能借用其他校区。
+- 路径相对清单所在目录，也接受绝对路径。生成的运行清单不暴露本机输入路径。
+- `simulation_time` 四字段必填：ISO 日期时间、有效 IANA 时区、`day` / `hour`、整数步数 1–10000。带偏移或 Z 的时刻按同一瞬间转换为声明时区；无偏移按该时区解释。Windows Python 如缺时区库，需要安装 tzdata。
+- 可选 `intervals: [{"start":"...","end":"..."}, ...]` 必须恰好 steps 段；首段起点与 start 相同，每段结束晚于开始，递增且不重叠。可选 end 必须等于最后一段结束。默认按日历日/小时生成；夏令时跳变导致的不存在时刻会拒绝，可显式提供有效时间段。
+- 进度在各段起止之间线性映射；日期和钟点按声明时区格式化；day 也经历日夜，hour 按实际小时设置光照。
+- `location_rules` 指向通用精确名称/标签规则数组，或已验收的 campus3d_mapping 对象。轨迹中每个人的地点必须对应本地图的建筑；不随机补位置。
+- `trajectory` 支持归一化 `mecoffe.scene.v1`，或原始 oasis.interaction_trajectory 导出。原始格式必须同时提供 population_snapshot，复用现有 adapter 核对快照编号、版本和人物 ID。归一化回放保持人物、事件、关注关系、订单原值，并验证人物、动作和地点一致性。可选快照不会替换历史关注网络。
+- `style.buildings`：procedural / yulan；`style.characters`：campus。没有轨迹时不放置虚构人物，明确显示“尚无模拟数据”，只播放模拟时钟。
+
+```powershell
+python -X utf8 -m adapter.scene_builder scenario --manifest scenarios/ustc-history.json
+python -X utf8 -m adapter.scene_builder scenario --manifest scenarios/nus-hourly.json
+```
+
+输出为 `frontend/public/mecoffe/scenarios/<id>/`：scenario.json、地图、原型分配、地表、可选地点映射/轨迹/快照/校外道路。运行清单记录各文件 SHA-256；页面先验证时间与文件哈希再创建场景，缺失或混版时显示错误与重试入口。
+
+- `/mecoffe3d?scenario=ustc-history`：复用已有中科大地图、原历史轨迹、原地点映射和地表/道路上下文。完整 23 天、第 24 天部分记录的事实不变，不补造记录。示例的 2026-10-01 是显式展示时间配置，不声称是原运行的真实日期。
+- `/mecoffe3d?scenario=nus-hourly`：NUS 226 栋楼、840 段道路，24 小时查看光照，没有模拟轨迹。
+- 没有 scenario 参数时，原三种数据模式与二维入口保持原样。
+
+VS Code 任务“MeCoffe：按场景清单搭建场景”提示清单路径，按独立参数调用同一 CLI。调度器只需输出清单，无须改渲染代码。地点命名、step 与日历的关系、时区权威来源仍需团队确认；本契约不是 OASIS 空间状态接口。

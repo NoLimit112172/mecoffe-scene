@@ -1,20 +1,19 @@
 <template>
   <div ref="rootEl" class="asset-library-page">
     <header class="library-header">
-      <div><p class="eyebrow">MECOFFE · ASSET LIBRARY</p><h1>三维素材库</h1><p>浏览、旋转和选择原型。原型定义显示样式，不产生模拟行为或新的地图事实。</p></div>
+      <div><p class="eyebrow">MECOFFE · ASSET LIBRARY</p><h1>三维素材库</h1><p>浏览、旋转和选择原型。查看全部模型、原型与来源许可。</p></div>
       <RouterLink to="/mecoffe3d" class="back-link">返回三维校园 ↗</RouterLink>
     </header>
     <section class="library-toolbar" aria-label="素材筛选">
-      <label><span>范围</span><select v-model="scope" aria-label="素材范围"><option value="campus">当前校区使用的素材</option><option value="">全部原型与原始素材</option></select></label>
       <label class="search-label"><span>搜索</span><input v-model="search" type="search" aria-label="搜索素材" placeholder="名称、类型或原型 ID" /></label>
       <label><span>类别</span><select v-model="category" aria-label="素材类别"><option value="">全部类别</option><option v-for="(label,key) in categories" :key="key" :value="key">{{ label }} · {{ stats.categories[key] || 0 }}</option></select></label>
       <label><span>来源</span><select v-model="source" aria-label="素材来源"><option value="">全部来源</option><option value="procedural">程序生成</option><option value="yulan">YuLan · Apache-2.0</option><option value="osm">OSM · ODbL</option><option value="valid">VALID 校园人物 · MIT</option><option value="kenney">Kenney 三维植被 · CC0</option><option value="rocketbox">Rocketbox 原始库 · MIT</option></select></label>
       <label v-if="source === 'rocketbox'"><span>人物分类</span><select v-model="humanGroup" aria-label="人物素材分类"><option value="">全部人形</option><option value="adults">成年人便装</option><option value="professions">职业装</option><option value="children">儿童</option></select></label>
       <span class="result-count" data-testid="asset-count">{{ filtered.length }} / {{ stats.total }} 个原型</span>
-      <span class="renderer-note">单一 WebGL 画布 · 拖动卡片旋转</span>
+      <span class="renderer-note">拖动卡片旋转</span>
     </section>
     <nav v-if="pagination.pageCount > 1" class="asset-pagination" aria-label="素材分页"><button :disabled="pagination.page === 1" @click="changePage(pagination.page-1)">上一页</button><span>第 {{ pagination.page }} / {{ pagination.pageCount }} 页 · 每页 {{ pagination.pageSize }} 个预览</span><button :disabled="pagination.page === pagination.pageCount" @click="changePage(pagination.page+1)">下一页</button></nav>
-    <p v-if="pageError" class="page-error" role="alert">{{ pageError }}</p>
+    <p v-if="pageError" class="page-error" role="alert">{{ pageError }} <button @click="reloadPreviews">重新加载预览</button></p>
     <div class="asset-grid" aria-label="三维素材原型">
       <article v-for="prototype in pagination.items" :key="prototype.id" class="asset-card" :data-asset-card="prototype.id">
         <div :ref="el => setPreviewElement(prototype.id,el)" class="asset-preview" :data-asset-preview="prototype.id" :aria-label="`${prototype.title}三维预览，可拖动旋转`">
@@ -47,15 +46,15 @@ import { ASSET_CATALOG, catalogStats, queryPrototypes } from '../mecoffe/assetCa
 import { AssetPreviewRenderer } from '../mecoffe/AssetPreviewRenderer.js'
 import { ASSET_CATEGORY_LABELS, describeMatch, previewParams, safeSourceUrl, paginateAssets } from '../mecoffe/assetPreviewModel.js'
 
+const reloadPreviews=()=>window.location.reload()
 const route=useRoute(),rootEl=ref(null),search=ref(''),category=ref(''),source=ref(route.query.source === 'rocketbox'?'rocketbox':''),pageError=ref('')
-const scope=ref(route.query.source?'':'campus'),humanGroup=ref(''),page=ref(1)
+const humanGroup=ref(''),page=ref(1)
 const variants=reactive({}),captions=reactive({}),errors=reactive({})
 const elements=new Map(),categories=ASSET_CATEGORY_LABELS,stats=catalogStats()
 const sourceLabels={procedural:'程序生成',yulan:'YuLan 图集',osm:'OpenStreetMap',rocketbox:'Microsoft Rocketbox',valid:'VALID 校园人物',kenney:'Kenney 三维植被'}
 const hasIndividualAvatars=ASSET_CATALOG.prototypes.some(item=>item.source.type==='rocketbox'&&item.params.model_id)
 let renderer=null,disposed=false,removeYuLanFactories=null
 const filtered=computed(()=>queryPrototypes(null,{category:category.value || undefined,text:search.value}).filter(item=>(!source.value||item.source.type===source.value)
-  && (!scope.value||item.scene_scope==='ustc')
   && (!humanGroup.value || source.value!=='rocketbox' || item.params.group===humanGroup.value)
   && !(hasIndividualAvatars && source.value==='rocketbox' && !search.value && item.id==='character.rocketbox')))
 const pagination=computed(()=>paginateAssets(filtered.value,page.value,12))
@@ -73,7 +72,7 @@ async function syncItems() {
   if(disposed||!renderer)return
   renderer.setItems(pagination.value.items.map(prototype=>({prototype,variant:selectedVariant(prototype),element:elements.get(prototype.id)})).filter(item=>item.element))
 }
-watch([search,category,source,humanGroup,scope],()=>{page.value=1})
+watch([search,category,source,humanGroup],()=>{page.value=1})
 watch([filtered,variants,page],()=>{void syncItems()},{deep:true})
 onMounted(async()=>{
   document.title='MeCoffe · 三维素材库'
@@ -81,7 +80,7 @@ onMounted(async()=>{
     const {installYuLanPreviewFactories}=await import('../mecoffe/assetPreviewYulan.js')
     if(disposed)return
     removeYuLanFactories=installYuLanPreviewFactories()
-    renderer=new AssetPreviewRenderer({host:rootEl.value,onCaption:(id,text)=>{captions[id]=text},onError:(id,text)=>{errors[id]=`预览失败：${text}`}})
+    renderer=new AssetPreviewRenderer({host:rootEl.value,onFatal:text=>{pageError.value=text},onCaption:(id,text)=>{captions[id]=text},onError:(id,text)=>{errors[id]=`预览失败：${text}`}})
     void syncItems()
   }
   catch(error){pageError.value=`三维预览不可用：${error.message || error}。目录与许可信息仍可浏览。`}

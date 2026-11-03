@@ -68,12 +68,35 @@ export function buildSpatialEnvironment(campus,landcovers=[],settings={}) {
   return {waters,bridges,boundary,obstacles:[...(boundary?[boundary]:[]),...(campus.buildings||[]),...waters],settings:options}
 }
 
+const campusPointCaches=new WeakMap()
 export function campusPointClear(point,boundary,radius=0) {
+  let cache=campusPointCaches.get(boundary)
+  if(!cache){cache=new Map();campusPointCaches.set(boundary,cache)}
+  const key=`${point.x},${point.y}:${radius}`
+  if(cache.has(key))return cache.get(key)
+  const result=uncachedCampusPointClear(point,boundary,radius)
+  if(cache.size>50000)cache.clear()
+  cache.set(key,result);return result
+}
+function uncachedCampusPointClear(point,boundary,radius=0) {
   return boundary.areas.some(area=>pointInRing(point,area.outer)&&!(area.holes||[]).some(h=>pointInRing(point,h))
-    &&[area.outer,...(area.holes||[])].every(ring=>ring.slice(1).every((p,i)=>segmentDistance(point,ring[i],p)>=radius-1e-6)))
+    &&[area.outer,...(area.holes||[])].every(ring=>ring.slice(1).every((p,i)=>{
+      const a=ring[i]
+      if(point.x<Math.min(a[0],p[0])-radius || point.x>Math.max(a[0],p[0])+radius || point.y<Math.min(a[1],p[1])-radius || point.y>Math.max(a[1],p[1])+radius)return true
+      return segmentDistance(point,a,p)>=radius-1e-6
+    })))
 }
 export function campusSegmentClear(a,b,boundary,radius=0) {
   if(!campusPointClear(a,boundary,radius)||!campusPointClear(b,boundary,radius))return false
+  // Broad-phase rejection is exact: an excursion outside must cross a boundary
+  // edge. Interior grid edges don't need polygon clipping against every shore.
+  const minX=Math.min(a.x,b.x)-radius,maxX=Math.max(a.x,b.x)+radius,minY=Math.min(a.y,b.y)-radius,maxY=Math.max(a.y,b.y)+radius
+  let nearEdge=false
+  for(const area of boundary.areas)for(const ring of [area.outer,...(area.holes||[])])for(let i=1;i<ring.length;i++){
+    const p=ring[i-1],q=ring[i]
+    if(Math.max(p[0],q[0])>=minX&&Math.min(p[0],q[0])<=maxX&&Math.max(p[1],q[1])>=minY&&Math.min(p[1],q[1])<=maxY){nearEdge=true;break}
+  }
+  if(!nearEdge)return true
   const rings=boundary.areas.flatMap(area=>[area.outer,...(area.holes||[])]),intervals=cuts(a,b,rings)
   if(!intervals.slice(1).every((t,i)=>campusPointClear(mix(a,b,(t+intervals[i])/2),boundary,0)))return false
   if(radius>0)for(const ring of rings)for(let i=1;i<ring.length;i++){

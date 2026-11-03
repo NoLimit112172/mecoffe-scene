@@ -1,3 +1,4 @@
+import {characterLodGeometry,consolidateMaterialGroups} from './renderPerformance.js'
 import * as THREE from 'three'
 import { FBXLoader } from 'three/addons/loaders/FBXLoader.js'
 import { clone as cloneSkeleton } from 'three/addons/utils/SkeletonUtils.js'
@@ -11,6 +12,7 @@ export { REAL_CHARACTER_HEIGHT, REAL_CHARACTER_RADIUS } from './rocketboxCharact
 const BASE = `${import.meta.env?.BASE_URL || '/'}mecoffe/assets3d/rocketbox/`
 const BLANK = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQIHWP4////fwAJ+wP9KobjigAAAABJRU5ErkJggg=='
 const sources = new Map()
+const characterLods=new WeakMap()
 const loadQueue = []
 let activeLoads = 0
 const manifestPromises=new Map()
@@ -18,7 +20,7 @@ const slots = ['map','alphaMap','normalMap','bumpMap','specularMap','emissiveMap
 
 function disposeSource(source) {
   const geometries = new Set(), materials = new Set(), textures = new Set()
-  source.traverse(object => { if (object.geometry) geometries.add(object.geometry); for (const material of [object.material].flat().filter(Boolean)) { materials.add(material); for (const slot of slots) if (material[slot]) textures.add(material[slot]) } })
+  source.traverse(object => { if (object.geometry) geometries.add(object.geometry); if(characterLods.has(object.geometry))geometries.add(characterLods.get(object.geometry)); for (const material of [object.material].flat().filter(Boolean)) { materials.add(material); for (const slot of slots) if (material[slot]) textures.add(material[slot]) } })
   for (const resource of [...geometries,...materials,...textures]) resource.dispose()
 }
 
@@ -87,8 +89,9 @@ async function loadSource(record) {
     source.traverse(o=>{if(o.isLight||o.isMesh&&/teeth|gland/i.test(o.name))removed.push(o)})
     for(const o of removed){o.removeFromParent();o.geometry?.dispose()}
     canonicalizeValidSkeleton(source)
-    source.traverse(o=>{if(o.isMesh){const old=o.geometry;o.geometry=mergeVertices(old);old.dispose()}})
+    source.traverse(o=>{if(o.isMesh){const old=o.geometry;o.geometry=mergeVertices(old);old.dispose();characterLods.set(o.geometry,consolidateMaterialGroups(characterLodGeometry(o.geometry)))}})
   }
+  source.traverse(object=>{if(object.isMesh&&Array.isArray(object.material))consolidateMaterialGroups(object.geometry)})
   const meshes = []; source.traverse(object => { if (object.isMesh) meshes.push(object) })
   const keep = new Set(rocketboxLodNames(meshes.map(mesh => mesh.name)))
   for (const mesh of meshes) if (!keep.has(mesh.name)) mesh.removeFromParent()
@@ -245,7 +248,7 @@ export class RealCharacterBatch {
     const cup=new THREE.Group(),body=new THREE.Mesh(this.cupGeometry,this.cupMaterial),lid=new THREE.Mesh(this.lidGeometry,this.lidMaterial)
     lid.position.y=.25;cup.add(body,lid);cup.visible=false;cup.name='held-coffee'
     root.add(actor.pivot,cup);this.group.add(root)
-    actor.model.traverse(object=>{if(object.isMesh){object.castShadow=this.quality==='high';object.receiveShadow=true;object.frustumCulled=false;object.userData.person=entry.person}})
+    actor.model.traverse(object=>{if(object.isMesh){object.castShadow=false;object.receiveShadow=true;object.frustumCulled=false;object.userData.person=entry.person;object.userData.bloomOcclusion=false;object.userData.fullGeometry=object.geometry}})
     return {...actor,entry,root,cup,modelId,phase:(rocketboxHash(entry.person.id)%1024)/1024*Math.PI*2}
   }
 
@@ -291,7 +294,7 @@ export class RealCharacterBatch {
     for(const record of hidden.slice(8))this.releaseRecord(record)
   }
 
-  update(seconds=0) {
+  update(seconds=0,camera=null,viewportHeight=800) {
     this.lastSeconds=seconds
     if(this.disposed||!this.initialized||!this.group.visible)return
     this.epoch++;this.group.updateWorldMatrix(true,false);this.inverse.copy(this.group.matrixWorld).invert()
@@ -303,8 +306,13 @@ export class RealCharacterBatch {
       entry.figure.updateWorldMatrix(true,false);this.actorMatrix.multiplyMatrices(this.inverse,entry.figure.matrixWorld)
       const transformChanged=!root.matrix.equals(this.actorMatrix)
       if(transformChanged){root.matrix.copy(this.actorMatrix);root.matrixWorldNeedsUpdate=true}
-      const walking=Boolean(entry.walker&&entry.walker.phase!=='dwell'&&entry.walker.moving!==false)
-      const poseKey=`${seconds}:${walking}:${Boolean(entry.hasCoffee)}`
+      const walking=Boolean(entry.walker&&entry.walker.phase!=='dwell'&&entry.walker.phase!=='planning'&&entry.walker.moving!==false)
+      const pixels=camera ? REAL_CHARACTER_HEIGHT*entry.figure.scale.y*viewportHeight/(2*Math.tan(camera.fov*Math.PI/360)*Math.max(1,camera.position.distanceTo(entry.figure.position))) : 100
+      const close=pixels>65
+      // Portrait/full and distant indexed LOD share the same rig/materials.
+      actor.model.traverse(o=>{if(!o.isMesh)return;const full=o.userData.fullGeometry,lod=characterLods.get(full);o.geometry=(!close&&lod)||full||o.geometry})
+      const tick=Math.floor(seconds*(walking?20:4))
+      const poseKey=`${tick}:${walking}:${Boolean(entry.hasCoffee)}`
       const poseChanged=actor.poseKey!==poseKey
       if(poseChanged){applyPose(rig,rocketboxCharacterPose(seconds,actor.phase,walking,Boolean(entry.hasCoffee)));actor.poseKey=poseKey}
       else if(transformChanged)rig.model.updateMatrixWorld(true)
@@ -332,7 +340,7 @@ export class RealCharacterBatch {
     this.library=library;this.manifest=manifest;this.pool=pool;this.configureRecords();this.onReady?.({status:'reset',pool});this.update(this.lastSeconds);return this
   }
   setVisible(value){this.group.visible=Boolean(value);if(value)this.update(this.lastSeconds);else this.evictHidden()}
-  setQuality(value){this.quality=value==='low'?'low':'high';this.group.traverse(object=>{if(object.isMesh)object.castShadow=this.quality==='high'})}
+  setQuality(value){this.quality=value==='low'?'low':'high';this.group.traverse(object=>{if(object.isMesh)object.castShadow=false})}
   dispose(){
     if(this.disposed)return
     this.disposed=true;this.generation++;this.group.removeFromParent()

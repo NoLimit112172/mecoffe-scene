@@ -1,3 +1,5 @@
+import {dayLighting} from './campus3dEnvironmentModel.js'
+import {batchStaticMeshes} from './renderPerformance.js'
 import * as THREE from 'three'
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js'
 import { fitCampusView } from './campus3dView.js'
@@ -23,8 +25,8 @@ function polygon(ring,holes=[]) {
 }
 
 export class MapSceneRenderer {
-  constructor({host,campus,assignments,onSelect}) {
-    this.host=host;this.campus=campus;this.assignments=assignments;this.onSelect=onSelect
+  constructor({host,campus,assignments,onSelect,onError}) {
+    this.host=host;this.campus=campus;this.assignments=assignments;this.onSelect=onSelect;this.onError=onError
     this.summary=previewMapSummary(campus,assignments)
     this.byId=new Map(assignments.assignments.map(a=>[a.feature_id,a]));this.meshes=[]
   }
@@ -36,8 +38,8 @@ export class MapSceneRenderer {
     this.host.appendChild(this.renderer.domElement)
     this.camera=new THREE.PerspectiveCamera(42,1,.5,20000)
     this.controls=new OrbitControls(this.camera,this.renderer.domElement);this.controls.enableDamping=true;this.controls.minDistance=12
-    this.scene.add(new THREE.HemisphereLight('#e5f1fa','#9b9b7b',2.2))
-    const sun=new THREE.DirectionalLight('#fff3df',2.4);sun.position.set(300,700,400);this.scene.add(sun)
+    this.hemi=new THREE.HemisphereLight('#e5f1fa','#9b9b7b',2.2);this.scene.add(this.hemi)
+    const sun=this.sun=new THREE.DirectionalLight('#fff3df',2.4);sun.position.set(300,700,400);this.scene.add(sun)
     const groundMaterial=new THREE.MeshStandardMaterial({color:'#bfd0b1',roughness:1,side:THREE.DoubleSide})
     for(const part of this.campus.boundary_polygons||[{outer:this.campus.boundary,holes:[]}]) {
       const mesh=new THREE.Mesh(new THREE.ShapeGeometry(polygon(part.outer,part.holes)),groundMaterial);mesh.rotation.x=-Math.PI/2;this.scene.add(mesh)
@@ -68,8 +70,10 @@ export class MapSceneRenderer {
     this.click=event=>{const r=this.renderer.domElement.getBoundingClientRect();this.pointer.set((event.clientX-r.left)/r.width*2-1,-(event.clientY-r.top)/r.height*2+1);this.ray.setFromCamera(this.pointer,this.camera);const hit=this.ray.intersectObjects(this.meshes,false)[0];this.onSelect?.(hit?.object.userData||null)}
     this.renderer.domElement.addEventListener('click',this.click)
     this.observer=new ResizeObserver(()=>this.resize());this.observer.observe(this.host);this.resize();this.resetCamera()
-    const frame=()=>{if(this.disposed)return;this.controls.update();this.renderer.render(this.scene,this.camera);this.frame=requestAnimationFrame(frame)};frame()
-    this.assetReady=this.loadAssignedModels()
+    this.dirty=true;this.changed=()=>{this.dirty=true};this.controls.addEventListener('change',this.changed)
+    this.contextLost=e=>{if(this.disposed)return;e.preventDefault();this.lost=true;this.onError?.(new Error('绘图连接中断，请刷新页面恢复。'))};this.renderer.domElement.addEventListener('webglcontextlost',this.contextLost)
+    const frame=()=>{if(this.disposed)return;this.controls.update();if(this.dirty&&!this.lost){this.dirty=false;this.renderer.render(this.scene,this.camera)}this.frame=requestAnimationFrame(frame)};frame()
+    this.assetReady=this.loadAssignedModels().catch(e=>{this.onError?.(e);throw e})
     return this
   }
   async loadAssignedModels(){
@@ -86,9 +90,11 @@ export class MapSceneRenderer {
       const object=this.assetFactory.createBuilding(building,{type:p.atlasType,model:p.model,moduleWidth:p.moduleWidth})
       object.position.y=original.position.y;Object.assign(object.userData,{building,assignment});this.assignedGroup.add(object);original.visible=false
     }
-    this.scene.add(this.assignedGroup)
+    batchStaticMeshes(this.assignedGroup)
+    this.scene.add(this.assignedGroup);this.dirty=true
   }
-  resize(){if(this.disposed)return;const w=Math.max(1,this.host.clientWidth),h=Math.max(1,this.host.clientHeight);this.renderer.setSize(w,h);this.camera.aspect=w/h;this.camera.updateProjectionMatrix()}
-  resetCamera(){const fit=fitCampusView(this.campus,{aspect:this.camera.aspect,fill:.82});this.controls.target.copy(fit.target);this.camera.position.copy(fit.position);this.controls.update()}
-  dispose(){if(this.disposed)return;this.disposed=true;cancelAnimationFrame(this.frame);this.observer?.disconnect();this.controls?.dispose();if(this.assignedGroup){this.disposeAssigned(this.assignedGroup);this.assignedGroup.removeFromParent()}this.assetFactory?.dispose();const geometries=new Set(),materials=new Set();this.scene?.traverse(o=>{if(o.geometry)geometries.add(o.geometry);for(const m of Array.isArray(o.material)?o.material:[o.material])if(m)materials.add(m)});geometries.forEach(g=>g.dispose());materials.forEach(m=>m.dispose());this.renderer?.domElement.removeEventListener('click',this.click);this.renderer?.dispose();this.renderer?.forceContextLoss();this.renderer?.domElement.remove()}
+  setLighting(phase){const light=dayLighting(phase);this.scene.background.set(light.horizon);this.hemi.color.set(light.ambientSky);this.hemi.groundColor.set(light.ambientGround);this.hemi.intensity=light.hemi;this.sun.color.set(light.sun);this.sun.intensity=light.strength;this.sun.position.copy(this.controls.target).add(new THREE.Vector3(...light.sunDirection).multiplyScalar(1500));this.renderer.toneMappingExposure=light.exposure;this.dirty=true}
+  resize(){this.dirty=true;if(this.disposed)return;const w=Math.max(1,this.host.clientWidth),h=Math.max(1,this.host.clientHeight);this.renderer.setSize(w,h);this.camera.aspect=w/h;this.camera.updateProjectionMatrix()}
+  resetCamera(){this.dirty=true;const fit=fitCampusView(this.campus,{aspect:this.camera.aspect,fill:.82});this.controls.target.copy(fit.target);this.camera.position.copy(fit.position);this.controls.update()}
+  dispose(){if(this.disposed)return;this.disposed=true;cancelAnimationFrame(this.frame);this.observer?.disconnect();this.controls?.dispose();if(this.assignedGroup){this.disposeAssigned(this.assignedGroup);this.assignedGroup.removeFromParent()}this.assetFactory?.dispose();const geometries=new Set(),materials=new Set();this.scene?.traverse(o=>{if(o.geometry)geometries.add(o.geometry);for(const m of Array.isArray(o.material)?o.material:[o.material])if(m)materials.add(m)});geometries.forEach(g=>g.dispose());materials.forEach(m=>m.dispose());this.controls?.removeEventListener('change',this.changed);this.renderer?.domElement.removeEventListener('webglcontextlost',this.contextLost);this.renderer?.domElement.removeEventListener('click',this.click);this.renderer?.dispose();this.renderer?.forceContextLoss();this.renderer?.domElement.remove()}
 }

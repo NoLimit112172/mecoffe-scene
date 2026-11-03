@@ -331,3 +331,15 @@ VS Code 里可直接运行任务 **MeCoffe：运行全部测试**。
 115个标准FBX来自 Microsoft Rocketbox 固定提交 `0943055db6ec570bcef9f2c8b41c9e5467c808f9`，逐文件核对官方Git blob。模型、贴图、原许可和manifest保存在 `frontend/public/mecoffe/assets3d/rocketbox/`，运行时均从本地读取。头像/合图最长1024像素、衣服/透明部件最长512。部分贴图由原TGA本地转换；其余使用 openOMSI 的同源MIT预转换JPEG/PNG，再按相同尺寸处理，逐图记录ZIP条目CRC、实际SHA256和二次有损来源。未完整下载的原TGA不会被标为已本地哈希验证。具体来源、许可、格式与校验层级见 `NOTICE.md`、同目录manifest和 `derivatives/openomsi/`。
 
 本轮使用本地FBXLoader，不要求Blender或API密钥。程序骨骼驱动待机、步行和持杯，未下载外部动作包。初次四模型试用的历史记录仍保留在 `docs/rocketbox-trial.md`，全库交付见 `docs/rocketbox-library.md`。
+### 里程碑 6：场景清单与性能检查
+
+```powershell
+python -X utf8 -m adapter.scene_builder scenario --manifest scenarios/ustc-history.json
+python -X utf8 -m adapter.scene_builder scenario --manifest scenarios/nus-hourly.json
+```
+
+启动后打开 `/mecoffe3d?scenario=ustc-history` 或 `/mecoffe3d?scenario=nus-hourly`。前者复用历史回放；后者没有轨迹，按小时显示日期和光照。VS Code 也提供“MeCoffe：按场景清单搭建场景”任务。字段与验证规则见 [地图输入契约草案](docs/map-input-contract.md)。
+
+素材库默认显示全部原型与原始素材。画质在持续低帧率时自动降低一次，手动选择优先。静态预览停止重绘；屏幕外人物停止动画；复杂展示路线在 Worker 计算，原始 OSM/A* 与轨迹不变。WebGL 中断后有明确的重新加载入口。
+
+本轮性能与稳定性结果见 [里程碑 6 验收记录](docs/milestone6-report.md)。本地截图和原始测量保存在 logs/milestone6/。

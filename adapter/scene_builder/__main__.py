@@ -28,8 +28,15 @@ def main(argv=None):
             command.add_argument('--metadata',type=Path)
             command.add_argument('--profile',choices=['ustc_legacy'])
         else: command.add_argument('--input',type=Path,required=True)
+    scenario_command=sub.add_parser('scenario', help='Prepare a map and simulation-time manifest')
+    scenario_command.add_argument('--manifest', type=Path, required=True)
     args=parser.parse_args(argv)
     try:
+        if args.format=='scenario':
+            from .scenario import prepare_scenario
+            manifest, output=prepare_scenario(args.manifest)
+            print(json.dumps({'output':str(output),'id':manifest['id'],'simulation_data':manifest['simulation_data']},ensure_ascii=False))
+            return 0
         options={'campus_id':args.campus_id,'title':args.title,'seed':args.seed,'catalog_path':args.catalog,'style':args.style,
                  'location_rules':json.loads(args.location_rules.read_text(encoding='utf-8')) if args.location_rules else None}
         if args.format=='geojson':

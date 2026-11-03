@@ -18,8 +18,8 @@ LICENSES = {'procedural': {'spdx': 'LicenseRef-MeCoffe-Project', 'path': 'NOTICE
             'osm': {'spdx': 'ODbL-1.0', 'url': 'https://www.openstreetmap.org/copyright', 'path': 'NOTICE.md'},
             'rocketbox':{'spdx':'MIT','path':'frontend/public/mecoffe/assets3d/rocketbox/LICENSE.md',
                         'note':'Microsoft (c) 2020；原模型与贴图按固定提交保存，TGA无损转换PNG；动作由项目程序驱动骨骼'},
-            'kenney':{'spdx':'CC0-1.0','path':'frontend/public/mecoffe/assets3d/kenney/License.txt'},
-            'valid':{'spdx':'MIT','path':'frontend/public/mecoffe/assets3d/valid/LICENSE','note':'Copyright 2022 Tiffany Do；Asian/gender 为上游合成人物标签，不推断模拟人物真实族群'}}
+            'kenney':{'spdx':'CC0-1.0','path':'frontend/public/mecoffe/assets3d/kenney/License.txt','note':'Kenney Nature Kit 2.1；原包 CC0；署名 Kenney / www.kenney.nl 属于自愿致谢，不是许可义务；保留原始 License.txt'},
+            'valid':{'spdx':'MIT','path':'frontend/public/mecoffe/assets3d/valid/LICENSE','note':'Copyright (c) 2022 Tiffany Do；MIT：分发副本或实质部分时须保留版权声明和完整许可文本；上游合成人物标签随原模型保留'}}
 
 
 def prototype(identifier, category, subtype, params, match=None, *, source=PROCEDURAL, kind='parametric', variants=None, style='procedural', title=None):

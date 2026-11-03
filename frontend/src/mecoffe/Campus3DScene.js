@@ -1,3 +1,5 @@
+import {SpatialWorker} from './spatialWorker.js'
+import {AdaptiveQuality,consolidateMaterialGroups,tripQueueEntries} from './renderPerformance.js'
 // Three.js presentation layer. The OSM graph constrains the drawn trips only;
 // neither the building assignments nor these animations are OASIS positions.
 import * as THREE from 'three'
@@ -135,7 +137,7 @@ function roadGeometry(roads, extraWidth = 0, elevation = 0.14) {
 }
 
 export class Campus3DScene {
-  constructor({ host, campus, mapping, index, landcovers = [], surroundings = [], onHover, onSelect, onStats, onVisualActivity, onCharacters, onError, characterPool = 'campus' } = {}) {
+  constructor({ host, campus, mapping, index, landcovers = [], surroundings = [], onHover, onSelect, onStats, onVisualActivity, onCharacters, onError, onQuality, characterPool = 'campus' } = {}) {
     this.host = host
     this.campus = campus
     this.mapping = mapping
@@ -152,6 +154,7 @@ export class Campus3DScene {
     const frameRing = [[minX-context,minY-context], [maxX+context,minY-context],
       [maxX+context,maxY+context], [minX-context,maxY+context], [minX-context,minY-context]]
     this.cameraCampus = { ...this.display.campus, boundary: frameRing, boundary_polygons: [{outer:frameRing,holes:[]}] }
+    this.onQuality=onQuality
     this.onHover = onHover
     this.onSelect = onSelect
     this.onStats = onStats
@@ -176,6 +179,8 @@ export class Campus3DScene {
     this.speed = 1
     this.unreachable = 0
     this.selectedId = null
+    this.performancePolicy=new AdaptiveQuality()
+    this.tripAdmission={total:12,perStore:2}
     this.disposed = false
     this.visualSeconds = 0
     this.quality = 'high'
@@ -219,6 +224,7 @@ export class Campus3DScene {
     this.relationLayer = new THREE.Group()
     this.scene.add(this.routeLayer, this.effectLayer, this.relationLayer)
     this.createLabelLayer()
+    if(typeof Worker!=='undefined')this.spatialWorker=new SpatialWorker(this.navigationObstacles)
     this.drawCampus()
     this.placePeople()
     this.baseModel = new Campus3DBase({scene:this.scene,campus:this.display.campus,displayBounds:this.display.bounds,waters:this.spatial.waters}).init()
@@ -234,6 +240,7 @@ export class Campus3DScene {
       displayBounds: this.display.bounds, campus: this.campus, host: this.host }).init()
     this.eventEffects = new EventEffects({ scene: this.scene, index: this.index,
       routing: this.routing, shopMarkers: this.shopMarkers })
+    this.scene.traverse(object=>{if(object.isMesh&&Array.isArray(object.material))consolidateMaterialGroups(object.geometry)})
     this.bloom = new SelectiveBloom({ renderer: this.renderer, scene: this.scene, camera: this.camera,
       width: this.host.clientWidth, height: this.host.clientHeight })
     this.setQuality(this.quality)
@@ -291,6 +298,7 @@ export class Campus3DScene {
 
   renderFrame(now) {
     if(this.disposed)return false
+    if(this.performancePolicy.sample(now,this.playing,this.quality)){this.setQuality('low');this.onQuality?.('low')}
     const delta=Math.min(Math.max(0,(now-this.lastTime)/1000),.12)
     this.lastTime=now
     if(this.playing) {
@@ -310,7 +318,7 @@ export class Campus3DScene {
     this.renderDirty=false
     this.updateScreenVisuals()
     if(this.relationsDirty){this.updateRelations();this.relationsDirty=false}
-    this.realCharacterBatch?.update(this.visualSeconds)
+    this.realCharacterBatch?.update(this.visualSeconds,this.camera,this.host?.clientHeight||800)
     this.emitCharacterStatus()
     this.surroundings?.update(this.camera,this.host)
     this.environment?.update(visualClock(this.lighting.position,this.lighting).phase,this.camera)
@@ -776,7 +784,7 @@ export class Campus3DScene {
         return
       }
       entry.queue.push({ event, route })
-      if (!entry.walker) this.startNextTrip(entry)
+      this.drainTripQueue()
       this.emitStats()
     } else if (['ad', 'post', 'comment', 'follow', 'exposure', 'interview'].includes(event.type)) {
       const color = event.type === 'ad' ? 0xe6a545 : event.type === 'comment' ? 0x9b73ba : 0x72a9c9
@@ -791,7 +799,12 @@ export class Campus3DScene {
     }
   }
 
+  drainTripQueue() {
+    for(const entry of tripQueueEntries(this.people.values(),this.walkers.size,this.tripAdmission.total,this.tripAdmission.perStore))this.startNextTrip(entry)
+  }
+
   startNextTrip(entry) {
+    if(this.walkers.size>=this.tripAdmission.total || entry.walker)return
     const next = entry.queue.shift()
     if (!next) return
     entry.hasCoffee = false
@@ -800,8 +813,21 @@ export class Campus3DScene {
       {x:other.figure.position.x,y:-other.figure.position.z,radius:other.collisionRadius},
       ...(other.walker?.servicePoint ? [{...other.walker.servicePoint,radius:other.collisionRadius}] : [])])
     const servicePoint=nearestClearPosition(next.route.points.at(-1),this.navigationObstacles,{radius:displayRadius,occupied})
-    const displayPoints=displayRoutePoints(next.route.points,this.navigationObstacles,{radius:displayRadius,laneOffset:4,
-      start:{x:entry.figure.position.x,y:-entry.figure.position.z},end:servicePoint})
+    const options={radius:displayRadius,laneOffset:4,start:{x:entry.figure.position.x,y:-entry.figure.position.z},end:servicePoint}
+    if(this.spatialWorker){
+      const placeholder={...next,phase:'planning',displayPoints:[],displayNextPoint:1,displayRadius,servicePoint,travelled:0,stalled:0}
+      entry.walker=placeholder;this.walkers.add(entry.person.id)
+      this.spatialWorker.run({kind:'route',points:next.route.points,options}).then(points=>{
+        if(this.disposed||entry.walker!==placeholder||!points)return
+        this.completeTrip(entry,next,displayRadius,servicePoint,points);this.invalidate();this.emitStats()
+      }).catch(e=>{if(!this.disposed&&entry.walker===placeholder)this.failFrame(e)})
+      return
+    }
+    const displayPoints=displayRoutePoints(next.route.points,this.navigationObstacles,options)
+    this.completeTrip(entry,next,displayRadius,servicePoint,displayPoints)
+  }
+
+  completeTrip(entry,next,displayRadius,servicePoint,displayPoints) {
     const material = new THREE.LineBasicMaterial({ color: this.brandColors.get(next.event.brand_id) || 0xe17943, transparent: true, opacity: 0.75 })
     const routeLine = new THREE.Line(new THREE.BufferGeometry().setFromPoints(displayPoints.map(point => new THREE.Vector3(point.x, this.personElevation(point)+.3, -point.y))), material)
     this.routeLayer.add(routeLine)
@@ -831,12 +857,14 @@ export class Campus3DScene {
             walker.phase='return'
             walker.points=reverseRoute(walker.route).points
             walker.nextPoint=1
+            if(this.spatialWorker){this.planWalkerRoute(entry,walker,walker.points,{radius:walker.displayRadius,laneOffset:4,start:p,end:entry.home},'return');proposals.push(p);continue}
             walker.displayPoints=displayRoutePoints(walker.points,this.navigationObstacles,{radius:walker.displayRadius,laneOffset:4,start:p,end:entry.home})
             walker.displayNextPoint=1
             this.updateWalkerLine(walker)
             this.refreshDecorationClearance()
           }
         }
+        if(walker?.phase==='planning'){proposals.push(p);continue}
         if(walker && walker.phase!=='dwell' && !walker.holdRemaining) {
           const goal=walker.displayPoints[walker.displayNextPoint]
           if(goal) {
@@ -853,9 +881,9 @@ export class Campus3DScene {
         const goal=walker?.displayPoints[walker.displayNextPoint]
         const beforeGoal=goal?Math.hypot(entry.figure.position.x-goal.x,-entry.figure.position.z-goal.y):0
         const dx=p.x-entry.figure.position.x,dz=-p.y-entry.figure.position.z,moved=Math.hypot(dx,dz)
-        entry.figure.position.set(p.x,this.personElevation(p),-p.y)
+        if(moved>0)entry.figure.position.set(p.x,this.personElevation(p),-p.y)
         entry.presentationWalking=moved>.001
-        if(!walker)continue
+        if(!walker || walker.phase==='planning')continue
         if(moved>.001)entry.figure.rotation.y=Math.atan2(dx,dz)
         walker.travelled+=moved
         walker.waiting=p.waiting
@@ -864,6 +892,7 @@ export class Campus3DScene {
         walker.stalled=(walker.stalled || 0)+step
         if(walker.stalled>.4 && (p.waiting || improvement<moved*.8+.001) && walker.phase!=='dwell' && !walker.holdRemaining) {
           const obstacles=[...this.people.values()].filter(other=>other!==entry).map(other=>({x:other.figure.position.x,y:-other.figure.position.z,radius:other.collisionRadius}))
+          if(this.spatialWorker){this.replanWalker(entry,walker,p,obstacles);continue}
           // Intermediate display corners may be occupied by an idle figure.
           // Rejoin a later free corner rather than waiting forever at it.
           let replanned=false
@@ -896,6 +925,7 @@ export class Campus3DScene {
         if(p.reachesGoal && p.fraction>.9999)walker.displayNextPoint++
         if(walker.phase!=='dwell' && walker.displayNextPoint>=walker.displayPoints.length) {
           if(walker.retreating) {
+            if(this.spatialWorker){this.planWalkerRoute(entry,walker,walker.resumeDisplayPoints,{radius:walker.displayRadius,laneOffset:0,start:p},'return');walker.retreating=false;walker.holdRemaining=2;walker.yieldCooldown=8;continue}
             walker.displayPoints=displayRoutePoints(walker.resumeDisplayPoints,this.navigationObstacles,{radius:walker.displayRadius,laneOffset:0,start:p})
             walker.displayNextPoint=1;walker.retreating=false;walker.holdRemaining=2;walker.yieldCooldown=8
             this.updateWalkerLine(walker)
@@ -911,13 +941,35 @@ export class Campus3DScene {
             entry.walker=null;this.walkers.delete(p.id)
             entry.home={x:p.x,y:p.y}
             entry.body.position.y=3.2
-            this.startNextTrip(entry);changed=true
+            this.drainTripQueue();changed=true
           }
         }
       }
     }
     this.updateSelection()
     if (changed) this.emitStats()
+  }
+
+  planWalkerRoute(entry,walker,points,options,phase) {
+    walker.phase='planning'
+    this.spatialWorker.run({kind:'route',points,options}).then(path=>{
+      if(this.disposed||entry.walker!==walker||!path)return
+      walker.displayPoints=path;walker.displayNextPoint=1;walker.phase=phase
+      this.updateWalkerLine(walker);this.refreshDecorationClearance();this.invalidate()
+    }).catch(e=>{if(!this.disposed&&entry.walker===walker)this.failFrame(e)})
+  }
+
+  replanWalker(entry,walker,start,people) {
+    const phase=walker.phase,goals=walker.displayPoints.slice(walker.displayNextPoint)
+    const retreat=!walker.retreating&&!walker.yieldCooldown&&[...this.people.values()].some(other=>other.walker&&other.person.id<entry.person.id&&Math.hypot(start.x-other.figure.position.x,start.y+other.figure.position.z)<entry.collisionRadius*6)
+    walker.phase='planning'
+    this.spatialWorker.run({kind:'replan',start,goals,people,radius:entry.collisionRadius,retreat,home:entry.home}).then(result=>{
+      if(this.disposed||entry.walker!==walker)return
+      walker.phase=phase;walker.stalled=0
+      if(!result)walker.holdRemaining=4
+      if(result){if(result.retreat){walker.resumeDisplayPoints=goals;walker.retreating=true}walker.displayPoints=result.points;walker.displayNextPoint=1;this.updateWalkerLine(walker)}
+      this.refreshDecorationClearance();this.invalidate()
+    }).catch(e=>{if(!this.disposed&&entry.walker===walker)this.failFrame(e)})
   }
 
   updateEffects(delta) {
@@ -1105,6 +1157,7 @@ export class Campus3DScene {
 
   setBuildingStyle(value) {
     this.invalidate()
+    if(this.environment)this.environment.shadowDirty=true
     this.buildingStyle=value==='yulan'?'yulan':'procedural'
     if(this.yulanStyle){this.yulanStyle.setEnabled(this.buildingStyle==='yulan');return Promise.resolve()}
     if(this.buildingStyle!=='yulan')return Promise.resolve()
@@ -1205,6 +1258,7 @@ export class Campus3DScene {
   dispose() {
     if (this.disposed) return
     this.disposed = true
+    this.spatialWorker?.dispose()
     if (this.frame) cancelAnimationFrame(this.frame)
     this.resizeObserver?.disconnect()
     this.controls?.removeEventListener('start', this.onControlsStart)

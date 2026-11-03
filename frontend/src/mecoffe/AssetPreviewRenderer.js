@@ -245,7 +245,7 @@ export async function createAssetPreview(prototype, variant, {signal} = {}) {
 }
 
 export class AssetPreviewRenderer {
-  constructor({host,onCaption,onError}={}) {
+  constructor({host,onCaption,onError,onFatal}={}) {
     this.host=host;this.onCaption=onCaption;this.onError=onError;this.items=[];this.views=new Map();this.pending=new Map();this.failed=new Set();this.disposed=false
     this.renderer=new THREE.WebGLRenderer({alpha:true,antialias:true})
     this.renderer.setPixelRatio(Math.min(window.devicePixelRatio||1,1.5))
@@ -257,12 +257,17 @@ export class AssetPreviewRenderer {
     canvas.setAttribute('aria-hidden','true')
     Object.assign(canvas.style,{position:'fixed',inset:'0',width:'100%',height:'100%',pointerEvents:'none',zIndex:'1',display:'block'})
     host.appendChild(canvas)
+    this.dirty=true;this.onChange=()=>{this.dirty=true}
+    this.onContextLost=event=>{if(this.disposed)return;event.preventDefault();this.contextLost=true;onFatal?.('绘图连接中断，请重新加载预览。')}
+    canvas.addEventListener('webglcontextlost',this.onContextLost)
+    host.addEventListener('scroll',this.onChange,{passive:true});window.addEventListener('resize',this.onChange)
     this.started=performance.now()
     this.animate=this.animate.bind(this)
     this.frame=requestAnimationFrame(this.animate)
   }
 
   setItems(items) {
+    this.dirty=true
     this.items=items
     const keys=new Set(items.map(item=>this.key(item)))
     for(const [key,controller] of this.pending) if(!keys.has(key)) {controller.abort();this.pending.delete(key)}
@@ -296,10 +301,11 @@ export class AssetPreviewRenderer {
       const camera=new THREE.PerspectiveCamera(36,1,.01,100)
       const view={item,key,model,scene,normalized,floor,camera,yaw:.65,pitch:.38,drag:null,handlers:{}}
       view.handlers.pointerdown=event=>{view.drag={x:event.clientX,y:event.clientY,yaw:view.yaw,pitch:view.pitch};item.element.setPointerCapture?.(event.pointerId)}
-      view.handlers.pointermove=event=>{if(!view.drag)return;view.yaw=view.drag.yaw+(event.clientX-view.drag.x)*.012;view.pitch=Math.max(-.1,Math.min(1.15,view.drag.pitch+(event.clientY-view.drag.y)*.008))}
+      view.handlers.pointermove=event=>{if(!view.drag)return;this.dirty=true;view.yaw=view.drag.yaw+(event.clientX-view.drag.x)*.012;view.pitch=Math.max(-.1,Math.min(1.15,view.drag.pitch+(event.clientY-view.drag.y)*.008))}
       view.handlers.pointerup=()=>{view.drag=null}
       view.handlers.pointercancel=view.handlers.pointerup
       for(const [type,handler] of Object.entries(view.handlers)) item.element.addEventListener(type,handler)
+      this.dirty=true
       this.views.set(key,view)
       this.onCaption?.(item.prototype.id,model.caption || '三维原型 · 拖动旋转')
     } catch(error) {
@@ -314,6 +320,12 @@ export class AssetPreviewRenderer {
 
   animate(now) {
     if(this.disposed)return
+    this.frame=requestAnimationFrame(this.animate)
+    if(this.contextLost)return
+    // Static cards render on input/scroll/load, animated visible cards at 30Hz.
+    const animated=this.items.some(item=>{const view=this.views.get(this.key(item));return view?.model.update && item.element?.isConnected && previewViewport(item.element.getBoundingClientRect(),{width:window.innerWidth,height:window.innerHeight})})
+    if(!this.dirty&&(!animated||now-(this.lastRender||0)<1000/30))return
+    this.dirty=false;this.lastRender=now
     const width=window.innerWidth,height=window.innerHeight
     if(this.width!==width||this.height!==height) {this.renderer.setSize(width,height,false);this.width=width;this.height=height}
     this.renderer.setScissorTest(false);this.renderer.clear(true,true,true);this.renderer.setScissorTest(true)
@@ -334,7 +346,6 @@ export class AssetPreviewRenderer {
       this.renderer.clear(true,true,true)
       this.renderer.render(view.scene,camera)
     }
-    this.frame=requestAnimationFrame(this.animate)
   }
 
   remove(view) {
@@ -346,6 +357,8 @@ export class AssetPreviewRenderer {
   dispose() {
     if(this.disposed)return
     this.disposed=true;cancelAnimationFrame(this.frame)
+    this.host?.removeEventListener?.('scroll',this.onChange);if(typeof window!=='undefined')window.removeEventListener?.('resize',this.onChange)
+    this.renderer.domElement.removeEventListener?.('webglcontextlost',this.onContextLost)
     for(const controller of this.pending.values())controller.abort()
     this.pending.clear()
     for(const view of this.views.values())this.remove(view)

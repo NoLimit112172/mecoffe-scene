@@ -89,6 +89,10 @@ test('100 real campus figures safely drain 12 simultaneous two-shop purchases at
 
   const receipts = [], events = [], routes = new Map()
   renderer.eventEffects = { effects: [], purchaseArrived: event => receipts.push(event.order_id), reset() {}, dispose() {} }
+  // Keep the original 12-way collision stress test. Production admission is
+  // separately tested with two trips per shop; this fixture deliberately
+  // bypasses only that queue policy, retaining every original safety check.
+  renderer.tripAdmission.perStore = Infinity
   for (const home of homes) {
     const consumers = [...renderer.people.values()].filter(entry => entry.key === home && entry.person.role !== 'merchant')
     assert.ok(consumers.length >= 2, `${home} must have two distinct real consumers`)
