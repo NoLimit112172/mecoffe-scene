@@ -33,3 +33,15 @@ export function displayOccupancy(entries) {
   }
   return counts
 }
+
+// A camera-facing sprite has a fixed screen-space height regardless of the
+// camera's downward tilt. Measure its own rectangle, not the old 3D rig's box.
+export function billboardScaleForCamera(camera, position, { height, minPixels = 30, worldHeight = 8.5 } = {}) {
+  if (!Number.isFinite(height) || height <= 0 || !Number.isFinite(worldHeight) || worldHeight <= 0
+    || !Number.isFinite(minPixels) || minPixels <= 0) return 1
+  const matrix = camera.matrixWorldInverse.elements
+  const depth = -(matrix[2] * position.x + matrix[6] * position.y + matrix[10] * position.z + matrix[14])
+  if (depth <= 0 || !Number.isFinite(depth)) return 1
+  const projected = worldHeight * camera.projectionMatrix.elements[5] * height / (2 * depth)
+  return Math.max(1, Math.min(128, minPixels / projected))
+}

@@ -6,7 +6,7 @@
         <nav aria-label="场景数据模式" class="mode-switch">
           <button v-for="mode in modes" :key="mode.key" :class="{ active: requestedMode === mode.key }" :aria-pressed="requestedMode === mode.key" :disabled="loading" @click="loadScene(mode.key)">{{ mode.label }}</button>
         </nav>
-        <Campus3DVisualControls v-model:quality="quality" v-model:cycle="dayCycle" v-model:hour="previewHour" :clock="lightClock.label" />
+        <Campus3DVisualControls v-model:character-style="characterStyle" v-model:quality="quality" v-model:cycle="dayCycle" v-model:hour="previewHour" :clock="lightClock.label" />
         <RouterLink to="/mecoffe" class="old-page">二维沙盘 ↗</RouterLink>
       </div>
     </header>
@@ -28,7 +28,7 @@
           <div ref="mapEl" class="map-canvas"></div>
           <div class="map-top"><div class="map-badge"><b>USTC · 高新校区</b><span>{{ campusData?.buildings.length || 0 }} 栋建筑 / {{ campusData?.roads.length || 0 }} 段道路</span></div><div class="map-camera-buttons"><button class="reset-camera" title="放大查看选中人物或当前行人" @click="focusPerson"><i class="fa-solid fa-person-walking"></i> 人物特写</button><button class="reset-camera" title="恢复校园全景" @click="renderer?.resetCamera()"><i class="fa-solid fa-expand"></i> 全景</button></div></div>
           <div v-if="hoverCard" class="hover-card" :style="hoverStyle"><b>{{ hoverCard.name }}</b><template v-if="hoverCard.type === 'building'"><span>OSM {{ hoverCard.building.osm_id }}</span><span>{{ hoverCard.building.levels }} 层 / {{ hoverCard.building.height_m }} 米 · {{ hoverCard.building.levels_source === 'default' ? '展示默认高度' : '来源见地图数据' }}</span></template><span v-else>点击查看人物与事件</span></div>
-          <div class="map-legend"><span><i style="background:#7c9cab"></i>教学 / 科研</span><span><i style="background:#bc7859"></i>住宿</span><span><i style="background:#65a89b"></i>公共设施</span><div class="role-key"><span v-for="(color, role) in CHARACTER_ROLE_COLORS" :key="role"><i :style="{background:color}"></i>{{ roleNames[role] }}</span></div><p>树木、路灯、长椅、草地纹理：<b>装饰</b><br>楼顶人数与光照：展示示意；楼层仍为默认值<br>左键旋转 · 右键平移 · 滚轮缩放</p></div>
+          <div class="map-legend"><span><i style="background:#7c9cab"></i>教学 / 科研</span><span><i style="background:#bc7859"></i>住宿</span><span><i style="background:#65a89b"></i>公共设施</span><div class="role-key"><span v-for="(color, role) in CHARACTER_ROLE_COLORS" :key="role"><i :style="{background:color}"></i>{{ roleNames[role] }}</span></div><p>{{ characterStyle === 'pixel' ? '像素外观与二维一致；脚下颜色表示角色' : '立体人物按衣服颜色区分角色' }}<br>树木、路灯、长椅、草地纹理：<b>装饰</b><br>楼顶人数与光照：展示示意；楼层仍为默认值<br>校外道路仅展示，不参与寻路<br>左键旋转 · 右键平移 · 滚轮缩放</p></div>
           <a class="osm-credit" href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener noreferrer">© OpenStreetMap contributors</a>
           <div v-if="loading" class="map-loading">正在构建校园三维体块…</div>
         </section>
@@ -56,8 +56,8 @@
 
       <footer class="timeline-panel">
         <div class="playback-controls"><button class="play-button" :disabled="loading || isNetwork" :aria-label="playing || draining ? '暂停回放' : '播放回放'" @click="togglePlay"><i :class="playing || draining ? 'fa-solid fa-pause' : 'fa-solid fa-play'"></i>{{ playing || draining ? '暂停' : '播放' }}</button><button :disabled="loading || isNetwork" title="上一天" @click="jumpDay(-1)">上一天</button><button :disabled="loading || isNetwork || cursor >= scene.events.length" @click="stepEvent">下一事件</button><button :disabled="loading || isNetwork" title="下一天" @click="jumpDay(1)">下一天</button><label>速度 <select v-model.number="speed" :disabled="isNetwork"><option v-for="n in [0.5, 1, 2, 4, 8]" :key="n" :value="n">{{ n }}×</option></select></label><strong class="current-day" data-testid="current-day">{{ currentDay.label }}<small v-if="!currentDay.complete"> · 记录不完整</small><small v-else-if="atEnd"> · {{ draining ? '等待人物返回' : '已到末尾' }}</small></strong></div>
-        <div v-if="!isNetwork" class="timeline-track"><input :value="dayPosition" :max="days.length" min="0" step="0.001" type="range" aria-label="回放时间进度" @input="seek(Number($event.target.value))" /><span>{{ Math.round(progressPercent) }}%</span></div>
-        <div v-if="!isNetwork" class="day-buttons" aria-label="按天跳转"><button v-for="(day, k) in days" :key="day.step" :class="{ active: dayIndex === k, partial: !day.complete }" :title="`${day.label}${day.complete ? '' : '（不完整）'}`" :aria-label="`跳转到${day.label}`" @click="seek(k)">{{ day.step === 0 ? '初' : day.step }}</button></div><p v-else class="network-footer">关系网络模式没有时间轨迹；购买、发帖、访谈结果均为零，不借用旧运行。</p>
+        <div v-if="!isNetwork" class="timeline-track"><input :disabled="loading" :value="dayPosition" :max="days.length" min="0" step="0.001" type="range" aria-label="回放时间进度" @input="seek(Number($event.target.value))" /><span>{{ Math.round(progressPercent) }}%</span></div>
+        <div v-if="!isNetwork" class="day-buttons" aria-label="按天跳转"><button v-for="(day, k) in days" :key="day.step" :disabled="loading" :class="{ active: dayIndex === k, partial: !day.complete }" :title="`${day.label}${day.complete ? '' : '（不完整）'}`" :aria-label="`跳转到${day.label}`" @click="seek(k)">{{ day.step === 0 ? '初' : day.step }}</button></div><p v-else class="network-footer">关系网络模式没有时间轨迹；购买、发帖、访谈结果均为零，不借用旧运行。</p>
       </footer>
     </template>
     <div v-else-if="loading && !loadError" class="initial-loading">正在读取 OSM 校园与回放数据…</div>
@@ -93,6 +93,7 @@ const playing = ref(false)
 const draining = ref(false)
 const speed = ref(1)
 const quality = ref('high')
+const characterStyle = ref('pixel')
 const dayCycle = ref(true)
 const previewHour = ref(12)
 const roleNames = { undergraduate_consumer:'本科生', graduate_consumer:'研究生', teacher_consumer:'教师', merchant:'商家' }
@@ -205,6 +206,7 @@ function stepEvent() {
 watch([playing, draining], () => renderer?.setPlaying(playing.value || draining.value))
 watch(speed, value => renderer?.setSpeed(value))
 watch(quality, value => renderer?.setQuality(value))
+watch(characterStyle, value => renderer?.setCharacterStyle(value))
 watch([dayPosition, dayCycle, previewHour], () => renderer?.setLighting({position:dayPosition.value,cycle:dayCycle.value,hour:previewHour.value}))
 
 async function fetchJson(file, signal) {
@@ -233,7 +235,7 @@ async function loadScene(mode) {
   loadError.value = ''
   let view = null
   try {
-    const [data, campus, mapping, landcover] = await Promise.all([fetchJson(dataFileForMode(mode), controller.signal), fetchJson('campus3d.json', controller.signal), fetchJson('campus3d_mapping.json', controller.signal), fetchJson('campus3d_landcover.json', controller.signal)])
+    const [data, campus, mapping, landcover, surroundings] = await Promise.all([fetchJson(dataFileForMode(mode), controller.signal), fetchJson('campus3d.json', controller.signal), fetchJson('campus3d_mapping.json', controller.signal), fetchJson('campus3d_landcover.json', controller.signal), fetchJson('campus3d_surroundings.json', controller.signal)])
     if (current !== generation) return
     validateDataMode(data, mode)
     campusData.value = campus
@@ -241,7 +243,7 @@ async function loadScene(mode) {
     index.value = indexScene(data)
     await nextTick()
     if (current !== generation) return
-    view = new Campus3DScene({ host: mapEl.value, campus, mapping, index: index.value, landcovers:landcover.features,
+    view = new Campus3DScene({ host: mapEl.value, campus, mapping, index: index.value, landcovers:landcover.features, surroundings:surroundings.roads,
       onHover: card => { hoverCard.value = card }, onSelect: selectPerson,
       onStats: stats => { motion.value = stats; if (draining.value && !hasPendingAnimation()) draining.value = false },
       onVisualActivity: count => { pendingEffects.value = count; if (draining.value && !hasPendingAnimation()) draining.value = false },
@@ -251,6 +253,7 @@ async function loadScene(mode) {
     renderer = view
     view.setSpeed(speed.value)
     view.setQuality(quality.value)
+    view.setCharacterStyle(characterStyle.value)
     view.setLighting({position:dayPosition.value,cycle:dayCycle.value,hour:previewHour.value})
     view.setPlaying(false)
     view.setCursor(0)

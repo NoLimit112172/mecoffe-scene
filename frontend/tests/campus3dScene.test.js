@@ -157,6 +157,49 @@ test('portrait camera avoids a foreground obstruction without moving the actor o
   obstruction.material.dispose()
 })
 
+test('switching pixel and solid characters preserves ongoing trips, queued orders and pause state', () => {
+  const { renderer, entry } = world()
+  renderer.playEvent(purchase('first-style'))
+  renderer.playEvent(purchase('second-style', 'merchant_002'))
+  renderer.updateWalkers(.1)
+  renderer.setPlaying(false)
+  const position = entry.figure.position.clone()
+  const walker = entry.walker
+  const queue = [...entry.queue]
+  const statistics = renderer.getStats()
+  const visible = []
+  renderer.pixelBatch = { setVisible: value => visible.push(value) }
+  for (const style of ['pixel', 'solid', 'pixel']) {
+    renderer.setCharacterStyle(style)
+    assert.deepEqual(entry.figure.position, position)
+    assert.equal(entry.walker, walker)
+    assert.deepEqual(entry.queue, queue)
+    assert.deepEqual(renderer.getStats(), statistics)
+    assert.equal(renderer.playing, false)
+    assert.equal(renderer.characterBatch.group.visible, style === 'solid')
+  }
+  assert.deepEqual(visible, [true, false, true])
+})
+
+test('surrounding roads and cropped display never extend or replace the original walking graph', () => {
+  const json = relative => JSON.parse(readFileSync(new URL(relative, import.meta.url), 'utf8'))
+  const campus = json('../../scene/campus3d.json')
+  const mapping = json('../../scene/campus3d_mapping.json')
+  const scene = json('../public/mecoffe/latest-demo.json')
+  const roads = json('../public/mecoffe/campus3d_surroundings.json').roads
+  const source = structuredClone(campus)
+  const renderer = new Campus3DScene({ campus, mapping, index:indexScene(scene), surroundings:roads })
+  assert.equal(renderer.campus, campus)
+  assert.equal(renderer.display.campus.walk_graph, campus.walk_graph)
+  assert.equal(renderer.routing.nodes.size, campus.walk_graph.nodes.length)
+  assert.deepEqual(campus, source)
+  assert.equal(renderer.display.bounds.routeCount, 12)
+  assert.ok(renderer.display.bounds.maxY < 100)
+  assert.ok(campus.bounds_m.max_y > 450)
+  const graphIds = new Set(campus.walk_graph.nodes.map(node => node.id))
+  assert.ok([...renderer.routing.nodes.keys()].every(id => graphIds.has(id)))
+})
+
 test('one person completes purchase trips in FIFO order without losing queued purchases', () => {
   const { renderer, entry } = world()
   for (const event of renderer.index.scene.events) renderer.playEvent(event)

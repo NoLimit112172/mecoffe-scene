@@ -23,8 +23,14 @@
 
 ## 三维视觉升级素材
 
-本轮新增的角色（头部、面部、衣服、四肢、背包、帽子与咖啡杯）、建筑窗户贴图、招牌、遮阳棚、草地/道路纹理、树木、路灯、长椅、天空着色器，以及事件气泡与文字图标，均由本仓库 JavaScript/Canvas/Three.js 几何程序生成，没有下载 Quaternius、Kenney 或其他第三方美术素材，也没有新增使用 YuLan 的气泡图片。它们属于本次项目源码的程序化输出；不冒充外部 CC0 授权资源。素材生成位置及边界见 `frontend/public/mecoffe/assets3d/README.md`。
+上一轮新增的立体角色（头部、面部、衣服、四肢、背包、帽子与咖啡杯）、建筑窗户贴图、招牌、遮阳棚、草地/道路纹理、树木、路灯、长椅、天空着色器，以及事件气泡与文字图标，均由本仓库 JavaScript/Canvas/Three.js 几何程序生成，没有下载 Quaternius、Kenney 或其他第三方美术素材，也没有新增使用 YuLan 的气泡图片。它们属于项目源码的程序化输出；不冒充外部 CC0 授权资源。素材生成位置及边界见 `frontend/public/mecoffe/assets3d/README.md`。
 
 `frontend/public/mecoffe/campus3d_landcover.json` 中的运动场、水面等几何来自同一份已保存 OSM 快照，通过 `adapter/osm_landcover.py` 独立提取并沿下载边界裁剪；保留原来源与投影，按 ODbL 1.0 提供，与上述 OSM 衍生数据采用相同署名及许可要求。运动场线条/水面风格属于示意性绘制，不是测量结果。
 
 Three.js 及 `three/addons` 的 OrbitControls、EffectComposer、RenderPass、UnrealBloomPass、ShaderPass、OutputPass 使用当前已安装版本的 MIT 许可代码（见 `frontend/node_modules/three/LICENSE`）；本轮未升级或新增依赖。当前 r187 已移除 PCFSoftShadowMap，阴影使用受支持的 PCFShadowMap 和扩大的采样半径得到柔和边缘。
+
+## 三维像素人物与周边道路
+
+本轮 `/mecoffe3d` 默认像素人物复用 YuLan-OneSim 提交 `9829d72` 中已有的 `frontend/public/assets/bgrd-0.json/png`、`bgrd-1.json/png`、`bgrd-2.json/png`：身体动画键为 `character/{gender}/{typeId}_{variant}`，头部为 `head/{gender}/{part}/...`。来源和上游 Apache License 2.0 说明与本文开头二维素材相同，许可证保留在 `YULAN_LICENSE`；该说明同时覆盖二维与本轮三维复用。未修改、另下载或重新授权这些原图集，不将其声称为 CC0。三维只在运行时组合原身体/头部帧并设最近邻过滤；咖啡杯小图标由本项目 Canvas 程序生成。
+
+新增 `data/osm/ustc_gaoxin_surroundings.osm`、同目录 metadata 与 `frontend/public/mecoffe/campus3d_surroundings.json` 来自 OSM 官方 API，属于单独保存的周边道路快照及 ODbL 1.0 衍生数据库。保留原始响应、下载 URL/UTC/bbox/SHA-256、转换脚本和 © OpenStreetMap contributors 署名。仅使用实际 `name` 标路名；默认道路宽度、人行道和分道线风格属于展示，不是测绘成果。没有获取高德、百度、Google 数据。

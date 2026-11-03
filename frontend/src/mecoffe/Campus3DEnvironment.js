@@ -2,6 +2,7 @@
 // presets are written back to OSM, person placement, the graph or OASIS data.
 import * as THREE from 'three'
 import { buildingPalette, dayLighting, decorationPlacements, seededRandom, windowPattern } from './campus3dEnvironmentModel.js'
+import { clipLandcovers, pointInDisplay } from './campus3dDisplay.js'
 
 const PATH_TYPES = new Set(['footway', 'path', 'steps', 'pedestrian', 'cycleway'])
 
@@ -68,14 +69,15 @@ float star=step(0.9987,hash(floor(d*550.0)))*smoothstep(0.05,0.5,d.y)*night;
 gl_FragColor=vec4(color+vec3(star*0.6),1.0); }`
 
 export class Campus3DEnvironment {
-  constructor({ scene, campus, mapping, buildingMeshes, renderer, center, landcovers = [] }) {
+  constructor({ scene, campus, displayCampus = null, displayBounds = null, mapping, buildingMeshes, renderer, center, landcovers = [] }) {
     this.scene = scene
-    this.campus = campus
+    this.campus = displayCampus || campus
+    this.displayBounds = displayBounds || displayCampus?.display_bounds || null
     this.mapping = mapping
     this.buildingMeshes = buildingMeshes
     this.renderer = renderer
     this.center = center?.clone() || new THREE.Vector3()
-    this.landcovers = landcovers
+    this.landcovers = this.displayBounds ? clipLandcovers(landcovers, this.displayBounds) : landcovers
     this.group = new THREE.Group()
     this.group.name = 'Procedural decoration (illustrative)'
     this.group.userData.illustrative = true
@@ -317,7 +319,15 @@ export class Campus3DEnvironment {
   }
 
   drawVegetation() {
-    this.placements = decorationPlacements(this.campus, { landcovers: this.landcovers })
+    // The smaller parcel has fewer safe candidates. Reserve slots for each
+    // furniture type instead of filling the complete pool with trees first.
+    this.placements = decorationPlacements(this.campus, { landcovers: this.landcovers,
+      ...(this.displayBounds ? { trees: 100, lamps: 20, benches: 12 } : {}) })
+    if (this.displayBounds) {
+      for (const [kind, inset] of [['trees', 7], ['lamps', 10], ['benches', 3]]) {
+        this.placements[kind] = this.placements[kind].filter(point => pointInDisplay([point.x, point.y], this.displayBounds, inset))
+      }
+    }
     this.trees = new THREE.Group()
     this.trees.userData.illustrative = true
     this.trees.name = '装饰树木'

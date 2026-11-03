@@ -356,6 +356,12 @@ export class SelectiveBloom {
     this.bloomComposer.addPass(this.bloomPass)
     this.composer = new EffectComposer(renderer)
     this.composer.setPixelRatio(Math.min(renderer.getPixelRatio(), 1.5))
+    // WebGLRenderer's canvas antialiasing does not apply to offscreen targets.
+    // Sample polygon edges here so narrow road markings remain legible; atlas
+    // texture sampling still uses NearestFilter and retains its pixel pattern.
+    const samples = Math.min(4, renderer.capabilities.maxSamples || 0)
+    this.composer.renderTarget1.samples = samples
+    this.composer.renderTarget2.samples = samples
     this.composer.addPass(new RenderPass(scene, camera))
     this.mixPass = new ShaderPass({
       uniforms: { tDiffuse: { value: null }, tBloom: { value: null } },

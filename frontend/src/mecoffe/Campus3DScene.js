@@ -8,9 +8,12 @@ import {
 import { campusBoundaryBounds, fitCampusView } from './campus3dView.js'
 import { layoutLabels, personScaleForCamera } from './campus3dScreen.js'
 import { CharacterBatch } from './Campus3DCharacters.js'
+import { PixelCharacterBatch } from './Campus3DPixelCharacters.js'
+import { createDisplayCampus } from './campus3dDisplay.js'
+import { Campus3DSurroundings } from './Campus3DSurroundings.js'
 import { Campus3DEnvironment } from './Campus3DEnvironment.js'
 import { EventEffects, SelectiveBloom } from './Campus3DEffects.js'
-import { visualClock, idleRepresentatives, displayOccupancy } from './campus3dPresentation.js'
+import { visualClock, idleRepresentatives, displayOccupancy, billboardScaleForCamera } from './campus3dPresentation.js'
 
 const BRAND_COLORS = [0x168b7a, 0xe17943, 0x6976bb, 0xb08c3d]
 const ROLE_COLORS = {
@@ -133,12 +136,21 @@ function roadGeometry(roads, extraWidth = 0, elevation = 0.14) {
 }
 
 export class Campus3DScene {
-  constructor({ host, campus, mapping, index, landcovers = [], onHover, onSelect, onStats, onVisualActivity } = {}) {
+  constructor({ host, campus, mapping, index, landcovers = [], surroundings = [], onHover, onSelect, onStats, onVisualActivity } = {}) {
     this.host = host
     this.campus = campus
     this.mapping = mapping
     this.index = index
     this.landcovers = landcovers
+    this.surroundingRoads = surroundings
+    this.display = createDisplayCampus(campus, { mapping, landcovers })
+    const { minX, maxX, minY, maxY } = this.display.bounds
+    // A small, independent framing margin exposes the four perimeter roads;
+    // the newly downloaded 300 m context never becomes a giant grass parcel.
+    const context = surroundings.length ? 60 : 0
+    const frameRing = [[minX-context,minY-context], [maxX+context,minY-context],
+      [maxX+context,maxY+context], [minX-context,maxY+context], [minX-context,minY-context]]
+    this.cameraCampus = { ...this.display.campus, boundary: frameRing, boundary_polygons: [{outer:frameRing,holes:[]}] }
     this.onHover = onHover
     this.onSelect = onSelect
     this.onStats = onStats
@@ -162,6 +174,7 @@ export class Campus3DScene {
     this.disposed = false
     this.visualSeconds = 0
     this.quality = 'high'
+    this.characterStyle = 'pixel'
     this.lighting = { cycle: true, position: 0, hour: 12 }
     this.representatives = idleRepresentatives(index.scene.people)
     this.brandColors = new Map(index.scene.brands.map((brand, k) => [brand.brand_id, BRAND_COLORS[k % BRAND_COLORS.length]]))
@@ -195,14 +208,20 @@ export class Campus3DScene {
     this.createLabelLayer()
     this.drawCampus()
     this.placePeople()
+    this.pixelBatch = new PixelCharacterBatch({ scene: this.scene, entries: this.people })
+    await this.pixelBatch.init()
     this.environment = new Campus3DEnvironment({ scene: this.scene, campus: this.campus,
+      displayCampus: this.display.campus, displayBounds: this.display.bounds,
       mapping: this.mapping, buildingMeshes: this.buildingMeshes, renderer: this.renderer,
-      center: this.center, landcovers: this.landcovers }).init()
+      center: this.center, landcovers: this.display.landcovers }).init()
+    this.surroundings = new Campus3DSurroundings({ scene: this.scene, roads: this.surroundingRoads,
+      displayBounds: this.display.bounds, campus: this.campus, host: this.host }).init()
     this.eventEffects = new EventEffects({ scene: this.scene, index: this.index,
       routing: this.routing, shopMarkers: this.shopMarkers })
     this.bloom = new SelectiveBloom({ renderer: this.renderer, scene: this.scene, camera: this.camera,
       width: this.host.clientWidth, height: this.host.clientHeight })
     this.setQuality(this.quality)
+    this.setCharacterStyle(this.characterStyle)
     this.resetCamera()
     this.resize()
     this.raycaster = new THREE.Raycaster()
@@ -233,7 +252,9 @@ export class Campus3DScene {
       this.controls.update()
       this.updateScreenVisuals()
       this.updateRelations()
-      this.characterBatch?.update(this.visualSeconds)
+      if (this.characterStyle === 'solid') this.characterBatch?.update(this.visualSeconds)
+      else this.pixelBatch?.update(this.visualSeconds, this.camera)
+      this.surroundings?.update(this.camera, this.host)
       this.environment?.update(visualClock(this.lighting.position, this.lighting).phase, this.camera)
       this.bloom ? this.bloom.render() : this.renderer.render(this.scene, this.camera)
       this.frame = requestAnimationFrame(animate)
@@ -244,12 +265,11 @@ export class Campus3DScene {
   }
 
   drawCampus() {
-    const polygons = this.campus.boundary_polygons?.length
-      ? this.campus.boundary_polygons : [{ outer: this.campus.boundary, holes: [] }]
-    // The outer ground and default camera follow the actual campus parcels,
-    // rather than distant road points or empty corners of a padded scene box.
-    this.bounds = campusBoundaryBounds(this.campus, 0)
-    const groundBounds = campusBoundaryBounds(this.campus, 12)
+    const displayCampus = this.display.campus
+    const polygons = displayCampus.boundary_polygons
+    this.bounds = campusBoundaryBounds(this.cameraCampus, 0)
+    const b = this.display.bounds
+    const groundBounds = { width:b.width, height:b.height, center:new THREE.Vector3((b.minX+b.maxX)/2,0,-(b.minY+b.maxY)/2) }
     const { width, height } = this.bounds
     this.span = Math.max(width, height, 100)
     this.center = this.bounds.center.clone()
@@ -274,12 +294,13 @@ export class Campus3DScene {
       border.computeLineDistances()
       this.scene.add(border)
     }
-    const roadEdge = new THREE.Mesh(roadGeometry(this.campus.roads, 0.7, 0.08),
+    const roadEdge = new THREE.Mesh(roadGeometry(displayCampus.roads, 0.7, 0.08),
       new THREE.MeshStandardMaterial({ color: 0xb9bcaf, roughness: 1, side: THREE.DoubleSide }))
+    roadEdge.userData.environmentKind = 'roadEdge'
     this.scene.add(roadEdge)
     for (const kind of ['road', 'path']) {
       const isPath = road => ['footway', 'path', 'steps', 'pedestrian', 'cycleway'].includes(road.highway)
-      const roads = this.campus.roads.filter(road => kind === 'path' ? isPath(road) : !isPath(road))
+      const roads = displayCampus.roads.filter(road => kind === 'path' ? isPath(road) : !isPath(road))
       const mesh = new THREE.Mesh(roadGeometry(roads), new THREE.MeshStandardMaterial({ color: kind === 'path' ? 0xdbcbaa : 0x6c7675, roughness: 1, side: THREE.DoubleSide }))
       mesh.userData.environmentKind = kind
       this.scene.add(mesh)
@@ -408,10 +429,12 @@ export class Campus3DScene {
       const prominent = Boolean(entry.walker) || entry.person.id === this.selectedId
       entry.presentationVisible = prominent || this.representatives.has(entry.person.id)
       entry.figure.visible = entry.presentationVisible
-      entry.base.visible = prominent
-      const minPixels = prominent ? 26 : 18
+      entry.base.visible = prominent || (this.characterStyle === 'pixel' && entry.presentationVisible)
+      const minPixels = this.characterStyle === 'pixel' ? (prominent ? 40 : 30) : (prominent ? 26 : 18)
       if (cameraChanged || entry.screenMinPixels !== minPixels || !entry.screenPosition?.equals(entry.figure.position)) {
-        const scale = personScaleForCamera(this.camera, entry.figure.position, { width, height, minPixels })
+        const scale = this.characterStyle === 'pixel'
+          ? billboardScaleForCamera(this.camera, entry.figure.position, { height, minPixels })
+          : personScaleForCamera(this.camera, entry.figure.position, { width, height, minPixels })
         entry.figure.scale.setScalar(scale)
         entry.screenPosition = entry.figure.position.clone()
         entry.screenMinPixels = minPixels
@@ -768,12 +791,21 @@ export class Campus3DScene {
     this.quality = value === 'low' ? 'low' : 'high'
     this.environment?.setQuality(this.quality)
     this.characterBatch?.setQuality(this.quality)
+    this.pixelBatch?.setQuality(this.quality)
     this.eventEffects?.setQuality(this.quality)
     this.bloom?.setQuality(this.quality)
     if (this.renderer) {
       this.renderer.setPixelRatio(this.quality === 'low' ? 1 : Math.min(window.devicePixelRatio || 1, 1.5))
       this.resize()
     }
+  }
+
+  setCharacterStyle(value) {
+    this.characterStyle = value === 'solid' ? 'solid' : 'pixel'
+    if (this.characterBatch) this.characterBatch.group.visible = this.characterStyle === 'solid'
+    this.pixelBatch?.setVisible(this.characterStyle === 'pixel')
+    for (const entry of this.people.values()) entry.screenMinPixels = null
+    this.updateScreenVisuals()
   }
 
   focusPerson(id) {
@@ -818,7 +850,10 @@ export class Campus3DScene {
     this.camera.aspect = Math.max(aspect, 0.05)
     this.camera.zoom = 1
     this.camera.updateProjectionMatrix()
-    const fit = fitCampusView(this.campus, { aspect: this.camera.aspect, fov: this.camera.fov, fill: 0.8 })
+    const landscape = this.camera.aspect >= 1.25
+    const eastWest = this.display.bounds.width > this.display.bounds.height
+    const direction = landscape === eastWest ? new THREE.Vector3(.22,.9,.85) : new THREE.Vector3(.85,.9,.22)
+    const fit = fitCampusView(this.cameraCampus, { aspect: this.camera.aspect, fov: this.camera.fov, fill: 0.83, direction })
     // Consume any residual drag damping before assigning an exact overview.
     const damping = this.controls.enableDamping
     this.controls.enableDamping = false
@@ -864,6 +899,8 @@ export class Campus3DScene {
     this.eventEffects?.dispose()
     this.bloom?.dispose()
     this.environment?.dispose()
+    this.surroundings?.dispose()
+    this.pixelBatch?.dispose()
     this.characterBatch?.dispose()
     if (this.scene) {
       disposeObject(this.scene)

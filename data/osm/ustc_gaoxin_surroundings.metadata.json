@@ -1,0 +1,22 @@
+{
+  "source_url": "https://api.openstreetmap.org/api/0.6/map?bbox=117.11622475,31.81530204,117.13147525,31.82969796",
+  "downloaded_at_utc": "2026-11-03T06:48:55.924494+00:00",
+  "sha256": "fe07a4f4caf8b29566c4352d38601a376b2e59be5bc0cffaad56a19f8c5a5da7",
+  "bbox": [
+    117.11622475,
+    31.81530204,
+    117.13147525,
+    31.82969796
+  ],
+  "original_campus_bbox": [
+    117.1194,
+    31.818,
+    117.1283,
+    31.827
+  ],
+  "margin_m": 300,
+  "license": "ODbL-1.0",
+  "attribution": "© OpenStreetMap contributors",
+  "license_url": "https://www.openstreetmap.org/copyright",
+  "purpose": "Display-only road context. Not part of the OASIS or campus walking graph."
+}
