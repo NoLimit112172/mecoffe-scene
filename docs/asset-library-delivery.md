@@ -13,4 +13,15 @@
 
 相关文件：`adapter/build_asset_catalog.py`、`catalog.json`、`assets3d/previews/*.svg`、`assetCatalog.js`、`AssetPreviewRenderer.js`、`assetPreviewModel.js`、`AssetLibrary.vue`、目录/预览测试、现有渲染器的参数接入、router/App、README/NOTICE。
 
-后续里程碑的完成结果与提交号将在对应提交中补充；当前未完成的功能不作为已交付功能描述。
+里程碑 1 提交：`f131554`。
+
+## 里程碑 2：通用地图流水线
+
+- 新增 `adapter/scene_builder/{__init__,__main__,io,core}.py`，标准库实现 OSM bbox 下载/存档或 WGS84 GeoJSON 校验、局部米制投影、标签识别、原型匹配、UTF-8 FNV 固定变体及输出解释。
+- GeoJSON 支持建筑/带孔多边形/多部件、道路和 POI；地点由调用方 ID 直接对应或显式规则匹配，歧义报错。单个 POI 不虚构楼体，交点不凭视觉添加通路。
+- `docs/map-input-contract.md` 明确标为“草案，待与调度器负责人确认”。CLI 的建筑风格选项不要求道路和地表提供同名风格。
+- 中科大从原始 XML 重建，与现有场景 deepEqual；修改测试 XML 的高度会改变转换结果，证明没有借用冻结场景。
+- NUS 实际快照：`2026-11-03T07:36:11.586106+00:00`，SHA-256 `31f19c9919e87ce833f592cff615097b6829cdecd8ae8f4adb6be897d7c2d63f`。226 楼、840 道路分段、114 POI、100 地表；1280 素材/地点分配记录。149 楼默认高度，不使用“约220楼”代替真实统计。
+- `frontend/public/mecoffe/campuses/nus/` 输出场景、素材分配、地点对应、地表和 manifest；新增窄范围 Git 规则保留这些 JSON 的字节哈希。原校园源文件与映射没有覆盖。
+- `/mecoffe3d?campus=nus` 独立预览只取楼栋和道路，不加载 MeCoffe 数据；原无 query 入口仍使用原三维视图。
+- Python 全部 **55/55** 通过，其中流水线新增 12 项。NUS 预览新增一项前端来源/格式测试；build 和无头浏览器结果在最终记录补充。

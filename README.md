@@ -195,6 +195,17 @@ python -X utf8 adapter/osm_surroundings.py
 
 程序生成资源使用 `LicenseRef-MeCoffe-Project` 标记项目自产来源与授权边界，不冒称 CC0；YuLan 和 OSM 分别保留 Apache-2.0、ODbL-1.0 记录。实现和验证详见 `docs/asset-library-delivery.md`。
 
+## 通用地图建模流水线
+
+`adapter/scene_builder/` 仅依赖 Python 标准库，接受 OSM 范围/已存快照或调用方 WGS84 GeoJSON，将坐标转为米，再从目录匹配原型并按固定 seed 选择变体。输出兼容 `campus3d.json`、素材分配理由、地点对应、地表和带 SHA-256 的 manifest。接口见 **[地图输入草案](docs/map-input-contract.md)，待与调度器负责人确认**；地图生成不包含人物、订单或 agent 决策。
+
+```powershell
+python -X utf8 -m adapter.scene_builder osm --osm data/osm/nus.osm --metadata data/osm/nus.metadata.json --campus-id nus --title "NUS 建模流水线验证" --seed 2026 --output-dir frontend/public/mecoffe/campuses/nus
+python -X utf8 -m adapter.scene_builder geojson --input campus.geojson --campus-id caller-campus --output-dir scene/generated/caller-campus
+```
+
+打开 <http://127.0.0.1:5180/mecoffe3d?campus=nus> 查看独立的 NUS 楼栋/道路预览，**没有模拟数据**，不复用 MeCoffe 人物或地点映射。本次 OSM 快照实际生成 226 栋楼、840 段道路、114 个 POI 和 100 个地表要素；其中 149 栋使用默认高度。NUS 原始文件与来源记录独立保存在 `data/osm/nus*`。中科大原始 XML 经兼容 profile 重建与当前场景完全一致，未覆盖已有源数据。
+
 ## 测试
 
 ```powershell

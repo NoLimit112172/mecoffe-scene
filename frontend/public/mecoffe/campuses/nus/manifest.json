@@ -1,0 +1,11 @@
+{
+  "schema_version": "mecoffe.scene-bundle.v1",
+  "campus_id": "nus",
+  "simulation_data": false,
+  "files": {
+    "campus3d.json": "9135e746cd35c3ed640120bcfbebddeac18c3a735c87c84b1a9f2465ffd9d291",
+    "asset_assignments.json": "b7996f507a01b520aa2bb495e9b33a5b369549be70c0836aa56cf2d670da8553",
+    "location_mapping.json": "4920408900e5f02f836e0f44b7dd0a7050da76262b849aebf0f79b67f2795805",
+    "landcover.json": "670d4ab5ccfbe7863a9965454866e2d9041a0831475c7d7060e84cf9fbfa0e48"
+  }
+}

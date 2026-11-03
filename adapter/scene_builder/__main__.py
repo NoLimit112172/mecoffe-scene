@@ -1,0 +1,56 @@
+"""python -m adapter.scene_builder --help"""
+import argparse
+import json
+from pathlib import Path
+import sys
+import xml.etree.ElementTree as ET
+
+from . import MapInputError, build_from_geojson, build_from_osm, download_osm, write_bundle
+from .core import CATALOG_PATH
+
+
+def main(argv=None):
+    parser=argparse.ArgumentParser(description='Prepare a map/asset scene; no OASIS simulation data is generated')
+    sub=parser.add_subparsers(dest='format',required=True)
+    for name in ('osm','geojson'):
+        command=sub.add_parser(name)
+        command.add_argument('--campus-id',required=True)
+        command.add_argument('--title',default='Map modeling preview')
+        command.add_argument('--seed',default='0')
+        command.add_argument('--style',default='procedural')
+        command.add_argument('--catalog',type=Path,default=CATALOG_PATH)
+        command.add_argument('--output-dir',type=Path,required=True)
+        command.add_argument('--location-rules',type=Path)
+        if name=='osm':
+            command.add_argument('--bbox',nargs=4,type=float,metavar=('MIN_LON','MIN_LAT','MAX_LON','MAX_LAT'))
+            command.add_argument('--archive-dir',type=Path,default=Path('data/osm'))
+            command.add_argument('--osm',type=Path)
+            command.add_argument('--metadata',type=Path)
+            command.add_argument('--profile',choices=['ustc_legacy'])
+        else: command.add_argument('--input',type=Path,required=True)
+    args=parser.parse_args(argv)
+    try:
+        options={'campus_id':args.campus_id,'title':args.title,'seed':args.seed,'catalog_path':args.catalog,'style':args.style,
+                 'location_rules':json.loads(args.location_rules.read_text(encoding='utf-8')) if args.location_rules else None}
+        if args.format=='geojson':
+            bundle=build_from_geojson(json.loads(args.input.read_text(encoding='utf-8')),**options)
+        else:
+            if args.bbox:
+                if args.osm or args.metadata: raise MapInputError('conflicting_inputs','use either --bbox download or --osm/--metadata saved inputs')
+                if not args.campus_id.replace('_','').replace('-','').isalnum(): raise MapInputError('invalid_campus_id','download campus_id may contain letters, numbers, underscore and hyphen')
+                osm=args.archive_dir/f'{args.campus_id}.osm';metadata=args.archive_dir/f'{args.campus_id}.metadata.json'
+                download_osm(args.bbox,osm,metadata)
+            else:
+                if not args.osm or not args.metadata: raise MapInputError('missing_osm_input','provide --bbox or both --osm and --metadata')
+                osm,metadata=args.osm,args.metadata
+            bundle=build_from_osm(osm,metadata,profile=args.profile,**options)
+        manifest=write_bundle(bundle,args.output_dir)
+        print(json.dumps({'output':str(args.output_dir),'campus_id':manifest['campus_id'],**bundle['campus']['stats'],
+                          'assignments':len(bundle['assignments']['assignments']),'warnings':bundle['campus'].get('warnings',[])},ensure_ascii=False))
+        return 0
+    except (MapInputError,OSError,ValueError,ET.ParseError) as error:
+        print(json.dumps({'error':getattr(error,'code','invalid_input'),'message':str(error)},ensure_ascii=False),file=sys.stderr)
+        return 1
+
+
+if __name__=='__main__': raise SystemExit(main())

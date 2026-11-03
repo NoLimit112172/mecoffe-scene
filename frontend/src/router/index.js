@@ -77,7 +77,7 @@ const routes = [
   {
     path: '/mecoffe3d',
     name: 'mecoffe3d',
-    component: () => import('../views/MeCoffe3D.vue')
+    component: () => import('../views/MeCoffe3DEntry.vue')
   }
 ]
 
