@@ -31,7 +31,7 @@ export function pagesFiles(publicRoot,catalog){
     const base=`mecoffe/assets3d/${library}/`,manifest=JSON.parse(fs.readFileSync(safePublicFile(publicRoot,base+'manifest.json'),'utf8'))
     add(base+'manifest.json');add(base+manifest.license_file)
     const referenced=new Set(catalog.prototypes.filter(p=>p.source.type===library).map(p=>p.params.model_id).filter(Boolean))
-    for(const model of manifest.models)if(referenced.has(model.id))add(base+(model.fbx||model.file))
+    for(const model of manifest.models)if(referenced.has(model.id)){add(base+(model.fbx||model.file));if(model.glb)add(base+model.glb)}
   }
   return [...files].sort()
 }

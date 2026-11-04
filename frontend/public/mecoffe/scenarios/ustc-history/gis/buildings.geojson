@@ -502,9 +502,7 @@
         "levels_source": "default",
         "prototype_id": "building.procedural.education",
         "variant_id": "default",
-        "location_ids": [
-          "shop_merchant_001"
-        ]
+        "location_ids": []
       }
     },
     {
@@ -1344,7 +1342,9 @@
         "levels_source": "default",
         "prototype_id": "building.procedural.education",
         "variant_id": "default",
-        "location_ids": []
+        "location_ids": [
+          "shop_merchant_001"
+        ]
       }
     },
     {

@@ -1,5 +1,5 @@
 <template>
-  <div class="gis-page" :data-indoor-occupancy="JSON.stringify(occupancy.buildings)" :data-inside="occupancy.inside" :data-position="position.toFixed(6)" :data-cursor="cursor" :data-active-walkers="activeWalkers" :data-ready-models="modelStatus.visibleReady||0" :data-render-frames="telemetry.renderFrames||0" :data-worst-frame="telemetry.worstFrameMs||0" :data-average-fps="telemetry.averageFps||0" :data-model-draw-calls="telemetry.drawCalls||0">
+  <div class="gis-page" :data-indoor-occupancy="JSON.stringify(occupancy.buildings)" :data-inside="occupancy.inside" :data-person-accounting="JSON.stringify(occupancy.accounting)" :data-position="position.toFixed(6)" :data-cursor="cursor" :data-active-walkers="activeWalkers" :data-ready-models="modelStatus.visibleReady||0" :data-render-frames="telemetry.renderFrames||0" :data-worst-frame="telemetry.worstFrameMs||0" :data-average-fps="telemetry.averageFps||0" :data-model-draw-calls="telemetry.drawCalls||0">
     <header class="gis-header"><div class="gis-brand"><span class="gis-logo">◈</span><div><p>MECOFFE / GIS</p><h1>{{scenario?.manifest.title || 'GIS 校园活动地图'}}</h1></div></div><nav>
       <details ref="scenarioPicker" class="scenario-picker" @keydown.esc.prevent="closeScenarioPicker" @focusout="blurScenarioPicker">
         <summary aria-label="GIS 场景" aria-haspopup="listbox">场景 · {{scenarioChoices.find(item=>item.id===scenarioId)?.title || '选择场景'}} <span>⌄</span></summary>
@@ -14,6 +14,7 @@
       <section class="gis-metrics" aria-label="场景概览"><div><span>建筑</span><strong>{{layers?.buildings.features.length || 0}}<small> 栋</small></strong></div><div><span>道路与步道</span><strong>{{layers?.roads.features.length || 0}}<small> 段</small></strong></div><div><span>模拟人物</span><strong>{{population}}<small> 人</small></strong></div><div><span>{{hasSimulation?'回放订单':'模拟状态'}}</span><strong>{{hasSimulation?orders:'尚无模拟数据'}}<small v-if="hasSimulation"> 单</small></strong></div><div><span>模拟日期 · {{clock?.timezone}}</span><strong class="clock" data-testid="gis-time">{{dateDisplay?.label}}</strong></div></section>
       <p class="gis-data-note" data-testid="gis-data-notice">{{hasSimulation?`已有 OASIS 运行记录 · 完成 ${scenario.files['trajectory.json'].meta.completed_steps}/${scenario.files['trajectory.json'].meta.total_steps} 步；缺失记录未补造。`:'尚无模拟数据 · 仅显示地图、建筑及场景模拟时间，不生成人物或活动。'}}<span v-if="unreachable"> · {{unreachable}} 笔购买未找到可通行展示路线</span></p>
     </template>
+    <p v-if="hasSimulation&&occupancy.accounting" class="population-accounting" data-testid="person-accounting">人物去向：室外 {{occupancy.accounting.visible}} + 楼内 {{occupancy.accounting.inside}} = {{occupancy.accounting.total}} 人 · {{occupancy.accounting.valid?'全部可定位':'请重新加载场景'}}</p>
     <div class="gis-layout">
       <main class="gis-map-wrap"><div ref="host" class="gis-map" aria-label="GIS 校园地图"></div><div v-if="loading" class="gis-loading" role="status">正在准备地图…</div><template v-else-if="scenario"><div class="gis-map-tools"><span class="gis-map-badge">{{basemap==='offline'?'离线矢量地图':'OpenStreetMap 底图'}}</span><button @click="renderer?.resetCamera()">全景</button><button :disabled="!selectedPerson" @click="renderer?.focusPerson(selectedPerson.id)">人物特写</button></div><div class="gis-legend"><b>图例</b><span><i style="background:#8fb3bf"></i>教学 / 科研</span><span><i style="background:#d6b78e"></i>住宿</span><span><i style="background:#99cbd4"></i>水域</span><span><i style="background:#3185a0;border-radius:50%"></i>人物 · 远景简化</span><small>拖动平移 · 右键拖动旋转 / 倾斜 · 滚轮缩放</small></div><div v-if="modelStatus.visibleTotal" class="gis-model-status" role="status">{{modelStatus.visibleReady===modelStatus.visibleTotal?'近景三维人物':`人物模型准备中 ${modelStatus.visibleReady||0}/${modelStatus.visibleTotal}`}}<button v-if="modelStatus.failed" @click="load">重试</button></div></template></main>
       <aside class="gis-panel">
@@ -64,7 +65,7 @@ const selectedInfo=computed(()=>selected.value?.type==='feature'?featureInfo(sel
 const selectedPerson=computed(()=>selected.value?.type==='person'?index.value?.people.get(selected.value.id):null),selectedWalking=computed(()=>{position.value;return Boolean(replay?.people.get(selectedPerson.value?.id)?.walker)})
 const activity=computed(()=>selectedPerson.value&&index.value?personHistory(index.value,selectedPerson.value.id,cursor.value,5):[])
 let renderer=null,replay=null,controller=null,frame=0,lastTime=0,lastUi=0,lastMap=0,lastDraw=0,generation=0,disposed=false
-function sync(){if(!replay)return;position.value=replay.position;cursor.value=replay.cursor;activeWalkers.value=replay.personData().length;unreachable.value=replay.unreachable;occupancy.value=replay.occupancy;telemetry.value=renderer?.getStats()||{}}
+function sync(){if(!replay)return;position.value=replay.position;cursor.value=replay.cursor;activeWalkers.value=replay.personData().length;unreachable.value=replay.unreachable;occupancy.value={...replay.occupancy,accounting:replay.motion?.accounting};telemetry.value=renderer?.getStats()||{}}
 function tick(now){
   if(disposed)return
   const delta=lastTime?now-lastTime:0;lastTime=now
@@ -112,6 +113,7 @@ onMounted(()=>{load();frame=requestAnimationFrame(tick)})
 onBeforeUnmount(()=>{disposed=true;generation++;controller?.abort();cancelAnimationFrame(frame);renderer?.dispose();replay?.dispose()})
 </script>
 <style scoped>
+.population-accounting{font-size:12px;color:#385f54;margin:4px 1px 8px}
 .gis-page{background:#f3f5ee;color:#244b46;min-height:100vh;padding:16px;box-sizing:border-box;text-align:left;font:13px/1.5 'Microsoft YaHei',Arial,sans-serif}
 .gis-page *{box-sizing:border-box}
 .gis-header{display:flex;justify-content:space-between;align-items:center;gap:20px;margin-bottom:14px}

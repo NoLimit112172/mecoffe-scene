@@ -2,6 +2,7 @@ import {publicUrl} from './publicUrl.js'
 import {characterLodGeometry,consolidateMaterialGroups} from './renderPerformance.js'
 import * as THREE from 'three'
 import { FBXLoader } from 'three/addons/loaders/FBXLoader.js'
+import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js'
 import { clone as cloneSkeleton } from 'three/addons/utils/SkeletonUtils.js'
 import { mergeVertices } from 'three/addons/utils/BufferGeometryUtils.js'
 import { campusAssignments } from './campusCharacterModel.js'
@@ -67,7 +68,7 @@ export function canonicalizeValidSkeleton(source) {
   return source
 }
 
-async function loadSource(record) {
+export async function loadCharacterSource(record) {
   const base=publicUrl(record.runtime_base||BASE)
   const manager = new THREE.LoadingManager(), failures = [],embedded=new Set()
   let ready
@@ -77,7 +78,7 @@ async function loadSource(record) {
   manager.setURLModifier(url => {if(url.startsWith('blob:'))embedded.add(url);return rocketboxTextureUrl(url, record, base) ?? BLANK})
   // FBX chooses handlers from the ORIGINAL extension, before URL rewriting.
   manager.addHandler(/\.tga$/i, new THREE.TextureLoader(manager))
-  const source = await new FBXLoader(manager).loadAsync(`${base}${record.fbx}`)
+  const source = record.glb?(await new GLTFLoader(manager).loadAsync(`${base}${record.glb}`)).scene:await new FBXLoader(manager).loadAsync(`${base}${record.fbx}`)
   await settled
   for(const url of embedded)URL.revokeObjectURL(url)
   if (failures.length) { disposeSource(source); throw new Error(`Rocketbox texture failed: ${failures.join(', ')}`) }
@@ -89,8 +90,8 @@ async function loadSource(record) {
     const removed=[]
     source.traverse(o=>{if(o.isLight||o.isMesh&&/teeth|gland/i.test(o.name))removed.push(o)})
     for(const o of removed){o.removeFromParent();o.geometry?.dispose()}
-    canonicalizeValidSkeleton(source)
-    source.traverse(o=>{if(o.isMesh){const old=o.geometry;o.geometry=mergeVertices(old);old.dispose();characterLods.set(o.geometry,consolidateMaterialGroups(characterLodGeometry(o.geometry)))}})
+    if(!record.glb)canonicalizeValidSkeleton(source)
+    source.traverse(o=>{if(o.isMesh){if(!record.glb){const old=o.geometry;o.geometry=mergeVertices(old);old.dispose()}characterLods.set(o.geometry,consolidateMaterialGroups(characterLodGeometry(o.geometry)))}})
   }
   source.traverse(object=>{if(object.isMesh&&Array.isArray(object.material))consolidateMaterialGroups(object.geometry)})
   const meshes = []; source.traverse(object => { if (object.isMesh) meshes.push(object) })
@@ -122,7 +123,7 @@ async function acquireModel(id, loader, record) {
   if (loader) return { source: await loader(id), release() {} }
   if (!record) throw new Error(`Rocketbox manifest is missing ${id}`)
   let cached = sources.get(id)
-  if (!cached) { cached = { refs: 0, promise: loadSource(record) }; sources.set(id,cached); cached.promise.catch(() => { if (sources.get(id) === cached) sources.delete(id) }) }
+  if (!cached) { cached = { refs: 0, promise: loadCharacterSource(record) }; sources.set(id,cached); cached.promise.catch(() => { if (sources.get(id) === cached) sources.delete(id) }) }
   cached.refs++
   try {
     const source = await cached.promise
@@ -192,9 +193,9 @@ function normalizedModel(source, cachedNormalization) {
 }
 
 export class RealCharacterBatch {
-  constructor({scene,entries,modelId,pool='all',library,onReady}={}) {
+  constructor({scene,entries,modelId,pool='all',library,onReady,prepareActor}={}) {
     if(!scene||!entries)throw new Error('RealCharacterBatch requires a scene and entries')
-    this.scene=scene;this.entries=entries;this.modelId=modelId;this.pool=pool;this.onReady=onReady
+    this.scene=scene;this.entries=entries;this.modelId=modelId;this.pool=pool;this.onReady=onReady;this.prepareActor=prepareActor
     this.library=library||(pool==='campus'?'valid':'rocketbox')
     this.group=new THREE.Group();this.group.name='mecoffe-rocketbox-real-characters'
     this.actors=[];this.resources=[];this.records=new Map();this.readyIds=new Set();this.pending=new Set()
@@ -268,7 +269,12 @@ export class RealCharacterBatch {
         if(!force&&!this.wanted(record)){
           lease.release();record.state='idle';this.onReady?.({entry:record.entry,status:'discarded'});return
         }
-        record.actor=this.buildActor(record,lease.source);record.lease=lease;record.state='ready';record.lastUsed=this.epoch
+        const actor=this.buildActor(record,lease.source);actor.root.visible=false
+        try{await this.prepareActor?.(actor.root)}catch(error){actor.root.removeFromParent();actor.model.traverse(o=>{if(o.isSkinnedMesh)o.skeleton.dispose()});throw error}
+        if(this.disposed||generation!==this.generation||!force&&!this.wanted(record)){
+          actor.root.removeFromParent();actor.model.traverse(o=>{if(o.isSkinnedMesh)o.skeleton.dispose()});lease.release();if(!this.disposed){record.state='idle';this.onReady?.({entry:record.entry,status:'discarded'})}return
+        }
+        record.actor=actor;record.lease=lease;record.state='ready';record.lastUsed=this.epoch
         this.actors.push(record.actor);this.readyIds.add(String(record.entry.person.id));this.update(this.lastSeconds)
         this.onReady?.({entry:record.entry,modelId:record.modelId,status:'ready'})
       }catch(error){

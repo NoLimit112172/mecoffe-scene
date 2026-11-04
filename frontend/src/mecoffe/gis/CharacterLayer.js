@@ -1,6 +1,7 @@
 import * as THREE from 'three'
 import {MercatorCoordinate} from 'maplibre-gl'
 import {chooseModels} from './model.js'
+import {Campus3DEntrances} from '../Campus3DEntrances.js'
 
 /** MapLibre's shared WebGL context; all figure positions originate in WGS84.
  * Models/rigs/appearance are the existing RealCharacterBatch, never new assets.
@@ -19,6 +20,7 @@ export class GisCharacterLayer {
     this.renderer.autoClear=false;this.renderer.outputColorSpace=THREE.SRGBColorSpace
     this.scene.add(new THREE.HemisphereLight(0xfffaf0,0x849080,2.2))
     const light=new THREE.DirectionalLight(0xfff4dd,2.3);light.position.set(50,100,30);this.scene.add(light)
+    if(this.replay.index)this.doors=new Campus3DEntrances({scene:this.scene,campus:this.replay.campus,entrances:this.replay.entrances})
     for(const record of this.replay.people.values()){
       const figure=new THREE.Group();this.scene.add(figure)
       this.entries.set(record.id,{person:record.person,figure,record,inView:false,presentationVisible:false,hasCoffee:false})
@@ -28,7 +30,7 @@ export class GisCharacterLayer {
     if(this.promise||this.disposed||!this.entries.size)return this.promise
     this.promise=import('../Campus3DRealCharacters.js').then(async({RealCharacterBatch})=>{
       if(this.disposed)return
-      this.batch=new RealCharacterBatch({scene:this.scene,entries:this.entries,pool:'campus',onReady:()=>{if(!this.disposed){this.map.triggerRepaint();this.emitStatus()}}})
+      this.batch=new RealCharacterBatch({scene:this.scene,entries:this.entries,pool:'campus',prepareActor:root=>this.renderer.compileAsync(root,this.camera,this.scene),onReady:()=>{if(!this.disposed){this.map.triggerRepaint();this.emitStatus()}}})
       await this.batch.init();if(this.disposed){this.batch.dispose();return}
       this.batch.setVisible(this.visible)
       this.map.triggerRepaint()
@@ -77,7 +79,7 @@ export class GisCharacterLayer {
     return ray.intersectObjects(this.batch.group.children,true).find(hit=>this.readyIds.has(hit.object.userData.person?.id))?.object.userData.person.id||null
   }
   onRemove(){
-    this.disposed=true;this.batch?.dispose();this.renderer?.dispose();this.scene?.clear();this.entries?.clear();this.readyIds.clear()
+    this.disposed=true;this.doors?.dispose();this.batch?.dispose();this.renderer?.dispose();this.scene?.clear();this.entries?.clear();this.readyIds.clear()
     // Never forceContextLoss: this context belongs to the map, not this layer.
   }
 }

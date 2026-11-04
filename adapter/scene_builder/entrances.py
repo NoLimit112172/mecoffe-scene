@@ -30,48 +30,59 @@ def pair(a, b, c, d):
     return min(candidates,key=lambda p:(distance(*p),p[0],p[1]))
 
 
+def facade_midpoints(building):
+    # Merge collinear OSM vertices so a facade split into several nodes still
+    # gets one door in its middle, never at the corner between two walls.
+    ring=[list(p) for p in building['polygon']]
+    if ring[0]==ring[-1]:ring.pop()
+    changed=True
+    while changed and len(ring)>3:
+        changed=False
+        for i,b in enumerate(ring):
+            a,c=ring[i-1],ring[(i+1)%len(ring)]
+            ab=[b[0]-a[0],b[1]-a[1]];bc=[c[0]-b[0],c[1]-b[1]]
+            if abs(ab[0]*bc[1]-ab[1]*bc[0])<=1e-5*max(1,distance(a,b)*distance(b,c)) and ab[0]*bc[0]+ab[1]*bc[1]>=0:
+                ring.pop(i);changed=True;break
+    sign=1 if sum(a[0]*b[1]-b[0]*a[1] for a,b in zip(ring,ring[1:]+ring[:1]))>=0 else -1
+    result=[]
+    for a,b in zip(ring,ring[1:]+ring[:1]):
+        length=distance(a,b)
+        if length<1e-6:continue
+        result.append(([(a[0]+b[0])/2,(a[1]+b[1])/2],[(b[1]-a[1])*sign/length,-(b[0]-a[0])*sign/length],[a,b],length))
+    # Tiny bevels are not useful front facades. Retain a fallback for small huts.
+    return [x for x in result if x[3]>=min(8,max(x[3] for x in result))]
+
+
 def generate_entrances(campus):
-    cache_key=hashlib.sha256(json.dumps([campus['campus_id'],campus['projection'],campus['source'],[(b['osm_id'],b['polygon'],b.get('holes',[])) for b in campus['buildings']],campus['walk_graph']],sort_keys=True).encode()).hexdigest()
+    cache_key=hashlib.sha256(json.dumps([campus['campus_id'],campus['projection'],campus['source'],[(b['osm_id'],b['polygon']) for b in campus['buildings']],campus['walk_graph']],sort_keys=True).encode()).hexdigest()
     if cache_key in _CACHE:return copy.deepcopy(_CACHE[cache_key])
     nodes={p['id']:p for p in campus['walk_graph']['nodes']}
     edges=[(e,[nodes[e['source']]['x'],nodes[e['source']]['y']],[nodes[e['target']]['x'],nodes[e['target']]['y']]) for e in campus['walk_graph']['edges']]
-    buildings=sorted(campus['buildings'],key=lambda b:b['osm_id'])
     records=[]
-    for b in buildings:
-        options=[{'point':None}]
-        for number,option in enumerate(options):
-            best=None
-            points=[option['point']] if option['point'] is not None else b['polygon']
-            box=[min(p[0] for p in points),min(p[1] for p in points),max(p[0] for p in points),max(p[1] for p in points)]
-            def lower_bound(item):
-                _,c,d=item
-                return math.hypot(max(box[0]-max(c[0],d[0]),min(c[0],d[0])-box[2],0),max(box[1]-max(c[1],d[1]),min(c[1],d[1])-box[3],0))
-            for edge,c,d in sorted(edges,key=lower_bound):
-                if best and lower_bound((edge,c,d))>best[0][0]+1e-8:continue
-                if option['point'] is not None:
-                    a=option['point'];p=project(a,c,d);choices=[(a,p)]
-                else:
-                    choices=[pair(a,z,c,d) for ring in [b['polygon'],*b.get('holes',[])] for a,z in zip(ring,ring[1:]+ring[:1])]
-                for a,p in choices:
-                    key=(round(distance(a,p),9),str(edge['source']),str(edge['target']),a,p)
-                    if best is None or key<best[0]:best=(key,edge,a,p,c,d)
-            if best is None:
-                records.append({'id':b['osm_id']+'/entrance/'+str(number+1),'building_id':b['osm_id'],
-                    'point':option['point'] or b['polygon'][0],'source':'inferred',
-                    'road_node_id':None,'connector':[],
-                    'connected':False,'illustrative':True})
-                continue
-            _,edge,point,road,c,d=best
+    for building in sorted(campus['buildings'],key=lambda b:b['osm_id']):
+        candidates=facade_midpoints(building);best=None
+        for point,normal,facade,length in candidates:
+            for edge,c,d in edges:
+                road=project(point,c,d);dx,dy=road[0]-point[0],road[1]-point[1]
+                if dx*normal[0]+dy*normal[1]<-1e-6:continue
+                key=(round(distance(point,road),6),-length,str(edge['source']),str(edge['target']),point)
+                if best is None or key<best[0]:best=(key,edge,point,road,normal,facade)
+        if best is None:
+            point,normal,facade,_=max(candidates,key=lambda c:c[3])
+            record={'point':point,'road_node_id':None,'connector':[],'connected':False}
+        else:
+            _,edge,point,road,normal,facade=best
             node_id=min((edge['source'],edge['target']),key=lambda key:(distance(road,[nodes[key]['x'],nodes[key]['y']]),str(key)))
+            lead=[point[i]+normal[i]*min(3,distance(point,road)*.4) for i in (0,1)]
             connector=[]
-            for p in (point,road,[nodes[node_id]['x'],nodes[node_id]['y']]):
+            for p in (point,lead,road,[nodes[node_id]['x'],nodes[node_id]['y']]):
                 p=[round(x,6) for x in p]
                 if not connector or distance(p,connector[-1])>1e-6:connector.append(p)
-            records.append({'id':b['osm_id']+'/entrance/'+str(number+1),'building_id':b['osm_id'],
-                'point':[round(x,6) for x in point],'source':'inferred',
-                'road_node_id':node_id,'connector':connector,'connected':True,'illustrative':True})
+            record={'point':[round(x,6) for x in point],'road_node_id':node_id,'connector':connector,'connected':True}
+        records.append({'id':building['osm_id']+'/entrance/1','building_id':building['osm_id'],**record,
+            'facade':facade,'outward':normal,'placement':'facade_midpoint','source':'inferred','illustrative':True})
     local={'schema_version':'mecoffe.entrances.v1','campus_id':campus['campus_id'],'illustrative':True,'geometry_source':campus['source'],
-           'note':'入口与道路连接为展示示意；本轮统一推断入口，非实测，不解析 OSM entrance 标注。','entrances':records}
+           'note':'入口位于朝道路的外墙中段，与路线一致；为展示示意，非实测，不解析 OSM entrance 标注。','entrances':records}
     geo={'type':'FeatureCollection','schema_version':'mecoffe.gis.v1','name':'entrances','source':campus['source'],
          'features':[{'type':'Feature','id':p['id'],'geometry':{'type':'Point','coordinates':to_wgs84(p['point'],campus['projection'])},
                       'properties':{**{k:v for k,v in p.items() if k not in ('point','connector')},'feature_id':p['id'],'category':'entrance'}} for p in records]}

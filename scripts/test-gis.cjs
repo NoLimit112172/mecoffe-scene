@@ -49,7 +49,7 @@ async function benchmark(page,seconds=10){
       const page=await context.newPage(),modelRequests=[];
       page.on('pageerror',e=>report.errors.push({id,message:e.message}));page.on('console',m=>{if(m.type()==='error')report.errors.push({id,message:m.text()})});
       page.on('response',r=>{if(r.status()>=400)report.badResponses.push({id,url:r.url(),status:r.status()})});
-      page.on('request',r=>{if(/\.fbx(?:\?|$)/.test(r.url()))modelRequests.push(r.url());if(pages&&r.url().startsWith(origin+'/')&&!r.url().startsWith(base+'/'))report.rootRequests.push(r.url())});
+      page.on('request',r=>{if(/\.(?:fbx|glb)(?:\?|$)/.test(r.url()))modelRequests.push(r.url());if(pages&&r.url().startsWith(origin+'/')&&!r.url().startsWith(base+'/'))report.rootRequests.push(r.url())});
       const response=await page.goto(base+'/mecoffe-gis?scenario='+id,{waitUntil:'domcontentloaded'});assert.equal(response.status(),200);await ready(page);await page.reload({waitUntil:'domcontentloaded'});await ready(page);
       assert.match(await page.title(),/GIS 模式/);assert.match(await page.getByRole('note').textContent(),/OASIS 没有位置数据/);assert.equal(modelRequests.length,0,'overview must not fetch avatars');
       if(id==='ustc-history'){

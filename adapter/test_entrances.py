@@ -4,12 +4,21 @@ import json
 import tempfile
 import unittest
 from pathlib import Path
-from adapter.scene_builder.entrances import generate_entrances, project, distance
+from adapter.scene_builder.entrances import generate_entrances, project, distance, facade_midpoints
 from adapter.scene_builder.scenario import ROOT, prepare_scenario
 from adapter.scene_builder.gis import to_local
 
 
 class EntranceTests(unittest.TestCase):
+    def test_collinear_facade_nodes_merge_and_doors_are_at_wall_midpoints_not_corners(self):
+        building={'polygon':[[0,0],[10,0],[20,0],[20,10],[0,10],[0,0]]}
+        candidates=facade_midpoints(building)
+        self.assertEqual(len(candidates),4)
+        self.assertIn([10,0],[c[0] for c in candidates])
+        self.assertNotIn([20,0],[c[0] for c in candidates])
+        for point,normal,(a,b),length in candidates:
+            self.assertEqual(point,[(a[0]+b[0])/2,(a[1]+b[1])/2])
+            self.assertAlmostEqual((b[0]-a[0])*normal[0]+(b[1]-a[1])*normal[1],0)
     def test_map_without_roads_has_no_invented_graph_or_connector(self):
         campus={'campus_id':'empty','source':{},'projection':{'method':'local_equirectangular','origin_lon':0,'origin_lat':0,'earth_radius_m':6371008.8},
             'buildings':[{'osm_id':'one','polygon':[[0,0],[10,0],[10,10],[0,0]]}],'walk_graph':{'nodes':[],'edges':[]}}
@@ -23,6 +32,7 @@ class EntranceTests(unittest.TestCase):
             result,geo=generate_entrances(campus)
             self.assertEqual(campus,before)
             self.assertEqual(set(p['building_id'] for p in result['entrances']),set(b['osm_id'] for b in campus['buildings']))
+            self.assertEqual(len(result['entrances']),len(campus['buildings']))
             nodes={p['id']:p for p in campus['walk_graph']['nodes']};buildings={b['osm_id']:b for b in campus['buildings']}
             for entry,feature in zip(result['entrances'],geo['features']):
                 rings=[buildings[entry['building_id']]['polygon'],*buildings[entry['building_id']].get('holes',[])]

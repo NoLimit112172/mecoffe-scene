@@ -8,6 +8,7 @@ import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js'
 import { OutputPass } from 'three/addons/postprocessing/OutputPass.js'
 import { resolveHomeKey } from './campus3dRouting.js'
 import { prototypeParams } from './assetCatalog.js'
+import {makeSharpTextTexture,screenLine} from './Campus3DAnnotations.js'
 
 const STYLES = Object.fromEntries(['post','comment','follow','ad','exposure','interview','purchase'].map(type=>{
   const {color,text,duration}=prototypeParams(`effect.${type}`)
@@ -72,35 +73,6 @@ function disposeVisual(object) {
   // Canvas textures belong to the manager's cache and survive transient FX.
 }
 
-function makeTextTexture(text, color) {
-  const canvas = document.createElement('canvas')
-  const context = canvas.getContext('2d')
-  const font = '700 30px "Microsoft YaHei",sans-serif'
-  context.font = font
-  canvas.width = Math.ceil(context.measureText(text).width + 38)
-  canvas.height = 76
-  context.font = font
-  context.fillStyle = 'rgba(13,29,39,.93)'
-  context.beginPath()
-  context.roundRect(2, 2, canvas.width - 4, 60, 17)
-  context.fill()
-  context.strokeStyle = `#${color.toString(16).padStart(6, '0')}`
-  context.lineWidth = 3
-  context.stroke()
-  context.beginPath()
-  context.moveTo(canvas.width / 2 - 8, 61)
-  context.lineTo(canvas.width / 2, 74)
-  context.lineTo(canvas.width / 2 + 8, 61)
-  context.fill()
-  context.fillStyle = '#ffffff'
-  context.textAlign = 'center'
-  context.textBaseline = 'middle'
-  context.fillText(text, canvas.width / 2, 33)
-  const texture = new THREE.CanvasTexture(canvas)
-  texture.colorSpace = THREE.SRGBColorSpace
-  return { texture, aspect: canvas.width / canvas.height }
-}
-
 export class EventEffects {
   constructor({ scene, index, routing, shopMarkers, labelFactory } = {}) {
     this.scene = scene
@@ -133,15 +105,16 @@ export class EventEffects {
     return anchor ? new THREE.Vector3(anchor.center.x, (anchor.building.height_m || 12) + 12, -anchor.center.y) : null
   }
 
-  label(text, color, height = 26) {
+  label(text, color, height = 26, type='comment') {
     if (this.labelFactory) return this.labelFactory(text, color, height)
-    const key = `${color}:${text}`
-    if (!this.textures.has(key)) this.textures.set(key, makeTextTexture(text, color))
+    const key = `${color}:${type}:${text}`
+    if (!this.textures.has(key)) this.textures.set(key, makeSharpTextTexture(text, color, type))
     const { texture, aspect } = this.textures.get(key)
     const sprite = new THREE.Sprite(new THREE.SpriteMaterial({
       map: texture, transparent: true, depthTest: false, depthWrite: false, toneMapped: false,
     }))
     sprite.scale.set(height * aspect, height, 1)
+    sprite.userData.textAspect=aspect
     sprite.renderOrder = 9
     return sprite
   }
@@ -153,8 +126,8 @@ export class EventEffects {
     this.effects.push({ ...effect, life: 0 })
   }
 
-  bubble(position, text, style) {
-    const sprite = this.label(text, style.color)
+  bubble(position, text, style, type='comment') {
+    const sprite = this.label(text, style.color,26,type)
     sprite.position.copy(position)
     this.add({ object: sprite, origin: position.clone(), duration: style.duration, kind: 'bubble' })
   }
@@ -165,9 +138,7 @@ export class EventEffects {
     const points = arcPoints(start, end).map(point => new THREE.Vector3(point.x, point.y, point.z))
     const curve = new THREE.CatmullRomCurve3(points)
     const object = new THREE.Group()
-    const beam = new THREE.Line(new THREE.BufferGeometry().setFromPoints(points),
-      new THREE.LineBasicMaterial({ color: new THREE.Color(style.color).multiplyScalar(kind === 'ad' ? 1.8 : 1),
-        transparent: true, opacity: 0.8, depthWrite: false }))
+    const beam = screenLine(points,{color:style.color,opacity:.7})
     beam.userData.bloom = kind === 'ad'
     object.add(beam)
     const particles = []
@@ -190,7 +161,7 @@ export class EventEffects {
     const style = visualEventStyle(event.type)
     const roof = this.roofFor(event.actor)
     if (!style || !roof) return
-    this.bubble(roof, style.text, style)
+    this.bubble(roof, style.text, style,event.type)
     const connections = eventConnections(event, this.index.people)
     const drawn = new Set()
     for (const pair of connections) {
@@ -212,7 +183,7 @@ export class EventEffects {
     const roof = this.roofFor(event.brand_id)
     const marker = this.shopMarkers.get(event.brand_id)
     if (!roof || !marker) return
-    this.bubble(roof, formatPurchaseReceipt(event), style)
+    this.bubble(roof, formatPurchaseReceipt(event), style,'purchase')
     const object = new THREE.Group()
     const circle = new THREE.Mesh(new THREE.RingGeometry(6, 8, 40),
       new THREE.MeshBasicMaterial({ color: new THREE.Color(style.color).multiplyScalar(1.8),
@@ -258,6 +229,13 @@ export class EventEffects {
       active.push(effect)
     }
     this.effects = active
+  }
+
+  updateScreen(camera,height){
+    for(const e of this.effects){if(e.kind!=='bubble'||!e.object.userData.textAspect)continue
+      const distance=camera.position.distanceTo(e.object.position),world=2*distance*Math.tan(camera.fov*Math.PI/360)/Math.max(1,height)*34
+      e.object.scale.set(world*e.object.userData.textAspect,world,1)
+    }
   }
 
   remove(effect) {

@@ -15,6 +15,8 @@ Pages 前端使用 YuLan-OneSim（Apache-2.0）、© OpenStreetMap contributors�
 
 VALID 运行时兼容处理合并同姿态的重名骨骼、重复顶点，移除室外回放不需要的口腔内部与作者灯光，并由本项目代码驱动放松站立、行走、持杯；原始FBX不改写。原 Rocketbox115套与其MIT许可仍保留在完整素材库，当前校园按画像性别和师生角色使用VALID预设。31栋实际楼栋及场地/水域/跨水通行面实例卡片的OSM几何仍保留ODbL-1.0，YuLan立面继续保留Apache-2.0；实例没有将几何和模型合并改授许可。
 
+里程碑 9 追加的 9 个 VALID GLB 是上述 MIT 素材的本地转换版本，仍附 Copyright (c) 2022 Tiffany Do 及原 MIT LICENSE。保留室外身体、眼睛、标准骨架和中性脸形；移除本回放未使用的面部变形目标，纹理最高 1024 像素。原始 FBX、来源 Git blob 和哈希均保留；manifest.json 另记录每个 GLB 的 SHA-256 与字节数。转换命令为 `node scripts/prepare-valid-runtime.cjs`（需本地 5180 开发服务及既有 Chrome/Playwright），不下载外部素材。GLTFLoader、GLTFExporter、Line2 和 LineMaterial 仍来自既有 Three.js MIT 代码，无新增依赖。
+
 三维素材目录 `frontend/public/mecoffe/assets3d/catalog.json` 逐原型记录来源、源路径与许可。YuLan 原图集保留上游 Apache-2.0 和 `YULAN_LICENSE`，OSM 数据保留 ODbL-1.0 与署名。程序生成的模型、纹理和 SVG 缩略图属于本项目代码输出，目录以 `LicenseRef-MeCoffe-Project` 记录该来源；这不是外部 CC0 授权，也不改变原数据或素材的许可。
 
 `frontend/` 来自 [RUC-GSAI/YuLan-OneSim](https://github.com/RUC-GSAI/YuLan-OneSim) 的 `src/frontend`，提交 `9829d72`，按 Apache License 2.0 使用，许可证全文见 `YULAN_LICENSE`。美术素材（`frontend/public/assets`、`frontend/public/img`）同样来自该项目。

@@ -5,8 +5,19 @@ import {layoutLabels} from '../campus3dScreen.js'
 
 // Screen-pixel badges projected at the true extrusion roof height, no remote glyphs.
 export class IndoorRoofLabels {
-  constructor(view){this.view=view;this.elements=new Map();this.host=document.createElement('div');this.host.className='gis-indoor-roofs';Object.assign(this.host.style,{position:'absolute',inset:'0',pointerEvents:'none',zIndex:'1'});view.host.append(this.host);this.render=()=>this.update();view.map.on('render',this.render)}
+  constructor(view){this.view=view;this.elements=new Map();this.pins=new Map();this.host=document.createElement('div');this.host.className='gis-indoor-roofs';Object.assign(this.host.style,{position:'absolute',inset:'0',pointerEvents:'none',zIndex:'1'});view.host.append(this.host);this.render=()=>this.update();view.map.on('render',this.render)}
+  updatePeople(){
+    const {view}=this,people=view.replay.personData(),outside=new Set(people.map(p=>p.id))
+    for(const [id,el]of this.pins)if(!outside.has(id)){el.remove();this.pins.delete(id)}
+    for(const person of people){
+      let el=this.pins.get(person.id)
+      if(!el){el=document.createElement('button');el.setAttribute('data-outside-person',person.id);el.setAttribute('aria-label',`定位 ${person.person.name}`);el.title=person.person.name+' · 室外（示意）';Object.assign(el.style,{position:'absolute',width:'11px',height:'11px',padding:'0',border:'2px solid #fff8df',borderRadius:'50%',background:'#33869a',boxShadow:'0 0 0 1px #426a72,0 1px 5px #173c4a88',transform:'translate(-50%,-50%)',pointerEvents:'auto',zIndex:'3',cursor:'pointer'});el.onclick=e=>{e.stopPropagation();view.focusPerson(person.id)};this.host.append(el);this.pins.set(person.id,el)}
+      const p=view.map.project(person.lngLat),visible=view.visibility.people!==false&&p.x>=0&&p.x<=view.host.clientWidth&&p.y>=0&&p.y<=view.host.clientHeight
+      el.style.display=visible?'block':'none';el.style.left=p.x+'px';el.style.top=p.y+'px'
+    }
+  }
   update(){
+    this.updatePeople()
     const {view}=this,matrix=view.characters.mapProjection,width=view.host.clientWidth,height=view.host.clientHeight,counts=view.replay.occupancy.buildings,items=[]
     const center=view.map.getCenter(),key=[center.lng,center.lat,view.map.getZoom(),view.map.getPitch(),view.map.getBearing(),width,height,view.occupancyKey,view.visibility.buildings].join('|')
     if(matrix&&key===this.lastKey)return
@@ -22,5 +33,5 @@ export class IndoorRoofLabels {
     }
     for(const item of layoutLabels(items,{width,height,padding:8,gap:5})){const el=this.elements.get(item.id);el.style.left=item.left+'px';el.style.top=item.top+'px'}
   }
-  dispose(){this.view.map.off('render',this.render);this.host.remove();this.elements.clear()}
+  dispose(){this.view.map.off('render',this.render);this.host.remove();this.elements.clear();this.pins.clear()}
 }

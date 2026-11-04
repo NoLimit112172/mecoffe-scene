@@ -26,6 +26,9 @@ import { Campus3DEnvironment } from './Campus3DEnvironment.js'
 import { EventEffects, SelectiveBloom } from './Campus3DEffects.js'
 import { visualClock, idleRepresentatives, displayOccupancy } from './campus3dPresentation.js'
 import {IndoorMotion} from './indoorMotion.js'
+import {screenLine,updateScreenLine} from './Campus3DAnnotations.js'
+import {arcPoints} from './Campus3DEffects.js'
+import {Campus3DEntrances} from './Campus3DEntrances.js'
 import {positionAtCursor} from './campus3dPlayback.js'
 import {placeIndoorPeople,syncIndoorView,indoorScreen,focusIndoorBuilding,updateIndoorGlow} from './Campus3DIndoor.js'
 
@@ -171,7 +174,7 @@ export class Campus3DScene {
     this.radiusLimits = new Map()
     this.characterPool = ['campus','all','adults','professions','children'].includes(characterPool)?characterPool:'campus'
     this.pendingVisualCount = 0
-    this.routing = createRouting(campus, mapping)
+    this.routing = this.indoor?.routing || createRouting(campus, mapping)
     this.people = new Map()
     this.buildingMeshes = new Map()
     this.pickTargets = []
@@ -326,6 +329,7 @@ export class Campus3DScene {
     if(!this.renderDirty)return false
     this.renderDirty=false
     this.updateScreenVisuals()
+    this.eventEffects?.updateScreen(this.camera,this.host.clientHeight)
     if(this.relationsDirty){this.updateRelations();this.relationsDirty=false}
     this.realCharacterBatch?.update(this.visualSeconds,this.camera,this.host?.clientHeight||800)
     this.emitCharacterStatus()
@@ -416,6 +420,7 @@ export class Campus3DScene {
           shopIndex >= 0 ? `#${BRAND_COLORS[shopIndex % BRAND_COLORS.length].toString(16).padStart(6, '0')}` : '#294e48')
       }
     }
+    if(this.indoor){this.doorMarkers=new Campus3DEntrances({scene:this.scene,campus:this.campus,entrances:this.indoor.entrances,elevation:p=>this.personElevation(p)});if(this.host?.dataset)this.host.dataset.entranceCount=String(this.doorMarkers.frames.size)}
     this.shopMarkers = new Map()
     for (const [brandId, color] of this.brandColors) {
       const anchor = this.routing.anchors.get(`shop_${brandId}`)
@@ -429,7 +434,8 @@ export class Campus3DScene {
       const ball = new THREE.Mesh(new THREE.SphereGeometry(3.4, 12, 8), new THREE.MeshStandardMaterial({ color }))
       ball.position.y = 14
       marker.add(ring, pin, ball)
-      marker.position.set(anchor.node.x, 0.4, -anchor.node.y)
+      const door=anchor.door?.point
+      marker.position.set(door?door[0]:anchor.node.x,.4,door?-door[1]:-anchor.node.y)
       this.scene.add(marker)
       this.shopMarkers.set(brandId, marker)
     }
@@ -460,7 +466,7 @@ export class Campus3DScene {
     const badge = document.createElement('span')
     const total = [...this.people.values()].filter(entry => entry.anchor.building.osm_id === id).length
     badge.textContent = `示意 ${total}人`
-    Object.assign(badge.style, { display:'inline-block', minWidth:'48px', marginLeft:'5px', padding:'0 3px', borderRadius:'4px', fontSize:'9px', textAlign:'center', color:'#47705c', background:'#e5eddd' })
+    Object.assign(badge.style, { display:'inline-block', minWidth:'48px', marginLeft:'5px', padding:'0 3px', borderRadius:'4px', fontSize:'11px', textAlign:'center', color:'#47705c', background:'#e5eddd' })
     element.appendChild(badge)
     element.title = text
     element.setAttribute('data-campus-label', id)
@@ -1004,39 +1010,36 @@ export class Campus3DScene {
   }
 
   selectPerson(id) {
-    if(this.indoor){this.selectedId=this.people.has(id)?id:null;this.clearLayer(this.relationLayer);const location=this.indoor.personLocation(id);if(location.inside)focusIndoorBuilding(this,location.buildingId);else{this.indoorSelectedBuilding=null;updateIndoorGlow(this)}this.invalidate();return}
-    const next=this.people.has(id)?id:null
-    if(next===this.selectedId)return
+    const next=this.people.has(id)?id:null,unchanged=next===this.selectedId
     this.selectedId=next
-    this.invalidate()
-    this.relationsDirty=true
-    this.updateSelection()
-    this.clearLayer(this.relationLayer)
-    const selected = this.people.get(this.selectedId)
-    if (!selected) return
-    for (const relation of this.index.scene.relationships || []) {
-      if (relation.source !== id && relation.target !== id) continue
-      const otherId = relation.source === id ? relation.target : relation.source
-      if (!this.people.has(otherId)) continue
-      const geometry = new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(), new THREE.Vector3(), new THREE.Vector3()])
-      const line = new THREE.Line(geometry, new THREE.LineBasicMaterial({
-        color: relation.source === id ? 0x4c8ba6 : 0xb49b61, transparent: true, opacity: 0.55,
-      }))
-      line.userData.people = [id, otherId]
-      this.relationLayer.add(line)
+    if(this.host?.dataset)this.host.dataset.selectedPerson=next||''
+    if(this.indoor){const location=this.indoor.personLocation(id);if(location.inside)focusIndoorBuilding(this,location.buildingId);else{this.indoorSelectedBuilding=null;updateIndoorGlow(this)}}
+    if(unchanged){this.invalidate();this.relationsDirty=true;return}
+    this.clearLayer(this.relationLayer);this.invalidate();this.relationsDirty=true
+    if(!this.indoor)this.updateSelection()
+    if(!this.selectedId)return
+    for(const relation of this.index.scene.relationships||[]){
+      if(relation.source!==id&&relation.target!==id)continue
+      const otherId=relation.source===id?relation.target:relation.source
+      if(!this.people.has(otherId))continue
+      const line=screenLine(arcPoints(new THREE.Vector3(),new THREE.Vector3(1,0,0)),{color:relation.source===id?0x4c8ba6:0xb49b61,opacity:.55})
+      line.userData.people=[id,otherId];this.relationLayer.add(line)
     }
+    this.updateRelations()
+    if(this.host?.dataset)this.host.dataset.relationshipLines=String(this.relationLayer.children.length)
   }
 
+  relationshipEndpoint(id){
+    const entry=this.people.get(id);if(!entry)return null
+    const location=this.indoor?.personLocation(id),building=location?.inside&&this.campus.buildings.find(b=>b.osm_id===location.buildingId)
+    if(building){const c=polygonCenter(building.polygon);return new THREE.Vector3(c.x,building.height_m+TERRAIN_LEVELS.buildingBase+3,-c.y)}
+    return entry.figure.position.clone().add(new THREE.Vector3(0,8*entry.figure.scale.x,0))
+  }
   updateRelations() {
-    for (const line of this.relationLayer.children) {
-      const [a, b] = line.userData.people.map(id => this.people.get(id)?.figure.position)
-      if (!a || !b) continue
-      const positions = line.geometry.attributes.position
-      positions.setXYZ(0, a.x, 8, a.z)
-      positions.setXYZ(1, (a.x + b.x) / 2, 20 + Math.min(a.distanceTo(b) * 0.1, 50), (a.z + b.z) / 2)
-      positions.setXYZ(2, b.x, 8, b.z)
-      positions.needsUpdate = true
-      line.geometry.computeBoundingSphere()
+    for(const line of this.relationLayer.children){
+      const [a,b]=line.userData.people.map(id=>this.relationshipEndpoint(id));if(!a||!b)continue
+      if(a.distanceTo(b)<1){a.x-=7;b.x+=7}
+      updateScreenLine(line,arcPoints(a,b))
     }
   }
 
@@ -1144,6 +1147,7 @@ export class Campus3DScene {
       if(!this.realPromise)this.realPromise=import('./Campus3DRealCharacters.js').then(async({RealCharacterBatch})=>{
         if(this.disposed)return
         this.realCharacterBatch=new RealCharacterBatch({scene:this.scene,entries:this.people,pool:this.characterPool,
+          prepareActor:root=>this.renderer.compileAsync(root,this.camera,this.scene),
           onReady:()=>{this.invalidate();this.emitCharacterStatus()}})
         await this.realCharacterBatch.init()
         if(this.disposed){this.realCharacterBatch.dispose();return}
@@ -1285,6 +1289,7 @@ export class Campus3DScene {
     this.controls?.removeEventListener('start', this.onControlsStart)
     this.controls?.removeEventListener('change', this.onControlsChange)
     this.controls?.dispose()
+    this.doorMarkers?.dispose()
     this.labelLayer?.remove()
     this.labels.length = 0
     this.clearHover()

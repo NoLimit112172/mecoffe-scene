@@ -10,6 +10,19 @@ export const INDOOR_DEFAULTS=Object.freeze({doorSeconds:.5,shopSeconds:6,speedMp
 const point=p=>({x:p[0],y:p[1]})
 export const outsidePerson=p=>Boolean(p.walker&&!['waiting','dwell'].includes(p.walker.phase))
 export const indoorBuilding=p=>!p.walker||p.walker.phase==='waiting'?p.homeBuilding:p.walker.phase==='dwell'?p.walker.shopBuilding:null
+export function auditPeople(people,buildingIds){
+  const ids=new Set(),issues=[];let inside=0,visible=0
+  for(const p of people){
+    if(ids.has(p.id))issues.push(`${p.id}: duplicate`);ids.add(p.id)
+    const building=indoorBuilding(p),outside=outsidePerson(p)
+    if(outside){visible++;if(!Number.isFinite(p.x)||!Number.isFinite(p.y))issues.push(`${p.id}: invalid position`)}
+    else if(building&&buildingIds.has(building))inside++
+    else issues.push(`${p.id}: no building`)
+    if(Boolean(building)===outside)issues.push(`${p.id}: ambiguous state`)
+  }
+  const total=ids.size,accounted=inside+visible
+  return {total,visible,inside,accounted,unassigned:total-accounted,valid:issues.length===0&&accounted===total,issues}
+}
 export function indoorSnapshot(people){
   const buildings={},persons={}
   for(const p of people){const id=indoorBuilding(p);persons[p.id]={buildingId:id,phase:p.walker?.phase||'home',outside:outsidePerson(p)};if(id)(buildings[id]||=[]).push(p.id)}
@@ -28,7 +41,8 @@ export class IndoorMotion {
     if(entrances?.schema_version!=='mecoffe.entrances.v1')throw new Error('场景缺少楼栋入口，请重新生成场景')
     this.campus=campus;this.mapping=mapping;this.index=index;this.entrances=entrances;this.options={...INDOOR_DEFAULTS,...options}
     this.routing=createRouting(campus,mapping);this.byBuilding=new Map();this.routes=new Map();this.people=new Map();this.revision=0
-    for(const e of entrances.entrances){if(!this.byBuilding.has(e.building_id))this.byBuilding.set(e.building_id,e)}
+    this.buildingIds=new Set(campus.buildings.map(b=>b.osm_id))
+    for(const e of entrances.entrances){if(this.byBuilding.has(e.building_id))throw new Error('每栋楼只能有一个推断入口');this.byBuilding.set(e.building_id,e)}
     for(const [key,anchor]of this.routing.anchors){const door=this.byBuilding.get(anchor.building.osm_id);if(!door||!this.routing.nodes.has(door.road_node_id))throw new Error('楼栋入口与步行图不匹配');anchor.node=this.routing.nodes.get(door.road_node_id);anchor.door=door}
     this.obstacles=buildSpatialEnvironment(campus,landcovers).obstacles
     for(const person of index?.scene.people||[]){const key=resolveHomeKey(person),anchor=this.routing.anchors.get(key);if(!anchor)throw new Error('人物缺少楼栋映射');this.people.set(person.id,{id:person.id,person,key,homeBuilding:anchor.building.osm_id,home:point(anchor.door.point),...point(anchor.door.point),heading:0,queue:[],walker:null,hasCoffee:false,transitionScale:1})}
@@ -81,6 +95,8 @@ export class IndoorMotion {
     if(w.phase==='waiting'){if(this.tick/this.options.hz<w.until)return;change('exit-home')}
     if(['exit-home','exit-shop','enter-shop','enter-home'].includes(w.phase)){
       w.elapsed+=delta;const f=Math.min(1,w.elapsed/this.options.doorSeconds);p.transitionScale=w.phase.startsWith('exit')?f:1-f
+      const door=this.byBuilding.get(w.phase.endsWith('home')?p.homeBuilding:w.shopBuilding)
+      if(door.outward){const inward=w.phase.startsWith('enter')?f:1-f;p.x=door.point[0]-door.outward[0]*2*inward;p.y=door.point[1]-door.outward[1]*2*inward;p.heading=Math.atan2(door.outward[0],-door.outward[1])+(w.phase.startsWith('enter')?Math.PI:0)}
       if(f<1)return
       if(w.phase==='enter-home'){p.walker=null;Object.assign(p,p.home);p.transitionScale=1;this.revision++;return}
       if(w.phase==='enter-shop'){change('dwell');p.transitionScale=0;return}
@@ -98,5 +114,6 @@ export class IndoorMotion {
   get pending(){return this.active+[...this.people.values()].reduce((n,p)=>n+p.queue.length,0)}
   get snapshot(){if(this.lastRevision!==this.revision){this.lastRevision=this.revision;this.lastSnapshot=indoorSnapshot(this.people.values())}return this.lastSnapshot}
   get outside(){return [...this.people.values()].filter(outsidePerson)}
+  get accounting(){return auditPeople(this.people.values(),this.buildingIds)}
   personLocation(id){const p=this.people.get(id),insideId=p&&indoorBuilding(p),phase=p?.walker?.phase||'home',buildingId=insideId||(['enter-shop','exit-shop'].includes(phase)?p.walker.shopBuilding:['enter-home','exit-home'].includes(phase)?p.homeBuilding:null),building=this.campus.buildings.find(b=>b.osm_id===buildingId);return {buildingId,name:building?.name||'',inside:Boolean(insideId),phase}}
 }

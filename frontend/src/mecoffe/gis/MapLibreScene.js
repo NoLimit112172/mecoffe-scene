@@ -76,6 +76,7 @@ export class MapLibreScene {
     add({id:'people-points',type:'circle',source:'people',paint:{'circle-radius':['case',['get','walking'],4.5,3.5],'circle-color':['get','color'],'circle-opacity':['case',['get','modelReady'],0,1],'circle-stroke-color':'#ffffff','circle-stroke-width':1.2,'circle-stroke-opacity':['case',['get','modelReady'],0,1]}})
     add({id:'people-selection',type:'circle',source:'people',filter:['==',['get','id'],''],paint:{'circle-radius':9,'circle-color':'#f0ba4a','circle-opacity':.25,'circle-stroke-color':'#e39c29','circle-stroke-width':2}})
     this.characters=new GisCharacterLayer({replay:this.replay,onStatus:this.onStatus,onError:this.onError});m.addLayer(this.characters)
+    this.host.dataset.entranceCount=String(this.characters.doors?.frames.size||0)
     this.roofLabels=new IndoorRoofLabels(this)
     this.setPeople()
   }
@@ -92,7 +93,7 @@ export class MapLibreScene {
   setLayers(values){
     this.visibility={...this.visibility,...values}
     for(const [group,ids]of Object.entries(GROUPS))for(const id of ids)this.map.setLayoutProperty(id,'visibility',this.visibility[group]===false?'none':'visible')
-    this.characters.setVisible(this.visibility.people!==false);this.requestFrame()
+    this.characters.setVisible(this.visibility.people!==false);this.characters.doors?.setVisible(this.visibility.entrances!==false&&this.visibility.buildings!==false);this.requestFrame()
   }
   setBasemap(id){if(!this.disposed){applyBasemap(this.map,id);this.basemap=id;this.requestFrame()}}
   hit(point){

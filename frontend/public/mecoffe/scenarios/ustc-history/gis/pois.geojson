@@ -93,18 +93,18 @@
       "geometry": {
         "type": "Point",
         "coordinates": [
-          117.123407001,
-          31.818585322
+          117.122631929,
+          31.819006843
         ]
       },
       "properties": {
         "feature_id": "location/shop_merchant_001",
-        "name": "师生活动中心",
+        "name": "学生食堂B区",
         "category": "mapped_location",
         "location_ids": [
           "shop_merchant_001"
         ],
-        "building_id": "way/1435370291",
+        "building_id": "way/1435377506",
         "illustrative": true,
         "prototype_id": "building.procedural.education"
       }

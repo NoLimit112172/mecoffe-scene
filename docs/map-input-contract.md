@@ -218,7 +218,7 @@ python -X utf8 -m adapter.scene_builder scenario --manifest scenarios/nus-hourly
 
 仅重建目录（不重写已有场景文件）：`python -m adapter.scene_builder scenario-index`。可选 `--scenario-dir <目录>` 用于其他输出目录，`--default-id <id>` 指定本次目录的默认项。
 
-里程碑 9 草案增加 `entrances.json` 与 `gis/entrances.geojson`，均纳入运行清单哈希；米制点、WGS84 点逐一对应。每项含 `id`、`building_id`、`point: [east,north]`、`source: inferred`、`road_node_id`、`connector: [[east,north], ...]`、`connected`、`illustrative`。本轮按追加要求只推断入口，OSM entrance 解析留待后续。连接线从楼轮廓入口到原步行图节点，不改图；无步行图时 `connected:false`，不编造通路。共同的进出楼与楼内人数约定见 [人物进楼](indoor-presentation.md)。
+里程碑 9 草案增加 `entrances.json` 与 `gis/entrances.geojson`，均纳入运行清单哈希；米制点、WGS84 点逐一对应。每项含 `id`、`building_id`、`point: [east,north]`、`source: inferred`、`road_node_id`、`connector: [[east,north], ...]`、`connected`、`illustrative`。追加修正以朝向道路的外墙中点代替最近转角点，记录 `placement: facade_midpoint`、`facade: [[east,north],[east,north]]` 与单位外法线 `outward: [east,north]`；每栋楼只有一个入口。旧包未提供朝向时仍可加载。本轮只推断入口，OSM entrance 解析留待后续。连接线从楼轮廓入口到原步行图节点，不改图；无步行图时 `connected:false`，不编造通路。共同的进出楼与楼内人数约定见 [人物进楼](indoor-presentation.md)。
 
 - `/mecoffe3d?scenario=ustc-history`：复用已有中科大地图、原历史轨迹、原地点映射和地表/道路上下文。完整 23 天、第 24 天部分记录的事实不变，不补造记录。示例的 2026-10-01 是显式展示时间配置，不声称是原运行的真实日期。
 - `/mecoffe3d?scenario=nus-hourly`：NUS 226 栋楼、840 段道路，24 小时查看光照，没有模拟轨迹。

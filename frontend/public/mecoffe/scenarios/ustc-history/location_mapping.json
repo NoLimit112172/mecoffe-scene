@@ -2,7 +2,7 @@
   "schema_version": "mecoffe.campus3d_mapping.v1",
   "campus_id": "ustc_gaoxin_osm",
   "illustrative": true,
-  "note": "保留现有回放数据的 building_id/home_location_id，仅将展示站位对应到真实 OSM 楼栋。此映射不是学校住宿分配、不是实际咖啡店地址，也不是 OASIS 位置数据。行走起终点采用楼栋几何中心最近的道路节点，不声称该节点是实测楼门。",
+  "note": "保留现有回放数据的 building_id/home_location_id，仅将展示地点对应到真实 OSM 楼栋。此映射不是学校住宿分配、不是实际咖啡店地址，也不是 OASIS 位置数据。人物从每栋楼唯一的推断入口进出，入口并非实测。",
   "mappings": {
     "ug_dorm_west": {
       "osm_id": "way/1435368246",
@@ -41,10 +41,10 @@
       "note": "依据 OSM 的教工公寓名称作为教师人物的展示住处；并非对模拟人物实际住址的断言。"
     },
     "shop_merchant_001": {
-      "osm_id": "way/1435370291",
-      "osm_name": "师生活动中心",
+      "osm_id": "way/1435377506",
+      "osm_name": "学生食堂B区",
       "illustrative": true,
-      "note": "为演示选择有名的师生活动中心安置商家一号；该 OSM 楼栋没有本项目咖啡店记录，不代表真实门店、经营权或店址。"
+      "note": "为展示将商家一号安置在学生食堂B区；该对应为示意，不代表真实门店、经营权或店址。"
     },
     "shop_merchant_002": {
       "osm_id": "way/1435377504",

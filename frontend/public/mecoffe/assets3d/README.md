@@ -38,6 +38,8 @@
 
 `valid/` 保存9个原始FBX（含内嵌贴图）、MIT许可和来源清单；原始Git blob及SHA-256均有校验。`kenney/` 保存8个原生GLB及CC0许可，归档版本2.1与SHA-256固定。没有按照片或人物姓名推断族群；Asian是上游合成模型的目录标签。
 
+人物运行时优先使用同目录9个GLB派生版本，避免在播放中解析原始FBX。转换保留室外身体、眼睛、骨架、中性脸形，移除未使用的面部变形目标并限制贴图最高1024像素；原始FBX不改写。manifest.json记录每个GLB的SHA-256和大小，MIT版权和许可与原文件一同保留。`node scripts/prepare-valid-runtime.cjs` 使用本地5180服务和既有Chrome/Playwright离线重建，不下载素材。网页按需加载模型，并异步准备着色器后显示。
+
 `building.campus.*`、`character.campus.*`、`landcover.campus.*`、`road.campus.*` 为校区实例卡片；通用匹配时作为 component 排除，不改变场景生成器的原型优先级。实例包含来源ID及原始轮廓，人物绑定使用与运行页面相同的画像性别、角色和稳定哈希规则。
 
 `python -X utf8 adapter/import_campus_assets.py` 可离线验证素材。设计与边界详见根目录 `docs/campus-boundary-assets.md`。

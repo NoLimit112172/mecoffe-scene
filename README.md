@@ -24,7 +24,7 @@ GIS 原型（里程碑 8，当前开发分支验收后发布）：本地打开 [
 
 GIS 场景下拉框读取自动生成的 `frontend/public/mecoffe/scenarios/index.json`，默认项也由目录决定。生成新场景会自动刷新目录；仅重建目录可执行 `python -m adapter.scene_builder scenario-index`，无需改页面或已有场景数据。
 
-人物进楼（里程碑 9，`feat/indoor` 本地验收）：中科大沙盘和 GIS 共用楼内人数与进出楼控制器。默认在楼内隐藏，购买时从推断入口出发、进店停留、持杯返回；名单选择定位所在楼栋。日期与回放百分比代替钟点，昼夜仅作展示。未发布到线上；配置与边界见 [人物进楼约定](docs/indoor-presentation.md)，测试、性能和截图见 [里程碑 9 交付记录](docs/milestone9-delivery.md)。
+人物进楼（里程碑 9，`feat/indoor` 本地验收）：中科大沙盘和 GIS 共用楼内人数与进出楼控制器。默认在楼内隐藏，购买时从唯一推断楼门出发、进店停留、持杯返回；名单选择定位所在楼栋。楼门位于朝道路的外墙中段。商家一号示意对应学生食堂B区，商家二号对应教工食堂。日期与回放百分比代替钟点，昼夜仅作展示。未发布到线上；配置见 [人物进楼约定](docs/indoor-presentation.md)，最新测试、性能和截图见 [追加修正记录](docs/milestone9-fixes.md)，初版见 [里程碑 9 交付记录](docs/milestone9-delivery.md)。
 
 默认打开基于团队最新人物关系快照（目前 revision 3）的动态演示：100 个主体、530 条有向关注，支持 30 个展示日的播放、暂停、逐条推进、走到门店和互动气泡。顶部还可查看静态关系网络或原始 OASIS 历史运行回放。前端基于 [YuLan-OneSim](https://github.com/RUC-GSAI/YuLan-OneSim) 的 Vue + PixiJS 前端和美术素材改造，**不调用模型**。
 
