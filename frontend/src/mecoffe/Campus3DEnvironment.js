@@ -198,7 +198,6 @@ export class Campus3DEnvironment {
     this.drawLandcovers()
     this.drawVegetation()
     this.drawFurniture()
-    this.drawShops()
     this.update(.25)
     return this
   }

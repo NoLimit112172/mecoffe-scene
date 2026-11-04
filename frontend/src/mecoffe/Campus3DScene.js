@@ -422,21 +422,13 @@ export class Campus3DScene {
     }
     if(this.indoor){this.doorMarkers=new Campus3DEntrances({scene:this.scene,campus:this.campus,entrances:this.indoor.entrances,elevation:p=>this.personElevation(p)});if(this.host?.dataset)this.host.dataset.entranceCount=String(this.doorMarkers.frames.size)}
     this.shopMarkers = new Map()
-    for (const [brandId, color] of this.brandColors) {
+    for (const brandId of this.brandColors.keys()) {
       const anchor = this.routing.anchors.get(`shop_${brandId}`)
       if (!anchor) continue
-      const marker = new THREE.Group()
-      const ring = new THREE.Mesh(new THREE.RingGeometry(6, 8, 32),
-        new THREE.MeshBasicMaterial({ color, side: THREE.DoubleSide, transparent: true, opacity: 0.85 }))
-      ring.rotation.x = -Math.PI / 2
-      const pin = new THREE.Mesh(new THREE.CylinderGeometry(0.9, 0.9, 13, 8), new THREE.MeshStandardMaterial({ color }))
-      pin.position.y = 6.5
-      const ball = new THREE.Mesh(new THREE.SphereGeometry(3.4, 12, 8), new THREE.MeshStandardMaterial({ color }))
-      ball.position.y = 14
-      marker.add(ring, pin, ball)
+      // Position-only anchor for recorded arrival effects; no static landmark.
+      const marker = new THREE.Object3D()
       const door=anchor.door?.point
       marker.position.set(door?door[0]:anchor.node.x,.4,door?-door[1]:-anchor.node.y)
-      this.scene.add(marker)
       this.shopMarkers.set(brandId, marker)
     }
   }
