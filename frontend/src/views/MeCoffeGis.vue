@@ -1,6 +1,13 @@
 <template>
   <div class="gis-page" :data-position="position.toFixed(6)" :data-cursor="cursor" :data-active-walkers="activeWalkers" :data-ready-models="modelStatus.visibleReady||0" :data-render-frames="telemetry.renderFrames||0" :data-worst-frame="telemetry.worstFrameMs||0" :data-average-fps="telemetry.averageFps||0" :data-model-draw-calls="telemetry.drawCalls||0">
-    <header class="gis-header"><div class="gis-brand"><span class="gis-logo">◈</span><div><p>MECOFFE / GIS</p><h1>{{scenario?.manifest.title || 'GIS 校园活动地图'}}</h1></div></div><nav><label>场景 <select aria-label="GIS 场景" :value="scenarioId" @change="changeScenario($event.target.value)"><option value="ustc-history">中科大 · 历史回放</option><option value="nus-hourly">NUS · 小时预览</option><option v-if="!['ustc-history','nus-hourly'].includes(scenarioId)" :value="scenarioId">{{scenarioId}}</option></select></label><RouterLink :to="sandboxUrl">沙盘模式 ↗</RouterLink><RouterLink to="/mecoffe3d/assets">素材库 ↗</RouterLink><RouterLink to="/licenses">来源与许可</RouterLink></nav></header>
+    <header class="gis-header"><div class="gis-brand"><span class="gis-logo">◈</span><div><p>MECOFFE / GIS</p><h1>{{scenario?.manifest.title || 'GIS 校园活动地图'}}</h1></div></div><nav>
+      <details ref="scenarioPicker" class="scenario-picker" @keydown.esc.prevent="closeScenarioPicker" @focusout="blurScenarioPicker">
+        <summary aria-label="GIS 场景" aria-haspopup="listbox">场景 · {{scenarioChoices.find(item=>item.id===scenarioId)?.title || '选择场景'}} <span>⌄</span></summary>
+        <div role="listbox" aria-label="可用场景" class="scenario-options" @keydown.down.prevent="moveScenarioOption($event,1)" @keydown.up.prevent="moveScenarioOption($event,-1)">
+          <button v-for="item in scenarioChoices" :key="item.id" :data-scenario-id="item.id" role="option" :aria-selected="item.id===scenarioId" @click="changeScenario(item.id)">{{item.title}}<small>{{item.simulation_data?'有模拟回放':'地图预览'}}</small></button>
+        </div>
+      </details>
+      <RouterLink :to="sandboxUrl">沙盘模式 ↗</RouterLink><RouterLink to="/mecoffe3d/assets">素材库 ↗</RouterLink><RouterLink to="/licenses">来源与许可</RouterLink></nav></header>
     <p class="gis-notice" role="note">ⓘ 人物所在楼栋与行走路线为展示层示意，OASIS 没有位置数据。建筑缺失高度采用标注的估算或默认值。</p>
     <div v-if="error" class="gis-error" role="alert"><strong>场景未能完整显示</strong><span>{{error}}</span><button @click="load">重新加载</button></div>
     <template v-if="scenario">
@@ -11,8 +18,11 @@
       <main class="gis-map-wrap"><div ref="host" class="gis-map" aria-label="GIS 校园地图"></div><div v-if="loading" class="gis-loading" role="status">正在准备地图…</div><template v-else-if="scenario"><div class="gis-map-tools"><span class="gis-map-badge">{{basemap==='offline'?'离线矢量地图':'OpenStreetMap 底图'}}</span><button @click="renderer?.resetCamera()">全景</button><button :disabled="!selectedPerson" @click="renderer?.focusPerson(selectedPerson.id)">人物特写</button></div><div class="gis-legend"><b>图例</b><span><i style="background:#8fb3bf"></i>教学 / 科研</span><span><i style="background:#d6b78e"></i>住宿</span><span><i style="background:#99cbd4"></i>水域</span><span><i style="background:#3185a0;border-radius:50%"></i>人物 · 远景简化</span><small>拖动平移 · 右键拖动旋转 / 倾斜 · 滚轮缩放</small></div><div v-if="modelStatus.visibleTotal" class="gis-model-status" role="status">{{modelStatus.visibleReady===modelStatus.visibleTotal?'近景三维人物':`人物模型准备中 ${modelStatus.visibleReady||0}/${modelStatus.visibleTotal}`}}<button v-if="modelStatus.failed" @click="load">重试</button></div></template></main>
       <aside class="gis-panel">
         <section><h2>地图与图层</h2><label class="basemap-label">底图<select aria-label="底图" v-model="basemap" :disabled="loading" @change="setBasemap"><option v-for="item in basemaps" :key="item.id" :value="item.id">{{item.label}}</option></select></label><p v-if="basemapNote" class="panel-hint" role="status">{{basemapNote}}</p><div class="layer-grid"><label v-for="(label,key) in layerLabels" :key="key"><input type="checkbox" :aria-label="`${label}图层`" v-model="visibility[key]" :disabled="loading" @change="setLayers"/>{{label}}</label></div></section>
-        <section><h2>查找地点</h2><input class="gis-search" type="search" aria-label="搜索楼栋或地点" v-model="query" placeholder="搜索楼名或地点名称"/><div class="search-results"><button v-for="item in results" :key="item.layer+item.feature.id" @click="renderer?.focusFeature(item)"><strong>{{item.feature.properties.name||item.feature.id}}</strong><small>{{item.feature.properties.location_ids?.join(' · ') || item.feature.properties.category}}</small></button><p v-if="query&&!results.length" class="panel-hint">未找到匹配地点。</p></div></section>
-        <section v-if="selected" class="gis-info" data-testid="gis-query-card"><h2>{{selectedPerson?'人物信息':'地点信息'}}</h2><template v-if="selectedPerson"><h3>{{selectedPerson.name}}</h3><span class="role-badge">{{selectedPerson.role_label}}</span><p>{{selectedPerson.bio || '暂无画像摘要'}}</p><button @click="renderer?.focusPerson(selectedPerson.id)">定位并查看人物</button><h4>当前活动</h4><p>{{selectedWalking?'沿步行路线前往门店 / 返回（示意）':'位于映射地点附近（示意）'}}</p><p v-for="event in activity" :key="event.key" class="activity-item">{{describeEvent(index,event)}}</p><p v-if="!activity.length" class="panel-hint">当前时间之前暂无该人物活动。</p></template><template v-else><h3>{{selected.feature.properties.name || '未命名要素'}}</h3><dl><dt>类别</dt><dd>{{selected.feature.properties.category}}</dd><dt v-if="selected.feature.properties.height_m">高度</dt><dd v-if="selected.feature.properties.height_m">{{selected.feature.properties.height_m}} 米</dd><dt v-if="selected.feature.properties.height_m">高度来源</dt><dd v-if="selected.feature.properties.height_m">{{heightDescription(selected.feature.properties.height_source)}}</dd><dt>素材原型</dt><dd>{{selected.feature.properties.prototype_id||'未分配楼体原型'}}</dd><dt>OASIS 地点</dt><dd>{{selected.feature.properties.location_ids?.join('、') || '无显式映射'}}</dd></dl><p class="panel-hint">{{selected.feature.id}}</p></template></section>
+        <section><h2>查找地点</h2><input class="gis-search" type="search" aria-label="搜索楼栋或地点" v-model="query" placeholder="搜索楼名或地点名称"/><div class="search-results"><button v-for="item in results" :key="item.layer+item.feature.id" @click="renderer?.focusFeature(item)"><strong>{{item.feature.properties.name||'未命名地点'}}</strong><small>{{item.info.category.name}} <span v-if="item.info.category.code" class="gis-data-code">{{item.info.category.code}}</span><span v-for="location in item.info.locations" :key="location.id"> · {{location.name}} <span class="gis-data-code">{{location.id}}</span></span></small></button><p v-if="query&&!results.length" class="panel-hint">未找到匹配地点。</p></div></section>
+        <section v-if="selected" class="gis-info" data-testid="gis-query-card"><h2>{{selectedPerson?'人物信息':'地点信息'}}</h2><template v-if="selectedPerson"><h3>{{selectedPerson.name}}</h3><span class="role-badge">{{selectedPerson.role_label}}</span><p>{{selectedPerson.bio || '暂无画像摘要'}}</p><button @click="renderer?.focusPerson(selectedPerson.id)">定位并查看人物</button><h4>当前活动</h4><p>{{selectedWalking?'沿步行路线前往门店 / 返回（示意）':'位于映射地点附近（示意）'}}</p><p v-for="event in activity" :key="event.key" class="activity-item">{{describeEvent(index,event)}}</p><p v-if="!activity.length" class="panel-hint">当前时间之前暂无该人物活动。</p></template><template v-else><h3>{{selected.feature.properties.name || '未命名要素'}}</h3>
+          <dl><dt>类别</dt><dd>{{selectedInfo.category.name}} <small v-if="selectedInfo.category.code" class="gis-data-code">{{selectedInfo.category.code}}</small></dd><dt v-if="selected.feature.properties.height_m">高度</dt><dd v-if="selected.feature.properties.height_m">{{selected.feature.properties.height_m}} 米</dd><dt v-if="selected.feature.properties.height_m">高度来源</dt><dd v-if="selected.feature.properties.height_m">{{heightDescription(selected.feature.properties.height_source)}}</dd><dt>素材原型</dt><dd>{{selectedInfo.prototype.name}} <small v-if="selectedInfo.prototype.code" class="gis-data-code">{{selectedInfo.prototype.code}}</small></dd><dt>OASIS 地点</dt><dd><span v-for="location in selectedInfo.locations" :key="location.id" class="mapped-location">{{location.name}} <small class="gis-data-code">{{location.id}}</small></span><span v-if="!selectedInfo.locations.length">无显式映射</span></dd></dl>
+          <details class="data-details"><summary>数据详情</summary><p class="panel-hint">数据来源 ID <span>{{selectedInfo.sourceId}}</span></p></details>
+        </template></section>
         <section v-if="population"><h2>人物 <small>{{population}} 人</small></h2><div class="gis-roster"><button v-for="person in roster" :key="person.id" @click="renderer?.focusPerson(person.id)"><span :style="{background:ROLE_COLORS[person.role]}"></span>{{person.name}}<small>{{person.role_label}}</small></button></div></section>
         <section v-if="scenario" class="panel-hint"><p>{{scenario.manifest.map.source.attribution}}</p><p>地图坐标：WGS84<br/>空间位置与路线：展示示意</p></section>
       </aside>
@@ -24,13 +34,16 @@
 import {computed,nextTick,onBeforeUnmount,onMounted,reactive,ref,shallowRef,watch} from 'vue'
 import {RouterLink,useRoute,useRouter} from 'vue-router'
 import 'maplibre-gl/dist/maplibre-gl.css'
-import {loadScenario,scenarioTime} from '../mecoffe/scenario.js'
+import {loadScenario,loadScenarioDirectory,directoryScenarioId,scenarioTime} from '../mecoffe/scenario.js'
 import {personHistory,stateAt,describeEvent} from '../mecoffe/replay.js'
 import {GisReplay} from '../mecoffe/gis/replay.js'
 import {gisLayers,searchPlaces,heightDescription,simulationPosition,ROLE_COLORS} from '../mecoffe/gis/model.js'
 import {BASEMAP_ADAPTERS} from '../mecoffe/gis/basemaps.js'
 import {createGisDisplay} from '../mecoffe/gis/engine.js'
-const route=useRoute(),router=useRouter(),scenarioId=computed(()=>typeof route.query.scenario==='string'?route.query.scenario:'ustc-history')
+import {ASSET_CATALOG} from '../mecoffe/assetCatalog.js'
+import {featureInfo} from '../mecoffe/gis/labels.js'
+const route=useRoute(),router=useRouter(),directory=shallowRef(null),scenarioPicker=ref(null)
+const scenarioChoices=computed(()=>directory.value?.scenarios||[]),scenarioId=computed(()=>typeof route.query.scenario==='string'?route.query.scenario:directory.value?.default_id||'')
 const scenario=shallowRef(null),layers=shallowRef(null),index=shallowRef(null),host=ref(null),loading=ref(true),error=ref(''),query=ref(''),selected=shallowRef(null)
 const position=ref(0),cursor=ref(0),playing=ref(false),speed=ref(1),activeWalkers=ref(0),unreachable=ref(0),modelStatus=ref({}),basemap=ref('offline'),basemapNote=ref('')
 const telemetry=ref({})
@@ -39,7 +52,9 @@ const basemaps=Object.values(BASEMAP_ADAPTERS),hasSimulation=computed(()=>Boolea
 const maxPosition=computed(()=>index.value?.days.length||scenario.value?.manifest.simulation_time.steps||1),orders=computed(()=>index.value?stateAt(index.value,cursor.value).orders:0)
 const clock=computed(()=>scenario.value?scenarioTime(scenario.value.manifest.simulation_time,index.value?simulationPosition(index.value,position.value):position.value):null)
 const currentStep=computed(()=>index.value?index.value.days[Math.min(index.value.days.length-1,Math.floor(position.value))]?.label:`第 ${Math.min(maxPosition.value,Math.floor(position.value))} 小时`)
-const results=computed(()=>layers.value?searchPlaces(layers.value,query.value):[]),sandboxUrl=computed(()=>({path:'/mecoffe3d',query:{scenario:scenarioId.value}}))
+const labelOptions=computed(()=>({catalog:ASSET_CATALOG,mapping:scenario.value?.files['location_mapping.json']||{}}))
+const results=computed(()=>layers.value?searchPlaces(layers.value,query.value).map(item=>({...item,info:featureInfo(item.feature,labelOptions.value)})):[]),sandboxUrl=computed(()=>({path:'/mecoffe3d',query:{scenario:scenarioId.value}}))
+const selectedInfo=computed(()=>selected.value?.type==='feature'?featureInfo(selected.value.feature,labelOptions.value):null)
 const selectedPerson=computed(()=>selected.value?.type==='person'?index.value?.people.get(selected.value.id):null),selectedWalking=computed(()=>{position.value;return Boolean(replay?.people.get(selectedPerson.value?.id)?.walker)})
 const activity=computed(()=>selectedPerson.value&&index.value?personHistory(index.value,selectedPerson.value.id,cursor.value,5):[])
 let renderer=null,replay=null,controller=null,frame=0,lastTime=0,lastUi=0,lastMap=0,lastDraw=0,generation=0,disposed=false
@@ -58,23 +73,31 @@ async function load(){
   renderer?.dispose();renderer=null;replay?.dispose();replay=null
   scenario.value=null;layers.value=null;index.value=null;position.value=0;cursor.value=0;activeWalkers.value=0
   try{
-    const value=await loadScenario(scenarioId.value,{signal:controller.signal,includeGis:true})
+    const nextDirectory=await loadScenarioDirectory({signal:controller.signal})
     if(disposed||token!==generation)return
+    directory.value=nextDirectory
+    const id=directoryScenarioId(nextDirectory,route.query.scenario),value=await loadScenario(id,{signal:controller.signal,includeGis:true})
+    if(disposed||token!==generation)return
+    const entry=nextDirectory.scenarios.find(item=>item.id===id)
+    if(entry.title!==value.manifest.title||entry.simulation_data!==value.manifest.simulation_data)throw new Error('场景目录已过期，请重新生成目录')
     const geo=gisLayers(value),nextReplay=new GisReplay(value);replay=nextReplay;index.value=nextReplay.index;scenario.value=value;layers.value=geo
     await nextTick();if(disposed||token!==generation)return
-    const display=await createGisDisplay({host:host.value,layers:geo,replay:nextReplay,signal:controller.signal,onSelect:item=>{selected.value=item},onStatus:value=>{modelStatus.value=value},onError:e=>{if(token===generation&&!disposed)error.value=e.message||String(e)},onBasemapFallback:message=>{basemap.value='offline';basemapNote.value=message}})
+    const display=await createGisDisplay({host:host.value,layers:geo,replay:nextReplay,describeFeature:feature=>featureInfo(feature,{catalog:ASSET_CATALOG,mapping:value.files['location_mapping.json']||{}}),signal:controller.signal,onSelect:item=>{selected.value=item},onStatus:value=>{modelStatus.value=value},onError:e=>{if(token===generation&&!disposed)error.value=e.message||String(e)},onBasemapFallback:message=>{basemap.value='offline';basemapNote.value=message}})
     if(disposed||token!==generation){display.dispose();return}
     renderer=display;renderer.setLayers(visibility);sync();loading.value=false;document.title=`${value.manifest.title} · GIS 模式`
   }catch(e){if(e.name!=='AbortError'&&token===generation&&!disposed){loading.value=false;error.value=e.message||String(e)}}
 }
-function changeScenario(id){router.push({path:'/mecoffe-gis',query:{scenario:id}})}
+function closeScenarioPicker(){if(scenarioPicker.value){scenarioPicker.value.open=false;scenarioPicker.value.querySelector('summary').focus()}}
+function blurScenarioPicker(event){if(!scenarioPicker.value.contains(event.relatedTarget))scenarioPicker.value.open=false}
+function changeScenario(id){closeScenarioPicker();router.push({path:'/mecoffe-gis',query:{scenario:id}})}
+function moveScenarioOption(event,direction){const options=[...scenarioPicker.value.querySelectorAll('[role=option]')];options[(options.indexOf(document.activeElement)+direction+options.length)%options.length]?.focus()}
 function setLayers(){renderer?.setLayers(visibility)}
 function setBasemap(){basemapNote.value='';renderer?.setBasemap(basemap.value)}
 function seek(){if(!replay)return;playing.value=false;replay.seek(Number(position.value));sync();renderer?.setPeople();renderer?.requestFrame()}
 function jump(delta){position.value=Math.max(0,Math.min(maxPosition.value,Math.floor(position.value)+delta));seek()}
 function togglePlay(){if(!replay)return;if(replay.position>=replay.maxPosition&&!replay.pending){position.value=0;seek()}playing.value=!playing.value;lastTime=0}
 function previewWalking(){if(!replay?.index)return;position.value=replay.previewPosition();seek();playing.value=true;lastTime=0;const first=replay.index.scene.events.find(e=>e.type==='purchase');if(first)renderer?.select({type:'person',id:first.actor})}
-watch(scenarioId,load)
+watch(()=>route.query.scenario,load)
 watch(playing,value=>renderer?.setMeasuring(value))
 onMounted(()=>{load();frame=requestAnimationFrame(tick)})
 onBeforeUnmount(()=>{disposed=true;generation++;controller?.abort();cancelAnimationFrame(frame);renderer?.dispose();replay?.dispose()})
@@ -88,6 +111,14 @@ onBeforeUnmount(()=>{disposed=true;generation++;controller?.abort();cancelAnimat
 .gis-brand p{margin:0;font-size:10px;letter-spacing:2px;color:#718c81}
 .gis-brand h1{font-size:21px;margin:1px 0}
 .gis-header nav{display:flex;align-items:center;gap:18px}
+.scenario-picker{position:relative;max-width:440px}
+.scenario-picker>summary{display:flex;align-items:center;gap:10px;cursor:pointer;list-style:none;border:1px solid #ccd8ca;background:#fffefa;border-radius:6px;padding:7px 10px}
+.scenario-picker>summary::-webkit-details-marker{display:none}
+.scenario-picker>summary span{margin-left:auto}
+.scenario-options{position:absolute;right:0;top:calc(100% + 6px);z-index:10;width:max-content;min-width:100%;max-width:min(440px,90vw);padding:5px;background:#fffefa;border:1px solid #ccd8ca;border-radius:8px;box-shadow:0 8px 24px #244b4630}
+.scenario-options button{display:block;width:100%;border:0;background:transparent;text-align:left;padding:10px 12px}
+.scenario-options button[aria-selected=true]{background:#e7efe1}
+.scenario-options small{display:block;font-size:10px;color:#718479;margin-top:3px}
 .gis-header a{color:#327b68;text-decoration:none;font-weight:600}
 .gis-header label{display:flex;align-items:center;gap:8px}
 button,select,input{font:inherit;color:inherit}
@@ -138,6 +169,11 @@ input[type=checkbox],input[type=range]{accent-color:#287c68}
 .gis-info dl{display:grid;grid-template-columns:70px 1fr;font-size:12px;gap:8px}
 .gis-info dt{color:#7b8b7e}
 .gis-info dd{margin:0;overflow-wrap:anywhere}
+.gis-data-code,:deep(.gis-data-code){color:#8a978f;font-size:10px;overflow-wrap:anywhere;font-weight:400}
+.mapped-location{display:block}
+.data-details{font-size:11px;color:#708578;margin-top:12px}
+.data-details summary{cursor:pointer}
+.data-details p span{display:block;margin-top:4px}
 .gis-roster{max-height:210px;overflow:auto}
 .gis-roster button{display:flex;align-items:center;gap:6px;width:100%;background:transparent;border:0;border-bottom:1px solid #eef0eb;padding:8px 0;font-size:12px}
 .gis-roster button>span{height:7px;width:7px;border-radius:50%}
@@ -177,6 +213,7 @@ input[type=checkbox],input[type=range]{accent-color:#287c68}
 .gis-brand h1{font-size:18px}
 .gis-header nav{justify-content:flex-start;margin-top:10px;font-size:11px;gap:11px}
 .gis-header nav label{width:100%}
+.scenario-picker{width:100%;max-width:100%}
 .gis-header nav select{flex:1}
 .gis-metrics{gap:5px}
 .gis-metrics>div{padding:6px;display:block}

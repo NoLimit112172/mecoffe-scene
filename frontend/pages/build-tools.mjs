@@ -1,6 +1,7 @@
 import crypto from 'node:crypto'
 import fs from 'node:fs'
 import path from 'node:path'
+import {validateScenarioDirectory} from '../src/mecoffe/scenario.js'
 
 export const PAGES_BASE='/mecoffe-scene/'
 export const ENTRY_ROUTES=['mecoffe','mecoffe3d','mecoffe3d/assets','mecoffe-gis','licenses']
@@ -66,7 +67,18 @@ export function assertArtifact(root,base=PAGES_BASE){
   // The scenario page rejects any file whose bytes differ from the manifest,
   // so a line-ending change at checkout would break it only after deployment.
   const scenarios=path.join(root,'mecoffe/scenarios')
-  if(fs.existsSync(scenarios))for(const id of fs.readdirSync(scenarios)){
+  const scenarioIds=fs.existsSync(scenarios)?fs.readdirSync(scenarios).filter(id=>fs.statSync(path.join(scenarios,id)).isDirectory()):[]
+  if(fs.existsSync(scenarios)){
+    const directory=validateScenarioDirectory(JSON.parse(fs.readFileSync(path.join(scenarios,'index.json'),'utf8')))
+    if(directory.scenarios.length!==scenarioIds.length)problems.push('Scenario directory does not list every prepared bundle')
+    for(const item of directory.scenarios){
+      const file=path.join(scenarios,item.id,'scenario.json')
+      if(!fs.existsSync(file)){problems.push(`Scenario directory references missing bundle ${item.id}`);continue}
+      const raw=fs.readFileSync(file),manifest=JSON.parse(raw)
+      if(manifest.id!==item.id||manifest.title!==item.title||manifest.simulation_data!==item.simulation_data||crypto.createHash('sha256').update(raw).digest('hex')!==item.manifest_sha256)problems.push(`Scenario directory metadata/hash mismatch: ${item.id}`)
+    }
+  }
+  for(const id of scenarioIds){
     const manifest=JSON.parse(fs.readFileSync(path.join(scenarios,id,'scenario.json'),'utf8'))
     for(const [name,expected] of Object.entries(manifest.files||{})){
       const actual=crypto.createHash('sha256').update(fs.readFileSync(path.join(scenarios,id,name))).digest('hex')

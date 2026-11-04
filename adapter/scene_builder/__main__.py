@@ -30,8 +30,15 @@ def main(argv=None):
         else: command.add_argument('--input',type=Path,required=True)
     scenario_command=sub.add_parser('scenario', help='Prepare a map and simulation-time manifest')
     scenario_command.add_argument('--manifest', type=Path, required=True)
+    index_command=sub.add_parser('scenario-index', help='Rebuild the directory of already prepared scenarios')
+    index_command.add_argument('--scenario-dir', type=Path)
+    index_command.add_argument('--default-id')
     args=parser.parse_args(argv)
     try:
+        if args.format=='scenario-index':
+            from .scenario import write_scenario_index
+            print(json.dumps(write_scenario_index(args.scenario_dir, args.default_id), ensure_ascii=False))
+            return 0
         if args.format=='scenario':
             from .scenario import prepare_scenario
             manifest, output=prepare_scenario(args.manifest)

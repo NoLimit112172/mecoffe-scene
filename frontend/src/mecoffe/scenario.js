@@ -3,6 +3,28 @@ export function scenarioId(value) {
   if(typeof value!=='string'||!/^[A-Za-z0-9][A-Za-z0-9_-]{0,63}$/.test(value))throw new Error('场景编号无效')
   return value
 }
+export function validateScenarioDirectory(value){
+  if(value?.schema_version!=='mecoffe.scenario-index.v1'||!Array.isArray(value.scenarios)||!value.scenarios.length)throw new Error('场景目录格式无效')
+  const ids=new Set()
+  for(const item of value.scenarios){
+    const id=scenarioId(item.id)
+    if(ids.has(id)||typeof item.title!=='string'||!item.title.trim()||typeof item.simulation_data!=='boolean'||!/^[a-f0-9]{64}$/.test(item.manifest_sha256))throw new Error('场景目录条目无效')
+    ids.add(id)
+  }
+  if(!ids.has(value.default_id))throw new Error('场景目录默认项无效')
+  return value
+}
+export function directoryScenarioId(directory,requested){
+  validateScenarioDirectory(directory)
+  const id=requested==null?directory.default_id:scenarioId(requested)
+  if(!directory.scenarios.some(item=>item.id===id))throw new Error('场景不在目录中，请重新生成场景目录')
+  return id
+}
+export async function loadScenarioDirectory({signal,fetcher=fetch,base=import.meta.env?.BASE_URL||'/'}={}){
+  const response=await fetcher(`${base}mecoffe/scenarios/index.json`,{signal,cache:'no-store'})
+  if(!response.ok)throw new Error(`场景目录暂不可用（${response.status}）`)
+  return validateScenarioDirectory(await response.json())
+}
 export function scenarioTime(time, position=0) {
   if(!time || !['day','hour'].includes(time.step_unit) || !Number.isInteger(time.steps) || time.steps<1 || time.steps>10000)throw new Error('模拟时间配置无效')
   try {new Intl.DateTimeFormat('zh-CN',{timeZone:time.timezone}).format()} catch {throw new Error('模拟时区无效')}

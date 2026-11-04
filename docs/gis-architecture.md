@@ -10,6 +10,8 @@
 
 `python -m adapter.scene_builder scenario --manifest scenarios/ustc-history.json` 同时输出原有米制场景和六份 `gis/*.geojson`。`adapter/scene_builder/gis.py` 严格按场景记录的 `origin_lon/origin_lat/earth_radius_m` 反算，输出 `[经度, 纬度]`；保留建筑孔洞、多块校界、道路层信息、原始高度来源及已有素材分配。GIS 图层和原有文件一起记录 SHA-256，使用 `.gitattributes` 的 `-text` 保存原始字节。
 
+生成命令同时刷新 `scenarios/index.json`：扫描所有已准备包，输出 id、原清单标题、simulation_data 与清单文件 SHA-256；按有模拟数据优先、再按 id 稳定排序，默认取第一项。仅刷新目录可运行 `python -m adapter.scene_builder scenario-index`，可用 `--default-id <id>` 指定本次输出的默认项。GIS 下拉框及无查询参数入口只读取这个目录，不维护校园 ID 白名单；新增包后重建目录即可。Pages 检查目录完整性、元数据和清单哈希，目录按原始字节发布。
+
 既有输入、地图、步行图、人物与关系、轨迹文件不重写语义；重复生成相同 JSON 时保持旧文件字节。Windows 上读者占用文件导致原子替换失败时，短暂重试后发布同一份已验证 JSON，最后更新清单哈希；并发读者遇到混合版本会被哈希校验拒绝，不会静默接受。临时 `.tmp` 文件不发布。
 
 ## 3. 人物层
@@ -18,6 +20,8 @@
 
 人物站位、出门连接、分道与门店排队都是展示设定；道路/水域/建筑避让使用原有展示几何函数。显示步速为既有沙盘的 100 显示米/秒，停留为 0.85 显示秒，受播放倍速影响，不是现实步速。保留原有每店 2 人 / 全局 12 人的可视队列上限。GIS 与沙盘共用事件游标和模拟时间，动画调度受帧率/加载影响，不声称两个界面的每一个姿态逐帧相同。
 
+验收修正增加同一路径的 0.4 展示秒出发间隔，按原 A* node_ids 的有向序列分组；排队期间保持待机，随后按同一速度沿原展示路线出发。不改事件时间、订单、道路图或场景包。它改善同向重叠，不是独立的连续人群碰撞系统。
+
 没有 trajectory 的场景不创建人物、不补购买、不输出虚构轨迹；例如 NUS 小时清单仅推进模拟时间。原始运行缺失日期不会填满成 30 天。
 
 ## 4. 可替换显示层
@@ -25,6 +29,8 @@
 `gis/engine.js` 是唯一显示引擎创建入口；当前仅注册 `maplibre`。将来添加 Cesium 引擎应实现：`init()`、`setPeople()`、`setLayers(values)`、`setBasemap(id)`、`select(item)`、`focusFeature(item)`、`focusPerson(id)`、`resetCamera()`、`requestFrame()`、`needsAnimation()`、`setMeasuring(value)`、`getStats()`、`dispose()`。Vue 页面不访问 MapLibre map 对象；两个引擎读取相同 GIS 图层、人物经纬度及回放控制器。
 
 MapLibre 用 fill-extrusion 显示按类别着色的建筑，符号层负责全局标签碰撞。标签使用本机字体和本地字形生成，不请求外部字体服务。ESM worker 通过 Vite 的 `?worker&url` 单独打包，避免开发预打包或 Pages 子路径遗漏 worker/shared 模块。
+
+查询卡、搜索和弹窗共用 `gis/labels.js`：类别中文化，素材名来自现有 catalog 的中文 title；没有中文名时使用次要样式保留代号。OASIS 地点使用显式映射里的名称与 ID，来源要素 ID 折叠在数据详情中。底图与场景的 OSM 署名统一为相同规范内容，由地图控件去重；独立数据源的署名保持独立。
 
 Three.js 自定义图层共享地图 WebGL 上下文，复用 `RealCharacterBatch` 的模型、骨骼、外观、步行动画和持杯动画；全部模型 URL 仍基于 BASE_URL。远景为圆点，zoom < 18.7 不请求 FBX；近景只加载视野内最多 12 人，优先选中人物。模型资源按原有租约释放；移除人物层不主动丢失地图的共享 WebGL 上下文。
 

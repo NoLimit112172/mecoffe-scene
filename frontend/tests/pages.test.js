@@ -3,6 +3,7 @@ import assert from 'node:assert/strict'
 import {readFileSync,existsSync,mkdtempSync,writeFileSync,mkdirSync,rmSync} from 'node:fs'
 import {tmpdir} from 'node:os'
 import path from 'node:path'
+import crypto from 'node:crypto'
 import {publicUrl} from '../src/mecoffe/publicUrl.js'
 import {publishedCatalog,pagesFiles,assertArtifact,ENTRY_ROUTES} from '../pages/build-tools.mjs'
 import {createRequire} from 'node:module'
@@ -22,6 +23,7 @@ test('published catalog excludes all Rocketbox cards while local catalog stays c
   assert(files.every(file=>!file.includes('/rocketbox/')&&!file.startsWith('img/')&&!file.startsWith('sounds/')))
   assert(files.includes('mecoffe/assets3d/valid/Asian_F_2_Casual.fbx'))
   assert(files.includes('mecoffe/scenarios/ustc-history/trajectory.json'))
+  assert(files.includes('mecoffe/scenarios/index.json'))
   assert(files.every(file=>existsSync(path.join(root,'public',file))))
 })
 test('artifact audit rejects root requests and enforces base without touching local build',()=>{
@@ -33,6 +35,22 @@ test('artifact audit rejects root requests and enforces base without touching lo
     assert.throws(()=>assertArtifact(temp),/root asset URL/)
     writeFileSync(path.join(temp,'bad.js'),'fetch("/mecoffe-scene/mecoffe/scene.json")')
     assert(assertArtifact(temp).totalBytes>0)
+  }finally{assert(path.resolve(temp).startsWith(path.resolve(tmpdir())+path.sep));rmSync(temp,{recursive:true,force:true})}
+})
+
+test('Pages checks scenario directory membership, metadata and byte-exact manifest hashes',()=>{
+  const temp=mkdtempSync(path.join(tmpdir(),'mecoffe-directory-test-'))
+  try{
+    writeFileSync(path.join(temp,'index.html'),'<script src="/mecoffe-scene/assets/app.js"></script>')
+    for(const route of ENTRY_ROUTES){mkdirSync(path.join(temp,route),{recursive:true});writeFileSync(path.join(temp,route,'index.html'),'ENTRY')}
+    const base=path.join(temp,'mecoffe/scenarios'),folder=path.join(base,'third-campus');mkdirSync(folder,{recursive:true})
+    const manifest={schema_version:'mecoffe.scenario.v1',id:'third-campus',title:'第三个地点',simulation_data:false,files:{}}
+    const raw=JSON.stringify(manifest);writeFileSync(path.join(folder,'scenario.json'),raw)
+    const index={schema_version:'mecoffe.scenario-index.v1',default_id:'third-campus',scenarios:[{id:manifest.id,title:manifest.title,simulation_data:false,manifest_sha256:crypto.createHash('sha256').update(raw).digest('hex')}]}
+    const file=path.join(base,'index.json');writeFileSync(file,JSON.stringify(index));assert(assertArtifact(temp).totalBytes>0)
+    writeFileSync(path.join(folder,'scenario.json'),raw+'\n');assert.throws(()=>assertArtifact(temp),/metadata\/hash mismatch/)
+    writeFileSync(path.join(folder,'scenario.json'),raw);index.scenarios[0].title='过期标题';writeFileSync(file,JSON.stringify(index));assert.throws(()=>assertArtifact(temp),/metadata\/hash mismatch/)
+    index.scenarios[0].title=manifest.title;writeFileSync(file,JSON.stringify(index));mkdirSync(path.join(base,'unlisted'));writeFileSync(path.join(base,'unlisted/scenario.json'),JSON.stringify({...manifest,id:'unlisted'}));assert.throws(()=>assertArtifact(temp),/every prepared bundle/)
   }finally{assert(path.resolve(temp).startsWith(path.resolve(tmpdir())+path.sep));rmSync(temp,{recursive:true,force:true})}
 })
 test('strict static simulation serves real entry directories, preserves query, and returns missing files as 404',async()=>{

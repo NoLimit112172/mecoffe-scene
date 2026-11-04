@@ -27,6 +27,33 @@ def read_json(path):
     return json.loads(Path(path).read_text(encoding='utf-8'))
 
 
+def write_scenario_index(directory=None, default_id=None):
+    """Discover prepared bundles, not a hard-coded list of campus IDs.
+
+    Stable ordering prefers bundles with recorded simulation data, then IDs.
+    The index is metadata only; existing bundle files are never rewritten.
+    """
+    directory = Path(directory or PUBLIC / 'scenarios')
+    entries = []
+    for path in sorted(directory.glob('*/scenario.json')):
+        document = read_json(path)
+        scenario_id = identifier(document.get('id'))
+        if (scenario_id != path.parent.name or document.get('schema_version') != 'mecoffe.scenario.v1'
+                or not isinstance(document.get('title'), str) or not document['title'].strip()
+                or type(document.get('simulation_data')) is not bool):
+            raise MapInputError('invalid_scenario_index_entry', 'prepared scenario metadata is invalid')
+        entries.append({'id': scenario_id, 'title': document['title'], 'simulation_data': document['simulation_data'],
+                        'manifest_sha256': hashlib.sha256(path.read_bytes()).hexdigest()})
+    entries.sort(key=lambda entry: (not entry['simulation_data'], entry['id']))
+    if not entries:
+        raise MapInputError('empty_scenario_index', 'prepare at least one scenario before generating its directory')
+    if default_id is not None and default_id not in {entry['id'] for entry in entries}:
+        raise MapInputError('invalid_default_scenario', 'default scenario must exist in the directory')
+    result = {'schema_version': 'mecoffe.scenario-index.v1', 'default_id': default_id or entries[0]['id'], 'scenarios': entries}
+    write_json(directory / 'index.json', result)
+    return result
+
+
 def validate_time(value):
     if not isinstance(value, dict) or any(key not in value for key in ('start', 'timezone', 'step_unit', 'steps')):
         raise MapInputError('missing_simulation_time', 'simulation_time requires start, timezone, step_unit and steps')
@@ -190,4 +217,5 @@ def prepare_scenario(manifest_path, output_root=None):
     for key in ('trajectory','population_snapshot','location_rules'): runtime.pop(key, None)
     runtime['map'] = {'type':'prepared', 'campus_id': bundle['campus']['campus_id'], 'source': bundle['campus']['source']}
     write_json(output / 'scenario.json', runtime)
+    write_scenario_index(output.parent)
     return runtime, output

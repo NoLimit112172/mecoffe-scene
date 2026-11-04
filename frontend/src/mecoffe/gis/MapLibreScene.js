@@ -1,8 +1,8 @@
 import * as maplibregl from 'maplibre-gl'
 import workerUrl from 'maplibre-gl/dist/maplibre-gl-worker.mjs?worker&url'
 import {GisCharacterLayer} from './CharacterLayer.js'
-import {applyBasemap} from './basemaps.js'
-import {CATEGORY_COLORS,emptyCollection,featureCentre,mapBounds,safeAttribution} from './model.js'
+import {applyBasemap,sourceAttribution} from './basemaps.js'
+import {CATEGORY_COLORS,emptyCollection,featureCentre,mapBounds} from './model.js'
 
 const GROUPS={
   buildings:['buildings','building-outlines','building-labels','building-selection'],
@@ -16,7 +16,7 @@ const colour=['match',['get','category'],...Object.entries(CATEGORY_COLORS).flat
 const roadWidth=(multiplier=1,extra=0)=>['interpolate',['linear'],['zoom'],14,1*multiplier+extra,17,5*multiplier+extra,19,14*multiplier+extra,22,55*multiplier+extra]
 
 export class MapLibreScene {
-  constructor({host,layers,replay,onSelect,onError,onStatus,onBasemapFallback,signal}){Object.assign(this,{host,layers,replay,onSelect,onError,onStatus,onBasemapFallback,signal});this.visibility={};this.disposed=false;this.selected=null;this.basemap='offline';this.renderFrames=0;this.frameDurations=[]}
+  constructor({host,layers,replay,describeFeature,onSelect,onError,onStatus,onBasemapFallback,signal}){Object.assign(this,{host,layers,replay,describeFeature,onSelect,onError,onStatus,onBasemapFallback,signal});this.visibility={};this.disposed=false;this.selected=null;this.basemap='offline';this.renderFrames=0;this.frameDurations=[]}
   async init(){
     if(this.signal?.aborted)throw new DOMException('场景加载已取消','AbortError')
     // Bundle the ESM worker AND its shared module, including under Pages base.
@@ -45,7 +45,7 @@ export class MapLibreScene {
   }
   installLayers(){
     const m=this.map
-    for(const [name,data] of Object.entries(this.layers))m.addSource(name,{type:'geojson',data,attribution:name==='boundary'?safeAttribution(data.source?.attribution):undefined})
+    for(const [name,data] of Object.entries(this.layers))m.addSource(name,{type:'geojson',data,attribution:name==='boundary'?sourceAttribution(data.source?.attribution):undefined})
     const add=layer=>m.addLayer(layer)
     add({id:'campus-fill',type:'fill',source:'boundary',paint:{'fill-color':'#dbe6cf','fill-opacity':1}})
     add({id:'landcover-fill',type:'fill',source:'landcover',paint:{'fill-color':['match',['get','category'],'pitch','#c1d7ab','track','#ce9c83','parking','#d8d4c4','forest','#91b599','grass','#c9ddb5','#d2dfbe'],'fill-opacity':.85}})
@@ -108,8 +108,11 @@ export class MapLibreScene {
       coordinate=localToPoint(record,this.replay)
       this.popupPerson=item.id
     }else{
-      const p=item.feature.properties;title.textContent=p.name||p.category||'未命名要素'
-      body.textContent=[p.category,p.height_m?`${p.height_m} 米`:'',p.prototype_id||'',...(p.location_ids||[])].filter(Boolean).join(' · ')
+      const p=item.feature.properties,info=this.describeFeature(item.feature);title.textContent=p.name||info.category.name||'未命名要素'
+      appendLabel(body,info.category)
+      if(p.height_m)body.append(` · ${p.height_m} 米`)
+      body.append(' · ');appendLabel(body,info.prototype)
+      for(const location of info.locations){body.append(' · '+location.name+' ');appendCode(body,location.id)}
       coordinate=featureCentre(item.feature)
     }
     container.append(title,body);this.popup=new maplibregl.Popup({closeButton:true,maxWidth:'320px',offset:14}).setLngLat(coordinate).setDOMContent(container).addTo(this.map)
@@ -125,3 +128,5 @@ export class MapLibreScene {
   dispose(){if(this.disposed)return;this.disposed=true;this.signal?.removeEventListener('abort',this.abort);this.resize?.disconnect();this.popup?.remove();this.map?.getCanvas().removeEventListener('webglcontextlost',this.lost);this.map?.remove()}
 }
 function localToPoint(record,replay){return replay.personData().find(p=>p.id===record.id).lngLat}
+function appendCode(parent,value){if(value){const span=document.createElement('small');span.className='gis-data-code';span.textContent=value;parent.append(span)}}
+function appendLabel(parent,value){parent.append(value.name);if(value.code){parent.append(' ');appendCode(parent,value.code)}}

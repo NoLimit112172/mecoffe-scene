@@ -1,0 +1,18 @@
+{
+  "schema_version": "mecoffe.scenario-index.v1",
+  "default_id": "ustc-history",
+  "scenarios": [
+    {
+      "id": "ustc-history",
+      "title": "中科大高新校区 · 历史回放",
+      "simulation_data": true,
+      "manifest_sha256": "073976594e00060666e1763bdb7e01b515b6795becc5b83ae3115eea01e0ede9"
+    },
+    {
+      "id": "nus-hourly",
+      "title": "NUS · 每小时光照预览",
+      "simulation_data": false,
+      "manifest_sha256": "e42e16d82b1626157ba32eccd409d4bce34c5233820fcfc27616e68e31684514"
+    }
+  ]
+}

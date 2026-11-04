@@ -214,6 +214,10 @@ python -X utf8 -m adapter.scene_builder scenario --manifest scenarios/nus-hourly
 
 输出为 `frontend/public/mecoffe/scenarios/<id>/`：scenario.json、地图、原型分配、地表、可选地点映射/轨迹/快照/校外道路。运行清单记录各文件 SHA-256；页面先验证时间与文件哈希再创建场景，缺失或混版时显示错误与重试入口。
 
+场景目录草案：每次 `scenario` 生成还会扫描所有已准备包，刷新同级 `scenarios/index.json`（`schema_version: mecoffe.scenario-index.v1`）。`scenarios` 每项含 `id`、原清单 `title`、`simulation_data`、清单原始字节的 `manifest_sha256`；`default_id` 必须指向目录内一项。默认按有模拟数据优先、再按 id 稳定排序并取第一项。GIS 下拉框完全读取目录，URL 无 `scenario` 时读取 `default_id`；新增第三个或更多包只需生成目录，不修改 GIS 页面。Pages 验证目录完整性、元数据及清单哈希，目录文件保持原始字节。
+
+仅重建目录（不重写已有场景文件）：`python -m adapter.scene_builder scenario-index`。可选 `--scenario-dir <目录>` 用于其他输出目录，`--default-id <id>` 指定本次目录的默认项。
+
 - `/mecoffe3d?scenario=ustc-history`：复用已有中科大地图、原历史轨迹、原地点映射和地表/道路上下文。完整 23 天、第 24 天部分记录的事实不变，不补造记录。示例的 2026-10-01 是显式展示时间配置，不声称是原运行的真实日期。
 - `/mecoffe3d?scenario=nus-hourly`：NUS 226 栋楼、840 段道路，24 小时查看光照，没有模拟轨迹。
 - 没有 scenario 参数时，原三种数据模式与二维入口保持原样。

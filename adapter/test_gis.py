@@ -6,12 +6,35 @@ import unittest
 from unittest.mock import patch
 
 from adapter.scene_builder.gis import LAYERS, to_local, to_wgs84
-from adapter.scene_builder.scenario import ROOT, prepare_scenario
+from adapter.scene_builder.scenario import ROOT, prepare_scenario, write_scenario_index
 from adapter.scene_builder.io import MapInputError
 from adapter.scene_builder.io import write_json
 
 
 class GisTests(unittest.TestCase):
+    def test_scenario_directory_discovers_third_bundle_and_is_byte_reproducible(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            root=Path(temporary)
+            def add(identifier, title, simulation_data):
+                write_json(root/identifier/'scenario.json', {'schema_version':'mecoffe.scenario.v1',
+                    'id':identifier, 'title':title, 'simulation_data':simulation_data, 'files':{}})
+            add('alpha', '校园甲', True)
+            add('beta', '校园乙', False)
+            first=write_scenario_index(root)
+            self.assertEqual(first['default_id'], 'alpha')
+            before={p:p.read_bytes() for p in root.glob('*/scenario.json')}
+            add('third-campus', '第三个地点', False)
+            third=write_scenario_index(root)
+            self.assertEqual([item['id'] for item in third['scenarios']], ['alpha','beta','third-campus'])
+            raw=(root/'index.json').read_bytes()
+            self.assertEqual(third, write_scenario_index(root))
+            self.assertEqual(raw, (root/'index.json').read_bytes())
+            for item in third['scenarios']:
+                self.assertEqual(item['manifest_sha256'],hashlib.sha256((root/item['id']/'scenario.json').read_bytes()).hexdigest())
+            self.assertTrue(all(p.read_bytes()==value for p,value in before.items()))
+            self.assertEqual(write_scenario_index(root,'third-campus')['default_id'],'third-campus')
+            with self.assertRaises(MapInputError): write_scenario_index(root,'missing')
+
     def test_idempotent_generation_preserves_archived_bytes_and_windows_reader_fallback(self):
         with tempfile.TemporaryDirectory() as temporary:
             target=Path(temporary)/'data.json'
