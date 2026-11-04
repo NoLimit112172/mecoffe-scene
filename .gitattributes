@@ -8,6 +8,7 @@
 data/source/*.json -text diff
 frontend/public/mecoffe/*.json -text diff
 frontend/public/mecoffe/campuses/**/*.json -text diff
+frontend/public/mecoffe/scenarios/**/*.json -text diff
 
 # Keep downloaded OSM bytes identical to the recorded SHA-256 on Windows.
 data/osm/*.osm -text diff

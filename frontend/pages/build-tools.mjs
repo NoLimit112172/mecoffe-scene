@@ -1,3 +1,4 @@
+import crypto from 'node:crypto'
 import fs from 'node:fs'
 import path from 'node:path'
 
@@ -61,6 +62,16 @@ export function assertArtifact(root,base=PAGES_BASE){
   }}}
   walk(root)
   if(fs.existsSync(path.join(root,'mecoffe/assets3d/rocketbox')))problems.push('Excluded Rocketbox library present')
+  // The scenario page rejects any file whose bytes differ from the manifest,
+  // so a line-ending change at checkout would break it only after deployment.
+  const scenarios=path.join(root,'mecoffe/scenarios')
+  if(fs.existsSync(scenarios))for(const id of fs.readdirSync(scenarios)){
+    const manifest=JSON.parse(fs.readFileSync(path.join(scenarios,id,'scenario.json'),'utf8'))
+    for(const [name,expected] of Object.entries(manifest.files||{})){
+      const actual=crypto.createHash('sha256').update(fs.readFileSync(path.join(scenarios,id,name))).digest('hex')
+      if(actual!==expected)problems.push(`mecoffe/scenarios/${id}/${name}: SHA-256 differs from scenario.json`)
+    }
+  }
   const index=fs.readFileSync(path.join(root,'index.html'),'utf8')
   if(!index.includes(base+'assets/'))problems.push('Entrypoint does not use deployment base')
   const stats=artifactStats(root)
