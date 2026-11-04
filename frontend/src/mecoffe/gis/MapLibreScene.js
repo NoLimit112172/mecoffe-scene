@@ -3,12 +3,15 @@ import workerUrl from 'maplibre-gl/dist/maplibre-gl-worker.mjs?worker&url'
 import {GisCharacterLayer} from './CharacterLayer.js'
 import {applyBasemap,sourceAttribution} from './basemaps.js'
 import {CATEGORY_COLORS,emptyCollection,featureCentre,mapBounds} from './model.js'
+import {localToLngLat} from './model.js'
+import {IndoorRoofLabels} from './IndoorLayer.js'
 
 const GROUPS={
   buildings:['buildings','building-outlines','building-labels','building-selection'],
   roads:['road-case','roads','footpaths','road-labels'],water:['water-fill','water-outline'],
   landcover:['campus-fill','landcover-fill','boundary-outline'],pois:['pois','poi-labels','poi-selection'],
   people:['people-halo','people-points','people-selection'],tracks:['tracks'],
+  entrances:['entrance-points'],
 }
 const font={'text-font':['sans-serif'],'text-size':12,'text-allow-overlap':false,'text-ignore-placement':false,'text-padding':5,'text-max-width':12}
 const textPaint={'text-color':'#304f49','text-halo-color':'#fffcf2','text-halo-width':1.8}
@@ -45,7 +48,7 @@ export class MapLibreScene {
   }
   installLayers(){
     const m=this.map
-    for(const [name,data] of Object.entries(this.layers))m.addSource(name,{type:'geojson',data,attribution:name==='boundary'?sourceAttribution(data.source?.attribution):undefined})
+    for(const [name,data] of Object.entries(this.layers))m.addSource(name,{type:'geojson',data,promoteId:'feature_id',attribution:name==='boundary'?sourceAttribution(data.source?.attribution):undefined})
     const add=layer=>m.addLayer(layer)
     add({id:'campus-fill',type:'fill',source:'boundary',paint:{'fill-color':'#dbe6cf','fill-opacity':1}})
     add({id:'landcover-fill',type:'fill',source:'landcover',paint:{'fill-color':['match',['get','category'],'pitch','#c1d7ab','track','#ce9c83','parking','#d8d4c4','forest','#91b599','grass','#c9ddb5','#d2dfbe'],'fill-opacity':.85}})
@@ -64,17 +67,24 @@ export class MapLibreScene {
     add({id:'pois',type:'circle',source:'pois',minzoom:16.5,paint:{'circle-radius':['case',['==',['get','category'],'mapped_location'],5,3],'circle-color':'#b27241','circle-stroke-color':'#fffaf0','circle-stroke-width':1.5}})
     add({id:'poi-labels',type:'symbol',source:'pois',minzoom:18,filter:['!=',['get','name'],''],layout:{...font,'text-field':['get','name'],'text-anchor':'top','text-offset':[0,.7],'text-size':11},paint:textPaint})
     add({id:'poi-selection',type:'circle',source:'pois',filter:['==',['get','feature_id'],''],paint:{'circle-radius':9,'circle-color':'#efbd4c','circle-stroke-color':'#ffffff','circle-stroke-width':2}})
+    add({id:'entrance-points',type:'circle',source:'entrances',minzoom:17.5,paint:{'circle-radius':5,'circle-color':['match',['get','source'],'osm','#31896c','#d39138'],'circle-stroke-color':'#ffffff','circle-stroke-width':1.5}})
+    const lightColour=['match',['get','category'],'dormitory','#e2ceb1','education','#b1ced4','library','#c5b6d0','public','#a9cfc0','commercial','#dec4a4','#cdd8d4']
+    m.setPaintProperty('buildings','fill-extrusion-color',['interpolate',['linear'],['min',40,['coalesce',['feature-state','indoorCount'],0]],0,colour,40,lightColour])
     m.addSource('people',{type:'geojson',data:emptyCollection()});m.addSource('tracks',{type:'geojson',data:emptyCollection()})
     add({id:'tracks',type:'line',source:'tracks',paint:{'line-color':'#d88439','line-width':3,'line-opacity':.85},layout:{'line-cap':'round','line-join':'round'}})
     add({id:'people-halo',type:'circle',source:'people',filter:['==',['get','walking'],true],paint:{'circle-radius':8,'circle-color':'#fff3bd','circle-opacity':.65}})
     add({id:'people-points',type:'circle',source:'people',paint:{'circle-radius':['case',['get','walking'],4.5,3.5],'circle-color':['get','color'],'circle-opacity':['case',['get','modelReady'],0,1],'circle-stroke-color':'#ffffff','circle-stroke-width':1.2,'circle-stroke-opacity':['case',['get','modelReady'],0,1]}})
     add({id:'people-selection',type:'circle',source:'people',filter:['==',['get','id'],''],paint:{'circle-radius':9,'circle-color':'#f0ba4a','circle-opacity':.25,'circle-stroke-color':'#e39c29','circle-stroke-width':2}})
     this.characters=new GisCharacterLayer({replay:this.replay,onStatus:this.onStatus,onError:this.onError});m.addLayer(this.characters)
+    this.roofLabels=new IndoorRoofLabels(this)
     this.setPeople()
   }
   setPeople(){
     if(this.disposed||!this.map.getSource('people'))return
-    this.map.getSource('people').setData(this.replay.pointFeatures(this.characters.readyIds))
+    const data=this.replay.pointFeatures(this.characters.readyIds),key=JSON.stringify(data)
+    if(key!==this.peopleKey){this.peopleKey=key;this.map.getSource('people').setData(data)}
+    const occupancy=this.replay.occupancy,occupancyKey=JSON.stringify(occupancy.buildings)
+    if(occupancyKey!==this.occupancyKey){this.occupancyKey=occupancyKey;for(const f of this.layers.buildings.features)this.map.setFeatureState({source:'buildings',id:f.id},{indoorCount:occupancy.buildings[f.id]?.length||0})}
     const routeKey=[...this.replay.people.values()].filter(p=>p.walker).map(p=>`${p.id}:${p.walker.event.key}:${p.walker.phase}`).join('|')
     if(routeKey!==this.routeKey){this.routeKey=routeKey;this.map.getSource('tracks').setData(this.replay.routeFeatures())}
     if(this.popupPerson&&this.popup)this.popup.setLngLat(this.replay.personData().find(p=>p.id===this.popupPerson)?.lngLat||this.popup.getLngLat())
@@ -87,11 +97,11 @@ export class MapLibreScene {
   setBasemap(id){if(!this.disposed){applyBasemap(this.map,id);this.basemap=id;this.requestFrame()}}
   hit(point){
     if(this.visibility.people!==false){const person=this.characters.pick(point);if(person)return {type:'person',id:person}}
-    const layers=['people-points','people-halo','pois','buildings'].filter(id=>this.map.getLayoutProperty(id,'visibility')!=='none')
+    const layers=['people-points','people-halo','entrance-points','pois','buildings'].filter(id=>this.map.getLayoutProperty(id,'visibility')!=='none')
     const hits=this.map.queryRenderedFeatures([[point.x-5,point.y-5],[point.x+5,point.y+5]],{layers})
     const p=hits.find(f=>f.source==='people')
     if(p)return {type:'person',id:p.properties.id}
-    const feature=hits.find(f=>['pois','buildings'].includes(f.source))
+    const feature=hits.find(f=>['pois','buildings','entrances'].includes(f.source))
     if(feature){const id=feature.properties.feature_id??feature.id;const original=this.layers[feature.source].features.find(f=>String(f.id)===String(id));return original?{type:'feature',layer:feature.source,feature:original}:null}
     return null
   }
@@ -104,7 +114,9 @@ export class MapLibreScene {
     const title=document.createElement('strong'),body=document.createElement('p');let coordinate
     if(item.type==='person'){
       const record=this.replay.people.get(item.id);if(!record)return
-      title.textContent=record.person.name;body.textContent=record.person.role_label+' · '+(record.walker?'前往门店 / 返回（示意）':'所在地点（示意）')
+      const location=this.replay.personLocation(item.id)
+      if(location.inside)this.map.setFilter('building-selection',['==',['get','feature_id'],location.buildingId])
+      title.textContent=record.person.name;body.textContent=record.person.role_label+' · '+(location.inside?`在 ${location.name} 内（示意）`:'正在进出楼或沿步行路线移动（示意）')
       coordinate=localToPoint(record,this.replay)
       this.popupPerson=item.id
     }else{
@@ -113,20 +125,21 @@ export class MapLibreScene {
       if(p.height_m)body.append(` · ${p.height_m} 米`)
       body.append(' · ');appendLabel(body,info.prototype)
       for(const location of info.locations){body.append(' · '+location.name+' ');appendCode(body,location.id)}
+      if(p.source)body.append(' · '+(p.source==='osm'?'OSM 入口标注':'推断入口')+'（示意）')
       coordinate=featureCentre(item.feature)
     }
     container.append(title,body);this.popup=new maplibregl.Popup({closeButton:true,maxWidth:'320px',offset:14}).setLngLat(coordinate).setDOMContent(container).addTo(this.map)
     this.onSelect?.(item);this.requestFrame()
   }
   focusFeature(item){const centre=featureCentre(item.feature);this.select({type:'feature',...item});this.map.easeTo({center:centre,zoom:Math.max(18.6,this.map.getZoom()),duration:550})}
-  focusPerson(id){const record=this.replay.people.get(id);if(!record)return;this.select({type:'person',id});this.popup?.remove();this.map.easeTo({center:localToPoint(record,this.replay),zoom:20.3,pitch:62,bearing:-22,duration:650})}
+  focusPerson(id){const record=this.replay.people.get(id);if(!record)return;this.select({type:'person',id});const inside=this.replay.personLocation(id).inside;if(!inside)this.popup?.remove();this.map.easeTo({center:localToPoint(record,this.replay),zoom:inside?18.3:20.3,pitch:inside?52:62,bearing:-22,duration:650})}
   resetCamera(animate=true){this.map.fitBounds(mapBounds(this.layers),{padding:65,pitch:52,bearing:-15,maxZoom:18,duration:animate?600:0})}
   requestFrame(){if(!this.disposed)this.map.triggerRepaint()}
-  needsAnimation(){return this.map.getZoom()>=18.7&&this.visibility.people!==false&&this.replay.people.size>0}
+  needsAnimation(){return this.map.getZoom()>=18.7&&this.visibility.people!==false&&this.replay.personData().length>0}
   setMeasuring(value){this.measuring=value;this.lastMeasuredFrame=0;this.frameDurations=[]}
   getStats(){const times=this.frameDurations;return {renderFrames:this.renderFrames,averageFps:times.length?times.length*1000/times.reduce((a,b)=>a+b,0):0,worstFrameMs:times.length?Math.max(...times):0,drawCalls:this.characters?.renderer?.info.render.calls||0}}
-  dispose(){if(this.disposed)return;this.disposed=true;this.signal?.removeEventListener('abort',this.abort);this.resize?.disconnect();this.popup?.remove();this.map?.getCanvas().removeEventListener('webglcontextlost',this.lost);this.map?.remove()}
+  dispose(){if(this.disposed)return;this.disposed=true;this.roofLabels?.dispose();this.signal?.removeEventListener('abort',this.abort);this.resize?.disconnect();this.popup?.remove();this.map?.getCanvas().removeEventListener('webglcontextlost',this.lost);this.map?.remove()}
 }
-function localToPoint(record,replay){return replay.personData().find(p=>p.id===record.id).lngLat}
+function localToPoint(record,replay){const location=replay.personLocation(record.id),building=location.inside&&replay.campus.buildings.find(b=>b.osm_id===location.buildingId);if(building){const p=building.polygon;return localToLngLat({x:p.reduce((n,v)=>n+v[0],0)/p.length,y:p.reduce((n,v)=>n+v[1],0)/p.length},replay.campus.projection)}return localToLngLat(record,replay.campus.projection)}
 function appendCode(parent,value){if(value){const span=document.createElement('small');span.className='gis-data-code';span.textContent=value;parent.append(span)}}
 function appendLabel(parent,value){parent.append(value.name);if(value.code){parent.append(' ');appendCode(parent,value.code)}}

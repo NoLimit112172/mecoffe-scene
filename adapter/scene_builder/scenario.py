@@ -12,6 +12,7 @@ from zoneinfo import ZoneInfo, ZoneInfoNotFoundError
 from .core import ROOT, build_from_geojson, build_from_osm
 from .io import MapInputError, download_osm, write_json
 from .gis import export_gis
+from .entrances import generate_entrances
 
 PUBLIC = ROOT / 'frontend/public/mecoffe'
 ID = re.compile(r'^[A-Za-z0-9][A-Za-z0-9_-]{0,63}$')
@@ -208,6 +209,7 @@ def prepare_scenario(manifest_path, output_root=None):
         if source.get(role): values[role + '.json'] = read_json(resolve(source[role]))
     values.update(export_gis(bundle['campus'], bundle['assignments'], values['landcover.json'],
                              values.get('location_mapping.json'), values.get('surroundings.json')))
+    values['entrances.json'],values['gis/entrances.geojson']=generate_entrances(bundle['campus'])
     output = Path(output_root or PUBLIC / 'scenarios') / manifest['id']
     for filename, value in values.items(): write_json(output / filename, value)
     runtime = {**manifest, 'schema_version':'mecoffe.scenario.v1', 'simulation_data': trajectory is not None,

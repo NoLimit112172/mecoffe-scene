@@ -56,7 +56,7 @@ export async function loadScenario(id,{signal,fetcher=fetch,base=import.meta.env
   for(const interval of manifest.simulation_time.intervals){const start=Date.parse(interval.start),end=Date.parse(interval.end);if(!Number.isFinite(start)||!Number.isFinite(end)||end<=start||start<previous)throw new Error('模拟时间段无效');previous=end}
   const files={}
   await Promise.all(Object.entries(manifest.files).map(async([name,expected])=>{
-    const gis=/^gis\/(buildings|roads|landcover|water|boundary|pois)\.geojson$/.test(name)
+    const gis=/^gis\/(buildings|roads|landcover|water|boundary|pois|entrances)\.geojson$/.test(name)
     if(!gis&&!/^[a-z_0-9-]+\.json$/.test(name))throw new Error('场景文件名无效')
     if(gis&&!includeGis)return
     const {data,text}=await read(name)

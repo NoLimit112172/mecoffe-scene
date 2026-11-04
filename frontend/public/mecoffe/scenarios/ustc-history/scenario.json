@@ -167,7 +167,9 @@
     "gis/landcover.geojson": "1abd776034bdf6279644259aa5bdccb49e8cbabc425b63fa23d9e8d745980d9b",
     "gis/water.geojson": "76a8e0109ed64894a1da92848dc1b2c78aaf65b002f2005e5d18f4846f6066c1",
     "gis/boundary.geojson": "129f54793590b20c067b6be7e189ecb5d391908ae1de53172a1596a1bc8efd59",
-    "gis/pois.geojson": "b830c1f8bfac22c7fed440b3877c3fdead015fde1dedfa0ddfb32b56b2effb17"
+    "gis/pois.geojson": "b830c1f8bfac22c7fed440b3877c3fdead015fde1dedfa0ddfb32b56b2effb17",
+    "entrances.json": "12251082a13173b6af594fa6208c36c38e4abaacc3f01035c962424eaf7bdbee",
+    "gis/entrances.geojson": "f73e6331ecb7fba0d0d9b4fd12bfaf7ee4dd1650c2a9baee32c9e1262749cfe6"
   },
   "replay_format": "mecoffe.scene.v1"
 }

@@ -1,0 +1,4768 @@
+{
+  "type": "FeatureCollection",
+  "schema_version": "mecoffe.gis.v1",
+  "name": "entrances",
+  "source": {
+    "source_url": "https://api.openstreetmap.org/api/0.6/map?bbox=103.771,1.292,103.779,1.3",
+    "downloaded_at_utc": "2026-11-03T07:36:11.586106+00:00",
+    "sha256": "31f19c9919e87ce833f592cff615097b6829cdecd8ae8f4adb6be897d7c2d63f",
+    "bbox": [
+      103.771,
+      1.292,
+      103.779,
+      1.3
+    ],
+    "license": "ODbL-1.0",
+    "license_url": "https://www.openstreetmap.org/copyright",
+    "attribution": "© OpenStreetMap contributors",
+    "osm_generator": "openstreetmap-cgimap 2.1.0 (2298491 spike-07.openstreetmap.org)"
+  },
+  "features": [
+    {
+      "type": "Feature",
+      "id": "relation/15347235/entrance/1",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.773272,
+          1.2952001
+        ]
+      },
+      "properties": {
+        "id": "relation/15347235/entrance/1",
+        "building_id": "relation/15347235",
+        "source": "inferred",
+        "road_node_id": "node/10564035716",
+        "connected": true,
+        "illustrative": true,
+        "feature_id": "relation/15347235/entrance/1",
+        "category": "entrance"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "relation/15421178/entrance/1",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.778939096,
+          1.293040499
+        ]
+      },
+      "properties": {
+        "id": "relation/15421178/entrance/1",
+        "building_id": "relation/15421178",
+        "source": "inferred",
+        "road_node_id": "clip/853094818/0/end",
+        "connected": true,
+        "illustrative": true,
+        "feature_id": "relation/15421178/entrance/1",
+        "category": "entrance"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "relation/15780831/entrance/1",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.774668913,
+          1.295105898
+        ]
+      },
+      "properties": {
+        "id": "relation/15780831/entrance/1",
+        "building_id": "relation/15780831",
+        "source": "inferred",
+        "road_node_id": "node/10128318313",
+        "connected": true,
+        "illustrative": true,
+        "feature_id": "relation/15780831/entrance/1",
+        "category": "entrance"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "relation/4548824/entrance/1",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.776267997,
+          1.292139604
+        ]
+      },
+      "properties": {
+        "id": "relation/4548824/entrance/1",
+        "building_id": "relation/4548824",
+        "source": "inferred",
+        "road_node_id": "node/6822613521",
+        "connected": true,
+        "illustrative": true,
+        "feature_id": "relation/4548824/entrance/1",
+        "category": "entrance"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "way/1060426986/entrance/1",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.773671103,
+          1.298491999
+        ]
+      },
+      "properties": {
+        "id": "way/1060426986/entrance/1",
+        "building_id": "way/1060426986",
+        "source": "inferred",
+        "road_node_id": "node/10821049765",
+        "connected": true,
+        "illustrative": true,
+        "feature_id": "way/1060426986/entrance/1",
+        "category": "entrance"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "way/1084196072/entrance/1",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.775249796,
+          1.294887199
+        ]
+      },
+      "properties": {
+        "id": "way/1084196072/entrance/1",
+        "building_id": "way/1084196072",
+        "source": "inferred",
+        "road_node_id": "node/10853051299",
+        "connected": true,
+        "illustrative": true,
+        "feature_id": "way/1084196072/entrance/1",
+        "category": "entrance"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "way/1085984100/entrance/1",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.774818201,
+          1.297194199
+        ]
+      },
+      "properties": {
+        "id": "way/1085984100/entrance/1",
+        "building_id": "way/1085984100",
+        "source": "inferred",
+        "road_node_id": "node/496803229",
+        "connected": true,
+        "illustrative": true,
+        "feature_id": "way/1085984100/entrance/1",
+        "category": "entrance"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "way/1085984101/entrance/1",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.774687703,
+          1.2974811
+        ]
+      },
+      "properties": {
+        "id": "way/1085984101/entrance/1",
+        "building_id": "way/1085984101",
+        "source": "inferred",
+        "road_node_id": "node/4602296492",
+        "connected": true,
+        "illustrative": true,
+        "feature_id": "way/1085984101/entrance/1",
+        "category": "entrance"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "way/1085984102/entrance/1",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.775400399,
+          1.2970895
+        ]
+      },
+      "properties": {
+        "id": "way/1085984102/entrance/1",
+        "building_id": "way/1085984102",
+        "source": "inferred",
+        "road_node_id": "node/4602296494",
+        "connected": true,
+        "illustrative": true,
+        "feature_id": "way/1085984102/entrance/1",
+        "category": "entrance"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "way/1136943223/entrance/1",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.772479397,
+          1.293398698
+        ]
+      },
+      "properties": {
+        "id": "way/1136943223/entrance/1",
+        "building_id": "way/1136943223",
+        "source": "inferred",
+        "road_node_id": "node/10598564854",
+        "connected": true,
+        "illustrative": true,
+        "feature_id": "way/1136943223/entrance/1",
+        "category": "entrance"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "way/1137159831/entrance/1",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.778298796,
+          1.293109198
+        ]
+      },
+      "properties": {
+        "id": "way/1137159831/entrance/1",
+        "building_id": "way/1137159831",
+        "source": "inferred",
+        "road_node_id": "node/1832488289",
+        "connected": true,
+        "illustrative": true,
+        "feature_id": "way/1137159831/entrance/1",
+        "category": "entrance"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "way/1137159832/entrance/1",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.778118804,
+          1.293135296
+        ]
+      },
+      "properties": {
+        "id": "way/1137159832/entrance/1",
+        "building_id": "way/1137159832",
+        "source": "inferred",
+        "road_node_id": "node/1832488290",
+        "connected": true,
+        "illustrative": true,
+        "feature_id": "way/1137159832/entrance/1",
+        "category": "entrance"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "way/1137159833/entrance/1",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.777681497,
+          1.293370099
+        ]
+      },
+      "properties": {
+        "id": "way/1137159833/entrance/1",
+        "building_id": "way/1137159833",
+        "source": "inferred",
+        "road_node_id": "node/1832488293",
+        "connected": true,
+        "illustrative": true,
+        "feature_id": "way/1137159833/entrance/1",
+        "category": "entrance"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "way/1137159834/entrance/1",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.777558403,
+          1.293514503
+        ]
+      },
+      "properties": {
+        "id": "way/1137159834/entrance/1",
+        "building_id": "way/1137159834",
+        "source": "inferred",
+        "road_node_id": "node/496810113",
+        "connected": true,
+        "illustrative": true,
+        "feature_id": "way/1137159834/entrance/1",
+        "category": "entrance"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "way/1137972617/entrance/1",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.771668497,
+          1.292448296
+        ]
+      },
+      "properties": {
+        "id": "way/1137972617/entrance/1",
+        "building_id": "way/1137972617",
+        "source": "inferred",
+        "road_node_id": "clip/449192423/0/start",
+        "connected": true,
+        "illustrative": true,
+        "feature_id": "way/1137972617/entrance/1",
+        "category": "entrance"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "way/1150078058/entrance/1",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.773562852,
+          1.294866757
+        ]
+      },
+      "properties": {
+        "id": "way/1150078058/entrance/1",
+        "building_id": "way/1150078058",
+        "source": "inferred",
+        "road_node_id": "node/10698657247",
+        "connected": true,
+        "illustrative": true,
+        "feature_id": "way/1150078058/entrance/1",
+        "category": "entrance"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "way/1150409850/entrance/1",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.774068201,
+          1.293306598
+        ]
+      },
+      "properties": {
+        "id": "way/1150409850/entrance/1",
+        "building_id": "way/1150409850",
+        "source": "inferred",
+        "road_node_id": "node/5936531515",
+        "connected": true,
+        "illustrative": true,
+        "feature_id": "way/1150409850/entrance/1",
+        "category": "entrance"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "way/1150409851/entrance/1",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.774089601,
+          1.293245202
+        ]
+      },
+      "properties": {
+        "id": "way/1150409851/entrance/1",
+        "building_id": "way/1150409851",
+        "source": "inferred",
+        "road_node_id": "node/6217298196",
+        "connected": true,
+        "illustrative": true,
+        "feature_id": "way/1150409851/entrance/1",
+        "category": "entrance"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "way/1150409857/entrance/1",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.777850496,
+          1.293198896
+        ]
+      },
+      "properties": {
+        "id": "way/1150409857/entrance/1",
+        "building_id": "way/1150409857",
+        "source": "inferred",
+        "road_node_id": "node/1832488293",
+        "connected": true,
+        "illustrative": true,
+        "feature_id": "way/1150409857/entrance/1",
+        "category": "entrance"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "way/1151101056/entrance/1",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.773105502,
+          1.295014902
+        ]
+      },
+      "properties": {
+        "id": "way/1151101056/entrance/1",
+        "building_id": "way/1151101056",
+        "source": "inferred",
+        "road_node_id": "node/10708123199",
+        "connected": true,
+        "illustrative": true,
+        "feature_id": "way/1151101056/entrance/1",
+        "category": "entrance"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "way/1151101060/entrance/1",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.772501903,
+          1.293241901
+        ]
+      },
+      "properties": {
+        "id": "way/1151101060/entrance/1",
+        "building_id": "way/1151101060",
+        "source": "inferred",
+        "road_node_id": "node/13608618305",
+        "connected": true,
+        "illustrative": true,
+        "feature_id": "way/1151101060/entrance/1",
+        "category": "entrance"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "way/1151101061/entrance/1",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.7717753,
+          1.293491103
+        ]
+      },
+      "properties": {
+        "id": "way/1151101061/entrance/1",
+        "building_id": "way/1151101061",
+        "source": "inferred",
+        "road_node_id": "node/1345143448",
+        "connected": true,
+        "illustrative": true,
+        "feature_id": "way/1151101061/entrance/1",
+        "category": "entrance"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "way/1151101065/entrance/1",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.771393012,
+          1.296425404
+        ]
+      },
+      "properties": {
+        "id": "way/1151101065/entrance/1",
+        "building_id": "way/1151101065",
+        "source": "inferred",
+        "road_node_id": "node/410466854",
+        "connected": true,
+        "illustrative": true,
+        "feature_id": "way/1151101065/entrance/1",
+        "category": "entrance"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "way/1151101066/entrance/1",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.774077546,
+          1.298915841
+        ]
+      },
+      "properties": {
+        "id": "way/1151101066/entrance/1",
+        "building_id": "way/1151101066",
+        "source": "inferred",
+        "road_node_id": "node/5282980942",
+        "connected": true,
+        "illustrative": true,
+        "feature_id": "way/1151101066/entrance/1",
+        "category": "entrance"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "way/1151101067/entrance/1",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.774311058,
+          1.298868767
+        ]
+      },
+      "properties": {
+        "id": "way/1151101067/entrance/1",
+        "building_id": "way/1151101067",
+        "source": "inferred",
+        "road_node_id": "node/410466861",
+        "connected": true,
+        "illustrative": true,
+        "feature_id": "way/1151101067/entrance/1",
+        "category": "entrance"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "way/1151101068/entrance/1",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.776034897,
+          1.298963099
+        ]
+      },
+      "properties": {
+        "id": "way/1151101068/entrance/1",
+        "building_id": "way/1151101068",
+        "source": "inferred",
+        "road_node_id": "node/10539123932",
+        "connected": true,
+        "illustrative": true,
+        "feature_id": "way/1151101068/entrance/1",
+        "category": "entrance"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "way/1151101069/entrance/1",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.778029398,
+          1.297570897
+        ]
+      },
+      "properties": {
+        "id": "way/1151101069/entrance/1",
+        "building_id": "way/1151101069",
+        "source": "inferred",
+        "road_node_id": "node/11503213893",
+        "connected": true,
+        "illustrative": true,
+        "feature_id": "way/1151101069/entrance/1",
+        "category": "entrance"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "way/1151101070/entrance/1",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.778683704,
+          1.2971129
+        ]
+      },
+      "properties": {
+        "id": "way/1151101070/entrance/1",
+        "building_id": "way/1151101070",
+        "source": "inferred",
+        "road_node_id": "node/10708150756",
+        "connected": true,
+        "illustrative": true,
+        "feature_id": "way/1151101070/entrance/1",
+        "category": "entrance"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "way/1151101080/entrance/1",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.777046966,
+          1.293552455
+        ]
+      },
+      "properties": {
+        "id": "way/1151101080/entrance/1",
+        "building_id": "way/1151101080",
+        "source": "inferred",
+        "road_node_id": "node/10595350832",
+        "connected": true,
+        "illustrative": true,
+        "feature_id": "way/1151101080/entrance/1",
+        "category": "entrance"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "way/1151101081/entrance/1",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.775113478,
+          1.292982121
+        ]
+      },
+      "properties": {
+        "id": "way/1151101081/entrance/1",
+        "building_id": "way/1151101081",
+        "source": "inferred",
+        "road_node_id": "node/7936899677",
+        "connected": true,
+        "illustrative": true,
+        "feature_id": "way/1151101081/entrance/1",
+        "category": "entrance"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "way/1152422140/entrance/1",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.7711445,
+          1.295079698
+        ]
+      },
+      "properties": {
+        "id": "way/1152422140/entrance/1",
+        "building_id": "way/1152422140",
+        "source": "inferred",
+        "road_node_id": "node/11918099306",
+        "connected": true,
+        "illustrative": true,
+        "feature_id": "way/1152422140/entrance/1",
+        "category": "entrance"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "way/1152985459/entrance/1",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.772669202,
+          1.297175097
+        ]
+      },
+      "properties": {
+        "id": "way/1152985459/entrance/1",
+        "building_id": "way/1152985459",
+        "source": "inferred",
+        "road_node_id": "node/1534827183",
+        "connected": true,
+        "illustrative": true,
+        "feature_id": "way/1152985459/entrance/1",
+        "category": "entrance"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "way/1158481785/entrance/1",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.7770178,
+          1.2945549
+        ]
+      },
+      "properties": {
+        "id": "way/1158481785/entrance/1",
+        "building_id": "way/1158481785",
+        "source": "inferred",
+        "road_node_id": "node/1747001816",
+        "connected": true,
+        "illustrative": true,
+        "feature_id": "way/1158481785/entrance/1",
+        "category": "entrance"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "way/1158481787/entrance/1",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.774657205,
+          1.293352389
+        ]
+      },
+      "properties": {
+        "id": "way/1158481787/entrance/1",
+        "building_id": "way/1158481787",
+        "source": "inferred",
+        "road_node_id": "node/11917597336",
+        "connected": true,
+        "illustrative": true,
+        "feature_id": "way/1158481787/entrance/1",
+        "category": "entrance"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "way/1162748913/entrance/1",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.771315099,
+          1.297912998
+        ]
+      },
+      "properties": {
+        "id": "way/1162748913/entrance/1",
+        "building_id": "way/1162748913",
+        "source": "inferred",
+        "road_node_id": "node/6846157080",
+        "connected": true,
+        "illustrative": true,
+        "feature_id": "way/1162748913/entrance/1",
+        "category": "entrance"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "way/1169280350/entrance/1",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.775227238,
+          1.298634883
+        ]
+      },
+      "properties": {
+        "id": "way/1169280350/entrance/1",
+        "building_id": "way/1169280350",
+        "source": "inferred",
+        "road_node_id": "node/7266702429",
+        "connected": true,
+        "illustrative": true,
+        "feature_id": "way/1169280350/entrance/1",
+        "category": "entrance"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "way/1169280351/entrance/1",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.775607502,
+          1.2987463
+        ]
+      },
+      "properties": {
+        "id": "way/1169280351/entrance/1",
+        "building_id": "way/1169280351",
+        "source": "inferred",
+        "road_node_id": "node/7930625774",
+        "connected": true,
+        "illustrative": true,
+        "feature_id": "way/1169280351/entrance/1",
+        "category": "entrance"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "way/1170438873/entrance/1",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.7718876,
+          1.292375397
+        ]
+      },
+      "properties": {
+        "id": "way/1170438873/entrance/1",
+        "building_id": "way/1170438873",
+        "source": "inferred",
+        "road_node_id": "clip/449192423/0/start",
+        "connected": true,
+        "illustrative": true,
+        "feature_id": "way/1170438873/entrance/1",
+        "category": "entrance"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "way/1170438874/entrance/1",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.7719408,
+          1.292371899
+        ]
+      },
+      "properties": {
+        "id": "way/1170438874/entrance/1",
+        "building_id": "way/1170438874",
+        "source": "inferred",
+        "road_node_id": "node/6705043048",
+        "connected": true,
+        "illustrative": true,
+        "feature_id": "way/1170438874/entrance/1",
+        "category": "entrance"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "way/1170438875/entrance/1",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.772051903,
+          1.292364399
+        ]
+      },
+      "properties": {
+        "id": "way/1170438875/entrance/1",
+        "building_id": "way/1170438875",
+        "source": "inferred",
+        "road_node_id": "node/6705043048",
+        "connected": true,
+        "illustrative": true,
+        "feature_id": "way/1170438875/entrance/1",
+        "category": "entrance"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "way/1170438876/entrance/1",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.771994998,
+          1.292368203
+        ]
+      },
+      "properties": {
+        "id": "way/1170438876/entrance/1",
+        "building_id": "way/1170438876",
+        "source": "inferred",
+        "road_node_id": "node/6705043048",
+        "connected": true,
+        "illustrative": true,
+        "feature_id": "way/1170438876/entrance/1",
+        "category": "entrance"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "way/1170438877/entrance/1",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.771689501,
+          1.292052802
+        ]
+      },
+      "properties": {
+        "id": "way/1170438877/entrance/1",
+        "building_id": "way/1170438877",
+        "source": "inferred",
+        "road_node_id": "node/7926857923",
+        "connected": true,
+        "illustrative": true,
+        "feature_id": "way/1170438877/entrance/1",
+        "category": "entrance"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "way/1170438878/entrance/1",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.771799498,
+          1.292056399
+        ]
+      },
+      "properties": {
+        "id": "way/1170438878/entrance/1",
+        "building_id": "way/1170438878",
+        "source": "inferred",
+        "road_node_id": "node/7926857923",
+        "connected": true,
+        "illustrative": true,
+        "feature_id": "way/1170438878/entrance/1",
+        "category": "entrance"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "way/1170438879/entrance/1",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.771779402,
+          1.292056399
+        ]
+      },
+      "properties": {
+        "id": "way/1170438879/entrance/1",
+        "building_id": "way/1170438879",
+        "source": "inferred",
+        "road_node_id": "node/7926857923",
+        "connected": true,
+        "illustrative": true,
+        "feature_id": "way/1170438879/entrance/1",
+        "category": "entrance"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "way/1170438923/entrance/1",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.771186599,
+          1.292363499
+        ]
+      },
+      "properties": {
+        "id": "way/1170438923/entrance/1",
+        "building_id": "way/1170438923",
+        "source": "inferred",
+        "road_node_id": "clip/449192423/0/start",
+        "connected": true,
+        "illustrative": true,
+        "feature_id": "way/1170438923/entrance/1",
+        "category": "entrance"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "way/1170438924/entrance/1",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.7712448,
+          1.292363598
+        ]
+      },
+      "properties": {
+        "id": "way/1170438924/entrance/1",
+        "building_id": "way/1170438924",
+        "source": "inferred",
+        "road_node_id": "clip/449192423/0/start",
+        "connected": true,
+        "illustrative": true,
+        "feature_id": "way/1170438924/entrance/1",
+        "category": "entrance"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "way/1170438925/entrance/1",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.771303099,
+          1.292363796
+        ]
+      },
+      "properties": {
+        "id": "way/1170438925/entrance/1",
+        "building_id": "way/1170438925",
+        "source": "inferred",
+        "road_node_id": "clip/449192423/0/start",
+        "connected": true,
+        "illustrative": true,
+        "feature_id": "way/1170438925/entrance/1",
+        "category": "entrance"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "way/1170438926/entrance/1",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.7713613,
+          1.292363904
+        ]
+      },
+      "properties": {
+        "id": "way/1170438926/entrance/1",
+        "building_id": "way/1170438926",
+        "source": "inferred",
+        "road_node_id": "clip/449192423/0/start",
+        "connected": true,
+        "illustrative": true,
+        "feature_id": "way/1170438926/entrance/1",
+        "category": "entrance"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "way/1170438927/entrance/1",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.7714196,
+          1.292364102
+        ]
+      },
+      "properties": {
+        "id": "way/1170438927/entrance/1",
+        "building_id": "way/1170438927",
+        "source": "inferred",
+        "road_node_id": "clip/449192423/0/start",
+        "connected": true,
+        "illustrative": true,
+        "feature_id": "way/1170438927/entrance/1",
+        "category": "entrance"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "way/1170438928/entrance/1",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.771477801,
+          1.292364201
+        ]
+      },
+      "properties": {
+        "id": "way/1170438928/entrance/1",
+        "building_id": "way/1170438928",
+        "source": "inferred",
+        "road_node_id": "clip/449192423/0/start",
+        "connected": true,
+        "illustrative": true,
+        "feature_id": "way/1170438928/entrance/1",
+        "category": "entrance"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "way/1170438929/entrance/1",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.771536101,
+          1.292364399
+        ]
+      },
+      "properties": {
+        "id": "way/1170438929/entrance/1",
+        "building_id": "way/1170438929",
+        "source": "inferred",
+        "road_node_id": "clip/449192423/0/start",
+        "connected": true,
+        "illustrative": true,
+        "feature_id": "way/1170438929/entrance/1",
+        "category": "entrance"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "way/1170438930/entrance/1",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.771594302,
+          1.292364497
+        ]
+      },
+      "properties": {
+        "id": "way/1170438930/entrance/1",
+        "building_id": "way/1170438930",
+        "source": "inferred",
+        "road_node_id": "clip/449192423/0/start",
+        "connected": true,
+        "illustrative": true,
+        "feature_id": "way/1170438930/entrance/1",
+        "category": "entrance"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "way/1170438931/entrance/1",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.771652602,
+          1.292364596
+        ]
+      },
+      "properties": {
+        "id": "way/1170438931/entrance/1",
+        "building_id": "way/1170438931",
+        "source": "inferred",
+        "road_node_id": "clip/449192423/0/start",
+        "connected": true,
+        "illustrative": true,
+        "feature_id": "way/1170438931/entrance/1",
+        "category": "entrance"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "way/1170438932/entrance/1",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.771710803,
+          1.292364803
+        ]
+      },
+      "properties": {
+        "id": "way/1170438932/entrance/1",
+        "building_id": "way/1170438932",
+        "source": "inferred",
+        "road_node_id": "clip/449192423/0/start",
+        "connected": true,
+        "illustrative": true,
+        "feature_id": "way/1170438932/entrance/1",
+        "category": "entrance"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "way/1170438933/entrance/1",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.771769103,
+          1.292365001
+        ]
+      },
+      "properties": {
+        "id": "way/1170438933/entrance/1",
+        "building_id": "way/1170438933",
+        "source": "inferred",
+        "road_node_id": "clip/449192423/0/start",
+        "connected": true,
+        "illustrative": true,
+        "feature_id": "way/1170438933/entrance/1",
+        "category": "entrance"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "way/1172699729/entrance/1",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.772202299,
+          1.292381099
+        ]
+      },
+      "properties": {
+        "id": "way/1172699729/entrance/1",
+        "building_id": "way/1172699729",
+        "source": "inferred",
+        "road_node_id": "node/6705043048",
+        "connected": true,
+        "illustrative": true,
+        "feature_id": "way/1172699729/entrance/1",
+        "category": "entrance"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "way/1172699730/entrance/1",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.772529502,
+          1.292358904
+        ]
+      },
+      "properties": {
+        "id": "way/1172699730/entrance/1",
+        "building_id": "way/1172699730",
+        "source": "inferred",
+        "road_node_id": "node/6705043048",
+        "connected": true,
+        "illustrative": true,
+        "feature_id": "way/1172699730/entrance/1",
+        "category": "entrance"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "way/1172699731/entrance/1",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.771037597,
+          1.2920287
+        ]
+      },
+      "properties": {
+        "id": "way/1172699731/entrance/1",
+        "building_id": "way/1172699731",
+        "source": "inferred",
+        "road_node_id": "node/7926857934",
+        "connected": true,
+        "illustrative": true,
+        "feature_id": "way/1172699731/entrance/1",
+        "category": "entrance"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "way/1172699732/entrance/1",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.771094098,
+          1.292030004
+        ]
+      },
+      "properties": {
+        "id": "way/1172699732/entrance/1",
+        "building_id": "way/1172699732",
+        "source": "inferred",
+        "road_node_id": "node/7926857934",
+        "connected": true,
+        "illustrative": true,
+        "feature_id": "way/1172699732/entrance/1",
+        "category": "entrance"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "way/1172699733/entrance/1",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.7711248,
+          1.292030004
+        ]
+      },
+      "properties": {
+        "id": "way/1172699733/entrance/1",
+        "building_id": "way/1172699733",
+        "source": "inferred",
+        "road_node_id": "node/7926857934",
+        "connected": true,
+        "illustrative": true,
+        "feature_id": "way/1172699733/entrance/1",
+        "category": "entrance"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "way/1172699734/entrance/1",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.771236101,
+          1.2920229
+        ]
+      },
+      "properties": {
+        "id": "way/1172699734/entrance/1",
+        "building_id": "way/1172699734",
+        "source": "inferred",
+        "road_node_id": "node/7926857935",
+        "connected": true,
+        "illustrative": true,
+        "feature_id": "way/1172699734/entrance/1",
+        "category": "entrance"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "way/1172699735/entrance/1",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.771266803,
+          1.2920229
+        ]
+      },
+      "properties": {
+        "id": "way/1172699735/entrance/1",
+        "building_id": "way/1172699735",
+        "source": "inferred",
+        "road_node_id": "node/7926857935",
+        "connected": true,
+        "illustrative": true,
+        "feature_id": "way/1172699735/entrance/1",
+        "category": "entrance"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "way/1172699736/entrance/1",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.7713768,
+          1.292026497
+        ]
+      },
+      "properties": {
+        "id": "way/1172699736/entrance/1",
+        "building_id": "way/1172699736",
+        "source": "inferred",
+        "road_node_id": "node/7926857935",
+        "connected": true,
+        "illustrative": true,
+        "feature_id": "way/1172699736/entrance/1",
+        "category": "entrance"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "way/1172699737/entrance/1",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.7714308,
+          1.291995596
+        ]
+      },
+      "properties": {
+        "id": "way/1172699737/entrance/1",
+        "building_id": "way/1172699737",
+        "source": "inferred",
+        "road_node_id": "clip/849638870/1/start",
+        "connected": true,
+        "illustrative": true,
+        "feature_id": "way/1172699737/entrance/1",
+        "category": "entrance"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "way/1172699745/entrance/1",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.772783461,
+          1.291984835
+        ]
+      },
+      "properties": {
+        "id": "way/1172699745/entrance/1",
+        "building_id": "way/1172699745",
+        "source": "inferred",
+        "road_node_id": "clip/1137972623/0/start",
+        "connected": true,
+        "illustrative": true,
+        "feature_id": "way/1172699745/entrance/1",
+        "category": "entrance"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "way/1173229006/entrance/1",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.775662798,
+          1.2999353
+        ]
+      },
+      "properties": {
+        "id": "way/1173229006/entrance/1",
+        "building_id": "way/1173229006",
+        "source": "inferred",
+        "road_node_id": "clip/1186359917/1/start",
+        "connected": true,
+        "illustrative": true,
+        "feature_id": "way/1173229006/entrance/1",
+        "category": "entrance"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "way/1202236080/entrance/1",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.772739996,
+          1.296269104
+        ]
+      },
+      "properties": {
+        "id": "way/1202236080/entrance/1",
+        "building_id": "way/1202236080",
+        "source": "inferred",
+        "road_node_id": "node/11922057708",
+        "connected": true,
+        "illustrative": true,
+        "feature_id": "way/1202236080/entrance/1",
+        "category": "entrance"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "way/1204930619/entrance/1",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.774548696,
+          1.294063404
+        ]
+      },
+      "properties": {
+        "id": "way/1204930619/entrance/1",
+        "building_id": "way/1204930619",
+        "source": "inferred",
+        "road_node_id": "node/11210344250",
+        "connected": true,
+        "illustrative": true,
+        "feature_id": "way/1204930619/entrance/1",
+        "category": "entrance"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "way/1204930620/entrance/1",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.774395304,
+          1.293907704
+        ]
+      },
+      "properties": {
+        "id": "way/1204930620/entrance/1",
+        "building_id": "way/1204930620",
+        "source": "inferred",
+        "road_node_id": "node/11917597332",
+        "connected": true,
+        "illustrative": true,
+        "feature_id": "way/1204930620/entrance/1",
+        "category": "entrance"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "way/1204930621/entrance/1",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.775383622,
+          1.295469699
+        ]
+      },
+      "properties": {
+        "id": "way/1204930621/entrance/1",
+        "building_id": "way/1204930621",
+        "source": "inferred",
+        "road_node_id": "node/1601425572",
+        "connected": true,
+        "illustrative": true,
+        "feature_id": "way/1204930621/entrance/1",
+        "category": "entrance"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "way/1204930622/entrance/1",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.774773997,
+          1.295742399
+        ]
+      },
+      "properties": {
+        "id": "way/1204930622/entrance/1",
+        "building_id": "way/1204930622",
+        "source": "inferred",
+        "road_node_id": "node/1601425592",
+        "connected": true,
+        "illustrative": true,
+        "feature_id": "way/1204930622/entrance/1",
+        "category": "entrance"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "way/1218014079/entrance/1",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.773452701,
+          1.294958101
+        ]
+      },
+      "properties": {
+        "id": "way/1218014079/entrance/1",
+        "building_id": "way/1218014079",
+        "source": "inferred",
+        "road_node_id": "node/10708150708",
+        "connected": true,
+        "illustrative": true,
+        "feature_id": "way/1218014079/entrance/1",
+        "category": "entrance"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "way/1218014080/entrance/1",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.773245776,
+          1.295073684
+        ]
+      },
+      "properties": {
+        "id": "way/1218014080/entrance/1",
+        "building_id": "way/1218014080",
+        "source": "inferred",
+        "road_node_id": "node/1854376571",
+        "connected": true,
+        "illustrative": true,
+        "feature_id": "way/1218014080/entrance/1",
+        "category": "entrance"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "way/1218014082/entrance/1",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.773452656,
+          1.294958115
+        ]
+      },
+      "properties": {
+        "id": "way/1218014082/entrance/1",
+        "building_id": "way/1218014082",
+        "source": "inferred",
+        "road_node_id": "node/10708150708",
+        "connected": true,
+        "illustrative": true,
+        "feature_id": "way/1218014082/entrance/1",
+        "category": "entrance"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "way/1317064106/entrance/1",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.775297202,
+          1.294850597
+        ]
+      },
+      "properties": {
+        "id": "way/1317064106/entrance/1",
+        "building_id": "way/1317064106",
+        "source": "inferred",
+        "road_node_id": "node/976478175",
+        "connected": true,
+        "illustrative": true,
+        "feature_id": "way/1317064106/entrance/1",
+        "category": "entrance"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "way/139957953/entrance/1",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.772058113,
+          1.299440222
+        ]
+      },
+      "properties": {
+        "id": "way/139957953/entrance/1",
+        "building_id": "way/139957953",
+        "source": "inferred",
+        "road_node_id": "node/11919923188",
+        "connected": true,
+        "illustrative": true,
+        "feature_id": "way/139957953/entrance/1",
+        "category": "entrance"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "way/139959760/entrance/1",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.773309997,
+          1.298949303
+        ]
+      },
+      "properties": {
+        "id": "way/139959760/entrance/1",
+        "building_id": "way/139959760",
+        "source": "inferred",
+        "road_node_id": "node/10821049769",
+        "connected": true,
+        "illustrative": true,
+        "feature_id": "way/139959760/entrance/1",
+        "category": "entrance"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "way/139959807/entrance/1",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.772377078,
+          1.29905875
+        ]
+      },
+      "properties": {
+        "id": "way/139959807/entrance/1",
+        "building_id": "way/139959807",
+        "source": "inferred",
+        "road_node_id": "node/11919950669",
+        "connected": true,
+        "illustrative": true,
+        "feature_id": "way/139959807/entrance/1",
+        "category": "entrance"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "way/139960333/entrance/1",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.772775736,
+          1.298464054
+        ]
+      },
+      "properties": {
+        "id": "way/139960333/entrance/1",
+        "building_id": "way/139960333",
+        "source": "inferred",
+        "road_node_id": "node/11919923181",
+        "connected": true,
+        "illustrative": true,
+        "feature_id": "way/139960333/entrance/1",
+        "category": "entrance"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "way/139960627/entrance/1",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.771852599,
+          1.298812301
+        ]
+      },
+      "properties": {
+        "id": "way/139960627/entrance/1",
+        "building_id": "way/139960627",
+        "source": "inferred",
+        "road_node_id": "node/11918099320",
+        "connected": true,
+        "illustrative": true,
+        "feature_id": "way/139960627/entrance/1",
+        "category": "entrance"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "way/139970613/entrance/1",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.772674679,
+          1.298195696
+        ]
+      },
+      "properties": {
+        "id": "way/139970613/entrance/1",
+        "building_id": "way/139970613",
+        "source": "inferred",
+        "road_node_id": "node/11918099316",
+        "connected": true,
+        "illustrative": true,
+        "feature_id": "way/139970613/entrance/1",
+        "category": "entrance"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "way/139971771/entrance/1",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.771641095,
+          1.299230734
+        ]
+      },
+      "properties": {
+        "id": "way/139971771/entrance/1",
+        "building_id": "way/139971771",
+        "source": "inferred",
+        "road_node_id": "node/11919923184",
+        "connected": true,
+        "illustrative": true,
+        "feature_id": "way/139971771/entrance/1",
+        "category": "entrance"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "way/139972031/entrance/1",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.771022982,
+          1.299974085
+        ]
+      },
+      "properties": {
+        "id": "way/139972031/entrance/1",
+        "building_id": "way/139972031",
+        "source": "inferred",
+        "road_node_id": "clip/1284673682/2/start",
+        "connected": true,
+        "illustrative": true,
+        "feature_id": "way/139972031/entrance/1",
+        "category": "entrance"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "way/139974326/entrance/1",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.771265905,
+          1.299444984
+        ]
+      },
+      "properties": {
+        "id": "way/139974326/entrance/1",
+        "building_id": "way/139974326",
+        "source": "inferred",
+        "road_node_id": "node/11920135895",
+        "connected": true,
+        "illustrative": true,
+        "feature_id": "way/139974326/entrance/1",
+        "category": "entrance"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "way/139974364/entrance/1",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.771452724,
+          1.299222166
+        ]
+      },
+      "properties": {
+        "id": "way/139974364/entrance/1",
+        "building_id": "way/139974364",
+        "source": "inferred",
+        "road_node_id": "node/11920135893",
+        "connected": true,
+        "illustrative": true,
+        "feature_id": "way/139974364/entrance/1",
+        "category": "entrance"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "way/139974570/entrance/1",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.771121382,
+          1.299653224
+        ]
+      },
+      "properties": {
+        "id": "way/139974570/entrance/1",
+        "building_id": "way/139974570",
+        "source": "inferred",
+        "road_node_id": "node/11918099332",
+        "connected": true,
+        "illustrative": true,
+        "feature_id": "way/139974570/entrance/1",
+        "category": "entrance"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "way/139974600/entrance/1",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.771262408,
+          1.299701385
+        ]
+      },
+      "properties": {
+        "id": "way/139974600/entrance/1",
+        "building_id": "way/139974600",
+        "source": "inferred",
+        "road_node_id": "node/11920135900",
+        "connected": true,
+        "illustrative": true,
+        "feature_id": "way/139974600/entrance/1",
+        "category": "entrance"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "way/139974601/entrance/1",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.771455978,
+          1.299151879
+        ]
+      },
+      "properties": {
+        "id": "way/139974601/entrance/1",
+        "building_id": "way/139974601",
+        "source": "inferred",
+        "road_node_id": "node/11920135893",
+        "connected": true,
+        "illustrative": true,
+        "feature_id": "way/139974601/entrance/1",
+        "category": "entrance"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "way/139974638/entrance/1",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.772330567,
+          1.298672373
+        ]
+      },
+      "properties": {
+        "id": "way/139974638/entrance/1",
+        "building_id": "way/139974638",
+        "source": "inferred",
+        "road_node_id": "node/11919923182",
+        "connected": true,
+        "illustrative": true,
+        "feature_id": "way/139974638/entrance/1",
+        "category": "entrance"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "way/139974766/entrance/1",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.772623697,
+          1.298015033
+        ]
+      },
+      "properties": {
+        "id": "way/139974766/entrance/1",
+        "building_id": "way/139974766",
+        "source": "inferred",
+        "road_node_id": "node/11918099317",
+        "connected": true,
+        "illustrative": true,
+        "feature_id": "way/139974766/entrance/1",
+        "category": "entrance"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "way/139976284/entrance/1",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.771354823,
+          1.298491915
+        ]
+      },
+      "properties": {
+        "id": "way/139976284/entrance/1",
+        "building_id": "way/139976284",
+        "source": "inferred",
+        "road_node_id": "node/11919950676",
+        "connected": true,
+        "illustrative": true,
+        "feature_id": "way/139976284/entrance/1",
+        "category": "entrance"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "way/139976357/entrance/1",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.770997783,
+          1.299180516
+        ]
+      },
+      "properties": {
+        "id": "way/139976357/entrance/1",
+        "building_id": "way/139976357",
+        "source": "inferred",
+        "road_node_id": "clip/1284673680/5/end",
+        "connected": true,
+        "illustrative": true,
+        "feature_id": "way/139976357/entrance/1",
+        "category": "entrance"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "way/139978177/entrance/1",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.771165911,
+          1.299572999
+        ]
+      },
+      "properties": {
+        "id": "way/139978177/entrance/1",
+        "building_id": "way/139978177",
+        "source": "inferred",
+        "road_node_id": "node/11918099332",
+        "connected": true,
+        "illustrative": true,
+        "feature_id": "way/139978177/entrance/1",
+        "category": "entrance"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "way/139978478/entrance/1",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.771898567,
+          1.29936173
+        ]
+      },
+      "properties": {
+        "id": "way/139978478/entrance/1",
+        "building_id": "way/139978478",
+        "source": "inferred",
+        "road_node_id": "node/11919923185",
+        "connected": true,
+        "illustrative": true,
+        "feature_id": "way/139978478/entrance/1",
+        "category": "entrance"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "way/139979121/entrance/1",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.771124883,
+          1.299954174
+        ]
+      },
+      "properties": {
+        "id": "way/139979121/entrance/1",
+        "building_id": "way/139979121",
+        "source": "inferred",
+        "road_node_id": "clip/1284914286/1/start",
+        "connected": true,
+        "illustrative": true,
+        "feature_id": "way/139979121/entrance/1",
+        "category": "entrance"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "way/139979122/entrance/1",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.771034912,
+          1.299940596
+        ]
+      },
+      "properties": {
+        "id": "way/139979122/entrance/1",
+        "building_id": "way/139979122",
+        "source": "inferred",
+        "road_node_id": "clip/1284673682/2/start",
+        "connected": true,
+        "illustrative": true,
+        "feature_id": "way/139979122/entrance/1",
+        "category": "entrance"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "way/139979137/entrance/1",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.771348774,
+          1.298428683
+        ]
+      },
+      "properties": {
+        "id": "way/139979137/entrance/1",
+        "building_id": "way/139979137",
+        "source": "inferred",
+        "road_node_id": "node/11919950676",
+        "connected": true,
+        "illustrative": true,
+        "feature_id": "way/139979137/entrance/1",
+        "category": "entrance"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "way/139979278/entrance/1",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.771354823,
+          1.298491915
+        ]
+      },
+      "properties": {
+        "id": "way/139979278/entrance/1",
+        "building_id": "way/139979278",
+        "source": "inferred",
+        "road_node_id": "node/11919950676",
+        "connected": true,
+        "illustrative": true,
+        "feature_id": "way/139979278/entrance/1",
+        "category": "entrance"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "way/139979294/entrance/1",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.772537804,
+          1.297867798
+        ]
+      },
+      "properties": {
+        "id": "way/139979294/entrance/1",
+        "building_id": "way/139979294",
+        "source": "inferred",
+        "road_node_id": "node/11918099317",
+        "connected": true,
+        "illustrative": true,
+        "feature_id": "way/139979294/entrance/1",
+        "category": "entrance"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "way/140074798/entrance/1",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.772114011,
+          1.29822902
+        ]
+      },
+      "properties": {
+        "id": "way/140074798/entrance/1",
+        "building_id": "way/140074798",
+        "source": "inferred",
+        "road_node_id": "node/11918099319",
+        "connected": true,
+        "illustrative": true,
+        "feature_id": "way/140074798/entrance/1",
+        "category": "entrance"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "way/140075155/entrance/1",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.771124701,
+          1.298977596
+        ]
+      },
+      "properties": {
+        "id": "way/140075155/entrance/1",
+        "building_id": "way/140075155",
+        "source": "inferred",
+        "road_node_id": "node/11918099323",
+        "connected": true,
+        "illustrative": true,
+        "feature_id": "way/140075155/entrance/1",
+        "category": "entrance"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "way/140075400/entrance/1",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.771047336,
+          1.299072654
+        ]
+      },
+      "properties": {
+        "id": "way/140075400/entrance/1",
+        "building_id": "way/140075400",
+        "source": "inferred",
+        "road_node_id": "node/11918099323",
+        "connected": true,
+        "illustrative": true,
+        "feature_id": "way/140075400/entrance/1",
+        "category": "entrance"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "way/140078560/entrance/1",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.771040069,
+          1.296985421
+        ]
+      },
+      "properties": {
+        "id": "way/140078560/entrance/1",
+        "building_id": "way/140078560",
+        "source": "inferred",
+        "road_node_id": "node/687603472",
+        "connected": true,
+        "illustrative": true,
+        "feature_id": "way/140078560/entrance/1",
+        "category": "entrance"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "way/140079527/entrance/1",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.770998602,
+          1.297563801
+        ]
+      },
+      "properties": {
+        "id": "way/140079527/entrance/1",
+        "building_id": "way/140079527",
+        "source": "inferred",
+        "road_node_id": "clip/142222373/2/start",
+        "connected": true,
+        "illustrative": true,
+        "feature_id": "way/140079527/entrance/1",
+        "category": "entrance"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "way/140084916/entrance/1",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.771624302,
+          1.297167399
+        ]
+      },
+      "properties": {
+        "id": "way/140084916/entrance/1",
+        "building_id": "way/140084916",
+        "source": "inferred",
+        "road_node_id": "node/1534828468",
+        "connected": true,
+        "illustrative": true,
+        "feature_id": "way/140084916/entrance/1",
+        "category": "entrance"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "way/140087160/entrance/1",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.774291802,
+          1.292596099
+        ]
+      },
+      "properties": {
+        "id": "way/140087160/entrance/1",
+        "building_id": "way/140087160",
+        "source": "inferred",
+        "road_node_id": "node/10701624942",
+        "connected": true,
+        "illustrative": true,
+        "feature_id": "way/140087160/entrance/1",
+        "category": "entrance"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "way/140087193/entrance/1",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.772296599,
+          1.294463196
+        ]
+      },
+      "properties": {
+        "id": "way/140087193/entrance/1",
+        "building_id": "way/140087193",
+        "source": "inferred",
+        "road_node_id": "node/1534833662",
+        "connected": true,
+        "illustrative": true,
+        "feature_id": "way/140087193/entrance/1",
+        "category": "entrance"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "way/140087374/entrance/1",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.773548393,
+          1.296784299
+        ]
+      },
+      "properties": {
+        "id": "way/140087374/entrance/1",
+        "building_id": "way/140087374",
+        "source": "inferred",
+        "road_node_id": "node/1601399487",
+        "connected": true,
+        "illustrative": true,
+        "feature_id": "way/140087374/entrance/1",
+        "category": "entrance"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "way/140087398/entrance/1",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.773794688,
+          1.297209794
+        ]
+      },
+      "properties": {
+        "id": "way/140087398/entrance/1",
+        "building_id": "way/140087398",
+        "source": "inferred",
+        "road_node_id": "node/10861645377",
+        "connected": true,
+        "illustrative": true,
+        "feature_id": "way/140087398/entrance/1",
+        "category": "entrance"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "way/140087580/entrance/1",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.777993902,
+          1.296677899
+        ]
+      },
+      "properties": {
+        "id": "way/140087580/entrance/1",
+        "building_id": "way/140087580",
+        "source": "inferred",
+        "road_node_id": "node/7933040695",
+        "connected": true,
+        "illustrative": true,
+        "feature_id": "way/140087580/entrance/1",
+        "category": "entrance"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "way/140087584/entrance/1",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.777246303,
+          1.296997598
+        ]
+      },
+      "properties": {
+        "id": "way/140087584/entrance/1",
+        "building_id": "way/140087584",
+        "source": "inferred",
+        "road_node_id": "node/4552263657",
+        "connected": true,
+        "illustrative": true,
+        "feature_id": "way/140087584/entrance/1",
+        "category": "entrance"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "way/140087835/entrance/1",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.773320098,
+          1.297522298
+        ]
+      },
+      "properties": {
+        "id": "way/140087835/entrance/1",
+        "building_id": "way/140087835",
+        "source": "inferred",
+        "road_node_id": "node/1556606132",
+        "connected": true,
+        "illustrative": true,
+        "feature_id": "way/140087835/entrance/1",
+        "category": "entrance"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "way/140087837/entrance/1",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.773445238,
+          1.297537592
+        ]
+      },
+      "properties": {
+        "id": "way/140087837/entrance/1",
+        "building_id": "way/140087837",
+        "source": "inferred",
+        "road_node_id": "node/1601429851",
+        "connected": true,
+        "illustrative": true,
+        "feature_id": "way/140087837/entrance/1",
+        "category": "entrance"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "way/141905202/entrance/1",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.77896663,
+          1.296861811
+        ]
+      },
+      "properties": {
+        "id": "way/141905202/entrance/1",
+        "building_id": "way/141905202",
+        "source": "inferred",
+        "road_node_id": "clip/1284673688/6/start",
+        "connected": true,
+        "illustrative": true,
+        "feature_id": "way/141905202/entrance/1",
+        "category": "entrance"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "way/141905252/entrance/1",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.778754742,
+          1.296472722
+        ]
+      },
+      "properties": {
+        "id": "way/141905252/entrance/1",
+        "building_id": "way/141905252",
+        "source": "inferred",
+        "road_node_id": "node/11918099344",
+        "connected": true,
+        "illustrative": true,
+        "feature_id": "way/141905252/entrance/1",
+        "category": "entrance"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "way/141905403/entrance/1",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.779019891,
+          1.29684059
+        ]
+      },
+      "properties": {
+        "id": "way/141905403/entrance/1",
+        "building_id": "way/141905403",
+        "source": "inferred",
+        "road_node_id": "clip/1284673688/6/start",
+        "connected": true,
+        "illustrative": true,
+        "feature_id": "way/141905403/entrance/1",
+        "category": "entrance"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "way/141905434/entrance/1",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.778754742,
+          1.296472722
+        ]
+      },
+      "properties": {
+        "id": "way/141905434/entrance/1",
+        "building_id": "way/141905434",
+        "source": "inferred",
+        "road_node_id": "node/11918099344",
+        "connected": true,
+        "illustrative": true,
+        "feature_id": "way/141905434/entrance/1",
+        "category": "entrance"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "way/141905556/entrance/1",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.778465698,
+          1.295872297
+        ]
+      },
+      "properties": {
+        "id": "way/141905556/entrance/1",
+        "building_id": "way/141905556",
+        "source": "inferred",
+        "road_node_id": "node/12058993792",
+        "connected": true,
+        "illustrative": true,
+        "feature_id": "way/141905556/entrance/1",
+        "category": "entrance"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "way/141905781/entrance/1",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.777901361,
+          1.295631121
+        ]
+      },
+      "properties": {
+        "id": "way/141905781/entrance/1",
+        "building_id": "way/141905781",
+        "source": "inferred",
+        "road_node_id": "node/11918099357",
+        "connected": true,
+        "illustrative": true,
+        "feature_id": "way/141905781/entrance/1",
+        "category": "entrance"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "way/141905796/entrance/1",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.778351759,
+          1.295487102
+        ]
+      },
+      "properties": {
+        "id": "way/141905796/entrance/1",
+        "building_id": "way/141905796",
+        "source": "inferred",
+        "road_node_id": "node/11918099356",
+        "connected": true,
+        "illustrative": true,
+        "feature_id": "way/141905796/entrance/1",
+        "category": "entrance"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "way/141905799/entrance/1",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.778951768,
+          1.295677233
+        ]
+      },
+      "properties": {
+        "id": "way/141905799/entrance/1",
+        "building_id": "way/141905799",
+        "source": "inferred",
+        "road_node_id": "node/11918099355",
+        "connected": true,
+        "illustrative": true,
+        "feature_id": "way/141905799/entrance/1",
+        "category": "entrance"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "way/141905825/entrance/1",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.778790525,
+          1.295718025
+        ]
+      },
+      "properties": {
+        "id": "way/141905825/entrance/1",
+        "building_id": "way/141905825",
+        "source": "inferred",
+        "road_node_id": "node/11919923217",
+        "connected": true,
+        "illustrative": true,
+        "feature_id": "way/141905825/entrance/1",
+        "category": "entrance"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "way/141905829/entrance/1",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.778951768,
+          1.295677233
+        ]
+      },
+      "properties": {
+        "id": "way/141905829/entrance/1",
+        "building_id": "way/141905829",
+        "source": "inferred",
+        "road_node_id": "node/11918099355",
+        "connected": true,
+        "illustrative": true,
+        "feature_id": "way/141905829/entrance/1",
+        "category": "entrance"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "way/141905922/entrance/1",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.779049596,
+          1.295954297
+        ]
+      },
+      "properties": {
+        "id": "way/141905922/entrance/1",
+        "building_id": "way/141905922",
+        "source": "inferred",
+        "road_node_id": "clip/540531842/2/end",
+        "connected": true,
+        "illustrative": true,
+        "feature_id": "way/141905922/entrance/1",
+        "category": "entrance"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "way/142076923/entrance/1",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.77135919,
+          1.295337293
+        ]
+      },
+      "properties": {
+        "id": "way/142076923/entrance/1",
+        "building_id": "way/142076923",
+        "source": "inferred",
+        "road_node_id": "node/11917597342",
+        "connected": true,
+        "illustrative": true,
+        "feature_id": "way/142076923/entrance/1",
+        "category": "entrance"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "way/142077129/entrance/1",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.77109754,
+          1.295164262
+        ]
+      },
+      "properties": {
+        "id": "way/142077129/entrance/1",
+        "building_id": "way/142077129",
+        "source": "inferred",
+        "road_node_id": "node/11918099306",
+        "connected": true,
+        "illustrative": true,
+        "feature_id": "way/142077129/entrance/1",
+        "category": "entrance"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "way/142077688/entrance/1",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.771783325,
+          1.29519133
+        ]
+      },
+      "properties": {
+        "id": "way/142077688/entrance/1",
+        "building_id": "way/142077688",
+        "source": "inferred",
+        "road_node_id": "node/11277450490",
+        "connected": true,
+        "illustrative": true,
+        "feature_id": "way/142077688/entrance/1",
+        "category": "entrance"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "way/142077734/entrance/1",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.770994104,
+          1.294967904
+        ]
+      },
+      "properties": {
+        "id": "way/142077734/entrance/1",
+        "building_id": "way/142077734",
+        "source": "inferred",
+        "road_node_id": "clip/1284673671/3/start",
+        "connected": true,
+        "illustrative": true,
+        "feature_id": "way/142077734/entrance/1",
+        "category": "entrance"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "way/142077784/entrance/1",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.771049003,
+          1.294941797
+        ]
+      },
+      "properties": {
+        "id": "way/142077784/entrance/1",
+        "building_id": "way/142077784",
+        "source": "inferred",
+        "road_node_id": "clip/1284673671/3/start",
+        "connected": true,
+        "illustrative": true,
+        "feature_id": "way/142077784/entrance/1",
+        "category": "entrance"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "way/142077984/entrance/1",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.771266074,
+          1.294591059
+        ]
+      },
+      "properties": {
+        "id": "way/142077984/entrance/1",
+        "building_id": "way/142077984",
+        "source": "inferred",
+        "road_node_id": "node/10736453196",
+        "connected": true,
+        "illustrative": true,
+        "feature_id": "way/142077984/entrance/1",
+        "category": "entrance"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "way/142078204/entrance/1",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.7713193,
+          1.295084501
+        ]
+      },
+      "properties": {
+        "id": "way/142078204/entrance/1",
+        "building_id": "way/142078204",
+        "source": "inferred",
+        "road_node_id": "node/11917597341",
+        "connected": true,
+        "illustrative": true,
+        "feature_id": "way/142078204/entrance/1",
+        "category": "entrance"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "way/142078205/entrance/1",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.77109754,
+          1.295164262
+        ]
+      },
+      "properties": {
+        "id": "way/142078205/entrance/1",
+        "building_id": "way/142078205",
+        "source": "inferred",
+        "road_node_id": "node/11918099306",
+        "connected": true,
+        "illustrative": true,
+        "feature_id": "way/142078205/entrance/1",
+        "category": "entrance"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "way/142078389/entrance/1",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.771782689,
+          1.294458792
+        ]
+      },
+      "properties": {
+        "id": "way/142078389/entrance/1",
+        "building_id": "way/142078389",
+        "source": "inferred",
+        "road_node_id": "node/10581123915",
+        "connected": true,
+        "illustrative": true,
+        "feature_id": "way/142078389/entrance/1",
+        "category": "entrance"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "way/142078390/entrance/1",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.771569996,
+          1.294888899
+        ]
+      },
+      "properties": {
+        "id": "way/142078390/entrance/1",
+        "building_id": "way/142078390",
+        "source": "inferred",
+        "road_node_id": "node/11918099302",
+        "connected": true,
+        "illustrative": true,
+        "feature_id": "way/142078390/entrance/1",
+        "category": "entrance"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "way/142078782/entrance/1",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.772126602,
+          1.294975899
+        ]
+      },
+      "properties": {
+        "id": "way/142078782/entrance/1",
+        "building_id": "way/142078782",
+        "source": "inferred",
+        "road_node_id": "node/11917597348",
+        "connected": true,
+        "illustrative": true,
+        "feature_id": "way/142078782/entrance/1",
+        "category": "entrance"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "way/142078783/entrance/1",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.772080559,
+          1.294893915
+        ]
+      },
+      "properties": {
+        "id": "way/142078783/entrance/1",
+        "building_id": "way/142078783",
+        "source": "inferred",
+        "road_node_id": "node/11917597349",
+        "connected": true,
+        "illustrative": true,
+        "feature_id": "way/142078783/entrance/1",
+        "category": "entrance"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "way/142079009/entrance/1",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.772061866,
+          1.29505345
+        ]
+      },
+      "properties": {
+        "id": "way/142079009/entrance/1",
+        "building_id": "way/142079009",
+        "source": "inferred",
+        "road_node_id": "node/11917597347",
+        "connected": true,
+        "illustrative": true,
+        "feature_id": "way/142079009/entrance/1",
+        "category": "entrance"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "way/142079010/entrance/1",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.772303343,
+          1.295170447
+        ]
+      },
+      "properties": {
+        "id": "way/142079010/entrance/1",
+        "building_id": "way/142079010",
+        "source": "inferred",
+        "road_node_id": "node/11918099294",
+        "connected": true,
+        "illustrative": true,
+        "feature_id": "way/142079010/entrance/1",
+        "category": "entrance"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "way/142079254/entrance/1",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.773071447,
+          1.296050404
+        ]
+      },
+      "properties": {
+        "id": "way/142079254/entrance/1",
+        "building_id": "way/142079254",
+        "source": "inferred",
+        "road_node_id": "node/11137518249",
+        "connected": true,
+        "illustrative": true,
+        "feature_id": "way/142079254/entrance/1",
+        "category": "entrance"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "way/142079318/entrance/1",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.773335777,
+          1.295562539
+        ]
+      },
+      "properties": {
+        "id": "way/142079318/entrance/1",
+        "building_id": "way/142079318",
+        "source": "inferred",
+        "road_node_id": "node/5936493263",
+        "connected": true,
+        "illustrative": true,
+        "feature_id": "way/142079318/entrance/1",
+        "category": "entrance"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "way/142079319/entrance/1",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.773455004,
+          1.295680903
+        ]
+      },
+      "properties": {
+        "id": "way/142079319/entrance/1",
+        "building_id": "way/142079319",
+        "source": "inferred",
+        "road_node_id": "node/5936493264",
+        "connected": true,
+        "illustrative": true,
+        "feature_id": "way/142079319/entrance/1",
+        "category": "entrance"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "way/142079835/entrance/1",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.77101191,
+          1.294034463
+        ]
+      },
+      "properties": {
+        "id": "way/142079835/entrance/1",
+        "building_id": "way/142079835",
+        "source": "inferred",
+        "road_node_id": "clip/161640810/13/start",
+        "connected": true,
+        "illustrative": true,
+        "feature_id": "way/142079835/entrance/1",
+        "category": "entrance"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "way/142079836/entrance/1",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.771333257,
+          1.294626712
+        ]
+      },
+      "properties": {
+        "id": "way/142079836/entrance/1",
+        "building_id": "way/142079836",
+        "source": "inferred",
+        "road_node_id": "node/11918099303",
+        "connected": true,
+        "illustrative": true,
+        "feature_id": "way/142079836/entrance/1",
+        "category": "entrance"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "way/142079837/entrance/1",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.773323598,
+          1.295586996
+        ]
+      },
+      "properties": {
+        "id": "way/142079837/entrance/1",
+        "building_id": "way/142079837",
+        "source": "inferred",
+        "road_node_id": "node/5936493263",
+        "connected": true,
+        "illustrative": true,
+        "feature_id": "way/142079837/entrance/1",
+        "category": "entrance"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "way/142079840/entrance/1",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.771643104,
+          1.294774442
+        ]
+      },
+      "properties": {
+        "id": "way/142079840/entrance/1",
+        "building_id": "way/142079840",
+        "source": "inferred",
+        "road_node_id": "node/11918099302",
+        "connected": true,
+        "illustrative": true,
+        "feature_id": "way/142079840/entrance/1",
+        "category": "entrance"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "way/142079842/entrance/1",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.771859103,
+          1.294955197
+        ]
+      },
+      "properties": {
+        "id": "way/142079842/entrance/1",
+        "building_id": "way/142079842",
+        "source": "inferred",
+        "road_node_id": "node/11917597344",
+        "connected": true,
+        "illustrative": true,
+        "feature_id": "way/142079842/entrance/1",
+        "category": "entrance"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "way/142080062/entrance/1",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.771782689,
+          1.294458792
+        ]
+      },
+      "properties": {
+        "id": "way/142080062/entrance/1",
+        "building_id": "way/142080062",
+        "source": "inferred",
+        "road_node_id": "node/10581123915",
+        "connected": true,
+        "illustrative": true,
+        "feature_id": "way/142080062/entrance/1",
+        "category": "entrance"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "way/142080063/entrance/1",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.771982503,
+          1.294011899
+        ]
+      },
+      "properties": {
+        "id": "way/142080063/entrance/1",
+        "building_id": "way/142080063",
+        "source": "inferred",
+        "road_node_id": "node/1554961024",
+        "connected": true,
+        "illustrative": true,
+        "feature_id": "way/142080063/entrance/1",
+        "category": "entrance"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "way/142080252/entrance/1",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.773771799,
+          1.293070302
+        ]
+      },
+      "properties": {
+        "id": "way/142080252/entrance/1",
+        "building_id": "way/142080252",
+        "source": "inferred",
+        "road_node_id": "node/1555039403",
+        "connected": true,
+        "illustrative": true,
+        "feature_id": "way/142080252/entrance/1",
+        "category": "entrance"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "way/142082467/entrance/1",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.773919742,
+          1.293956504
+        ]
+      },
+      "properties": {
+        "id": "way/142082467/entrance/1",
+        "building_id": "way/142082467",
+        "source": "inferred",
+        "road_node_id": "node/11917386229",
+        "connected": true,
+        "illustrative": true,
+        "feature_id": "way/142082467/entrance/1",
+        "category": "entrance"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "way/142082470/entrance/1",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.774067896,
+          1.293638168
+        ]
+      },
+      "properties": {
+        "id": "way/142082470/entrance/1",
+        "building_id": "way/142082470",
+        "source": "inferred",
+        "road_node_id": "node/11917386227",
+        "connected": true,
+        "illustrative": true,
+        "feature_id": "way/142082470/entrance/1",
+        "category": "entrance"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "way/142083506/entrance/1",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.774706396,
+          1.293242801
+        ]
+      },
+      "properties": {
+        "id": "way/142083506/entrance/1",
+        "building_id": "way/142083506",
+        "source": "inferred",
+        "road_node_id": "node/1554993847",
+        "connected": true,
+        "illustrative": true,
+        "feature_id": "way/142083506/entrance/1",
+        "category": "entrance"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "way/142083508/entrance/1",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.774368102,
+          1.293394399
+        ]
+      },
+      "properties": {
+        "id": "way/142083508/entrance/1",
+        "building_id": "way/142083508",
+        "source": "inferred",
+        "road_node_id": "node/13136654597",
+        "connected": true,
+        "illustrative": true,
+        "feature_id": "way/142083508/entrance/1",
+        "category": "entrance"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "way/142083509/entrance/1",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.774312807,
+          1.293752001
+        ]
+      },
+      "properties": {
+        "id": "way/142083509/entrance/1",
+        "building_id": "way/142083509",
+        "source": "inferred",
+        "road_node_id": "node/11917386226",
+        "connected": true,
+        "illustrative": true,
+        "feature_id": "way/142083509/entrance/1",
+        "category": "entrance"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "way/142083842/entrance/1",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.774228187,
+          1.293713222
+        ]
+      },
+      "properties": {
+        "id": "way/142083842/entrance/1",
+        "building_id": "way/142083842",
+        "source": "inferred",
+        "road_node_id": "node/11917386226",
+        "connected": true,
+        "illustrative": true,
+        "feature_id": "way/142083842/entrance/1",
+        "category": "entrance"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "way/142089841/entrance/1",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.776358402,
+          1.293888998
+        ]
+      },
+      "properties": {
+        "id": "way/142089841/entrance/1",
+        "building_id": "way/142089841",
+        "source": "inferred",
+        "road_node_id": "node/10595350812",
+        "connected": true,
+        "illustrative": true,
+        "feature_id": "way/142089841/entrance/1",
+        "category": "entrance"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "way/142221851/entrance/1",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.771461897,
+          1.292932301
+        ]
+      },
+      "properties": {
+        "id": "way/142221851/entrance/1",
+        "building_id": "way/142221851",
+        "source": "inferred",
+        "road_node_id": "node/1555047362",
+        "connected": true,
+        "illustrative": true,
+        "feature_id": "way/142221851/entrance/1",
+        "category": "entrance"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "way/142221852/entrance/1",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.771024302,
+          1.2929349
+        ]
+      },
+      "properties": {
+        "id": "way/142221852/entrance/1",
+        "building_id": "way/142221852",
+        "source": "inferred",
+        "road_node_id": "node/1556604971",
+        "connected": true,
+        "illustrative": true,
+        "feature_id": "way/142221852/entrance/1",
+        "category": "entrance"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "way/142221853/entrance/1",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.771672797,
+          1.292843601
+        ]
+      },
+      "properties": {
+        "id": "way/142221853/entrance/1",
+        "building_id": "way/142221853",
+        "source": "inferred",
+        "road_node_id": "node/1556605057",
+        "connected": true,
+        "illustrative": true,
+        "feature_id": "way/142221853/entrance/1",
+        "category": "entrance"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "way/142221858/entrance/1",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.771082296,
+          1.292618501
+        ]
+      },
+      "properties": {
+        "id": "way/142221858/entrance/1",
+        "building_id": "way/142221858",
+        "source": "inferred",
+        "road_node_id": "node/1556605022",
+        "connected": true,
+        "illustrative": true,
+        "feature_id": "way/142221858/entrance/1",
+        "category": "entrance"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "way/142221863/entrance/1",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.772307798,
+          1.292678001
+        ]
+      },
+      "properties": {
+        "id": "way/142221863/entrance/1",
+        "building_id": "way/142221863",
+        "source": "inferred",
+        "road_node_id": "node/1556605041",
+        "connected": true,
+        "illustrative": true,
+        "feature_id": "way/142221863/entrance/1",
+        "category": "entrance"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "way/1429049929/entrance/1",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.773752099,
+          1.294296202
+        ]
+      },
+      "properties": {
+        "id": "way/1429049929/entrance/1",
+        "building_id": "way/1429049929",
+        "source": "inferred",
+        "road_node_id": "node/10708035887",
+        "connected": true,
+        "illustrative": true,
+        "feature_id": "way/1429049929/entrance/1",
+        "category": "entrance"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "way/144351224/entrance/1",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.773240365,
+          1.297233843
+        ]
+      },
+      "properties": {
+        "id": "way/144351224/entrance/1",
+        "building_id": "way/144351224",
+        "source": "inferred",
+        "road_node_id": "node/1601399521",
+        "connected": true,
+        "illustrative": true,
+        "feature_id": "way/144351224/entrance/1",
+        "category": "entrance"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "way/1489773923/entrance/1",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.778078604,
+          1.292913258
+        ]
+      },
+      "properties": {
+        "id": "way/1489773923/entrance/1",
+        "building_id": "way/1489773923",
+        "source": "inferred",
+        "road_node_id": "node/13608618289",
+        "connected": true,
+        "illustrative": true,
+        "feature_id": "way/1489773923/entrance/1",
+        "category": "entrance"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "way/1489773924/entrance/1",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.777427104,
+          1.293263998
+        ]
+      },
+      "properties": {
+        "id": "way/1489773924/entrance/1",
+        "building_id": "way/1489773924",
+        "source": "inferred",
+        "road_node_id": "node/13608618291",
+        "connected": true,
+        "illustrative": true,
+        "feature_id": "way/1489773924/entrance/1",
+        "category": "entrance"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "way/1489773925/entrance/1",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.777763104,
+          1.293032998
+        ]
+      },
+      "properties": {
+        "id": "way/1489773925/entrance/1",
+        "building_id": "way/1489773925",
+        "source": "inferred",
+        "road_node_id": "node/13608618291",
+        "connected": true,
+        "illustrative": true,
+        "feature_id": "way/1489773925/entrance/1",
+        "category": "entrance"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "way/1552906214/entrance/1",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.777798897,
+          1.295350304
+        ]
+      },
+      "properties": {
+        "id": "way/1552906214/entrance/1",
+        "building_id": "way/1552906214",
+        "source": "inferred",
+        "road_node_id": "node/14128708228",
+        "connected": true,
+        "illustrative": true,
+        "feature_id": "way/1552906214/entrance/1",
+        "category": "entrance"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "way/1552906215/entrance/1",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.777827098,
+          1.295426701
+        ]
+      },
+      "properties": {
+        "id": "way/1552906215/entrance/1",
+        "building_id": "way/1552906215",
+        "source": "inferred",
+        "road_node_id": "node/11918099358",
+        "connected": true,
+        "illustrative": true,
+        "feature_id": "way/1552906215/entrance/1",
+        "category": "entrance"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "way/1552906216/entrance/1",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.777884103,
+          1.295549396
+        ]
+      },
+      "properties": {
+        "id": "way/1552906216/entrance/1",
+        "building_id": "way/1552906216",
+        "source": "inferred",
+        "road_node_id": "node/11918099357",
+        "connected": true,
+        "illustrative": true,
+        "feature_id": "way/1552906216/entrance/1",
+        "category": "entrance"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "way/161640802/entrance/1",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.778348298,
+          1.296352102
+        ]
+      },
+      "properties": {
+        "id": "way/161640802/entrance/1",
+        "building_id": "way/161640802",
+        "source": "inferred",
+        "road_node_id": "node/12189706385",
+        "connected": true,
+        "illustrative": true,
+        "feature_id": "way/161640802/entrance/1",
+        "category": "entrance"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "way/162903005/entrance/1",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.775414702,
+          1.293339604
+        ]
+      },
+      "properties": {
+        "id": "way/162903005/entrance/1",
+        "building_id": "way/162903005",
+        "source": "inferred",
+        "road_node_id": "node/1746994056",
+        "connected": true,
+        "illustrative": true,
+        "feature_id": "way/162903005/entrance/1",
+        "category": "entrance"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "way/163560567/entrance/1",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.774369001,
+          1.297466396
+        ]
+      },
+      "properties": {
+        "id": "way/163560567/entrance/1",
+        "building_id": "way/163560567",
+        "source": "inferred",
+        "road_node_id": "node/10703337512",
+        "connected": true,
+        "illustrative": true,
+        "feature_id": "way/163560567/entrance/1",
+        "category": "entrance"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "way/163560748/entrance/1",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.776906201,
+          1.295585998
+        ]
+      },
+      "properties": {
+        "id": "way/163560748/entrance/1",
+        "building_id": "way/163560748",
+        "source": "inferred",
+        "road_node_id": "node/9982818141",
+        "connected": true,
+        "illustrative": true,
+        "feature_id": "way/163560748/entrance/1",
+        "category": "entrance"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "way/241265453/entrance/1",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.773338998,
+          1.299992803
+        ]
+      },
+      "properties": {
+        "id": "way/241265453/entrance/1",
+        "building_id": "way/241265453",
+        "source": "inferred",
+        "road_node_id": "clip/241265461/0/end",
+        "connected": true,
+        "illustrative": true,
+        "feature_id": "way/241265453/entrance/1",
+        "category": "entrance"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "way/241265454/entrance/1",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.773135403,
+          1.299908401
+        ]
+      },
+      "properties": {
+        "id": "way/241265454/entrance/1",
+        "building_id": "way/241265454",
+        "source": "inferred",
+        "road_node_id": "node/2489562837",
+        "connected": true,
+        "illustrative": true,
+        "feature_id": "way/241265454/entrance/1",
+        "category": "entrance"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "way/241265455/entrance/1",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.773165898,
+          1.2996709
+        ]
+      },
+      "properties": {
+        "id": "way/241265455/entrance/1",
+        "building_id": "way/241265455",
+        "source": "inferred",
+        "road_node_id": "node/2489562830",
+        "connected": true,
+        "illustrative": true,
+        "feature_id": "way/241265455/entrance/1",
+        "category": "entrance"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "way/241265458/entrance/1",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.773670698,
+          1.299782901
+        ]
+      },
+      "properties": {
+        "id": "way/241265458/entrance/1",
+        "building_id": "way/241265458",
+        "source": "inferred",
+        "road_node_id": "node/2489562845",
+        "connected": true,
+        "illustrative": true,
+        "feature_id": "way/241265458/entrance/1",
+        "category": "entrance"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "way/298991080/entrance/1",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.774505301,
+          1.297463896
+        ]
+      },
+      "properties": {
+        "id": "way/298991080/entrance/1",
+        "building_id": "way/298991080",
+        "source": "inferred",
+        "road_node_id": "node/10703337514",
+        "connected": true,
+        "illustrative": true,
+        "feature_id": "way/298991080/entrance/1",
+        "category": "entrance"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "way/298991081/entrance/1",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.774842696,
+          1.297410296
+        ]
+      },
+      "properties": {
+        "id": "way/298991081/entrance/1",
+        "building_id": "way/298991081",
+        "source": "inferred",
+        "road_node_id": "node/4602296492",
+        "connected": true,
+        "illustrative": true,
+        "feature_id": "way/298991081/entrance/1",
+        "category": "entrance"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "way/298991082/entrance/1",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.775197802,
+          1.2971062
+        ]
+      },
+      "properties": {
+        "id": "way/298991082/entrance/1",
+        "building_id": "way/298991082",
+        "source": "inferred",
+        "road_node_id": "node/7930746767",
+        "connected": true,
+        "illustrative": true,
+        "feature_id": "way/298991082/entrance/1",
+        "category": "entrance"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "way/298991083/entrance/1",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.775475502,
+          1.296935896
+        ]
+      },
+      "properties": {
+        "id": "way/298991083/entrance/1",
+        "building_id": "way/298991083",
+        "source": "inferred",
+        "road_node_id": "node/4602296495",
+        "connected": true,
+        "illustrative": true,
+        "feature_id": "way/298991083/entrance/1",
+        "category": "entrance"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "way/427077072/entrance/1",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.776893401,
+          1.297752703
+        ]
+      },
+      "properties": {
+        "id": "way/427077072/entrance/1",
+        "building_id": "way/427077072",
+        "source": "inferred",
+        "road_node_id": "node/11503213901",
+        "connected": true,
+        "illustrative": true,
+        "feature_id": "way/427077072/entrance/1",
+        "category": "entrance"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "way/427077073/entrance/1",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.776464035,
+          1.297765459
+        ]
+      },
+      "properties": {
+        "id": "way/427077073/entrance/1",
+        "building_id": "way/427077073",
+        "source": "inferred",
+        "road_node_id": "node/11503213897",
+        "connected": true,
+        "illustrative": true,
+        "feature_id": "way/427077073/entrance/1",
+        "category": "entrance"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "way/427077076/entrance/1",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.7764435,
+          1.297930103
+        ]
+      },
+      "properties": {
+        "id": "way/427077076/entrance/1",
+        "building_id": "way/427077076",
+        "source": "inferred",
+        "road_node_id": "node/11503213897",
+        "connected": true,
+        "illustrative": true,
+        "feature_id": "way/427077076/entrance/1",
+        "category": "entrance"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "way/427077081/entrance/1",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.775892102,
+          1.298215701
+        ]
+      },
+      "properties": {
+        "id": "way/427077081/entrance/1",
+        "building_id": "way/427077081",
+        "source": "inferred",
+        "road_node_id": "node/7266702432",
+        "connected": true,
+        "illustrative": true,
+        "feature_id": "way/427077081/entrance/1",
+        "category": "entrance"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "way/427077083/entrance/1",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.775697601,
+          1.298509302
+        ]
+      },
+      "properties": {
+        "id": "way/427077083/entrance/1",
+        "building_id": "way/427077083",
+        "source": "inferred",
+        "road_node_id": "node/7266702432",
+        "connected": true,
+        "illustrative": true,
+        "feature_id": "way/427077083/entrance/1",
+        "category": "entrance"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "way/427077084/entrance/1",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.776106699,
+          1.298753296
+        ]
+      },
+      "properties": {
+        "id": "way/427077084/entrance/1",
+        "building_id": "way/427077084",
+        "source": "inferred",
+        "road_node_id": "node/11503213903",
+        "connected": true,
+        "illustrative": true,
+        "feature_id": "way/427077084/entrance/1",
+        "category": "entrance"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "way/453911862/entrance/1",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.778628103,
+          1.294680796
+        ]
+      },
+      "properties": {
+        "id": "way/453911862/entrance/1",
+        "building_id": "way/453911862",
+        "source": "inferred",
+        "road_node_id": "node/5120986219",
+        "connected": true,
+        "illustrative": true,
+        "feature_id": "way/453911862/entrance/1",
+        "category": "entrance"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "way/453911868/entrance/1",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.778366199,
+          1.294223797
+        ]
+      },
+      "properties": {
+        "id": "way/453911868/entrance/1",
+        "building_id": "way/453911868",
+        "source": "inferred",
+        "road_node_id": "node/5120988029",
+        "connected": true,
+        "illustrative": true,
+        "feature_id": "way/453911868/entrance/1",
+        "category": "entrance"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "way/453911883/entrance/1",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.778575153,
+          1.294193283
+        ]
+      },
+      "properties": {
+        "id": "way/453911883/entrance/1",
+        "building_id": "way/453911883",
+        "source": "inferred",
+        "road_node_id": "node/5120988028",
+        "connected": true,
+        "illustrative": true,
+        "feature_id": "way/453911883/entrance/1",
+        "category": "entrance"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "way/453911898/entrance/1",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.7782315,
+          1.294338398
+        ]
+      },
+      "properties": {
+        "id": "way/453911898/entrance/1",
+        "building_id": "way/453911898",
+        "source": "inferred",
+        "road_node_id": "node/5120988030",
+        "connected": true,
+        "illustrative": true,
+        "feature_id": "way/453911898/entrance/1",
+        "category": "entrance"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "way/455248967/entrance/1",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.77327995,
+          1.292091142
+        ]
+      },
+      "properties": {
+        "id": "way/455248967/entrance/1",
+        "building_id": "way/455248967",
+        "source": "inferred",
+        "road_node_id": "node/1201719386",
+        "connected": true,
+        "illustrative": true,
+        "feature_id": "way/455248967/entrance/1",
+        "category": "entrance"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "way/455248968/entrance/1",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.773191301,
+          1.292192997
+        ]
+      },
+      "properties": {
+        "id": "way/455248968/entrance/1",
+        "building_id": "way/455248968",
+        "source": "inferred",
+        "road_node_id": "node/1201719386",
+        "connected": true,
+        "illustrative": true,
+        "feature_id": "way/455248968/entrance/1",
+        "category": "entrance"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "way/455248969/entrance/1",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.773039097,
+          1.292213699
+        ]
+      },
+      "properties": {
+        "id": "way/455248969/entrance/1",
+        "building_id": "way/455248969",
+        "source": "inferred",
+        "road_node_id": "node/1201719386",
+        "connected": true,
+        "illustrative": true,
+        "feature_id": "way/455248969/entrance/1",
+        "category": "entrance"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "way/455248970/entrance/1",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.772811798,
+          1.292067497
+        ]
+      },
+      "properties": {
+        "id": "way/455248970/entrance/1",
+        "building_id": "way/455248970",
+        "source": "inferred",
+        "road_node_id": "node/10607419605",
+        "connected": true,
+        "illustrative": true,
+        "feature_id": "way/455248970/entrance/1",
+        "category": "entrance"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "way/455248971/entrance/1",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.772463097,
+          1.2923634
+        ]
+      },
+      "properties": {
+        "id": "way/455248971/entrance/1",
+        "building_id": "way/455248971",
+        "source": "inferred",
+        "road_node_id": "node/6705043048",
+        "connected": true,
+        "illustrative": true,
+        "feature_id": "way/455248971/entrance/1",
+        "category": "entrance"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "way/455248972/entrance/1",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.771722497,
+          1.292052802
+        ]
+      },
+      "properties": {
+        "id": "way/455248972/entrance/1",
+        "building_id": "way/455248972",
+        "source": "inferred",
+        "road_node_id": "node/7926857923",
+        "connected": true,
+        "illustrative": true,
+        "feature_id": "way/455248972/entrance/1",
+        "category": "entrance"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "way/455248974/entrance/1",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.771827303,
+          1.2923651
+        ]
+      },
+      "properties": {
+        "id": "way/455248974/entrance/1",
+        "building_id": "way/455248974",
+        "source": "inferred",
+        "road_node_id": "clip/449192423/0/start",
+        "connected": true,
+        "illustrative": true,
+        "feature_id": "way/455248974/entrance/1",
+        "category": "entrance"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "way/526619593/entrance/1",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.778964499,
+          1.294725096
+        ]
+      },
+      "properties": {
+        "id": "way/526619593/entrance/1",
+        "building_id": "way/526619593",
+        "source": "inferred",
+        "road_node_id": "clip/526619597/3/start",
+        "connected": true,
+        "illustrative": true,
+        "feature_id": "way/526619593/entrance/1",
+        "category": "entrance"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "way/54583485/entrance/1",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.771998704,
+          1.295970403
+        ]
+      },
+      "properties": {
+        "id": "way/54583485/entrance/1",
+        "building_id": "way/54583485",
+        "source": "inferred",
+        "road_node_id": "node/11277450494",
+        "connected": true,
+        "illustrative": true,
+        "feature_id": "way/54583485/entrance/1",
+        "category": "entrance"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "way/54583487/entrance/1",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.776469228,
+          1.299306208
+        ]
+      },
+      "properties": {
+        "id": "way/54583487/entrance/1",
+        "building_id": "way/54583487",
+        "source": "inferred",
+        "road_node_id": "node/13732235693",
+        "connected": true,
+        "illustrative": true,
+        "feature_id": "way/54583487/entrance/1",
+        "category": "entrance"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "way/54583488/entrance/1",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.772814803,
+          1.297485102
+        ]
+      },
+      "properties": {
+        "id": "way/54583488/entrance/1",
+        "building_id": "way/54583488",
+        "source": "inferred",
+        "road_node_id": "node/2170644539",
+        "connected": true,
+        "illustrative": true,
+        "feature_id": "way/54583488/entrance/1",
+        "category": "entrance"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "way/54583490/entrance/1",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.773071447,
+          1.296050404
+        ]
+      },
+      "properties": {
+        "id": "way/54583490/entrance/1",
+        "building_id": "way/54583490",
+        "source": "inferred",
+        "road_node_id": "node/11137518249",
+        "connected": true,
+        "illustrative": true,
+        "feature_id": "way/54583490/entrance/1",
+        "category": "entrance"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "way/54583491/entrance/1",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.775155901,
+          1.298760203
+        ]
+      },
+      "properties": {
+        "id": "way/54583491/entrance/1",
+        "building_id": "way/54583491",
+        "source": "inferred",
+        "road_node_id": "node/1554931159",
+        "connected": true,
+        "illustrative": true,
+        "feature_id": "way/54583491/entrance/1",
+        "category": "entrance"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "way/54583929/entrance/1",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.772623697,
+          1.298015033
+        ]
+      },
+      "properties": {
+        "id": "way/54583929/entrance/1",
+        "building_id": "way/54583929",
+        "source": "inferred",
+        "road_node_id": "node/11918099317",
+        "connected": true,
+        "illustrative": true,
+        "feature_id": "way/54583929/entrance/1",
+        "category": "entrance"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "way/54619685/entrance/1",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.774289697,
+          1.292761601
+        ]
+      },
+      "properties": {
+        "id": "way/54619685/entrance/1",
+        "building_id": "way/54619685",
+        "source": "inferred",
+        "road_node_id": "node/11210351502",
+        "connected": true,
+        "illustrative": true,
+        "feature_id": "way/54619685/entrance/1",
+        "category": "entrance"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "way/54619687/entrance/1",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.775506096,
+          1.292207197
+        ]
+      },
+      "properties": {
+        "id": "way/54619687/entrance/1",
+        "building_id": "way/54619687",
+        "source": "inferred",
+        "road_node_id": "node/11137523179",
+        "connected": true,
+        "illustrative": true,
+        "feature_id": "way/54619687/entrance/1",
+        "category": "entrance"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "way/54619694/entrance/1",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.772582521,
+          1.293408971
+        ]
+      },
+      "properties": {
+        "id": "way/54619694/entrance/1",
+        "building_id": "way/54619694",
+        "source": "inferred",
+        "road_node_id": "node/10708123191",
+        "connected": true,
+        "illustrative": true,
+        "feature_id": "way/54619694/entrance/1",
+        "category": "entrance"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "way/54619697/entrance/1",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.775086699,
+          1.2934604
+        ]
+      },
+      "properties": {
+        "id": "way/54619697/entrance/1",
+        "building_id": "way/54619697",
+        "source": "inferred",
+        "road_node_id": "node/11210344247",
+        "connected": true,
+        "illustrative": true,
+        "feature_id": "way/54619697/entrance/1",
+        "category": "entrance"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "way/54619699/entrance/1",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.774185739,
+          1.294430342
+        ]
+      },
+      "properties": {
+        "id": "way/54619699/entrance/1",
+        "building_id": "way/54619699",
+        "source": "inferred",
+        "road_node_id": "node/10557034785",
+        "connected": true,
+        "illustrative": true,
+        "feature_id": "way/54619699/entrance/1",
+        "category": "entrance"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "way/54619703/entrance/1",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.775735104,
+          1.294728397
+        ]
+      },
+      "properties": {
+        "id": "way/54619703/entrance/1",
+        "building_id": "way/54619703",
+        "source": "inferred",
+        "road_node_id": "node/11252774946",
+        "connected": true,
+        "illustrative": true,
+        "feature_id": "way/54619703/entrance/1",
+        "category": "entrance"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "way/54619717/entrance/1",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.771004701,
+          1.298352397
+        ]
+      },
+      "properties": {
+        "id": "way/54619717/entrance/1",
+        "building_id": "way/54619717",
+        "source": "inferred",
+        "road_node_id": "node/13822921052",
+        "connected": true,
+        "illustrative": true,
+        "feature_id": "way/54619717/entrance/1",
+        "category": "entrance"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "way/54619721/entrance/1",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.773560197,
+          1.295363704
+        ]
+      },
+      "properties": {
+        "id": "way/54619721/entrance/1",
+        "building_id": "way/54619721",
+        "source": "inferred",
+        "road_node_id": "node/10574167549",
+        "connected": true,
+        "illustrative": true,
+        "feature_id": "way/54619721/entrance/1",
+        "category": "entrance"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "way/54619730/entrance/1",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.775290207,
+          1.295501733
+        ]
+      },
+      "properties": {
+        "id": "way/54619730/entrance/1",
+        "building_id": "way/54619730",
+        "source": "inferred",
+        "road_node_id": "node/11252774952",
+        "connected": true,
+        "illustrative": true,
+        "feature_id": "way/54619730/entrance/1",
+        "category": "entrance"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "way/54619777/entrance/1",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.775875299,
+          1.299071503
+        ]
+      },
+      "properties": {
+        "id": "way/54619777/entrance/1",
+        "building_id": "way/54619777",
+        "source": "inferred",
+        "road_node_id": "node/1555167834",
+        "connected": true,
+        "illustrative": true,
+        "feature_id": "way/54619777/entrance/1",
+        "category": "entrance"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "way/546374635/entrance/1",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.776949902,
+          1.293365702
+        ]
+      },
+      "properties": {
+        "id": "way/546374635/entrance/1",
+        "building_id": "way/546374635",
+        "source": "inferred",
+        "road_node_id": "node/10595350830",
+        "connected": true,
+        "illustrative": true,
+        "feature_id": "way/546374635/entrance/1",
+        "category": "entrance"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "way/546382548/entrance/1",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.777062832,
+          1.297684308
+        ]
+      },
+      "properties": {
+        "id": "way/546382548/entrance/1",
+        "building_id": "way/546382548",
+        "source": "inferred",
+        "road_node_id": "node/11503213891",
+        "connected": true,
+        "illustrative": true,
+        "feature_id": "way/546382548/entrance/1",
+        "category": "entrance"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "way/628777635/entrance/1",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.77140338,
+          1.298906687
+        ]
+      },
+      "properties": {
+        "id": "way/628777635/entrance/1",
+        "building_id": "way/628777635",
+        "source": "inferred",
+        "road_node_id": "node/11920135892",
+        "connected": true,
+        "illustrative": true,
+        "feature_id": "way/628777635/entrance/1",
+        "category": "entrance"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "way/730956214/entrance/1",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.775270603,
+          1.299219504
+        ]
+      },
+      "properties": {
+        "id": "way/730956214/entrance/1",
+        "building_id": "way/730956214",
+        "source": "inferred",
+        "road_node_id": "node/6846159592",
+        "connected": true,
+        "illustrative": true,
+        "feature_id": "way/730956214/entrance/1",
+        "category": "entrance"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "way/730959512/entrance/1",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.771328997,
+          1.297792903
+        ]
+      },
+      "properties": {
+        "id": "way/730959512/entrance/1",
+        "building_id": "way/730959512",
+        "source": "inferred",
+        "road_node_id": "node/10814068003",
+        "connected": true,
+        "illustrative": true,
+        "feature_id": "way/730959512/entrance/1",
+        "category": "entrance"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "way/84517830/entrance/1",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.777393983,
+          1.29396828
+        ]
+      },
+      "properties": {
+        "id": "way/84517830/entrance/1",
+        "building_id": "way/84517830",
+        "source": "inferred",
+        "road_node_id": "node/11252774978",
+        "connected": true,
+        "illustrative": true,
+        "feature_id": "way/84517830/entrance/1",
+        "category": "entrance"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "way/84517831/entrance/1",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.777413567,
+          1.294390101
+        ]
+      },
+      "properties": {
+        "id": "way/84517831/entrance/1",
+        "building_id": "way/84517831",
+        "source": "inferred",
+        "road_node_id": "node/11252774966",
+        "connected": true,
+        "illustrative": true,
+        "feature_id": "way/84517831/entrance/1",
+        "category": "entrance"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "way/858570010/entrance/1",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.772964704,
+          1.292648296
+        ]
+      },
+      "properties": {
+        "id": "way/858570010/entrance/1",
+        "building_id": "way/858570010",
+        "source": "inferred",
+        "road_node_id": "node/8003762340",
+        "connected": true,
+        "illustrative": true,
+        "feature_id": "way/858570010/entrance/1",
+        "category": "entrance"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "way/858981035/entrance/1",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.7727054,
+          1.294149702
+        ]
+      },
+      "properties": {
+        "id": "way/858981035/entrance/1",
+        "building_id": "way/858981035",
+        "source": "inferred",
+        "road_node_id": "node/11286135803",
+        "connected": true,
+        "illustrative": true,
+        "feature_id": "way/858981035/entrance/1",
+        "category": "entrance"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "way/876468747/entrance/1",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.777796397,
+          1.298260397
+        ]
+      },
+      "properties": {
+        "id": "way/876468747/entrance/1",
+        "building_id": "way/876468747",
+        "source": "inferred",
+        "road_node_id": "node/8157381835",
+        "connected": true,
+        "illustrative": true,
+        "feature_id": "way/876468747/entrance/1",
+        "category": "entrance"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "way/883097350/entrance/1",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.77896663,
+          1.296861811
+        ]
+      },
+      "properties": {
+        "id": "way/883097350/entrance/1",
+        "building_id": "way/883097350",
+        "source": "inferred",
+        "road_node_id": "clip/1284673688/6/start",
+        "connected": true,
+        "illustrative": true,
+        "feature_id": "way/883097350/entrance/1",
+        "category": "entrance"
+      }
+    }
+  ]
+}

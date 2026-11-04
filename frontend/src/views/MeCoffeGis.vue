@@ -1,5 +1,5 @@
 <template>
-  <div class="gis-page" :data-position="position.toFixed(6)" :data-cursor="cursor" :data-active-walkers="activeWalkers" :data-ready-models="modelStatus.visibleReady||0" :data-render-frames="telemetry.renderFrames||0" :data-worst-frame="telemetry.worstFrameMs||0" :data-average-fps="telemetry.averageFps||0" :data-model-draw-calls="telemetry.drawCalls||0">
+  <div class="gis-page" :data-indoor-occupancy="JSON.stringify(occupancy.buildings)" :data-inside="occupancy.inside" :data-position="position.toFixed(6)" :data-cursor="cursor" :data-active-walkers="activeWalkers" :data-ready-models="modelStatus.visibleReady||0" :data-render-frames="telemetry.renderFrames||0" :data-worst-frame="telemetry.worstFrameMs||0" :data-average-fps="telemetry.averageFps||0" :data-model-draw-calls="telemetry.drawCalls||0">
     <header class="gis-header"><div class="gis-brand"><span class="gis-logo">◈</span><div><p>MECOFFE / GIS</p><h1>{{scenario?.manifest.title || 'GIS 校园活动地图'}}</h1></div></div><nav>
       <details ref="scenarioPicker" class="scenario-picker" @keydown.esc.prevent="closeScenarioPicker" @focusout="blurScenarioPicker">
         <summary aria-label="GIS 场景" aria-haspopup="listbox">场景 · {{scenarioChoices.find(item=>item.id===scenarioId)?.title || '选择场景'}} <span>⌄</span></summary>
@@ -11,7 +11,7 @@
     <p class="gis-notice" role="note">ⓘ 人物所在楼栋与行走路线为展示层示意，OASIS 没有位置数据。建筑缺失高度采用标注的估算或默认值。</p>
     <div v-if="error" class="gis-error" role="alert"><strong>场景未能完整显示</strong><span>{{error}}</span><button @click="load">重新加载</button></div>
     <template v-if="scenario">
-      <section class="gis-metrics" aria-label="场景概览"><div><span>建筑</span><strong>{{layers?.buildings.features.length || 0}}<small> 栋</small></strong></div><div><span>道路与步道</span><strong>{{layers?.roads.features.length || 0}}<small> 段</small></strong></div><div><span>模拟人物</span><strong>{{population}}<small> 人</small></strong></div><div><span>{{hasSimulation?'回放订单':'模拟状态'}}</span><strong>{{hasSimulation?orders:'尚无模拟数据'}}<small v-if="hasSimulation"> 单</small></strong></div><div><span>模拟时间 · {{clock?.timezone}}</span><strong class="clock" data-testid="gis-time">{{clock?.label}}</strong></div></section>
+      <section class="gis-metrics" aria-label="场景概览"><div><span>建筑</span><strong>{{layers?.buildings.features.length || 0}}<small> 栋</small></strong></div><div><span>道路与步道</span><strong>{{layers?.roads.features.length || 0}}<small> 段</small></strong></div><div><span>模拟人物</span><strong>{{population}}<small> 人</small></strong></div><div><span>{{hasSimulation?'回放订单':'模拟状态'}}</span><strong>{{hasSimulation?orders:'尚无模拟数据'}}<small v-if="hasSimulation"> 单</small></strong></div><div><span>模拟日期 · {{clock?.timezone}}</span><strong class="clock" data-testid="gis-time">{{dateDisplay?.label}}</strong></div></section>
       <p class="gis-data-note" data-testid="gis-data-notice">{{hasSimulation?`已有 OASIS 运行记录 · 完成 ${scenario.files['trajectory.json'].meta.completed_steps}/${scenario.files['trajectory.json'].meta.total_steps} 步；缺失记录未补造。`:'尚无模拟数据 · 仅显示地图、建筑及场景模拟时间，不生成人物或活动。'}}<span v-if="unreachable"> · {{unreachable}} 笔购买未找到可通行展示路线</span></p>
     </template>
     <div class="gis-layout">
@@ -19,15 +19,16 @@
       <aside class="gis-panel">
         <section><h2>地图与图层</h2><label class="basemap-label">底图<select aria-label="底图" v-model="basemap" :disabled="loading" @change="setBasemap"><option v-for="item in basemaps" :key="item.id" :value="item.id">{{item.label}}</option></select></label><p v-if="basemapNote" class="panel-hint" role="status">{{basemapNote}}</p><div class="layer-grid"><label v-for="(label,key) in layerLabels" :key="key"><input type="checkbox" :aria-label="`${label}图层`" v-model="visibility[key]" :disabled="loading" @change="setLayers"/>{{label}}</label></div></section>
         <section><h2>查找地点</h2><input class="gis-search" type="search" aria-label="搜索楼栋或地点" v-model="query" placeholder="搜索楼名或地点名称"/><div class="search-results"><button v-for="item in results" :key="item.layer+item.feature.id" @click="renderer?.focusFeature(item)"><strong>{{item.feature.properties.name||'未命名地点'}}</strong><small>{{item.info.category.name}} <span v-if="item.info.category.code" class="gis-data-code">{{item.info.category.code}}</span><span v-for="location in item.info.locations" :key="location.id"> · {{location.name}} <span class="gis-data-code">{{location.id}}</span></span></small></button><p v-if="query&&!results.length" class="panel-hint">未找到匹配地点。</p></div></section>
-        <section v-if="selected" class="gis-info" data-testid="gis-query-card"><h2>{{selectedPerson?'人物信息':'地点信息'}}</h2><template v-if="selectedPerson"><h3>{{selectedPerson.name}}</h3><span class="role-badge">{{selectedPerson.role_label}}</span><p>{{selectedPerson.bio || '暂无画像摘要'}}</p><button @click="renderer?.focusPerson(selectedPerson.id)">定位并查看人物</button><h4>当前活动</h4><p>{{selectedWalking?'沿步行路线前往门店 / 返回（示意）':'位于映射地点附近（示意）'}}</p><p v-for="event in activity" :key="event.key" class="activity-item">{{describeEvent(index,event)}}</p><p v-if="!activity.length" class="panel-hint">当前时间之前暂无该人物活动。</p></template><template v-else><h3>{{selected.feature.properties.name || '未命名要素'}}</h3>
+        <section v-if="selected" class="gis-info" data-testid="gis-query-card"><h2>{{selectedPerson?'人物信息':'地点信息'}}</h2><template v-if="selectedPerson"><h3>{{selectedPerson.name}}</h3><span class="role-badge">{{selectedPerson.role_label}}</span><p>{{selectedPerson.bio || '暂无画像摘要'}}</p><button @click="renderer?.focusPerson(selectedPerson.id)">定位并查看人物</button><h4>当前活动</h4><p>{{selectedPlacement}}</p><p v-for="event in activity" :key="event.key" class="activity-item">{{describeEvent(index,event)}}</p><p v-if="!activity.length" class="panel-hint">当前时间之前暂无该人物活动。</p></template><template v-else><h3>{{selected.feature.properties.name || selectedInfo.category.name}}</h3>
           <dl><dt>类别</dt><dd>{{selectedInfo.category.name}} <small v-if="selectedInfo.category.code" class="gis-data-code">{{selectedInfo.category.code}}</small></dd><dt v-if="selected.feature.properties.height_m">高度</dt><dd v-if="selected.feature.properties.height_m">{{selected.feature.properties.height_m}} 米</dd><dt v-if="selected.feature.properties.height_m">高度来源</dt><dd v-if="selected.feature.properties.height_m">{{heightDescription(selected.feature.properties.height_source)}}</dd><dt>素材原型</dt><dd>{{selectedInfo.prototype.name}} <small v-if="selectedInfo.prototype.code" class="gis-data-code">{{selectedInfo.prototype.code}}</small></dd><dt>OASIS 地点</dt><dd><span v-for="location in selectedInfo.locations" :key="location.id" class="mapped-location">{{location.name}} <small class="gis-data-code">{{location.id}}</small></span><span v-if="!selectedInfo.locations.length">无显式映射</span></dd></dl>
+          <p v-for="entry in selectedEntrances" :key="entry.id" class="panel-hint">{{entry.source==='osm'?'OSM 入口标注':'推断入口'}}（示意） <button @click="renderer?.focusFeature({layer:'entrances',feature:layers.entrances.features.find(f=>f.id===entry.id)})">定位入口</button></p><div v-if="buildingResidents.length" class="indoor-residents"><h4>楼内 {{buildingResidents.length}} 人（示意）</h4><button v-for="person in buildingResidents" :key="person.id" :data-person-id="person.id" @click="renderer?.focusPerson(person.id)">{{person.name}} · {{person.role_label}}</button></div>
           <details class="data-details"><summary>数据详情</summary><p class="panel-hint">数据来源 ID <span>{{selectedInfo.sourceId}}</span></p></details>
         </template></section>
-        <section v-if="population"><h2>人物 <small>{{population}} 人</small></h2><div class="gis-roster"><button v-for="person in roster" :key="person.id" @click="renderer?.focusPerson(person.id)"><span :style="{background:ROLE_COLORS[person.role]}"></span>{{person.name}}<small>{{person.role_label}}</small></button></div></section>
+        <section v-if="population"><h2>人物 <small>{{population}} 人</small></h2><div class="gis-roster"><button v-for="person in roster" :key="person.id" :data-person-id="person.id" @click="renderer?.focusPerson(person.id)"><span :style="{background:ROLE_COLORS[person.role]}"></span>{{person.name}}<small>{{person.role_label}}</small></button></div></section>
         <section v-if="scenario" class="panel-hint"><p>{{scenario.manifest.map.source.attribution}}</p><p>地图坐标：WGS84<br/>空间位置与路线：展示示意</p></section>
       </aside>
     </div>
-    <footer v-if="scenario" class="gis-timeline"><div class="gis-play-row"><button class="gis-play" :disabled="loading" @click="togglePlay">{{playing?'暂停':hasSimulation?'播放回放':'播放时间'}}</button><button :disabled="loading" @click="jump(-1)">上一步</button><button :disabled="loading" @click="jump(1)">下一步</button><button v-if="hasSimulation" :disabled="loading" @click="previewWalking">看人物行走</button><label>速度 <select aria-label="回放速度" v-model.number="speed"><option v-for="value in [.5,1,2,4,8]" :value="value" :key="value">{{value}}×</option></select></label><span class="timeline-summary">{{currentStep}} <small v-if="hasSimulation">· {{activeWalkers}} 人在途</small></span></div><input aria-label="GIS 模拟时间进度" type="range" min="0" :max="maxPosition" step="0.001" v-model.number="position" @input="seek"/><div class="gis-time-endpoints"><span>{{scenario.manifest.simulation_time.start.slice(0,10)}}</span><span>{{hasSimulation?'依据已有运行记录回放':'按场景清单的时间步推进'}}</span></div></footer>
+    <footer v-if="scenario" class="gis-timeline"><div class="gis-play-row"><button class="gis-play" :disabled="loading" @click="togglePlay">{{playing?'暂停':hasSimulation?'播放回放':'播放时间'}}</button><button :disabled="loading" @click="jump(-1)">上一步</button><button :disabled="loading" @click="jump(1)">下一步</button><button v-if="hasSimulation" :disabled="loading" @click="previewWalking">看人物行走</button><label>速度 <select aria-label="回放速度" v-model.number="speed"><option v-for="value in [.5,1,2,4,8]" :value="value" :key="value">{{value}}×</option></select></label><span class="timeline-summary">{{currentStep}} <small v-if="hasSimulation">· {{activeWalkers}} 人在途</small></span></div><input aria-label="GIS 模拟时间进度" type="range" min="0" :max="maxPosition" step="0.001" v-model.number="position" @input="seek"/><div class="gis-time-endpoints"><span>天内回放进度 {{dateDisplay?.progress||0}}% · 昼夜变化为展示效果 · 起始日期 {{scenario.manifest.simulation_time.start.slice(0,10)}}</span><span>{{hasSimulation?'依据已有运行记录回放':'按场景清单的时间步推进'}}</span></div></footer>
   </div>
 </template>
 <script setup>
@@ -42,30 +43,37 @@ import {BASEMAP_ADAPTERS} from '../mecoffe/gis/basemaps.js'
 import {createGisDisplay} from '../mecoffe/gis/engine.js'
 import {ASSET_CATALOG} from '../mecoffe/assetCatalog.js'
 import {featureInfo} from '../mecoffe/gis/labels.js'
+import {displayDate} from '../mecoffe/indoorMotion.js'
 const route=useRoute(),router=useRouter(),directory=shallowRef(null),scenarioPicker=ref(null)
 const scenarioChoices=computed(()=>directory.value?.scenarios||[]),scenarioId=computed(()=>typeof route.query.scenario==='string'?route.query.scenario:directory.value?.default_id||'')
 const scenario=shallowRef(null),layers=shallowRef(null),index=shallowRef(null),host=ref(null),loading=ref(true),error=ref(''),query=ref(''),selected=shallowRef(null)
 const position=ref(0),cursor=ref(0),playing=ref(false),speed=ref(1),activeWalkers=ref(0),unreachable=ref(0),modelStatus=ref({}),basemap=ref('offline'),basemapNote=ref('')
-const telemetry=ref({})
-const visibility=reactive({buildings:true,roads:true,water:true,landcover:true,pois:true,people:true,tracks:true}),layerLabels={buildings:'建筑',roads:'道路',water:'水域',landcover:'地表',pois:'点位',people:'人物',tracks:'轨迹'}
+const telemetry=ref({}),occupancy=shallowRef({buildings:{},persons:{},inside:0})
+const visibility=reactive({buildings:true,roads:true,water:true,landcover:true,pois:true,people:true,tracks:true,entrances:true}),layerLabels={buildings:'建筑',roads:'道路',water:'水域',landcover:'地表',pois:'点位',people:'人物',tracks:'轨迹',entrances:'入口'}
 const basemaps=Object.values(BASEMAP_ADAPTERS),hasSimulation=computed(()=>Boolean(scenario.value?.manifest.simulation_data)),population=computed(()=>index.value?.people.size||0),roster=computed(()=>[...(index.value?.people.values()||[])])
 const maxPosition=computed(()=>index.value?.days.length||scenario.value?.manifest.simulation_time.steps||1),orders=computed(()=>index.value?stateAt(index.value,cursor.value).orders:0)
 const clock=computed(()=>scenario.value?scenarioTime(scenario.value.manifest.simulation_time,index.value?simulationPosition(index.value,position.value):position.value):null)
-const currentStep=computed(()=>index.value?index.value.days[Math.min(index.value.days.length-1,Math.floor(position.value))]?.label:`第 ${Math.min(maxPosition.value,Math.floor(position.value))} 小时`)
+const dateDisplay=computed(()=>scenario.value?displayDate(scenario.value.manifest.simulation_time,position.value,index.value):null)
+const selectedPlacement=computed(()=>{position.value;const location=replay?.personLocation(selectedPerson.value?.id);return location?.inside?`在 ${location.name} 内（示意）`:location?.phase?.startsWith('enter')?`正在进入 ${location.name}（示意）`:location?.phase?.startsWith('exit')?`正在走出 ${location.name}（示意）`:'沿步行路线移动（示意）'})
+const selectedEntrances=computed(()=>{const f=selected.value?.feature;if(!f)return [];return (scenario.value?.files['entrances.json']?.entrances||[]).filter(e=>e.building_id===(f.properties.building_id||f.id))})
+const buildingResidents=computed(()=>selected.value?.type==='feature'?(occupancy.value.buildings[selected.value.feature.id]||[]).map(id=>index.value?.people.get(id)).filter(Boolean):[])
+const currentStep=computed(()=>index.value?index.value.days[Math.min(index.value.days.length-1,Math.floor(position.value))]?.label:dateDisplay.value?.label.split(' · ')[0])
 const labelOptions=computed(()=>({catalog:ASSET_CATALOG,mapping:scenario.value?.files['location_mapping.json']||{}}))
 const results=computed(()=>layers.value?searchPlaces(layers.value,query.value).map(item=>({...item,info:featureInfo(item.feature,labelOptions.value)})):[]),sandboxUrl=computed(()=>({path:'/mecoffe3d',query:{scenario:scenarioId.value}}))
 const selectedInfo=computed(()=>selected.value?.type==='feature'?featureInfo(selected.value.feature,labelOptions.value):null)
 const selectedPerson=computed(()=>selected.value?.type==='person'?index.value?.people.get(selected.value.id):null),selectedWalking=computed(()=>{position.value;return Boolean(replay?.people.get(selectedPerson.value?.id)?.walker)})
 const activity=computed(()=>selectedPerson.value&&index.value?personHistory(index.value,selectedPerson.value.id,cursor.value,5):[])
 let renderer=null,replay=null,controller=null,frame=0,lastTime=0,lastUi=0,lastMap=0,lastDraw=0,generation=0,disposed=false
-function sync(){if(!replay)return;position.value=replay.position;cursor.value=replay.cursor;activeWalkers.value=replay.active;unreachable.value=replay.unreachable;telemetry.value=renderer?.getStats()||{}}
+function sync(){if(!replay)return;position.value=replay.position;cursor.value=replay.cursor;activeWalkers.value=replay.personData().length;unreachable.value=replay.unreachable;occupancy.value=replay.occupancy;telemetry.value=renderer?.getStats()||{}}
 function tick(now){
   if(disposed)return
   const delta=lastTime?now-lastTime:0;lastTime=now
   if(playing.value&&replay){replay.advance(delta,speed.value);if(replay.position>=replay.maxPosition&&!replay.pending)playing.value=false}
   if(now-lastMap>=50){renderer?.setPeople();lastMap=now}
   if(now-lastUi>=200){sync();lastUi=now}
-  if((playing.value||renderer?.needsAnimation())&&now-lastDraw>=1000/60){renderer?.requestFrame();lastDraw=now}
+  // MapLibre schedules its own camera/model-load paints. A paused map needs
+  // no continuous GPU loop; playback is capped independently of display Hz.
+  if(playing.value&&now-lastDraw>=1000/90){renderer?.requestFrame();lastDraw=now}
   frame=requestAnimationFrame(tick)
 }
 async function load(){
@@ -81,6 +89,7 @@ async function load(){
     const entry=nextDirectory.scenarios.find(item=>item.id===id)
     if(entry.title!==value.manifest.title||entry.simulation_data!==value.manifest.simulation_data)throw new Error('场景目录已过期，请重新生成目录')
     const geo=gisLayers(value),nextReplay=new GisReplay(value);replay=nextReplay;index.value=nextReplay.index;scenario.value=value;layers.value=geo
+    await nextReplay.prepare(controller.signal);if(disposed||token!==generation)return
     await nextTick();if(disposed||token!==generation)return
     const display=await createGisDisplay({host:host.value,layers:geo,replay:nextReplay,describeFeature:feature=>featureInfo(feature,{catalog:ASSET_CATALOG,mapping:value.files['location_mapping.json']||{}}),signal:controller.signal,onSelect:item=>{selected.value=item},onStatus:value=>{modelStatus.value=value},onError:e=>{if(token===generation&&!disposed)error.value=e.message||String(e)},onBasemapFallback:message=>{basemap.value='offline';basemapNote.value=message}})
     if(disposed||token!==generation){display.dispose();return}
@@ -95,7 +104,7 @@ function setLayers(){renderer?.setLayers(visibility)}
 function setBasemap(){basemapNote.value='';renderer?.setBasemap(basemap.value)}
 function seek(){if(!replay)return;playing.value=false;replay.seek(Number(position.value));sync();renderer?.setPeople();renderer?.requestFrame()}
 function jump(delta){position.value=Math.max(0,Math.min(maxPosition.value,Math.floor(position.value)+delta));seek()}
-function togglePlay(){if(!replay)return;if(replay.position>=replay.maxPosition&&!replay.pending){position.value=0;seek()}playing.value=!playing.value;lastTime=0}
+function togglePlay(){if(!replay)return;if(playing.value)sync();if(replay.position>=replay.maxPosition&&!replay.pending){position.value=0;seek()}playing.value=!playing.value;lastTime=0}
 function previewWalking(){if(!replay?.index)return;position.value=replay.previewPosition();seek();playing.value=true;lastTime=0;const first=replay.index.scene.events.find(e=>e.type==='purchase');if(first)renderer?.select({type:'person',id:first.actor})}
 watch(()=>route.query.scenario,load)
 watch(playing,value=>renderer?.setMeasuring(value))
@@ -171,6 +180,7 @@ input[type=checkbox],input[type=range]{accent-color:#287c68}
 .gis-info dd{margin:0;overflow-wrap:anywhere}
 .gis-data-code,:deep(.gis-data-code){color:#8a978f;font-size:10px;overflow-wrap:anywhere;font-weight:400}
 .mapped-location{display:block}
+.indoor-residents button{display:block;width:100%;text-align:left;margin:4px 0;font-size:11px}
 .data-details{font-size:11px;color:#708578;margin-top:12px}
 .data-details summary{cursor:pointer}
 .data-details p span{display:block;margin-top:4px}

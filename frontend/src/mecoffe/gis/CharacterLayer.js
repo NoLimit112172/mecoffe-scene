@@ -46,16 +46,19 @@ export class GisCharacterLayer {
     this.batch?.setVisible(this.visible);this.emitStatus()
   }
   render(gl,options){
+    this.mapProjection=new THREE.Matrix4().fromArray(options.defaultProjectionData.mainMatrix)
     if(this.disposed||!this.visible||!this.entries.size)return
     const map=this.map,canvas=map.getCanvas(),people=this.replay.personData()
     const visible=chooseModels(people,{zoom:map.getZoom(),project:p=>map.project(p),width:canvas.clientWidth,height:canvas.clientHeight,selectedId:this.selectedId})
     if(visible.size)this.initializeModels()
     this.readyIds.clear()
+    for(const entry of this.entries.values()){entry.presentationVisible=false;entry.inView=false;entry.figure.visible=false}
     for(const person of people){
       const entry=this.entries.get(person.id),coordinate=MercatorCoordinate.fromLngLat(person.lngLat,0)
       entry.figure.position.set((coordinate.x-this.origin.x)/this.units,.1,(coordinate.y-this.origin.y)/this.units)
       entry.figure.rotation.y=person.heading;entry.figure.updateMatrixWorld(true)
       entry.presentationVisible=visible.has(person.id);entry.inView=entry.presentationVisible
+      entry.figure.visible=entry.presentationVisible;entry.figure.scale.setScalar(Math.max(.02,person.transitionScale));entry.figure.updateMatrixWorld(true)
       entry.walker=person.walker;entry.hasCoffee=person.hasCoffee
       if(entry.presentationVisible&&this.batch?.isReady(person.id))this.readyIds.add(person.id)
     }
@@ -71,7 +74,7 @@ export class GisCharacterLayer {
     const canvas=this.map.getCanvas(),x=point.x/canvas.clientWidth*2-1,y=1-point.y/canvas.clientHeight*2
     const a=new THREE.Vector3(x,y,-1).unproject(this.camera),b=new THREE.Vector3(x,y,1).unproject(this.camera)
     const ray=new THREE.Raycaster(a,b.sub(a).normalize())
-    return ray.intersectObjects(this.batch.group.children,true).find(hit=>hit.object.userData.person)?.object.userData.person.id||null
+    return ray.intersectObjects(this.batch.group.children,true).find(hit=>this.readyIds.has(hit.object.userData.person?.id))?.object.userData.person.id||null
   }
   onRemove(){
     this.disposed=true;this.batch?.dispose();this.renderer?.dispose();this.scene?.clear();this.entries?.clear();this.readyIds.clear()

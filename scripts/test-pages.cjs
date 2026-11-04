@@ -33,7 +33,7 @@ async function ready(page,name){
       if(name==='3d'){await page.getByRole('button',{name:'历史回放',exact:true}).click();await ready(page,name);await page.getByRole('button',{name:'看人物行走',exact:true}).click();await page.waitForTimeout(1000);assert.match(await page.getByTestId('active-walkers').textContent(),/[1-4] 人在途/)}
       if(name==='2d'){await page.locator('.mc-play').click();await page.waitForTimeout(300);assert.match(await page.locator('.mc-play').textContent(),/暂停/);await page.locator('.mc-play').click()}
       if(name==='assets'){await page.getByLabel('素材来源',{exact:true}).selectOption('valid');await page.locator('.preview-status').first().filter({hasText:'VALID'}).waitFor({timeout:120000});assert.equal(await page.locator('.preview-status.error').count(),0)}
-      if(name==='nus-scenario'){await page.getByLabel('模拟时间进度').evaluate(el=>{el.value=6;el.dispatchEvent(new Event('input',{bubbles:true}))});await page.waitForTimeout(300);assert.match(await page.getByTestId('simulation-time').textContent(),/12:00/)}
+      if(name==='nus-scenario'){await page.getByLabel('模拟时间进度').evaluate(el=>{el.value=6;el.dispatchEvent(new Event('input',{bubbles:true}))});await page.waitForTimeout(300);assert.match(await page.getByTestId('simulation-time').textContent(),/第 7 小时/)}
       if(name==='licenses'){for(const href of await page.locator('a').evaluateAll(links=>links.map(a=>a.href).filter(h=>h.startsWith(location.origin))))assert.equal((await context.request.get(href)).status(),200)}
       await page.screenshot({path:path.join(output,name+'.png')});report.routes.push({name,firstUrl,refreshedUrl:page.url(),title:await page.title(),status:'passed'});save();console.log('PASS',name);await page.close();
     }

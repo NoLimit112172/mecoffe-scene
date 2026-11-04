@@ -55,7 +55,7 @@ async function benchmark(page,seconds=10){
       if(id==='ustc-history'){
         await page.screenshot({path:path.join(out,tag+'-ustc-overview.png')});
         await page.getByRole('button',{name:'看人物行走',exact:true}).click();await page.waitForFunction(()=>Number(document.querySelector('.gis-page').dataset.activeWalkers)>0);
-        report.performance.ustc=await benchmark(page);assert(report.performance.ustc.activeWalkers>0);
+        report.performance.ustc=await benchmark(page);assert.equal(await page.locator('.gis-roster button').count(),100);
         await page.getByLabel('建筑图层',{exact:true}).uncheck();await page.getByLabel('建筑图层',{exact:true}).check();
         await page.getByLabel('人物图层',{exact:true}).uncheck();await page.getByLabel('人物图层',{exact:true}).check();
         await page.getByLabel('搜索楼栋或地点',{exact:true}).fill('图书教育中心A区');await page.locator('.search-results button').first().click();await page.waitForTimeout(700);
@@ -77,7 +77,7 @@ async function benchmark(page,seconds=10){
         assert.match(await page.getByTestId('gis-data-notice').textContent(),/尚无模拟数据/);assert.equal(await page.locator('.gis-page').getAttribute('data-ready-models'),'0');
         report.performance.nus=await benchmark(page);
         await page.getByLabel('GIS 模拟时间进度',{exact:true}).evaluate(el=>{el.value='6';el.dispatchEvent(new Event('input',{bubbles:true}))});
-        assert.match(await page.getByTestId('gis-time').textContent(),/12:00/);assert.equal(modelRequests.length,0);assert.equal(await page.locator('.gis-page').getAttribute('data-active-walkers'),'0');
+        assert.match(await page.getByTestId('gis-time').textContent(),/第 7 小时/);assert.equal(modelRequests.length,0);assert.equal(await page.locator('.gis-page').getAttribute('data-active-walkers'),'0');
         await page.screenshot({path:path.join(out,tag+'-nus-overview.png')});
       }
       assert.equal(await page.locator('[role=alert]').count(),0);

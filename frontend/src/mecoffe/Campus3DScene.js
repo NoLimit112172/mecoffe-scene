@@ -25,6 +25,9 @@ import { Campus3DSurroundings } from './Campus3DSurroundings.js'
 import { Campus3DEnvironment } from './Campus3DEnvironment.js'
 import { EventEffects, SelectiveBloom } from './Campus3DEffects.js'
 import { visualClock, idleRepresentatives, displayOccupancy } from './campus3dPresentation.js'
+import {IndoorMotion} from './indoorMotion.js'
+import {positionAtCursor} from './campus3dPlayback.js'
+import {placeIndoorPeople,syncIndoorView,indoorScreen,focusIndoorBuilding,updateIndoorGlow} from './Campus3DIndoor.js'
 
 const BRAND_COLORS = prototypeParams('building.component.shop-sign').marker_colors.map(value=>parseInt(value.slice(1),16))
 const ROLE_COLORS = Object.fromEntries(Object.entries(CHARACTER_BASE_COLORS).map(([key,value])=>[key,parseInt(value.slice(1),16)]))
@@ -137,7 +140,7 @@ function roadGeometry(roads, extraWidth = 0, elevation = 0.14) {
 }
 
 export class Campus3DScene {
-  constructor({ host, campus, mapping, index, landcovers = [], surroundings = [], onHover, onSelect, onStats, onVisualActivity, onCharacters, onError, onQuality, characterPool = 'campus', deferCharacters = false } = {}) {
+  constructor({ host, campus, mapping, index, entrances, landcovers = [], surroundings = [], onHover, onSelect, onBuildingSelect, onIndoor, onStats, onVisualActivity, onCharacters, onError, onQuality, characterPool = 'campus', deferCharacters = false } = {}) {
     this.deferCharacters=deferCharacters
     this.host = host
     this.campus = campus
@@ -158,6 +161,9 @@ export class Campus3DScene {
     this.onQuality=onQuality
     this.onHover = onHover
     this.onSelect = onSelect
+    this.onBuildingSelect=onBuildingSelect;this.onIndoor=onIndoor
+    this.indoor=entrances?new IndoorMotion({campus,mapping,index,entrances,landcovers}):null
+    this.indoorPosition=0;this.indoorDrain=0;this.timelinePlaying=false
     this.onStats = onStats
     this.onVisualActivity = onVisualActivity
     this.onCharacters = onCharacters
@@ -193,7 +199,7 @@ export class Campus3DScene {
     this.personSphere = new THREE.Sphere()
     this.buildingStyle = 'procedural'
     this.lighting = { cycle: true, position: 0, hour: 12 }
-    this.representatives = idleRepresentatives(index.scene.people)
+    this.representatives = this.indoor?new Set():idleRepresentatives(index.scene.people)
     this.brandColors = new Map(index.scene.brands.map((brand, k) => [brand.brand_id, BRAND_COLORS[k % BRAND_COLORS.length]]))
   }
 
@@ -225,7 +231,7 @@ export class Campus3DScene {
     this.relationLayer = new THREE.Group()
     this.scene.add(this.routeLayer, this.effectLayer, this.relationLayer)
     this.createLabelLayer()
-    if(typeof Worker!=='undefined')this.spatialWorker=new SpatialWorker(this.navigationObstacles)
+    if(typeof Worker!=='undefined'&&!this.indoor)this.spatialWorker=new SpatialWorker(this.navigationObstacles)
     this.drawCampus()
     this.placePeople()
     this.baseModel = new Campus3DBase({scene:this.scene,campus:this.display.campus,displayBounds:this.display.bounds,waters:this.spatial.waters}).init()
@@ -245,6 +251,8 @@ export class Campus3DScene {
     this.bloom = new SelectiveBloom({ renderer: this.renderer, scene: this.scene, camera: this.camera,
       width: this.host.clientWidth, height: this.host.clientHeight })
     this.setQuality(this.quality)
+    if(this.indoor)await this.indoor.prepareRoutes()
+    if(this.disposed)return this
     if(!this.deferCharacters)await this.initCharacters()
     if(this.disposed)return this
     this.resetCamera()
@@ -478,6 +486,7 @@ export class Campus3DScene {
 
   updateScreenVisuals() {
     if (!this.camera || !this.host) return
+    if(this.indoor){indoorScreen(this);return}
     const width = Math.max(1, this.host.clientWidth)
     const height = Math.max(1, this.host.clientHeight)
     this.camera.updateMatrixWorld()
@@ -558,6 +567,7 @@ export class Campus3DScene {
   }
 
   placePeople() {
+    if(this.indoor){placeIndoorPeople(this);return}
     const groups = new Map()
     const sorted = [...this.index.people.values()].sort((a, b) => a.id.localeCompare(b.id))
     for (const person of sorted) {
@@ -646,6 +656,7 @@ export class Campus3DScene {
   }
 
   reflowPeople() {
+    if(this.indoor)return
     const people=[...this.people].map(([id,entry])=>({id,x:entry.figure.position.x,y:-entry.figure.position.z,
       radius:this.cameraCrowdRadius || Math.max(DISPLAY_RADIUS,entry.figure.scale.x*3),moving:Boolean(entry.walker)}))
     const invalid=people.some((p,i)=>!outsideBuildings(p,this.navigationObstacles,p.radius)
@@ -726,6 +737,7 @@ export class Campus3DScene {
   }
 
   decorationAvoidance() {
+    if(this.indoor)return {points:[],routes:this.indoor.entrances.entrances.map(e=>e.connector.map(([x,y])=>({x,y}))),clearance:8}
     const routes=[]
     for(const key of this.routing.anchors.keys())if(!key.startsWith('shop_'))for(const shop of this.routing.anchors.keys())if(shop.startsWith('shop_')) {
       const route=routeBetweenMappings(this.routing,key,shop)
@@ -739,6 +751,7 @@ export class Campus3DScene {
   }
 
   setCursor(cursor) {
+    if(this.indoor){this.indoor.reset();this.setIndoorPosition(positionAtCursor(this.index,cursor));this.clearLayer(this.effectLayer);this.eventEffects?.reset();return}
     this.invalidate()
     this.relationsDirty=true
     this.seenOrders.clear()
@@ -769,6 +782,7 @@ export class Campus3DScene {
     this.invalidate()
     const entry = this.people.get(event.actor)
     if (!entry) return
+    if(this.indoor&&event.type==='purchase')return
     if (this.eventEffects && event.type !== 'purchase') {
       this.eventEffects.playEvent(event)
       this.emitVisualActivity()
@@ -839,6 +853,7 @@ export class Campus3DScene {
   }
 
   updateWalkers(delta) {
+    if(this.indoor){if(!this.timelinePlaying){this.indoorDrain+=delta;this.indoor.sync(this.indoorPosition,this.indoorDrain)}syncIndoorView(this);return}
     let changed = false
     // Small, swept steps keep both the frame endpoints and the interval safe.
     // Only display travel is delayed by a queue; replay events/stats are intact.
@@ -989,6 +1004,7 @@ export class Campus3DScene {
   }
 
   selectPerson(id) {
+    if(this.indoor){this.selectedId=this.people.has(id)?id:null;this.clearLayer(this.relationLayer);const location=this.indoor.personLocation(id);if(location.inside)focusIndoorBuilding(this,location.buildingId);else{this.indoorSelectedBuilding=null;updateIndoorGlow(this)}this.invalidate();return}
     const next=this.people.has(id)?id:null
     if(next===this.selectedId)return
     this.selectedId=next
@@ -1060,6 +1076,7 @@ export class Campus3DScene {
         this.onSelect?.(person.id)
       }
     } else if (building) {
+      if(select&&this.indoor){focusIndoorBuilding(this,building.osm_id);this.onBuildingSelect?.(building.osm_id)}
       if(this.hoveredBuilding!==hit.object) {
         this.hoveredBuilding = hit.object
         this.hoveredEmissives = [hit.object.material].flat().filter(material=>material?.emissive).map(material => ({ material, color: material.emissive.clone() }))
@@ -1085,6 +1102,7 @@ export class Campus3DScene {
   }
 
   getStats() {
+    if(this.indoor)return {active:this.indoor.outside.length,queued:[...this.indoor.people.values()].reduce((n,p)=>n+p.queue.length,0),pending:this.indoor.pending,unreachable:this.indoor.unreachable}
     return { active: this.walkers.size, queued: [...this.people.values()].reduce((sum, entry) => sum + entry.queue.length, 0), unreachable: this.unreachable }
   }
 
@@ -1096,6 +1114,7 @@ export class Campus3DScene {
     this.onVisualActivity?.(count)
   }
   isWalking(id) { return this.walkers.has(id) }
+  setIndoorPosition(position){if(!this.indoor)return;this.indoorPosition=position;this.indoorDrain=0;this.indoor.sync(position);syncIndoorView(this)}
   setPlaying(playing) { this.playing = Boolean(playing);this.invalidate() }
   setSpeed(speed) { this.speed = Number.isFinite(Number(speed)) ? Math.max(0.1, Math.min(20, Number(speed))) : 1 }
 
@@ -1178,6 +1197,7 @@ export class Campus3DScene {
   focusPerson(id) {
     const entry = this.people.get(id) || this.people.get([...this.walkers][0]) || [...this.people.values()].find(item => item.person.role !== 'merchant')
     if (!entry || !this.camera) return null
+    if(this.indoor?.personLocation(entry.person.id).inside){this.selectPerson(entry.person.id);return entry.person.id}
     this.selectPerson(entry.person.id)
     this.overviewActive = false
     const target = entry.figure.position.clone().add(new THREE.Vector3(0, 4.3, 0))

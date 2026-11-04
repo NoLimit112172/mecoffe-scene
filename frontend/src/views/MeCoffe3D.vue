@@ -1,12 +1,12 @@
 <template>
-  <div class="campus3d-page">
+  <div class="campus3d-page" :data-indoor-occupancy="JSON.stringify(indoorState.buildings)" :data-inside="indoorState.inside">
     <header class="page-header">
       <div class="title-group"><span class="logo"><i class="fa-solid fa-cubes"></i></span><div><h1>{{scenario?.manifest.title || '中科大高新校区 · 三维校园沙盘'}}</h1><p>MeCoffe / 阶段 1 · OSM 建筑体块与步行路网</p></div></div>
       <div class="header-actions">
         <nav v-if="!scenario" aria-label="场景数据模式" class="mode-switch">
           <button v-for="mode in modes" :key="mode.key" :class="{ active: requestedMode === mode.key }" :aria-pressed="requestedMode === mode.key" :disabled="loading" @click="loadScene(mode.key)">{{ mode.label }}</button>
         </nav>
-        <Campus3DVisualControls :building-style="scenario?.manifest.style?.buildings || 'yulan'" v-model:character-pool="characterPool" :quality="quality" @update:quality="chooseQuality" v-model:cycle="dayCycle" v-model:hour="previewHour" :clock="lightClock.label" />
+        <Campus3DVisualControls :building-style="scenario?.manifest.style?.buildings || 'yulan'" v-model:character-pool="characterPool" :quality="quality" @update:quality="chooseQuality" v-model:cycle="dayCycle" v-model:hour="previewHour" :clock="'光照：展示效果'" />
         <span v-if="styleBusy" role="status" class="style-status">正在准备三维素材…</span>
         <RouterLink to="/mecoffe" class="old-page">二维沙盘 ↗</RouterLink>
         <RouterLink :to="{path:'/mecoffe-gis',query:{scenario:scenario?.manifest.id || 'ustc-history'}}" class="old-page">GIS 模式 ↗</RouterLink>
@@ -19,7 +19,7 @@
     <p v-if="styleError" role="alert" class="data-notice">{{styleError}}</p>
 
     <template v-if="index && !loadError">
-      <div v-if="scenario" class="data-notice" data-testid="simulation-time">{{simulatedClock.label}} · {{simulatedClock.timezone}}</div>
+      <div class="data-notice" data-testid="simulation-time">{{dayDisplay?.label || currentDay.label}} · 天内回放进度 {{dayDisplay?.progress || 0}}% · 昼夜变化为展示效果</div>
       <div class="data-notice" :class="requestedMode" data-testid="data-notice">{{ dataNotice }}</div>
 
       <p v-if="qualityNotice" role="status" class="data-notice">{{ qualityNotice }}</p>
@@ -52,9 +52,10 @@
           </div>
           <div v-else-if="activeTab === 'people'" class="side-content">
             <label class="search"><i class="fa-solid fa-magnifying-glass"></i><input v-model="query" placeholder="搜索人物姓名或编号" aria-label="搜索人物" /></label>
-            <div v-if="selected" class="person-detail"><div class="person-title"><span class="person-dot" :style="{ background: roleColor(selected.role) }"></span><h2>{{ selected.name }}</h2><small>{{ selected.role_label }}</small></div><code>{{ selected.id }}</code><p>示意所在楼栋：<b>{{ mappedBuilding(selected)?.name || '未映射' }}</b></p><p class="mapping-note">{{ mappingEntry(selected)?.note }}</p><p class="person-bio">{{ selected.bio }}</p><p>关注 {{ selectedFollowing.length }} 人 · 被关注 {{ selectedFollowers.length }} 人</p><div class="relation-buttons"><button v-for="person in selectedFollowing" :key="person.id" @click="selectPerson(person.id)">{{ person.name }}</button></div><div v-if="selectedHistory.length" class="person-history"><h3>截至当前的行为</h3><p v-for="event in selectedHistory.slice(0, 5)" :key="event.key">{{ describeEvent(index, event) }}</p></div></div>
-            <div class="roster" aria-label="人物名册"><button v-for="person in roster" :key="person.id" :class="{ selected: selectedId === person.id }" @click="selectPerson(person.id)"><span class="person-dot" :style="{ background: roleColor(person.role) }"></span><span>{{ person.name }}<small>{{ mappedBuilding(person)?.name || person.role_label }}</small></span><i v-if="selectedId === person.id" class="fa-solid fa-chevron-right"></i></button></div>
+            <div v-if="selected" class="person-detail"><div class="person-title"><span class="person-dot" :style="{ background: roleColor(selected.role) }"></span><h2>{{ selected.name }}</h2><small>{{ selected.role_label }}</small></div><code>{{ selected.id }}</code><p>{{personPlacement(selected.id)}}</p><p class="mapping-note">{{ mappingEntry(selected)?.note }}</p><p class="person-bio">{{ selected.bio }}</p><p>关注 {{ selectedFollowing.length }} 人 · 被关注 {{ selectedFollowers.length }} 人</p><div class="relation-buttons"><button v-for="person in selectedFollowing" :key="person.id" @click="selectPerson(person.id)">{{ person.name }}</button></div><div v-if="selectedHistory.length" class="person-history"><h3>截至当前的行为</h3><p v-for="event in selectedHistory.slice(0, 5)" :key="event.key">{{ describeEvent(index, event) }}</p></div></div>
+            <div class="roster" aria-label="人物名册"><button v-for="person in roster" :key="person.id" :data-person-id="person.id" :class="{ selected: selectedId === person.id }" @click="selectPerson(person.id)"><span class="person-dot" :style="{ background: roleColor(person.role) }"></span><span>{{ person.name }}<small>{{ mappedBuilding(person)?.name || person.role_label }}</small></span><i v-if="selectedId === person.id" class="fa-solid fa-chevron-right"></i></button></div>
           </div>
+          <div v-else-if="activeTab === 'building'" class="side-content"><h2>{{selectedBuilding?.name || '楼栋'}}</h2><p>楼内 {{buildingResidents.length}} 人（示意）</p><div class="roster"><button v-for="person in buildingResidents" :key="person.id" @click="selectPerson(person.id)">{{person.name}} · {{person.role_label}}</button></div></div>
           <div v-else class="side-content">
             <div class="section-heading"><h2>真实楼栋 · 示意对应</h2><small>8 个地点</small></div><p class="muted">轮廓与楼名来自 OSM。下面是原沙盘地点的人工展示映射，咖啡店不是核实店址。</p>
             <div v-for="[key, entry] in Object.entries(mappingData?.mappings || {})" :key="key" class="mapping-row"><small>{{ key }}</small><b>{{ buildingById.get(entry.osm_id)?.name || entry.osm_id }}</b><p>{{ entry.note }}</p></div>
@@ -83,14 +84,19 @@ import { advancePosition, clampPosition, cursorAtPosition, dataFileForMode, posi
 import { resolveHomeKey } from '../mecoffe/campus3dRouting.js'
 import { CHARACTER_ROLE_COLORS } from '../mecoffe/characterDisplay.js'
 import {scenarioTime} from '../mecoffe/scenario.js'
+import {displayDate} from '../mecoffe/indoorMotion.js'
 import { visualClock } from '../mecoffe/campus3dPresentation.js'
 
 const props=defineProps({scenario:{type:Object,default:null}})
 const modes = [{ key: 'demo', label: '新版演示' }, { key: 'network', label: '关系网络' }, { key: 'history', label: '历史回放' }]
-const tabs = [{ key: 'events', label: '事件' }, { key: 'people', label: '人物' }, { key: 'mapping', label: '地点映射' }]
+const tabs = [{ key: 'events', label: '事件' }, { key: 'people', label: '人物' }, { key: 'mapping', label: '地点映射' }, {key:'building',label:'楼栋'}]
 const brandColors = ['#22856e', '#bd7545']
 const index = shallowRef(null)
 const campusData = shallowRef(null)
+const indoorState=shallowRef({buildings:{},persons:{},inside:0}), selectedBuildingId=ref(null), sourceTime=shallowRef(null)
+const selectedBuilding=computed(()=>campusData.value?.buildings.find(b=>b.osm_id===selectedBuildingId.value))
+const buildingResidents=computed(()=>(indoorState.value.buildings[selectedBuildingId.value]||[]).map(id=>index.value?.people.get(id)).filter(Boolean))
+function personPlacement(id){const state=indoorState.value.persons[id],b=campusData.value?.buildings.find(b=>b.osm_id===state?.buildingId);return state?.buildingId?`在 ${b?.name || '楼栋'} 内（示意）`:'正在进出楼或沿步行路线移动（示意）'}
 const mappingData = shallowRef(null)
 const mapEl = ref(null)
 const loading = ref(true)
@@ -117,12 +123,12 @@ const roleNames = { undergraduate_consumer:'本科生', graduate_consumer:'研�
 const dayPosition = ref(0)
 const motion = ref({ active: 0, queued: 0, unreachable: 0 })
 const pendingEffects = ref(0)
-const hasPendingAnimation = () => Boolean(motion.value.active || motion.value.queued || pendingEffects.value)
+const hasPendingAnimation = () => Boolean(motion.value.pending || motion.value.active || motion.value.queued || pendingEffects.value)
 let renderer = null
 let generation = 0
 let controller = null
 let frame = 0
-let lastTime = 0
+let lastTime = 0, precisePosition=0, lastUiTime=0
 
 const scene = computed(() => index.value?.scene)
 const meta = computed(() => scene.value?.meta)
@@ -133,6 +139,7 @@ const cursor = computed(() => index.value ? cursorAtPosition(index.value, dayPos
 const atEnd = computed(() => index.value && dayPosition.value >= days.value.length)
 const dayIndex = computed(() => Math.max(0, Math.min(days.value.length - 1, Math.floor(dayPosition.value))))
 const currentDay = computed(() => days.value[dayIndex.value] || { label: '', complete: true })
+const dayDisplay=computed(()=>sourceTime.value?displayDate(sourceTime.value,dayPosition.value,index.value):null)
 const simulatedClock=computed(()=>props.scenario?scenarioTime(props.scenario.manifest.simulation_time,Math.max(0,dayPosition.value-(days.value[0]?.step===0?1:0))):null)
 const lightClock = computed(() => simulatedClock.value && dayCycle.value ? {...simulatedClock.value,label:simulatedClock.value.label.slice(11)} : visualClock(dayPosition.value,{cycle:dayCycle.value,hour:previewHour.value}))
 function lightSettings(){return simulatedClock.value && dayCycle.value?{cycle:false,hour:simulatedClock.value.hour}:{position:dayPosition.value,cycle:dayCycle.value,hour:previewHour.value}}
@@ -172,6 +179,7 @@ function focusPerson() {
   if (id) selectPerson(id)
 }
 function stopTimeline() {
+  if(playing.value)dayPosition.value=precisePosition
   playing.value = false
   draining.value = false
   cancelAnimationFrame(frame)
@@ -182,12 +190,12 @@ function animateRange(from, to) {
 }
 function loop(now) {
   if (!playing.value || !index.value) return
-  if(lastTime && now-lastTime<200){frame=requestAnimationFrame(loop);return}
-  const before = cursor.value
-  const elapsed = lastTime ? now - lastTime : 0
-  lastTime = now
-  dayPosition.value = advancePosition(index.value, dayPosition.value, elapsed, speed.value, 12)
-  animateRange(before, cursor.value)
+  const before=cursorAtPosition(index.value,precisePosition)
+  const elapsed=lastTime?now-lastTime:0;lastTime=now
+  precisePosition=advancePosition(index.value,precisePosition,elapsed,speed.value,12)
+  renderer?.setIndoorPosition(precisePosition)
+  animateRange(before,cursorAtPosition(index.value,precisePosition))
+  if(now-lastUiTime>=200 || precisePosition>=days.value.length){dayPosition.value=precisePosition;lastUiTime=now}
   if (atEnd.value) {
     draining.value = hasPendingAnimation()
     playing.value = false
@@ -208,7 +216,8 @@ function seek(position) {
   if (!index.value || loading.value) return
   stopTimeline()
   dayPosition.value = clampPosition(index.value, position)
-  renderer?.setCursor(cursor.value)
+  precisePosition=dayPosition.value
+  if(renderer?.indoor){renderer.indoor.reset();renderer.setIndoorPosition(dayPosition.value)}else renderer?.setCursor(cursor.value)
   hoverCard.value = null
 }
 function jumpDay(delta) {
@@ -220,6 +229,7 @@ function stepEvent() {
   stopTimeline()
   const before = cursor.value
   dayPosition.value = positionAtCursor(index.value, before + 1)
+  precisePosition=dayPosition.value;renderer?.setIndoorPosition(dayPosition.value)
   animateRange(before, cursor.value)
   draining.value = hasPendingAnimation()
 }
@@ -232,7 +242,7 @@ function previewWalking() {
   selectPerson(scene.value.events[next].actor)
   renderer?.resetCamera()
 }
-watch([playing, draining], () => renderer?.setPlaying(playing.value || draining.value))
+watch([playing, draining], () => {if(renderer)renderer.timelinePlaying=playing.value;renderer?.setPlaying(playing.value || draining.value)})
 watch(speed, value => renderer?.setSpeed(value))
 watch(quality, value => renderer?.setQuality(value))
 async function applyStyle(method,value) {
@@ -248,6 +258,7 @@ watch([dayPosition, dayCycle, previewHour], () => renderer?.setLighting(lightSet
 
 async function fetchJson(file, signal) {
   if(props.scenario){const key=({'scene.json':'trajectory.json','campus3d_mapping.json':'location_mapping.json','campus3d_landcover.json':'landcover.json','campus3d_surroundings.json':'surroundings.json'})[file]||file;return props.scenario.files[key] || (key==='surroundings.json'?{roads:[]}:null)}
+  if(file==='entrances.json')file='scenarios/ustc-history/entrances.json'
   const response = await fetch(`${import.meta.env.BASE_URL}mecoffe/${file}`, { cache: 'no-store', signal })
   if (!response.ok) throw new Error(`${file}: HTTP ${response.status}`)
   return response.json()
@@ -274,16 +285,19 @@ async function loadScene(mode) {
   loadError.value = ''
   let view = null
   try {
-    const [data, campus, mapping, landcover, surroundings] = await Promise.all([fetchJson(dataFileForMode(mode), controller.signal), fetchJson('campus3d.json', controller.signal), fetchJson('campus3d_mapping.json', controller.signal), fetchJson('campus3d_landcover.json', controller.signal), fetchJson('campus3d_surroundings.json', controller.signal)])
+    const [data, campus, mapping, landcover, surroundings, entrances, timeManifest] = await Promise.all([fetchJson(dataFileForMode(mode), controller.signal), fetchJson('campus3d.json', controller.signal), fetchJson('campus3d_mapping.json', controller.signal), fetchJson('campus3d_landcover.json', controller.signal), fetchJson('campus3d_surroundings.json', controller.signal),fetchJson('entrances.json',controller.signal),props.scenario?Promise.resolve(props.scenario.manifest):fetchJson('scenarios/ustc-history/scenario.json',controller.signal)])
     if (current !== generation) return
+    if(entrances?.schema_version!=='mecoffe.entrances.v1')throw new Error('场景缺少楼栋入口，请重新生成场景')
     validateDataMode(data, mode)
+    sourceTime.value=timeManifest.simulation_time;precisePosition=0
     campusData.value = campus
     mappingData.value = mapping
     index.value = indexScene(data)
     await nextTick()
     if (current !== generation) return
-    view = new Campus3DScene({ host: mapEl.value, campus, mapping, index: index.value, landcovers:landcover.features, surroundings:surroundings.roads,characterPool:characterPool.value,deferCharacters:IS_PAGES,
+    view = new Campus3DScene({ host: mapEl.value, campus, mapping, index: index.value, entrances, landcovers:landcover.features, surroundings:surroundings.roads,characterPool:characterPool.value,deferCharacters:IS_PAGES,
       onQuality: value=>{quality.value=value;qualityNotice.value='已调整画质，让回放更流畅。'},
+      onIndoor: value=>{indoorState.value=value},onBuildingSelect:id=>{selectedBuildingId.value=id;activeTab.value='building'},
       onHover: card => { hoverCard.value = card }, onSelect: selectPerson,
       onStats: stats => { motion.value = stats; if (draining.value && !hasPendingAnimation()) draining.value = false },
       onVisualActivity: count => { pendingEffects.value = count; if (draining.value && !hasPendingAnimation()) draining.value = false },

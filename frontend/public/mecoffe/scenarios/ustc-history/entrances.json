@@ -1,0 +1,806 @@
+{
+  "schema_version": "mecoffe.entrances.v1",
+  "campus_id": "ustc_gaoxin_osm",
+  "illustrative": true,
+  "geometry_source": {
+    "source_url": "https://api.openstreetmap.org/api/0.6/map?bbox=117.1194,31.8180,117.1283,31.8270",
+    "downloaded_at_utc": "2026-11-03T05:01:24.973987+00:00",
+    "sha256": "663062802ab35914d085a7a97d2be29001d0d6bc786b69b688608bdd37ee6437",
+    "bbox": [
+      117.1194,
+      31.818,
+      117.1283,
+      31.827
+    ],
+    "license": "ODbL-1.0",
+    "attribution": "© OpenStreetMap contributors",
+    "relation_id": "14093671",
+    "osm_generator": "openstreetmap-cgimap 2.1.0 (2089598 spike-07.openstreetmap.org)",
+    "license_url": "https://www.openstreetmap.org/copyright"
+  },
+  "note": "入口与道路连接为展示示意；本轮统一推断入口，非实测，不解析 OSM entrance 标注。",
+  "entrances": [
+    {
+      "id": "way/1435368245/entrance/1",
+      "building_id": "way/1435368245",
+      "point": [
+        -292.924,
+        -384.996
+      ],
+      "source": "inferred",
+      "road_node_id": "node/11546061726",
+      "connector": [
+        [
+          -292.924,
+          -384.996
+        ],
+        [
+          -292.732211,
+          -380.078599
+        ],
+        [
+          -286.953,
+          -380.304
+        ]
+      ],
+      "connected": true,
+      "illustrative": true
+    },
+    {
+      "id": "way/1435368246/entrance/1",
+      "building_id": "way/1435368246",
+      "point": [
+        -329.034,
+        -347.379
+      ],
+      "source": "inferred",
+      "road_node_id": "node/11546061725",
+      "connector": [
+        [
+          -329.034,
+          -347.379
+        ],
+        [
+          -323.920491,
+          -347.442423
+        ],
+        [
+          -324.31,
+          -378.847
+        ]
+      ],
+      "connected": true,
+      "illustrative": true
+    },
+    {
+      "id": "way/1435368247/entrance/1",
+      "building_id": "way/1435368247",
+      "point": [
+        -307.625,
+        -267.174
+      ],
+      "source": "inferred",
+      "road_node_id": "node/11546061724",
+      "connector": [
+        [
+          -307.625,
+          -267.174
+        ],
+        [
+          -307.669383,
+          -281.463056
+        ],
+        [
+          -322.175,
+          -281.418
+        ]
+      ],
+      "connected": true,
+      "illustrative": true
+    },
+    {
+      "id": "way/1435368248/entrance/1",
+      "building_id": "way/1435368248",
+      "point": [
+        -231.096,
+        -213.167
+      ],
+      "source": "inferred",
+      "road_node_id": "node/11546061712",
+      "connector": [
+        [
+          -231.096,
+          -213.167
+        ],
+        [
+          -228.017979,
+          -210.942381
+        ],
+        [
+          -230.67,
+          -207.273
+        ]
+      ],
+      "connected": true,
+      "illustrative": true
+    },
+    {
+      "id": "way/1435368249/entrance/1",
+      "building_id": "way/1435368249",
+      "point": [
+        -232.144,
+        -442.662
+      ],
+      "source": "inferred",
+      "road_node_id": "node/11546061730",
+      "connector": [
+        [
+          -232.144,
+          -442.662
+        ],
+        [
+          -232.071452,
+          -435.519467
+        ],
+        [
+          -213.116,
+          -435.712
+        ]
+      ],
+      "connected": true,
+      "illustrative": true
+    },
+    {
+      "id": "way/1435368250/entrance/1",
+      "building_id": "way/1435368250",
+      "point": [
+        -157.854,
+        -49.821
+      ],
+      "source": "inferred",
+      "road_node_id": "node/11546057949",
+      "connector": [
+        [
+          -157.854,
+          -49.821
+        ],
+        [
+          -152.940455,
+          -48.488457
+        ],
+        [
+          -155.284,
+          -39.847
+        ]
+      ],
+      "connected": true,
+      "illustrative": true
+    },
+    {
+      "id": "way/1435368251/entrance/1",
+      "building_id": "way/1435368251",
+      "point": [
+        -210.778649,
+        -285.662882
+      ],
+      "source": "inferred",
+      "road_node_id": "node/11546061714",
+      "connector": [
+        [
+          -210.778649,
+          -285.662882
+        ],
+        [
+          -211.103,
+          -281.763
+        ]
+      ],
+      "connected": true,
+      "illustrative": true
+    },
+    {
+      "id": "way/1435368252/entrance/1",
+      "building_id": "way/1435368252",
+      "point": [
+        -194.746173,
+        -343.776196
+      ],
+      "source": "inferred",
+      "road_node_id": "node/11546061715",
+      "connector": [
+        [
+          -194.746173,
+          -343.776196
+        ],
+        [
+          -207.721,
+          -322.427
+        ]
+      ],
+      "connected": true,
+      "illustrative": true
+    },
+    {
+      "id": "way/1435368253/entrance/1",
+      "building_id": "way/1435368253",
+      "point": [
+        -161.46051,
+        -398.036952
+      ],
+      "source": "inferred",
+      "road_node_id": "node/11546061716",
+      "connector": [
+        [
+          -161.46051,
+          -398.036952
+        ],
+        [
+          -169.73,
+          -384.93
+        ]
+      ],
+      "connected": true,
+      "illustrative": true
+    },
+    {
+      "id": "way/1435370291/entrance/1",
+      "building_id": "way/1435370291",
+      "point": [
+        -22.501,
+        -411.961
+      ],
+      "source": "inferred",
+      "road_node_id": "node/11546057960",
+      "connector": [
+        [
+          -22.501,
+          -411.961
+        ],
+        [
+          -22.301329,
+          -391.105788
+        ],
+        [
+          1.535,
+          -391.334
+        ]
+      ],
+      "connected": true,
+      "illustrative": true
+    },
+    {
+      "id": "way/1435377493/entrance/1",
+      "building_id": "way/1435377493",
+      "point": [
+        94.618,
+        -363.613
+      ],
+      "source": "inferred",
+      "road_node_id": "node/11546061677",
+      "connector": [
+        [
+          94.618,
+          -363.613
+        ],
+        [
+          94.741358,
+          -350.468606
+        ],
+        [
+          123.34,
+          -350.737
+        ]
+      ],
+      "connected": true,
+      "illustrative": true
+    },
+    {
+      "id": "way/1435377494/entrance/1",
+      "building_id": "way/1435377494",
+      "point": [
+        287.236,
+        -465.379
+      ],
+      "source": "inferred",
+      "road_node_id": "node/11546057917",
+      "connector": [
+        [
+          287.236,
+          -465.379
+        ],
+        [
+          287.163068,
+          -492.56175
+        ],
+        [
+          367.762,
+          -492.778
+        ]
+      ],
+      "connected": true,
+      "illustrative": true
+    },
+    {
+      "id": "way/1435377495/entrance/1",
+      "building_id": "way/1435377495",
+      "point": [
+        230.368,
+        -404.211
+      ],
+      "source": "inferred",
+      "road_node_id": "node/11546061675",
+      "connector": [
+        [
+          230.368,
+          -404.211
+        ],
+        [
+          226.044316,
+          -349.06634
+        ],
+        [
+          195.949,
+          -351.426
+        ]
+      ],
+      "connected": true,
+      "illustrative": true
+    },
+    {
+      "id": "way/1435377496/entrance/1",
+      "building_id": "way/1435377496",
+      "point": [
+        243.388,
+        -360.822
+      ],
+      "source": "inferred",
+      "road_node_id": "node/11546061675",
+      "connector": [
+        [
+          243.388,
+          -360.822
+        ],
+        [
+          242.365946,
+          -347.786623
+        ],
+        [
+          195.949,
+          -351.426
+        ]
+      ],
+      "connected": true,
+      "illustrative": true
+    },
+    {
+      "id": "way/1435377497/entrance/1",
+      "building_id": "way/1435377497",
+      "point": [
+        321.911,
+        -361.734
+      ],
+      "source": "inferred",
+      "road_node_id": "node/11546061676",
+      "connector": [
+        [
+          321.911,
+          -361.734
+        ],
+        [
+          320.338103,
+          -341.673122
+        ],
+        [
+          334.637,
+          -340.552
+        ]
+      ],
+      "connected": true,
+      "illustrative": true
+    },
+    {
+      "id": "way/1435377498/entrance/1",
+      "building_id": "way/1435377498",
+      "point": [
+        214.618,
+        -283.609
+      ],
+      "source": "inferred",
+      "road_node_id": "node/11546061690",
+      "connector": [
+        [
+          214.618,
+          -283.609
+        ],
+        [
+          206.459048,
+          -277.424651
+        ],
+        [
+          212.105,
+          -269.976
+        ]
+      ],
+      "connected": true,
+      "illustrative": true
+    },
+    {
+      "id": "way/1435377499/entrance/1",
+      "building_id": "way/1435377499",
+      "point": [
+        312.614,
+        -273.746
+      ],
+      "source": "inferred",
+      "road_node_id": "node/11546061676",
+      "connector": [
+        [
+          312.614,
+          -273.746
+        ],
+        [
+          334.540445,
+          -273.714325
+        ],
+        [
+          334.637,
+          -340.552
+        ]
+      ],
+      "connected": true,
+      "illustrative": true
+    },
+    {
+      "id": "way/1435377500/entrance/1",
+      "building_id": "way/1435377500",
+      "point": [
+        217.453,
+        -193.641
+      ],
+      "source": "inferred",
+      "road_node_id": "node/11546061693",
+      "connector": [
+        [
+          217.453,
+          -193.641
+        ],
+        [
+          205.948222,
+          -186.968376
+        ],
+        [
+          193.256,
+          -208.852
+        ]
+      ],
+      "connected": true,
+      "illustrative": true
+    },
+    {
+      "id": "way/1435377501/entrance/1",
+      "building_id": "way/1435377501",
+      "point": [
+        10.379,
+        -194.53
+      ],
+      "source": "inferred",
+      "road_node_id": "node/11546061706",
+      "connector": [
+        [
+          10.379,
+          -194.53
+        ],
+        [
+          10.352947,
+          -185.639858
+        ],
+        [
+          15.764,
+          -185.624
+        ]
+      ],
+      "connected": true,
+      "illustrative": true
+    },
+    {
+      "id": "way/1435377502/entrance/1",
+      "building_id": "way/1435377502",
+      "point": [
+        109.839,
+        -272.289
+      ],
+      "source": "inferred",
+      "road_node_id": "node/11546061678",
+      "connector": [
+        [
+          109.839,
+          -272.289
+        ],
+        [
+          117.055553,
+          -272.161327
+        ],
+        [
+          117.095,
+          -274.391
+        ]
+      ],
+      "connected": true,
+      "illustrative": true
+    },
+    {
+      "id": "way/1435377503/entrance/1",
+      "building_id": "way/1435377503",
+      "point": [
+        114.745262,
+        -234.345325
+      ],
+      "source": "inferred",
+      "road_node_id": "node/11546061679",
+      "connector": [
+        [
+          114.745262,
+          -234.345325
+        ],
+        [
+          116.386,
+          -234.349
+        ]
+      ],
+      "connected": true,
+      "illustrative": true
+    },
+    {
+      "id": "way/1435377504/entrance/1",
+      "building_id": "way/1435377504",
+      "point": [
+        20.696,
+        -11.637
+      ],
+      "source": "inferred",
+      "road_node_id": "node/11546057967",
+      "connector": [
+        [
+          20.696,
+          -11.637
+        ],
+        [
+          20.717434,
+          1.42467
+        ],
+        [
+          4.672,
+          1.451
+        ]
+      ],
+      "connected": true,
+      "illustrative": true
+    },
+    {
+      "id": "way/1435377505/entrance/1",
+      "building_id": "way/1435377505",
+      "point": [
+        -209.987324,
+        -204.854867
+      ],
+      "source": "inferred",
+      "road_node_id": "node/11546057942",
+      "connector": [
+        [
+          -209.987324,
+          -204.854867
+        ],
+        [
+          -214.486,
+          -207.573
+        ]
+      ],
+      "connected": true,
+      "illustrative": true
+    },
+    {
+      "id": "way/1435377506/entrance/1",
+      "building_id": "way/1435377506",
+      "point": [
+        -103.483372,
+        -423.355255
+      ],
+      "source": "inferred",
+      "road_node_id": "node/11546061720",
+      "connector": [
+        [
+          -103.483372,
+          -423.355255
+        ],
+        [
+          -103.707,
+          -436.302
+        ]
+      ],
+      "connected": true,
+      "illustrative": true
+    },
+    {
+      "id": "way/1435377507/entrance/1",
+      "building_id": "way/1435377507",
+      "point": [
+        219.182,
+        -142.502
+      ],
+      "source": "inferred",
+      "road_node_id": "node/11546061694",
+      "connector": [
+        [
+          219.182,
+          -142.502
+        ],
+        [
+          217.82777,
+          -163.336587
+        ],
+        [
+          219.588,
+          -163.451
+        ]
+      ],
+      "connected": true,
+      "illustrative": true
+    },
+    {
+      "id": "way/1435377508/entrance/1",
+      "building_id": "way/1435377508",
+      "point": [
+        17.928,
+        -119.996
+      ],
+      "source": "inferred",
+      "road_node_id": "node/11546057968",
+      "connector": [
+        [
+          17.928,
+          -119.996
+        ],
+        [
+          4.672,
+          -119.996
+        ],
+        [
+          4.672,
+          -161.294
+        ]
+      ],
+      "connected": true,
+      "illustrative": true
+    },
+    {
+      "id": "way/1435377509/entrance/1",
+      "building_id": "way/1435377509",
+      "point": [
+        314.21,
+        -143.358
+      ],
+      "source": "inferred",
+      "road_node_id": "node/11546057947",
+      "connector": [
+        [
+          314.21,
+          -143.358
+        ],
+        [
+          312.499135,
+          -169.525623
+        ],
+        [
+          334.392,
+          -170.957
+        ]
+      ],
+      "connected": true,
+      "illustrative": true
+    },
+    {
+      "id": "way/1435377510/entrance/1",
+      "building_id": "way/1435377510",
+      "point": [
+        269.767,
+        -28.705
+      ],
+      "source": "inferred",
+      "road_node_id": "node/11546057931",
+      "connector": [
+        [
+          269.767,
+          -28.705
+        ],
+        [
+          269.782056,
+          -13.632344
+        ],
+        [
+          364.54,
+          -13.727
+        ]
+      ],
+      "connected": true,
+      "illustrative": true
+    },
+    {
+      "id": "way/1435377511/entrance/1",
+      "building_id": "way/1435377511",
+      "point": [
+        269.767,
+        -28.705
+      ],
+      "source": "inferred",
+      "road_node_id": "node/11546057931",
+      "connector": [
+        [
+          269.767,
+          -28.705
+        ],
+        [
+          269.782056,
+          -13.632344
+        ],
+        [
+          364.54,
+          -13.727
+        ]
+      ],
+      "connected": true,
+      "illustrative": true
+    },
+    {
+      "id": "way/1435377512/entrance/1",
+      "building_id": "way/1435377512",
+      "point": [
+        154.944,
+        -30.784
+      ],
+      "source": "inferred",
+      "road_node_id": "node/11546057932",
+      "connector": [
+        [
+          154.944,
+          -30.784
+        ],
+        [
+          154.961248,
+          -13.517646
+        ],
+        [
+          119.277,
+          -13.482
+        ]
+      ],
+      "connected": true,
+      "illustrative": true
+    },
+    {
+      "id": "way/1501639766/entrance/1",
+      "building_id": "way/1501639766",
+      "point": [
+        -372.118,
+        -166.442
+      ],
+      "source": "inferred",
+      "road_node_id": "node/11546057902",
+      "connector": [
+        [
+          -372.118,
+          -166.442
+        ],
+        [
+          -391.365875,
+          -168.605575
+        ],
+        [
+          -392.384,
+          -159.548
+        ]
+      ],
+      "connected": true,
+      "illustrative": true
+    }
+  ]
+}

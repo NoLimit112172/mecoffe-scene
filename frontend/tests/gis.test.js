@@ -49,13 +49,16 @@ test('same-route departures are staggered only in display time, without editing 
   for(const [i,person]of peers.entries())replay.event({...purchase,actor:person.id,key:`headway-${i}`,order_id:`headway-${i}`})
   replay.admit()
   const [first,second]=peers
-  assert.equal(first.walker.phase,'outbound');assert.equal(second.walker.phase,'waiting');assert.equal(second.walker.delay,DISPLAY_ROUTE_HEADWAY)
+  assert.equal(first.walker.phase,'waiting');assert.equal(second.walker.phase,'waiting')
+  assert.equal(second.walker.until-first.walker.until,DISPLAY_ROUTE_HEADWAY)
   assert.deepEqual(first.walker.route.node_ids,second.walker.route.node_ids)
-  const initial={x:second.x,y:second.y};replay.move(first,.2);replay.move(second,.2)
-  assert.deepEqual({x:second.x,y:second.y},initial);assert(Math.hypot(first.x-second.x,first.y-second.y)>5)
-  replay.move(second,.3);assert.equal(second.walker.phase,'outbound');assert.notDeepEqual({x:second.x,y:second.y},initial)
+  replay.motion.purchases=[];replay.motion.sync(0,.25)
+  assert.equal(first.walker.phase,'exit-home');assert.equal(second.walker.phase,'waiting')
+  replay.motion.sync(0,1.2);assert.equal(first.walker.phase,'outbound');assert.equal(second.walker.phase,'outbound')
+  assert(Math.hypot(first.x-second.x,first.y-second.y)>5)
   assert.equal(nextDisplayDeparture(1,10),10);assert.equal(nextDisplayDeparture(1,1),1+DISPLAY_ROUTE_HEADWAY)
-  assert.equal(JSON.stringify(s),before);replay.seek(0);assert.equal(replay.departures.size,0)
+  assert.equal(JSON.stringify(s),before);replay.seek(0);assert.equal(replay.motion.departures.size,0)
+
 })
 
 test('published map dependency notices include the pinned SDK and its actual dependency copyrights',()=>{
@@ -114,7 +117,7 @@ test('history replay shares the sandbox cursor/clock, uses its A* graph, and lea
   assert.equal(replay.position,advancePosition(replay.index,position,200,1,12));assert(replay.active>0)
   const actor=[...replay.people.values()].find(p=>p.walker),route=actor.walker.route
   assert(route.node_ids.every(id=>replay.routing.nodes.has(id)))
-  const before={x:actor.x,y:actor.y};replay.advance(100,1);assert(Math.hypot(before.x-actor.x,before.y-actor.y)>0)
+  const before={x:actor.x,y:actor.y};for(let tick=0;tick<10;tick++)replay.advance(100,1);assert(Math.hypot(before.x-actor.x,before.y-actor.y)>0)
   assert.equal(JSON.stringify(s),original)
   replay.seek(0);assert.equal(replay.active,0);assert.equal(replay.pending,0)
   assert.equal(heightDescription('default'),'展示默认高度')

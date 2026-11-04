@@ -1,5 +1,5 @@
 // Engine-independent GIS presentation contract. No MapLibre/Three/Vue imports.
-export const GIS_LAYERS=['buildings','roads','landcover','water','boundary','pois']
+export const GIS_LAYERS=['buildings','roads','landcover','water','boundary','pois','entrances']
 export const ROLE_COLORS={merchant:'#b86a38',undergraduate_consumer:'#3185a0',graduate_consumer:'#8b6da5',teacher_consumer:'#3e8a68'}
 export const CATEGORY_COLORS={dormitory:'#d6b78e',education:'#8fb3bf',library:'#ad9bbd',public:'#83b6a0',commercial:'#d1a06c'}
 export function localToLngLat(point,projection){
