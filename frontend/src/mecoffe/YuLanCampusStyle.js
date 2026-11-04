@@ -10,7 +10,7 @@ import { decorationVisibility } from './campus3dEnvironmentModel.js'
 
 export class YuLanCampusStyle {
   constructor({ scene, campus, buildingMeshes, resolvePrototype, prototypes = [], environment = null,
-    decorPlacements = null, resolveDecorationPrototype = null, sourceObjects = {} } = {}) {
+    decorPlacements = null, resolveDecorationPrototype = null, sourceObjects = {}, inspectableBuildings = new Set() } = {}) {
     this.scene = scene
     this.campus = campus
     this.buildingMeshes = buildingMeshes
@@ -25,6 +25,8 @@ export class YuLanCampusStyle {
     this.group.name = 'YuLan modular buildings (optional)'
     this.group.visible = false
     this.savedVisibility = new Map()
+    this.inspectableBuildings = inspectableBuildings
+    this.inspectableGroups = new Map()
     this.savedDecorVisibility = new Map()
     this.decorationGroups = new Map()
     this.decorationBatches = []
@@ -55,10 +57,16 @@ export class YuLanCampusStyle {
       group.userData.assetPrototype = corrected?.changed ? `building.yulan.${corrected.type<27?'house':'villa'}${corrected.type}` : prototype.id
       group.userData.assetVariant = corrected?.changed ? `model-${corrected.model}` : resolved.variant?.id || null
       group.userData.building = building
-      this.group.add(group)
+      if (this.inspectableBuildings.has(building.osm_id)) {
+        batchStaticMeshes(group)
+        this.inspectableGroups.set(building.osm_id, group)
+      } else {
+        this.group.add(group)
+      }
       this.savedVisibility.set(mesh,mesh.visible)
     }
     this.staticBatches=batchStaticMeshes(this.group)
+    for (const group of this.inspectableGroups.values()) this.group.add(group)
     this.createDecorations()
     this.removeClearanceListener = this.environment?.onAgentClearance?.(value => this.setAgentClearance(value))
     this.setAgentClearance(this.agentClearance)
@@ -165,12 +173,17 @@ export class YuLanCampusStyle {
 
   setEnabled(enabled) { this.setVisible(enabled) }
 
+  setBuildingCutaway(id) {
+    for (const [buildingId, group] of this.inspectableGroups) group.visible = buildingId !== id
+  }
+
   dispose() {
     if(this.disposed)return
     this.disposed=true
     this.setVisible(false)
     disposeYuLanObject(this.group)
     this.group.clear()
+    this.inspectableGroups.clear()
     this.savedVisibility.clear()
     this.savedDecorVisibility.clear()
     this.decorationGroups.clear()

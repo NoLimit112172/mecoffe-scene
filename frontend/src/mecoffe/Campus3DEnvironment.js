@@ -310,7 +310,7 @@ export class Campus3DEnvironment {
         const a = building.polygon[i - 1]
         const b = building.polygon[i]
         const length = Math.hypot(b[0] - a[0], b[1] - a[1])
-        if (length > .5) parapets.push({ x: (a[0] + b[0]) / 2, y: (a[1] + b[1]) / 2, height: building.height_m + L.buildingBase + .55,
+        if (length > .5) parapets.push({ buildingId: building.osm_id, x: (a[0] + b[0]) / 2, y: (a[1] + b[1]) / 2, height: building.height_m + L.buildingBase + .55,
           length, angle: Math.atan2(-(b[1] - a[1]), b[0] - a[0]), color: palette.accent })
       }
     }
@@ -319,15 +319,29 @@ export class Campus3DEnvironment {
     const matrix = new THREE.Matrix4()
     const rotation = new THREE.Quaternion()
     const colour = new THREE.Color()
+    this.parapets = { mesh: rim, byBuilding: new Map() }
     for (const [i, edge] of parapets.entries()) {
       rotation.setFromAxisAngle(new THREE.Vector3(0, 1, 0), -edge.angle)
       matrix.compose(new THREE.Vector3(edge.x, edge.height, -edge.y), rotation, new THREE.Vector3(edge.length, .65, .6))
       rim.setMatrixAt(i, matrix)
       rim.setColorAt(i, colour.set(edge.color))
+      const byBuilding = this.parapets.byBuilding
+      if (!byBuilding.has(edge.buildingId)) byBuilding.set(edge.buildingId, [])
+      byBuilding.get(edge.buildingId).push({ index: i, matrix: matrix.clone() })
     }
     rim.instanceMatrix.needsUpdate = true
     if (rim.instanceColor) rim.instanceColor.needsUpdate = true
     this.group.add(rim)
+  }
+
+  setBuildingCutaway(id) {
+    if (!this.parapets || this.cutawayBuildingId === id) return
+    const { mesh, byBuilding } = this.parapets
+    for (const { index, matrix } of byBuilding.get(this.cutawayBuildingId) || []) mesh.setMatrixAt(index, matrix)
+    const hidden = new THREE.Matrix4().makeScale(0, 0, 0)
+    for (const { index } of byBuilding.get(id) || []) mesh.setMatrixAt(index, hidden)
+    mesh.instanceMatrix.needsUpdate = true
+    this.cutawayBuildingId = id
   }
 
   drawLandcovers() {
@@ -425,16 +439,20 @@ export class Campus3DEnvironment {
     const lightMaterial = this.own(new THREE.MeshBasicMaterial({ color: 0x1d180d, toneMapped: false }))
     const light = new THREE.InstancedMesh(this.own(new THREE.SphereGeometry(.9, 6, 4)), lightMaterial, lamps.length)
     light.userData.bloom = true
-    const [image, context] = canvas(64, 64)
-    const gradient = context.createRadialGradient(32, 32, 0, 32, 32, 32)
-    gradient.addColorStop(0, 'rgba(255,223,141,.55)')
-    gradient.addColorStop(.35, 'rgba(255,216,123,.2)')
-    gradient.addColorStop(1, 'rgba(255,211,118,0)')
+    const size = 128
+    const radius = size / 2
+    const [image, context] = canvas(size, size)
+    const gradient = context.createRadialGradient(radius, radius, 0, radius, radius, radius)
+    gradient.addColorStop(0, 'rgba(255,225,161,.6)')
+    gradient.addColorStop(.35, 'rgba(255,225,161,.28)')
+    gradient.addColorStop(.7, 'rgba(255,225,161,.06)')
+    gradient.addColorStop(1, 'rgba(255,225,161,0)')
     context.fillStyle = gradient
-    context.fillRect(0, 0, 64, 64)
+    context.fillRect(0, 0, size, size)
     const poolMaterial = this.own(new THREE.MeshBasicMaterial({ map: this.texture(image), transparent: true, opacity: 0, depthWrite: false, side: THREE.DoubleSide, toneMapped: false }))
-    const pools = new THREE.InstancedMesh(this.own(new THREE.PlaneGeometry(18, 18)), poolMaterial, lamps.length)
-    pools.userData.bloom = true
+    const pools = new THREE.InstancedMesh(this.own(new THREE.PlaneGeometry(12, 12)), poolMaterial, lamps.length)
+    // The fixture can glow, but the translucent ground pool stays local.
+    pools.userData.bloomOcclusion = false
     const dummy = new THREE.Object3D()
     for (const [i, point] of lamps.entries()) {
       dummy.rotation.set(0, 0, 0)
@@ -454,7 +472,7 @@ export class Campus3DEnvironment {
       item.instanceMatrix.needsUpdate = true
       this.registerDecorationBatch(item, lamps)
     }
-    this.lightMaterials.push({ material: lightMaterial, colour: new THREE.Color('#ffe0a0'), multiplier: 2.2 }, { material: poolMaterial, opacity: .7 })
+    this.lightMaterials.push({ material: lightMaterial, colour: new THREE.Color('#ffe0a0'), multiplier: 2.2 }, { material: poolMaterial, opacity: .36 })
     this.group.add(stem, light, pools)
     const seats = this.placements.benches
     const wood = this.own(new THREE.MeshStandardMaterial({ color: bench.wood, roughness: .95 }))

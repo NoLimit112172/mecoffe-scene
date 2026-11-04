@@ -31,6 +31,7 @@ import {arcPoints} from './Campus3DEffects.js'
 import {Campus3DEntrances} from './Campus3DEntrances.js'
 import {positionAtCursor} from './campus3dPlayback.js'
 import {placeIndoorPeople,syncIndoorView,indoorScreen,focusIndoorBuilding,updateIndoorGlow} from './Campus3DIndoor.js'
+import { Campus3DInteriorPreview } from './Campus3DInteriorPreview.js'
 
 const BRAND_COLORS = prototypeParams('building.component.shop-sign').marker_colors.map(value=>parseInt(value.slice(1),16))
 const ROLE_COLORS = Object.fromEntries(Object.entries(CHARACTER_BASE_COLORS).map(([key,value])=>[key,parseInt(value.slice(1),16)]))
@@ -225,7 +226,11 @@ export class Campus3DScene {
     this.controls.dampingFactor = 0.08
     this.controls.maxPolarAngle = Math.PI * 0.47
     this.controls.minDistance = 18
-    this.onControlsStart = () => { this.overviewActive = false }
+    this.onControlsStart = () => {
+      this.overviewActive = false
+      this.hoverEvent = null
+      this.clearHover()
+    }
     this.controls.addEventListener('start', this.onControlsStart)
     this.onControlsChange = () => this.invalidate()
     this.controls.addEventListener('change', this.onControlsChange)
@@ -237,6 +242,10 @@ export class Campus3DScene {
     if(typeof Worker!=='undefined'&&!this.indoor)this.spatialWorker=new SpatialWorker(this.navigationObstacles)
     this.drawCampus()
     this.placePeople()
+    if (this.indoor) {
+      this.inspectableBuildings = new Set(Object.values(this.mapping.mappings).map(entry => entry.osm_id))
+      this.indoorPreview = new Campus3DInteriorPreview(this, this.inspectableBuildings)
+    }
     this.baseModel = new Campus3DBase({scene:this.scene,campus:this.display.campus,displayBounds:this.display.bounds,waters:this.spatial.waters}).init()
     this.waterModel = new Campus3DWater({scene:this.scene,spatial:this.spatial}).init()
     this.sportsModel = new Campus3DSports({scene:this.scene,landcovers:this.display.landcovers}).init()
@@ -263,7 +272,9 @@ export class Campus3DScene {
     this.raycaster = new THREE.Raycaster()
     this.pointer = new THREE.Vector2()
     this.handlers = {
-      pointermove: event => { this.hoverEvent = {clientX:event.clientX,clientY:event.clientY} },
+      pointermove: event => {
+        if (!event.buttons) this.hoverEvent = { clientX: event.clientX, clientY: event.clientY }
+      },
       pointerleave: () => { this.hoverEvent = null;this.clearHover() },
       pointerdown: event => { this.pointerDown = { x: event.clientX, y: event.clientY } },
       click: event => {
@@ -328,6 +339,7 @@ export class Campus3DScene {
     // bone/label/layout updates for an unchanged paused scene.
     if(!this.renderDirty)return false
     this.renderDirty=false
+    this.indoorPreview?.update()
     this.updateScreenVisuals()
     this.eventEffects?.updateScreen(this.camera,this.host.clientHeight)
     if(this.relationsDirty){this.updateRelations();this.relationsDirty=false}
@@ -1074,15 +1086,23 @@ export class Campus3DScene {
       if(select&&this.indoor){focusIndoorBuilding(this,building.osm_id);this.onBuildingSelect?.(building.osm_id)}
       if(this.hoveredBuilding!==hit.object) {
         this.hoveredBuilding = hit.object
-        this.hoveredEmissives = [hit.object.material].flat().filter(material=>material?.emissive).map(material => ({ material, color: material.emissive.clone() }))
-        for (const { material } of this.hoveredEmissives) material.emissive.add(new THREE.Color(0x112b28))
+        const exteriorReady = this.buildingStyle !== 'yulan' || this.yulanStyle?.enabled
+        if (!(exteriorReady && this.indoorPreview?.show(hit.object))) {
+          this.hoveredEmissives = [hit.object.material].flat().filter(material=>material?.emissive).map(material => ({ material, color: material.emissive.clone() }))
+          for (const { material } of this.hoveredEmissives) material.emissive.add(new THREE.Color(0x112b28))
+        }
         this.invalidate()
       }
-      this.onHover?.({ type: 'building', name: building.name || `OSM ${building.osm_id}`, building, x: event.clientX, y: event.clientY })
+      this.onHover?.({ type: 'building', name: building.name || `OSM ${building.osm_id}`, building,
+        preview: this.indoorPreview?.buildingId === building.osm_id, x: event.clientX, y: event.clientY })
     }
   }
 
   clearHoveredBuilding() {
+    if (this.indoorPreview?.buildingId) {
+      this.indoorPreview.clear()
+      updateIndoorGlow(this)
+    }
     if (this.hoveredBuilding) {
       for (const { material, color } of this.hoveredEmissives || []) material.emissive.copy(color)
       this.hoveredEmissives = null
@@ -1172,6 +1192,7 @@ export class Campus3DScene {
   retryCharacters() { this.realCharacterBatch?.retryFailed?.();this.emitCharacterStatus() }
 
   setBuildingStyle(value) {
+    this.clearHover()
     this.invalidate()
     if(this.environment)this.environment.shadowDirty=true
     this.buildingStyle=value==='yulan'?'yulan':'procedural'
@@ -1181,7 +1202,7 @@ export class Campus3DScene {
       if(this.disposed)return
       const resolvePrototype=campusBuildingPrototype
       this.yulanStyle=new YuLanCampusStyle({scene:this.scene,campus:this.display.campus,buildingMeshes:this.buildingMeshes,
-        environment:this.environment,resolvePrototype,sourceObjects:{trees:null}})
+        environment:this.environment,resolvePrototype,sourceObjects:{trees:null},inspectableBuildings:this.inspectableBuildings})
       await this.yulanStyle.init()
       if(this.disposed){this.yulanStyle.dispose();return}
       this.yulanStyle.setQuality?.(this.quality)
@@ -1285,6 +1306,7 @@ export class Campus3DScene {
     this.labelLayer?.remove()
     this.labels.length = 0
     this.clearHover()
+    this.indoorPreview?.dispose()
     this.eventEffects?.dispose()
     this.bloom?.dispose()
     this.yulanStyle?.dispose()

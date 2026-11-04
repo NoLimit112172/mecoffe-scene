@@ -35,7 +35,17 @@
         <section class="map-panel" aria-label="中科大高新校区三维场景">
           <div ref="mapEl" class="map-canvas"></div>
           <div class="map-top"><div class="map-badge"><b>USTC · 高新校区</b><span>{{ campusData?.buildings.length || 0 }} 栋建筑 / {{ campusData?.roads.length || 0 }} 段道路</span></div><div class="map-camera-buttons"><button class="reset-camera" title="放大查看选中人物或当前行人" @click="focusPerson"><i aria-hidden="true" class="fa-solid fa-person-walking"></i> 人物特写</button><button class="reset-camera" title="恢复校园全景" @click="renderer?.resetCamera()"><i aria-hidden="true" class="fa-solid fa-expand"></i> 全景</button></div></div>
-          <div v-if="hoverCard" class="hover-card" :style="hoverStyle"><b>{{ hoverCard.name }}</b><template v-if="hoverCard.type === 'building'"><span>OSM {{ hoverCard.building.osm_id }}</span><span>{{ hoverCard.building.levels }} 层 / {{ hoverCard.building.height_m }} 米 · {{ hoverCard.building.levels_source === 'default' ? '展示默认高度' : '来源见地图数据' }}</span></template><span v-else>点击查看人物与事件</span></div>
+          <div v-if="hoverCard" class="hover-card" :style="hoverStyle">
+            <b>{{ hoverCard.name }}</b>
+            <template v-if="hoverCard.type === 'building'">
+              <span v-if="hoverCard.preview" class="hover-interior">
+                楼内 {{ indoorState.buildings[hoverCard.building.osm_id]?.length || 0 }} 人 · 位置示意
+              </span>
+              <span>{{ hoverCard.building.levels }} 层 / {{ hoverCard.building.height_m }} 米 · {{ hoverCard.building.levels_source === 'default' ? '展示默认高度' : '来源见地图数据' }}</span>
+              <span>点击查看楼栋详情</span>
+            </template>
+            <span v-else>点击查看人物与事件</span>
+          </div>
           <div class="map-legend"><span><i aria-hidden="true" style="background:#7c9cab"></i>教学 / 科研</span><span><i aria-hidden="true" style="background:#bc7859"></i>住宿</span><span><i aria-hidden="true" style="background:#65a89b"></i>公共设施</span><div class="role-key"><span v-for="(color, role) in CHARACTER_ROLE_COLORS" :key="role"><i aria-hidden="true" :style="{background:color}"></i>{{ roleNames[role] }}</span></div><p>写实人物为外观示意；脚下颜色表示角色<br>人物活动限制在建成区校界内<br>水域不可行走，仅跨水道路 / 桥面可通行<br>跑道外圈、球场排布、桥型与水深：展示设定<br>树木、路灯、长椅、草地纹理：<b>装饰</b><br>楼顶人数与光照：展示示意；楼层仍为默认值<br>校外道路仅展示，不参与寻路<br>左键旋转 · 右键平移 · 滚轮缩放</p></div>
           <a class="osm-credit" href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener noreferrer">© OpenStreetMap contributors</a>
       <div v-if="characterStatus.visibleReady < characterStatus.visibleTotal || characterStatus.failed" class="data-notice character-loading" role="status"><span>正在加载人物 {{ characterStatus.visibleReady || 0 }}/{{ characterStatus.visibleTotal || 0 }}…</span><button v-if="characterStatus.failed" @click="renderer?.retryCharacters()">重试 {{ characterStatus.failed }} 个模型</button></div>
@@ -43,31 +53,119 @@
         </section>
 
         <aside class="side-panel">
-          <nav class="side-tabs" aria-label="场景信息"><button v-for="tab in tabs" :key="tab.key" :class="{ active: activeTab === tab.key }" @click="activeTab = tab.key">{{ tab.label }}</button></nav>
+          <div class="side-panel-header">
+            <p class="panel-caption">场景详情</p>
+            <nav class="side-tabs" aria-label="场景信息">
+              <button v-for="tab in tabs" :key="tab.key" type="button"
+                :class="{ active: activeTab === tab.key }" :aria-pressed="activeTab === tab.key" @click="activeTab = tab.key">
+                <i aria-hidden="true" :class="['fa-solid', tab.icon]"></i><span>{{ tab.label }}</span>
+              </button>
+            </nav>
+          </div>
           <div v-if="activeTab === 'events'" class="side-content">
             <div class="section-heading"><h2>{{ isNetwork ? '关注关系输入' : '事件记录' }}</h2><small>{{ isDemo ? '规则演示' : isNetwork ? '尚未运行' : '历史 OASIS' }}</small></div>
             <p v-if="isNetwork" class="muted">此模式只有人物与关注关系，没有订单或可播放的行为。选择“人物”可查看关注对象。</p>
             <p v-else-if="!recentEvents.length" class="empty">播放或单步查看事件。购买事件会触发沿 OSM 路网的往返动画。</p>
-            <button v-for="event in recentEvents" :key="event.key" class="event-row" @click="selectPerson(event.actor)"><span class="event-meta">{{ event.step === 0 ? '初始化' : `第 ${event.step} 天` }} · {{ EVENT_LABELS[event.type] || event.type }}</span><span>{{ describeEvent(index, event) }}</span></button>
+            <div v-if="recentEvents.length" class="event-list">
+              <button v-for="event in recentEvents" :key="event.key" class="event-row" type="button" @click="selectPerson(event.actor)">
+                <span class="event-meta">
+                  <span>{{ event.step === 0 ? '初始化' : `第 ${event.step} 天` }}</span>
+                  <span class="event-kind">{{ EVENT_LABELS[event.type] || event.type }}</span>
+                </span>
+                <span>{{ describeEvent(index, event) }}</span>
+              </button>
+            </div>
             <div class="brand-totals"><div v-for="(brand, i) in scene.brands" :key="brand.brand_id"><i aria-hidden="true" :style="{ background: brandColors[i % 2] }"></i><span>{{ brand.product_name }}</span><b>{{ state.cups[brand.brand_id] }} 杯</b></div></div>
           </div>
           <div v-else-if="activeTab === 'people'" class="side-content">
+            <div class="section-heading"><h2>人物名册</h2><small>{{ roster.length }} 人</small></div>
             <label class="search"><i aria-hidden="true" class="fa-solid fa-magnifying-glass"></i><input v-model="query" placeholder="搜索人物姓名或编号" aria-label="搜索人物" /></label>
-            <div v-if="selected" class="person-detail"><div class="person-title"><span class="person-dot" :style="{ background: roleColor(selected.role) }"></span><h2>{{ selected.name }}</h2><small>{{ selected.role_label }}</small></div><code>{{ selected.id }}</code><p>{{personPlacement(selected.id)}}</p><p class="mapping-note">{{ mappingEntry(selected)?.note }}</p><p class="person-bio">{{ selected.bio }}</p><p>关注 {{ selectedFollowing.length }} 人 · 被关注 {{ selectedFollowers.length }} 人</p><div class="relation-buttons"><button v-for="person in selectedFollowing" :key="person.id" @click="selectPerson(person.id)">{{ person.name }}</button></div><div v-if="selectedHistory.length" class="person-history"><h3>截至当前的行为</h3><p v-for="event in selectedHistory.slice(0, 5)" :key="event.key">{{ describeEvent(index, event) }}</p></div></div>
+            <article v-if="selected" class="person-detail">
+              <div class="person-title">
+                <span class="person-dot" :style="{ background: roleColor(selected.role) }"></span>
+                <h2>{{ selected.name }}</h2><small>{{ selected.role_label }}</small>
+              </div>
+              <code>{{ selected.id }}</code>
+              <p class="person-placement"><i class="fa-solid fa-location-dot" aria-hidden="true"></i>{{ personPlacement(selected.id) }}</p>
+              <p v-if="selected.bio" class="person-bio">{{ selected.bio }}</p>
+              <details v-if="mappingEntry(selected)?.note" class="mapping-note">
+                <summary>位置说明</summary><p>{{ mappingEntry(selected).note }}</p>
+              </details>
+              <dl class="person-stats">
+                <div><dt>关注</dt><dd>{{ selectedFollowing.length }}</dd></div>
+                <div><dt>被关注</dt><dd>{{ selectedFollowers.length }}</dd></div>
+              </dl>
+              <div v-if="selectedFollowing.length" class="relation-buttons" aria-label="关注对象"><button v-for="person in selectedFollowing" :key="person.id" @click="selectPerson(person.id)">{{ person.name }}</button></div>
+              <div v-if="selectedHistory.length" class="person-history">
+                <h3>近期行为</h3>
+                <ol><li v-for="event in selectedHistory.slice(0, 5)" :key="event.key">{{ describeEvent(index, event) }}</li></ol>
+              </div>
+            </article>
+            <p v-if="!roster.length" class="empty">没有匹配的人物。</p>
             <div class="roster" aria-label="人物名册"><button v-for="person in roster" :key="person.id" :data-person-id="person.id" :class="{ selected: selectedId === person.id }" @click="selectPerson(person.id)"><span class="person-dot" :style="{ background: roleColor(person.role) }"></span><span>{{ person.name }}<small>{{ mappedBuilding(person)?.name || person.role_label }}</small></span><i aria-hidden="true" v-if="selectedId === person.id" class="fa-solid fa-chevron-right"></i></button></div>
           </div>
-          <div v-else-if="activeTab === 'building'" class="side-content"><h2>{{selectedBuilding?.name || '楼栋'}}</h2><p>楼内 {{buildingResidents.length}} 人（示意）</p><div class="roster"><button v-for="person in buildingResidents" :key="person.id" @click="selectPerson(person.id)">{{person.name}} · {{person.role_label}}</button></div></div>
+          <div v-else-if="activeTab === 'building'" class="side-content">
+            <div class="section-heading"><h2>楼栋详情</h2></div>
+            <p v-if="!selectedBuilding" class="empty">点击地图上的楼栋，查看楼内人员。</p>
+            <template v-else>
+              <div class="building-summary">
+                <i class="fa-solid fa-building" aria-hidden="true"></i>
+                <div><h3>{{ selectedBuilding.name }}</h3><p>楼内 {{ buildingResidents.length }} 人（示意）</p></div>
+              </div>
+              <p v-if="!buildingResidents.length" class="empty">当前没有楼内人员。</p>
+              <div v-else class="roster" aria-label="楼内人员">
+                <button v-for="person in buildingResidents" :key="person.id" @click="selectPerson(person.id)">
+                  <span class="person-dot" :style="{ background: roleColor(person.role) }"></span><span>{{ person.name }}<small>{{ person.role_label }}</small></span>
+                </button>
+              </div>
+            </template>
+          </div>
           <div v-else class="side-content">
             <div class="section-heading"><h2>真实楼栋 · 示意对应</h2><small>8 个地点</small></div><p class="muted">轮廓与楼名来自 OSM。下面是原沙盘地点的人工展示映射，咖啡店不是核实店址。</p>
-            <div v-for="[key, entry] in Object.entries(mappingData?.mappings || {})" :key="key" class="mapping-row"><small>{{ key }}</small><b>{{ buildingById.get(entry.osm_id)?.name || entry.osm_id }}</b><p>{{ entry.note }}</p></div>
+            <div v-for="[key, entry] in Object.entries(mappingData?.mappings || {})" :key="key" class="mapping-row">
+              <b><i class="fa-solid fa-location-dot" aria-hidden="true"></i>{{ buildingById.get(entry.osm_id)?.name || entry.osm_id }}</b>
+              <small>{{ key }}</small><p>{{ entry.note }}</p>
+            </div>
           </div>
         </aside>
       </main>
 
-      <footer class="timeline-panel">
-        <div class="playback-controls"><button class="play-button" :disabled="loading || isNetwork" :aria-label="playing || draining ? '暂停回放' : '播放回放'" @click="togglePlay"><i aria-hidden="true" :class="playing || draining ? 'fa-solid fa-pause' : 'fa-solid fa-play'"></i>{{ playing || draining ? '暂停' : '播放' }}</button><button :disabled="loading || isNetwork" title="上一天" @click="jumpDay(-1)">上一天</button><button :disabled="loading || isNetwork || cursor >= scene.events.length" @click="stepEvent">下一事件</button><button :disabled="loading || isNetwork" title="下一天" @click="jumpDay(1)">下一天</button><button :disabled="loading || isNetwork" title="跳转到首笔购买事件并播放人物往返" @click="previewWalking">看人物行走</button><label>速度 <select v-model.number="speed" :disabled="isNetwork"><option v-for="n in [0.5, 1, 2, 4, 8]" :key="n" :value="n">{{ n }}×</option></select></label><strong class="current-day" data-testid="current-day">{{ currentDay.label }}<small v-if="!currentDay.complete"> · 记录不完整</small><small v-else-if="atEnd"> · {{ draining ? '等待人物返回' : '已到末尾' }}</small></strong></div>
-        <div v-if="!isNetwork" class="timeline-track"><input :disabled="loading" :value="dayPosition" :max="days.length" min="0" step="0.001" type="range" aria-label="回放时间进度" @input="seek(Number($event.target.value))" /><span>{{ Math.round(progressPercent) }}%</span></div>
-        <div v-if="!isNetwork" class="day-buttons" aria-label="按天跳转"><button v-for="(day, k) in days" :key="day.step" :disabled="loading" :class="{ active: dayIndex === k, partial: !day.complete }" :title="`${day.label}${day.complete ? '' : '（不完整）'}`" :aria-label="`跳转到${day.label}`" @click="seek(k)">{{ day.step === 0 ? '初' : day.step }}</button></div><p v-else class="network-footer">关系网络模式没有时间轨迹；购买、发帖、访谈结果均为零，不借用旧运行。</p>
+      <footer class="timeline-panel" aria-label="回放时间轴">
+        <div class="timeline-header">
+          <div class="timeline-heading">
+            <i class="fa-solid fa-clock" aria-hidden="true"></i>
+            <div>
+              <p class="panel-caption">{{ isNetwork ? '关系网络' : '回放时间轴' }}</p>
+              <strong class="current-day" data-testid="current-day">{{ isNetwork ? '静态快照' : currentDay.label }}</strong>
+            </div>
+            <span v-if="!isNetwork && !currentDay.complete" class="timeline-status partial-status">记录不完整</span>
+            <span v-else-if="!isNetwork && atEnd" class="timeline-status">{{ draining ? '等待人物返回' : '已到末尾' }}</span>
+          </div>
+          <div class="playback-controls">
+            <button class="play-button" :disabled="loading || isNetwork" :aria-label="playing || draining ? '暂停回放' : '播放回放'" @click="togglePlay">
+              <i aria-hidden="true" :class="playing || draining ? 'fa-solid fa-pause' : 'fa-solid fa-play'"></i>{{ playing || draining ? '暂停' : '播放' }}
+            </button>
+            <div class="day-step-controls" role="group" aria-label="回放步进">
+              <button :disabled="loading || isNetwork" @click="jumpDay(-1)"><i class="fa-solid fa-chevron-left" aria-hidden="true"></i>上一天</button>
+              <button :disabled="loading || isNetwork || cursor >= scene.events.length" @click="stepEvent">下一事件</button>
+              <button :disabled="loading || isNetwork" @click="jumpDay(1)">下一天<i class="fa-solid fa-chevron-right" aria-hidden="true"></i></button>
+            </div>
+            <button class="walking-button" :disabled="loading || isNetwork" title="跳转到首笔购买事件并播放人物往返" @click="previewWalking"><i class="fa-solid fa-person-walking" aria-hidden="true"></i>看人物行走</button>
+            <label class="speed-control">速度 <select v-model.number="speed" :disabled="isNetwork"><option v-for="n in [0.5, 1, 2, 4, 8]" :key="n" :value="n">{{ n }}×</option></select></label>
+          </div>
+        </div>
+        <div v-if="!isNetwork" class="timeline-track">
+          <span class="progress-label">总进度</span>
+          <input :disabled="loading" :value="dayPosition" :max="days.length" min="0" step="0.001" type="range" aria-label="回放时间进度"
+            :style="{ '--progress': `${progressPercent}%` }" @input="seek(Number($event.target.value))" />
+          <output>{{ Math.round(progressPercent) }}%</output>
+        </div>
+        <div v-if="!isNetwork" class="day-buttons" aria-label="按天跳转">
+          <button v-for="(day, k) in days" :key="day.step" :disabled="loading"
+            :class="{ active: dayIndex === k, elapsed: k < dayIndex, partial: !day.complete }" :aria-current="dayIndex === k ? 'step' : undefined"
+            :title="`${day.label}${day.complete ? '' : '（不完整）'}`" :aria-label="`跳转到${day.label}`" @click="seek(k)">{{ day.step === 0 ? '初' : day.step }}</button>
+        </div>
+        <p v-else class="network-footer">关系网络模式没有时间轨迹；购买、发帖、访谈结果均为零，不借用旧运行。</p>
       </footer>
     </template>
     <div v-else-if="loading && !loadError" class="initial-loading">正在读取 OSM 校园与回放数据…</div>
@@ -90,7 +188,12 @@ import { visualClock } from '../mecoffe/campus3dPresentation.js'
 
 const props=defineProps({scenario:{type:Object,default:null}})
 const modes = [{ key: 'demo', label: '新版演示' }, { key: 'network', label: '关系网络' }, { key: 'history', label: '历史回放' }]
-const tabs = [{ key: 'events', label: '事件' }, { key: 'people', label: '人物' }, { key: 'mapping', label: '地点映射' }, {key:'building',label:'楼栋'}]
+const tabs = [
+  { key: 'events', label: '事件', icon: 'fa-list-ul' },
+  { key: 'people', label: '人物', icon: 'fa-users' },
+  { key: 'mapping', label: '地点映射', icon: 'fa-map-location-dot' },
+  { key: 'building', label: '楼栋', icon: 'fa-building' },
+]
 const brandColors = ['#22856e', '#bd7545']
 const index = shallowRef(null)
 const campusData = shallowRef(null)
@@ -159,7 +262,8 @@ const hoverStyle = computed(() => {
   const card = hoverCard.value
   const rect = mapEl.value?.getBoundingClientRect()
   if (!card || !rect) return {}
-  return { left: `${Math.max(10, Math.min(rect.width - 265, card.x - rect.left + 14))}px`, top: `${Math.max(70, Math.min(rect.height - 110, card.y - rect.top + 12))}px` }
+  const verticalOffset = card.preview ? -96 : 12
+  return { left: `${Math.max(10, Math.min(rect.width - 265, card.x - rect.left + 14))}px`, top: `${Math.max(70, Math.min(rect.height - 110, card.y - rect.top + verticalOffset))}px` }
 })
 const dataNotice = computed(() => {
   if (isDemo.value) return `新版演示：快照 v${meta.value?.snapshot_revision} 的 30 天规则演示，非 OASIS 运行结果。购买与传播按本地示例规则生成。`
@@ -345,15 +449,200 @@ onBeforeUnmount(() => { generation += 1; controller?.abort(); stopTimeline(); re
 <style scoped>
 .population-accounting{font-size:12px;color:#385f54;margin:4px 1px 8px}.population-accounting i{font-style:normal;font-size:18px}
 .campus3d-page{--ink:#233a39;--muted:#6f817b;--line:#dde3d9;--accent:#277b68;position:fixed;inset:0;display:flex;flex-direction:column;gap:9px;padding:13px 16px;background:#f2f4ee;color:var(--ink);font-family:'Microsoft YaHei',system-ui,sans-serif;text-align:left;overflow:auto;color-scheme:light}
-.campus3d-page *{box-sizing:border-box}.campus3d-page button,.campus3d-page input,.campus3d-page select{font:inherit}.campus3d-page button{cursor:pointer;color:inherit}.campus3d-page button:disabled{opacity:.45;cursor:not-allowed}.campus3d-page button:focus-visible,.campus3d-page a:focus-visible{outline:3px solid #4b9ca7;outline-offset:2px}.page-header{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-shrink:0}.title-group{display:flex;gap:12px;align-items:center}.logo{height:42px;width:42px;border-radius:12px;background:#277b68;color:white;display:grid;place-items:center;font-size:23px}.page-header h1{font-size:20px;margin:0;letter-spacing:.4px}.page-header p{font-size:11px;color:var(--muted);margin:3px 0 0}.header-actions{display:flex;align-items:center;gap:14px}.mode-switch{display:flex;gap:3px;background:#e4e9e1;border:1px solid var(--line);padding:4px;border-radius:10px}.mode-switch button{border:0;background:transparent;padding:7px 12px;font-size:12px;border-radius:7px;white-space:nowrap}.mode-switch .active{background:white;color:var(--accent);font-weight:700;box-shadow:0 1px 4px #233a3915}.old-page{font-size:12px;color:var(--accent);text-decoration:none;white-space:nowrap}.spatial-notice{padding:8px 12px;border:1px solid #e3d59c;background:#fff7db;border-radius:8px;font-size:12px;line-height:1.5;display:flex;gap:9px;align-items:center;flex-shrink:0}.spatial-notice strong{font-weight:500}.data-notice{padding:6px 11px;border-left:3px solid #418c85;background:#e6f0eb;font-size:11px;border-radius:3px;line-height:1.5;flex-shrink:0}.data-notice.history{background:#f7eae1;border-color:#be825a}.data-notice.network{background:#e7eef7;border-color:#6385af}.kpis{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:9px;flex-shrink:0}.kpis>div{background:white;border:1px solid var(--line);border-radius:10px;padding:9px 14px;display:grid;grid-template-columns:1fr auto;align-items:center;gap:2px 8px}.kpis span{font-size:11px;color:var(--muted)}.kpis strong{font-size:24px;grid-column:2;grid-row:1/3;white-space:nowrap}.kpis strong small{font-size:11px;font-weight:400}.kpis em{font-style:normal;color:var(--muted);font-size:10px}.main-layout{display:flex;flex:1;min-height:310px;gap:10px}.map-panel{position:relative;flex:1;min-width:0;border:1px solid #cbd9c9;border-radius:12px;overflow:hidden;background:#e3eadc}.map-canvas{position:absolute;inset:0}.map-canvas :deep(canvas){display:block;width:100%;height:100%;touch-action:none}.map-top{position:absolute;left:13px;right:13px;top:12px;display:flex;justify-content:space-between;align-items:flex-start;pointer-events:none}.map-badge{display:flex;flex-direction:column;gap:3px;padding:8px 11px;background:#ffffffde;border-radius:8px;box-shadow:0 2px 10px #233a390c}.map-badge b{font-size:12px}.map-badge span{font-size:10px;color:var(--muted)}.reset-camera{pointer-events:auto;padding:8px 10px;background:#fffffff0;border:1px solid #d3dfd3;border-radius:8px;font-size:11px}.map-legend{position:absolute;left:13px;bottom:12px;background:#ffffffe8;border:1px solid #dbe2d6;padding:8px 10px;border-radius:8px;max-width:280px;font-size:10px;pointer-events:none}.map-legend>span{margin-right:10px;white-space:nowrap}.map-legend i,.brand-totals i{display:inline-block;width:8px;height:8px;border-radius:2px;margin-right:5px}.map-legend p{color:var(--muted);font-size:10px;margin:6px 0 0;line-height:1.6}.osm-credit{position:absolute;right:8px;bottom:6px;font-size:10px;color:#326959;background:#ffffffe6;padding:3px 6px;border-radius:4px;text-decoration:none}.north-indicator{position:absolute;right:17px;top:64px;display:flex;flex-direction:column;align-items:center;color:#3d6259;font-size:19px;font-weight:700;pointer-events:none}.north-indicator small{font-size:9px;font-weight:400}.hover-card{position:absolute;z-index:3;display:flex;flex-direction:column;gap:4px;padding:10px 13px;border-radius:9px;background:#fffffff5;border:1px solid #cdd9cb;box-shadow:0 6px 18px #233a3918;max-width:255px;pointer-events:none}.hover-card b{font-size:13px}.hover-card span{font-size:10px;color:var(--muted)}.map-loading{position:absolute;inset:0;background:#f2f4eed9;display:grid;place-items:center;color:var(--accent);font-size:14px}.side-panel{width:316px;flex-shrink:0;background:white;border:1px solid var(--line);border-radius:12px;display:flex;flex-direction:column;overflow:hidden}.side-tabs{display:flex;border-bottom:1px solid var(--line);padding:0 8px;flex-shrink:0}.side-tabs button{flex:1;padding:11px 3px;border:0;border-bottom:2px solid transparent;background:transparent;font-size:12px}.side-tabs .active{color:var(--accent);border-bottom-color:var(--accent);font-weight:700}.side-content{padding:12px;overflow:auto;flex:1;min-height:0}.section-heading{display:flex;justify-content:space-between;align-items:center;gap:6px}.section-heading h2{font-size:13px;margin:0 0 6px}.section-heading small{font-size:10px;color:var(--muted)}.empty,.muted{color:var(--muted);font-size:11px;line-height:1.8}.empty{padding:14px 2px}.event-row{display:flex;flex-direction:column;gap:4px;width:100%;text-align:left;padding:10px 4px;border:0;border-bottom:1px solid #edf0e9;background:transparent;font-size:11px;line-height:1.6;overflow-wrap:anywhere}.event-row:hover{background:#f2f6ef}.event-meta{font-size:10px;color:var(--muted)}.brand-totals{margin-top:14px;border-top:1px solid var(--line);padding-top:10px}.brand-totals>div{display:flex;align-items:center;font-size:11px;margin:7px 0}.brand-totals span{flex:1}.brand-totals b{white-space:nowrap}.search{display:flex;align-items:center;gap:8px;background:#f2f5ef;padding:8px 10px;border-radius:7px;font-size:11px;color:var(--muted)}.search input{border:0;outline:0;min-width:0;width:100%;background:transparent;color:var(--ink)}.person-detail{padding:12px 1px;border-bottom:1px solid var(--line);font-size:11px;line-height:1.7}.person-title{display:flex;gap:6px;align-items:center}.person-title h2{font-size:14px;margin:0}.person-title small{color:var(--muted);margin-left:auto}.person-detail code{font-size:10px;color:var(--muted);overflow-wrap:anywhere}.mapping-note{background:#fff6df;border-radius:5px;padding:6px;color:#806b40;font-size:10px}.person-bio{color:var(--muted)}.person-dot{display:inline-block;width:9px;height:9px;border-radius:50%;flex-shrink:0}.roster>button{width:100%;display:flex;align-items:center;gap:9px;background:transparent;border:0;border-bottom:1px solid #edf0e9;padding:10px 4px;text-align:left;font-size:12px}.roster>button>span:nth-child(2){flex:1}.roster small{display:block;font-size:10px;color:var(--muted);margin-top:2px}.roster .selected{background:#eaf3ed;color:var(--accent)}.relation-buttons{display:flex;flex-wrap:wrap;gap:4px}.relation-buttons button{font-size:10px;background:#f1f5ed;border:1px solid #dde5d7;border-radius:5px;padding:3px 6px}.person-history h3{font-size:12px;margin:12px 0 4px}.person-history p{font-size:10px;color:var(--muted)}.mapping-row{padding:10px 0;border-bottom:1px solid #edf0e9}.mapping-row small{display:block;font-family:monospace;font-size:10px;color:var(--muted)}.mapping-row b{font-size:12px}.mapping-row p{font-size:10px;color:var(--muted);line-height:1.6;margin:4px 0}.timeline-panel{background:white;border:1px solid var(--line);border-radius:10px;padding:9px 12px;flex-shrink:0}.playback-controls{display:flex;gap:7px;align-items:center}.playback-controls>button{border:1px solid #dce3d7;border-radius:7px;background:#f5f7f1;font-size:11px;padding:7px 10px;white-space:nowrap}.playback-controls .play-button{background:var(--accent);border-color:var(--accent);color:white;min-width:75px}.play-button i{margin-right:6px}.playback-controls label{font-size:11px;margin-left:5px;white-space:nowrap}.playback-controls select{border:1px solid var(--line);border-radius:5px;background:white;color:var(--ink);padding:4px;font-size:11px}.current-day{margin-left:auto;font-size:12px;white-space:nowrap}.current-day small{font-weight:400;color:#a3783c;font-size:10px}.timeline-track{display:flex;align-items:center;gap:10px;margin:7px 0 3px}.timeline-track input{accent-color:var(--accent);width:100%;height:12px;cursor:pointer}.timeline-track span{font-size:10px;color:var(--muted);min-width:28px;text-align:right}.day-buttons{display:flex;gap:4px;overflow:auto;padding:3px 0}.day-buttons button{flex:1;min-width:24px;padding:3px 1px;background:#f0f3ec;border:1px solid #e4e8dc;border-radius:4px;font-size:10px}.day-buttons .active{background:var(--accent);border-color:var(--accent);color:white}.day-buttons .partial{border-style:dashed;border-color:#ba864f}.network-footer{margin:7px 0 0;font-size:11px;color:var(--muted)}.initial-loading{margin:auto;color:var(--muted)}.error-panel{margin:30px auto;background:#fff2e8;border:1px solid #d5b19a;border-radius:12px;padding:24px;max-width:700px;line-height:1.8}.error-panel p{font-size:13px}.error-panel a{color:var(--accent);margin-left:14px}.error-panel button{padding:6px 12px;border:1px solid #bfcdb9;background:white;border-radius:6px}
+.campus3d-page *{box-sizing:border-box}.campus3d-page button,.campus3d-page input,.campus3d-page select{font:inherit}.campus3d-page button{cursor:pointer;color:inherit}.campus3d-page button:disabled{opacity:.45;cursor:not-allowed}.campus3d-page button:focus-visible,.campus3d-page a:focus-visible{outline:3px solid #4b9ca7;outline-offset:2px}.page-header{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-shrink:0}.title-group{display:flex;gap:12px;align-items:center}.logo{height:42px;width:42px;border-radius:12px;background:#277b68;color:white;display:grid;place-items:center;font-size:23px}.page-header h1{font-size:20px;margin:0;letter-spacing:.4px}.page-header p{font-size:11px;color:var(--muted);margin:3px 0 0}.header-actions{display:flex;align-items:center;gap:14px}.mode-switch{display:flex;gap:3px;background:#e4e9e1;border:1px solid var(--line);padding:4px;border-radius:10px}.mode-switch button{border:0;background:transparent;padding:7px 12px;font-size:12px;border-radius:7px;white-space:nowrap}.mode-switch .active{background:white;color:var(--accent);font-weight:700;box-shadow:0 1px 4px #233a3915}.old-page{font-size:12px;color:var(--accent);text-decoration:none;white-space:nowrap}.spatial-notice{padding:8px 12px;border:1px solid #e3d59c;background:#fff7db;border-radius:8px;font-size:12px;line-height:1.5;display:flex;gap:9px;align-items:center;flex-shrink:0}.spatial-notice strong{font-weight:500}.data-notice{padding:6px 11px;border-left:3px solid #418c85;background:#e6f0eb;font-size:11px;border-radius:3px;line-height:1.5;flex-shrink:0}.data-notice.history{background:#f7eae1;border-color:#be825a}.data-notice.network{background:#e7eef7;border-color:#6385af}.kpis{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:9px;flex-shrink:0}.kpis>div{background:white;border:1px solid var(--line);border-radius:10px;padding:9px 14px;display:grid;grid-template-columns:1fr auto;align-items:center;gap:2px 8px}.kpis span{font-size:11px;color:var(--muted)}.kpis strong{font-size:24px;grid-column:2;grid-row:1/3;white-space:nowrap}.kpis strong small{font-size:11px;font-weight:400}.kpis em{font-style:normal;color:var(--muted);font-size:10px}.main-layout{display:flex;flex:1;min-height:310px;gap:10px}.map-panel{position:relative;flex:1;min-width:0;border:1px solid #cbd9c9;border-radius:12px;overflow:hidden;background:#e3eadc}.map-canvas{position:absolute;inset:0}.map-canvas :deep(canvas){display:block;width:100%;height:100%;touch-action:none}.map-top{position:absolute;left:13px;right:13px;top:12px;display:flex;justify-content:space-between;align-items:flex-start;pointer-events:none}.map-badge{display:flex;flex-direction:column;gap:3px;padding:8px 11px;background:#ffffffde;border-radius:8px;box-shadow:0 2px 10px #233a390c}.map-badge b{font-size:12px}.map-badge span{font-size:10px;color:var(--muted)}.reset-camera{pointer-events:auto;padding:8px 10px;background:#fffffff0;border:1px solid #d3dfd3;border-radius:8px;font-size:11px}.map-legend{position:absolute;left:13px;bottom:12px;background:#ffffffe8;border:1px solid #dbe2d6;padding:8px 10px;border-radius:8px;max-width:280px;font-size:10px;pointer-events:none}.map-legend>span{margin-right:10px;white-space:nowrap}.map-legend i,.brand-totals i{display:inline-block;width:8px;height:8px;border-radius:2px;margin-right:5px}.map-legend p{color:var(--muted);font-size:10px;margin:6px 0 0;line-height:1.6}.osm-credit{position:absolute;right:8px;bottom:6px;font-size:10px;color:#326959;background:#ffffffe6;padding:3px 6px;border-radius:4px;text-decoration:none}.north-indicator{position:absolute;right:17px;top:64px;display:flex;flex-direction:column;align-items:center;color:#3d6259;font-size:19px;font-weight:700;pointer-events:none}.north-indicator small{font-size:9px;font-weight:400}.hover-card{position:absolute;z-index:3;display:flex;flex-direction:column;gap:4px;padding:10px 13px;border-radius:9px;background:#fffffff5;border:1px solid #cdd9cb;box-shadow:0 6px 18px #233a3918;max-width:255px;pointer-events:none}.hover-card b{font-size:13px}.hover-card span{font-size:10px;color:var(--muted)}.map-loading{position:absolute;inset:0;background:#f2f4eed9;display:grid;place-items:center;color:var(--accent);font-size:14px}.side-panel{width:316px;flex-shrink:0;background:white;border:1px solid var(--line);border-radius:12px;display:flex;flex-direction:column;overflow:hidden}.side-content{padding:12px;overflow:auto;flex:1;min-height:0}.empty,.muted{color:var(--muted);font-size:11px;line-height:1.8}.empty{padding:14px 2px}.brand-totals{margin-top:14px;border-top:1px solid var(--line);padding-top:10px}.brand-totals>div{display:flex;align-items:center;font-size:11px;margin:7px 0}.brand-totals span{flex:1}.brand-totals b{white-space:nowrap}.person-dot{display:inline-block;width:9px;height:9px;border-radius:50%;flex-shrink:0}.initial-loading{margin:auto;color:var(--muted)}.error-panel{margin:30px auto;background:#fff2e8;border:1px solid #d5b19a;border-radius:12px;padding:24px;max-width:700px;line-height:1.8}.error-panel p{font-size:13px}.error-panel a{color:var(--accent);margin-left:14px}.error-panel button{padding:6px 12px;border:1px solid #bfcdb9;background:white;border-radius:6px}
 .spatial-notice{position:sticky;top:0;z-index:10}
 .header-actions{flex-wrap:wrap;justify-content:flex-end}.map-camera-buttons{display:flex;gap:7px;pointer-events:auto}.role-key{display:flex;gap:8px;margin-top:6px;flex-wrap:wrap}.role-key span{white-space:nowrap}.role-key i{border-radius:50%}.map-legend{max-width:310px}
-@media(min-width:1600px){.side-panel{width:350px}.page-header h1{font-size:22px}.kpis>div{padding:12px 16px}.side-content{padding:15px}.event-row{font-size:12px}.main-layout{min-height:360px}}
-@media(max-width:1000px){.page-header h1{font-size:16px}.side-panel{width:265px}.old-page{display:none}.kpis>div{padding:8px}.kpis strong{font-size:20px}.kpis em{font-size:9px}.current-day{font-size:11px}.mode-switch button{padding:7px 8px}}
-@media(max-width:720px){.campus3d-page{padding:9px;gap:7px}.page-header{flex-wrap:wrap}.page-header h1{font-size:16px}.header-actions{width:100%;justify-content:space-between}.old-page{display:block}.spatial-notice{font-size:11px}.kpis{grid-template-columns:repeat(2,minmax(0,1fr))}.main-layout{flex-direction:column;min-height:650px}.map-panel{min-height:370px}.side-panel{width:100%;height:260px}.map-legend{max-width:230px}.playback-controls{flex-wrap:wrap;gap:5px}.playback-controls>button{padding:6px 7px}.current-day{margin-left:0}.timeline-panel{padding:8px}.north-indicator{display:none}}
+@media(min-width:1600px){.side-panel{width:350px}.page-header h1{font-size:22px}.kpis>div{padding:12px 16px}.side-content{padding:15px}.main-layout{min-height:360px}}
+@media(max-width:1000px){.page-header h1{font-size:16px}.side-panel{width:265px}.old-page{display:none}.kpis>div{padding:8px}.kpis strong{font-size:20px}.kpis em{font-size:9px}.mode-switch button{padding:7px 8px}}
+@media(max-width:720px){.campus3d-page{padding:9px;gap:7px}.page-header{flex-wrap:wrap}.page-header h1{font-size:16px}.header-actions{width:100%;justify-content:space-between}.old-page{display:block}.spatial-notice{font-size:11px}.kpis{grid-template-columns:repeat(2,minmax(0,1fr))}.main-layout{flex-direction:column;min-height:650px}.map-panel{min-height:370px}.side-panel{width:100%;height:260px}.map-legend{max-width:230px}.north-indicator{display:none}}
 </style>
 
 <style scoped>
-.population-accounting{font-size:12px;color:#385f54;margin:4px 1px 8px}.population-accounting i{font-style:normal;font-size:18px}
+.side-panel-header {
+  flex-shrink: 0;
+  padding: 13px 11px 10px;
+  border-bottom: 1px solid #e3e9e4;
+}
+.panel-caption { margin: 0 0 6px; color: #526a61; font-size: 11px; font-weight: 650; }
+.side-panel-header .panel-caption { padding-left: 3px; }
+.hover-card .hover-interior { color: #216658; font-weight: 700; }
+.side-tabs {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 3px;
+  padding: 3px;
+  border: 1px solid #e2e9e3;
+  border-radius: 9px;
+  background: #eef3ef;
+}
+.side-tabs button {
+  display: grid;
+  justify-items: center;
+  align-content: center;
+  gap: 4px;
+  min-height: 43px;
+  padding: 4px 2px;
+  border: 1px solid transparent;
+  border-radius: 6px;
+  background: transparent;
+  color: #4b6259;
+  font-size: 11px;
+  white-space: nowrap;
+}
+.side-tabs button i { font-size: 12px; }
+.side-tabs button:hover { background: #e2ebe4; }
+.side-tabs button.active {
+  border-color: #c8ddd1;
+  background: #fff;
+  color: #1c6250;
+  font-weight: 700;
+  box-shadow: 0 1px 3px #233a3912;
+}
+.section-heading { display: flex; justify-content: space-between; align-items: center; gap: 8px; margin-bottom: 9px; }
+.section-heading h2 { margin: 0; font-size: 14px; }
+.section-heading small {
+  padding: 3px 7px;
+  border-radius: 5px;
+  background: #edf3ee;
+  color: #496357;
+  font-size: 11px;
+  white-space: nowrap;
+}
+.event-list { display: grid; gap: 5px; }
+.side-content .event-row {
+  display: grid;
+  gap: 5px;
+  width: 100%;
+  padding: 8px 9px;
+  text-align: left;
+  border: 1px solid #e6ece7;
+  border-radius: 7px;
+  background: #fbfcfa;
+  font-size: 12px;
+  line-height: 1.55;
+  overflow-wrap: anywhere;
+}
+.side-content .event-row:hover { background: #eff6f0; border-color: #cbded1; }
+.event-meta { display: flex; gap: 7px; align-items: center; color: #5e7168; font-size: 11px; }
+.event-kind { background: #e8f1ea; color: #32634f; border-radius: 4px; padding: 1px 5px; font-weight: 650; }
+.search {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 10px;
+  border: 1px solid #dce7df;
+  border-radius: 8px;
+  background: #f7faf7;
+  color: #526a61;
+  font-size: 12px;
+}
+.search:focus-within { outline: 2px solid #4b9ca7; outline-offset: 2px; }
+.search input { border: 0; outline: 0; min-width: 0; width: 100%; background: transparent; color: var(--ink); }
+.person-detail {
+  margin: 10px 0;
+  padding: 11px;
+  border: 1px solid #dbe7de;
+  border-radius: 9px;
+  background: #f7faf7;
+  font-size: 12px;
+  line-height: 1.55;
+}
+.person-title { display: flex; gap: 6px; align-items: center; }
+.person-title h2 { margin: 0; font-size: 15px; overflow-wrap: anywhere; }
+.person-title small { margin-left: auto; padding: 2px 6px; border-radius: 4px; background: #e8f0e9; color: #3e5a4f; white-space: nowrap; }
+.person-detail code { font-size: 10px; color: #586d64; overflow-wrap: anywhere; }
+.person-placement { display: flex; align-items: baseline; gap: 7px; margin: 8px 0 5px; color: #216658; font-weight: 650; }
+.person-bio { margin: 5px 0 8px; color: #4f625a; }
+.mapping-note { color: #655832; font-size: 11px; }
+.mapping-note summary { width: fit-content; cursor: pointer; }
+.mapping-note p { margin: 5px 0 0; padding: 6px 8px; border-radius: 5px; background: #f6efdb; }
+.person-stats { display: grid; grid-template-columns: repeat(2, 1fr); gap: 6px; margin: 9px 0; }
+.person-stats div { display: flex; align-items: baseline; justify-content: space-between; gap: 5px; padding: 5px 7px; border-radius: 5px; background: #e9f1e9; }
+.person-stats dt { font-size: 11px; color: #4d665b; }
+.person-stats dd { margin: 0; color: #216658; font-size: 15px; font-weight: 700; font-variant-numeric: tabular-nums; }
+.relation-buttons { display: flex; flex-wrap: wrap; gap: 4px; }
+.relation-buttons button { font-size: 11px; border: 1px solid #d4e2d7; border-radius: 5px; padding: 3px 6px; background: #fff; }
+.relation-buttons button:hover { background: #e8f2e9; }
+.person-history h3 { margin: 11px 0 5px; font-size: 12px; }
+.person-history ol { list-style: none; margin: 0; padding: 0 0 0 9px; border-left: 2px solid #cddfd3; }
+.person-history li { padding: 4px 0; color: #4d6259; font-size: 11px; overflow-wrap: anywhere; }
+.roster { display: grid; gap: 4px; margin-top: 8px; }
+.roster > button {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  padding: 6px 8px;
+  border: 1px solid #e5ebe6;
+  border-radius: 6px;
+  background: #fff;
+  text-align: left;
+  font-size: 12px;
+}
+.roster > button > span:nth-child(2) { flex: 1; min-width: 0; overflow-wrap: anywhere; }
+.roster small { display: block; color: #5b7066; font-size: 11px; }
+.roster > button:hover, .roster .selected { background: #eef6ef; border-color: #cadfd0; color: #216658; }
+.mapping-row, .building-summary { padding: 8px 9px; border: 1px solid #e0e9e1; border-radius: 7px; background: #f7faf7; }
+.mapping-row + .mapping-row { margin-top: 6px; }
+.mapping-row b { display: block; font-size: 13px; }
+.mapping-row i { margin-right: 6px; color: #277b68; }
+.mapping-row small { display: block; color: #5b7066; font: 10px ui-monospace, monospace; overflow-wrap: anywhere; }
+.mapping-row p, .building-summary p { margin: 4px 0 0; color: #4d6259; font-size: 11px; line-height: 1.55; }
+.building-summary { display: flex; align-items: center; gap: 10px; }
+.building-summary > i { color: #277b68; }
+.building-summary h3 { margin: 0; font-size: 14px; }
+.timeline-panel { background: #fff; border: 1px solid var(--line); border-radius: 12px; padding: 9px 12px; flex-shrink: 0; }
+.timeline-header { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 6px 14px; }
+.timeline-heading { display: flex; align-items: center; gap: 8px; }
+.timeline-heading > i { padding: 8px; border-radius: 7px; background: #e9f2eb; color: #277b68; font-size: 14px; }
+.timeline-heading .panel-caption { margin: 0 0 2px; }
+.current-day { display: block; font-size: 14px; line-height: 1.2; white-space: nowrap; }
+.timeline-status { padding: 2px 6px; border-radius: 5px; background: #e9f2eb; color: #416252; font-size: 10px; white-space: nowrap; }
+.timeline-status.partial-status { color: #78531f; background: #fbf1dd; }
+.playback-controls { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; }
+.playback-controls button, .playback-controls select {
+  min-height: 32px;
+  padding: 5px 8px;
+  border: 1px solid #dce7de;
+  border-radius: 7px;
+  background: #f7faf7;
+  color: var(--ink);
+  font-size: 11px;
+  white-space: nowrap;
+}
+.playback-controls button:not(:disabled):hover { border-color: #9bbdad; }
+.playback-controls .play-button { min-width: 64px; background: #216658; border-color: #216658; color: #fff; font-weight: 700; }
+.playback-controls .play-button:not(:disabled):hover { background: #195346; }
+.play-button i, .walking-button i, .day-step-controls .fa-chevron-left { margin-right: 5px; }
+.day-step-controls .fa-chevron-right { margin-left: 5px; }
+.day-step-controls { display: flex; }
+.day-step-controls button { border-radius: 0; }
+.day-step-controls button:first-child { border-radius: 7px 0 0 7px; }
+.day-step-controls button:last-child { border-radius: 0 7px 7px 0; }
+.day-step-controls button + button { margin-left: -1px; }
+.day-step-controls button:focus-visible { z-index: 1; }
+.speed-control { display: flex; align-items: center; gap: 5px; color: #4f665c; font-size: 11px; }
+.timeline-track { display: flex; align-items: center; gap: 8px; margin: 5px 0 1px; }
+.progress-label, .timeline-track output { color: #4d665b; font-size: 11px; white-space: nowrap; }
+.timeline-track output { width: 33px; text-align: right; font-variant-numeric: tabular-nums; }
+.timeline-track input { appearance: none; flex: 1; min-width: 0; height: 20px; margin: 0; background: transparent; cursor: pointer; }
+.timeline-track input::-webkit-slider-runnable-track { height: 5px; border-radius: 10px; background: linear-gradient(to right, #277b68 var(--progress), #e0eae2 var(--progress)); }
+.timeline-track input::-webkit-slider-thumb { appearance: none; width: 13px; height: 13px; margin-top: -4px; border: 2px solid white; border-radius: 50%; background: #216658; box-shadow: 0 0 0 1px #277b68; }
+.timeline-track input::-moz-range-track { height: 5px; border-radius: 10px; background: #e0eae2; }
+.timeline-track input::-moz-range-progress { height: 5px; border-radius: 10px; background: #277b68; }
+.timeline-track input::-moz-range-thumb { width: 9px; height: 9px; border: 2px solid white; border-radius: 50%; background: #216658; box-shadow: 0 0 0 1px #277b68; }
+.day-buttons { display: flex; gap: 4px; overflow-x: auto; padding: 3px; }
+.day-buttons button { flex: 1; min-width: 24px; min-height: 24px; padding: 2px 3px; background: #f6f8f5; border: 1px solid #e5ebe5; border-radius: 5px; color: #50665b; font-size: 11px; font-variant-numeric: tabular-nums; }
+.day-buttons button.elapsed { background: #e9f3ea; color: #286654; }
+.day-buttons button:hover { border-color: #92b5a3; }
+.day-buttons button.partial { border-style: dashed; border-color: #b8884c; }
+.day-buttons button.active { background: #216658; border-color: #216658; color: white; font-weight: 700; }
+.day-buttons button.active.partial { border-color: #f8cb89; }
+.network-footer { margin: 6px 0 0; color: var(--muted); font-size: 11px; }
+@media (max-width: 720px) {
+  .timeline-panel { padding: 8px 9px; }
+  .playback-controls button, .playback-controls select { min-height: 37px; }
+  .day-buttons button { min-width: 30px; min-height: 30px; }
+}
 .character-loading{position:absolute;z-index:8;top:70px;left:14px;max-width:340px;display:flex;align-items:center;justify-content:space-between;gap:10px}.character-loading button{border:1px solid #b7cbbb;border-radius:5px;padding:3px 8px;background:white;color:#376e59}
 </style>

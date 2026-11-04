@@ -51,7 +51,7 @@ export function syncIndoorView(view){
   view.invalidate()
 }
 export function updateIndoorGlow(view){
-  for(const [id,glow]of view.indoorGlows||[]){const count=view.indoor.snapshot.buildings[id]?.length||0,selected=view.indoorSelectedBuilding===id;glow.visible=count>0||selected;glow.material.color.set(selected?0xe8bc56:0xffffff);glow.material.opacity=selected?.35:Math.min(.14,Math.log1p(count)*.035)}
+  for(const [id,glow]of view.indoorGlows||[]){const count=view.indoor.snapshot.buildings[id]?.length||0,selected=view.indoorSelectedBuilding===id;glow.visible=view.indoorPreview?.buildingId!==id&&(count>0||selected);glow.material.color.set(selected?0xe8bc56:0xffffff);glow.material.opacity=selected?.35:Math.min(.14,Math.log1p(count)*.035)}
 }
 export function focusIndoorBuilding(view,id){
   const b=view.campus.buildings.find(b=>b.osm_id===id);if(!b)return
