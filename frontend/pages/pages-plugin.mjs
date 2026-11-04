@@ -1,6 +1,7 @@
 import fs from 'node:fs'
 import path from 'node:path'
 import {publishedCatalog,pagesFiles,rewriteAssetMetadata,assertArtifact,ENTRY_ROUTES} from './build-tools.mjs'
+import {mapDependencyNotices} from './dependency-notices.mjs'
 
 export function pagesPreparation(root,base){
   const publicRoot=path.join(root,'public'),cache=path.join(root,'node_modules/.cache/mecoffe-pages')
@@ -30,6 +31,7 @@ export function pagesPreparation(root,base){
         'YuLan-Apache-2.0.txt':path.join(root,'../YULAN_LICENSE'),
         'NOTICE.md':path.join(root,'../NOTICE.md'),
         'Three-MIT.txt':path.join(root,'node_modules/three/LICENSE'),
+        'MapLibre-BSD-3-Clause.txt':path.join(root,'node_modules/maplibre-gl/LICENSE.txt'),
         'Vue-MIT.txt':path.join(root,'node_modules/vue/LICENSE'),
         'VueRouter-MIT.txt':path.join(root,'node_modules/vue-router/LICENSE'),
         'PixiJS-MIT.txt':path.join(root,'node_modules/pixi.js/LICENSE'),
@@ -40,6 +42,7 @@ export function pagesPreparation(root,base){
       }
       fs.mkdirSync(path.join(out,'licenses'),{recursive:true})
       for(const [name,source]of Object.entries(licenses))fs.copyFileSync(source,path.join(out,'licenses',name))
+      fs.writeFileSync(path.join(out,'licenses/MapLibre-Dependencies.txt'),mapDependencyNotices(root))
       const index=fs.readFileSync(path.join(out,'index.html'),'utf8')
       for(const route of ENTRY_ROUTES){fs.mkdirSync(path.join(out,route),{recursive:true});fs.writeFileSync(path.join(out,route,'index.html'),index)}
       // Known routes have real static entry files (200, no server fallback).

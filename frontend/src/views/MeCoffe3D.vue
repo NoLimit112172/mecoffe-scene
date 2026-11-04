@@ -9,6 +9,7 @@
         <Campus3DVisualControls :building-style="scenario?.manifest.style?.buildings || 'yulan'" v-model:character-pool="characterPool" :quality="quality" @update:quality="chooseQuality" v-model:cycle="dayCycle" v-model:hour="previewHour" :clock="lightClock.label" />
         <span v-if="styleBusy" role="status" class="style-status">正在准备三维素材…</span>
         <RouterLink to="/mecoffe" class="old-page">二维沙盘 ↗</RouterLink>
+        <RouterLink :to="{path:'/mecoffe-gis',query:{scenario:scenario?.manifest.id || 'ustc-history'}}" class="old-page">GIS 模式 ↗</RouterLink>
         <RouterLink to="/mecoffe3d/assets" class="old-page">场景素材库 ↗</RouterLink>
       </div>
     </header>

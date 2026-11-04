@@ -20,6 +20,8 @@ node scripts/serve-pages.cjs
 
 本轮测试、体积、慢网测量、截图位置和改动清单见 [里程碑 7 交付记录](docs/milestone7-delivery.md)。公开仓库前还需复核其中的 Git 历史遗留项。
 
+GIS 原型（里程碑 8，当前开发分支验收后发布）：本地打开 [中科大 GIS](http://127.0.0.1:5180/mecoffe-gis?scenario=ustc-history) 或 [NUS GIS](http://127.0.0.1:5180/mecoffe-gis?scenario=nus-hourly)。默认仅使用场景包内的离线矢量图层；可主动切换 OSM 在线底图。建筑按高度拔高，支持地点搜索、点击查询、图层开关和已有运行轨迹的人物回放；无轨迹的 NUS 不生成人物。MapLibre GL JS 固定 6.16.0，不需要 API Key。接口、来源和后续阶段边界见 [GIS 架构](docs/gis-architecture.md)，测试、性能、截图与完整文件清单见 [里程碑 8 交付记录](docs/milestone8-delivery.md)。
+
 默认打开基于团队最新人物关系快照（目前 revision 3）的动态演示：100 个主体、530 条有向关注，支持 30 个展示日的播放、暂停、逐条推进、走到门店和互动气泡。顶部还可查看静态关系网络或原始 OASIS 历史运行回放。前端基于 [YuLan-OneSim](https://github.com/RUC-GSAI/YuLan-OneSim) 的 Vue + PixiJS 前端和美术素材改造，**不调用模型**。
 
 “新版演示”使用明确的脚本规则，供检查场景、动画和接口，不是新一轮 OASIS 实验结果。演示价格、概率、抽样和每日购买上限在 `scene/demo.json` 中公开配置；不得据此报告销量预测或消费者偏好变化。

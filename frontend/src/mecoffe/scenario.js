@@ -17,7 +17,7 @@ export function scenarioTime(time, position=0) {
   // dayLighting / visualClock use phase 0 at 06:00, not at midnight.
   return {iso:date.toISOString(),hour,phase:((hour-6+24)%24)/24,label:`${p.year}-${p.month}-${p.day} ${p.hour}:${p.minute}`,timezone:time.timezone}
 }
-export async function loadScenario(id,{signal,fetcher=fetch,base=import.meta.env?.BASE_URL||'/'}={}) {
+export async function loadScenario(id,{signal,fetcher=fetch,base=import.meta.env?.BASE_URL||'/',includeGis=false}={}) {
   const url=`${base}mecoffe/scenarios/${scenarioId(id)}/`
   async function read(name) {
     const response=await fetcher(url+name,{signal,cache:'no-store'})
@@ -34,7 +34,9 @@ export async function loadScenario(id,{signal,fetcher=fetch,base=import.meta.env
   for(const interval of manifest.simulation_time.intervals){const start=Date.parse(interval.start),end=Date.parse(interval.end);if(!Number.isFinite(start)||!Number.isFinite(end)||end<=start||start<previous)throw new Error('模拟时间段无效');previous=end}
   const files={}
   await Promise.all(Object.entries(manifest.files).map(async([name,expected])=>{
-    if(!/^[a-z_0-9-]+\.json$/.test(name))throw new Error('场景文件名无效')
+    const gis=/^gis\/(buildings|roads|landcover|water|boundary|pois)\.geojson$/.test(name)
+    if(!gis&&!/^[a-z_0-9-]+\.json$/.test(name))throw new Error('场景文件名无效')
+    if(gis&&!includeGis)return
     const {data,text}=await read(name)
     const digest=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(text)),actual=Array.from(new Uint8Array(digest),b=>b.toString(16).padStart(2,'0')).join('')
     if(actual!==expected)throw new Error(`场景文件 ${name} 已改变，请重新生成场景`)

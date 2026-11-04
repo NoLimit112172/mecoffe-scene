@@ -5,6 +5,7 @@ from datetime import datetime, timezone
 import hashlib
 import json
 import math
+import time
 from pathlib import Path
 import urllib.request
 import xml.etree.ElementTree as ET
@@ -20,9 +21,27 @@ class MapInputError(ValueError):
 def write_json(path, value):
     path = Path(path)
     path.parent.mkdir(parents=True, exist_ok=True)
+    serialized = json.dumps(value, ensure_ascii=False, indent=2, allow_nan=False) + '\n'
+    # Vite can briefly hold watched files open on Windows. Identical archived
+    # inputs need no replacement (and keep their exact, already-hashed bytes).
+    if path.exists() and path.read_text(encoding='utf-8') == serialized:
+        return
     temporary = path.with_suffix(path.suffix + '.tmp')
-    temporary.write_text(json.dumps(value, ensure_ascii=False, indent=2, allow_nan=False) + '\n', encoding='utf-8')
-    temporary.replace(path)
+    temporary.write_text(serialized, encoding='utf-8')
+    for attempt in range(8):
+        try:
+            temporary.replace(path)
+            return
+        except PermissionError:
+            if attempt == 7:
+                # Some Windows readers allow writes but deny delete-sharing,
+                # which prevents os.replace even after they finish reading.
+                # Publish the same validated JSON in place; manifest hashes are
+                # written last, so a concurrent reader never accepts mixed data.
+                path.write_text(serialized, encoding='utf-8')
+                temporary.unlink(missing_ok=True)
+                return
+            time.sleep(.05)
 
 
 def validate_bbox(bbox):

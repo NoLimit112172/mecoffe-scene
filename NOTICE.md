@@ -77,3 +77,9 @@ Three.js FBXLoader、SkeletonUtils与既有Three.js同属其MIT代码；没有�
 - Kenney Nature Kit 2.1：官方 <https://kenney.nl/assets/nature-kit> 标记 Creative Commons CC0；归档原始 License.txt 同样明确署名不是强制要求。保留 Kenney / www.kenney.nl 自愿致谢和完整原文，不添加署名义务。
 - VALID：逐字复核固定提交的 [MIT LICENSE](https://github.com/google/valid-avatar-library/blob/c76d2547b5b464415283169d18dffb16bb584eee/LICENSE)，版权人为 Copyright (c) 2022 Tiffany Do。MIT 要求分发副本或实质部分时附带上述版权声明和许可文本；已在 public/mecoffe/assets3d/valid/LICENSE 原样保留，构建会随模型一起分发。原始 FBX 未更改；运行时骨骼、索引 LOD 和动画属于展示适配，不改变源文件和许可。
 - 每个 Kenney / VALID 原型（含校内实例）均从 adapter/build_asset_catalog.py 的来源与许可记录生成；catalog.json 不以项目程序生成许可覆盖上游模型。
+## GIS 模式原型（里程碑 8）
+
+- 新增 MapLibre GL JS **6.16.0**，来源 https://github.com/maplibre/maplibre-gl-js/tree/v6.16.0 ，BSD-3-Clause，Copyright (c) 2023 MapLibre contributors。完整许可保存在安装包 LICENSE.txt，Pages 产物随站复制到 `licenses/MapLibre-BSD-3-Clause.txt`，依赖原始许可合并保存在 `licenses/MapLibre-Dependencies.txt`，来源与许可页提供链接。其许可文本还包含上游及相关归属声明，原样保留。
+- GIS 数据是本仓库已存 OSM / 调用方地图的经纬度派生图层；OSM 继续遵守 ODbL-1.0 和 © OpenStreetMap contributors 署名，不改变原始来源。GIS 界面默认离线；可选 OSM 标准栅格仅在用户切换后按官方瓦片使用政策请求，不批量下载、预取或设置自建缓存。
+- 人物复用 VALID / Three.js 的现有模型与动画，未新增人物素材或 deck.gl。人物所在楼栋与行走路线为展示层示意，OASIS 没有位置数据；无轨迹场景不生成人物或活动。
+- 本轮不使用高德、百度、Google 数据或接口，不需要 API Key；未接入学校 GIS 的非公开数据或模型。

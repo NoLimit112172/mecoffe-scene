@@ -4,7 +4,7 @@ import {readFileSync,existsSync,mkdtempSync,writeFileSync,mkdirSync,rmSync} from
 import {tmpdir} from 'node:os'
 import path from 'node:path'
 import {publicUrl} from '../src/mecoffe/publicUrl.js'
-import {publishedCatalog,pagesFiles,assertArtifact} from '../pages/build-tools.mjs'
+import {publishedCatalog,pagesFiles,assertArtifact,ENTRY_ROUTES} from '../pages/build-tools.mjs'
 import {createRequire} from 'node:module'
 const require=createRequire(import.meta.url),{servePages}=require('../../scripts/serve-pages.cjs'),{findings}=require('../../scripts/audit-public.cjs')
 const root=path.resolve(import.meta.dirname,'..'),catalog=JSON.parse(readFileSync(path.join(root,'public/mecoffe/assets3d/catalog.json'),'utf8'))
@@ -28,6 +28,7 @@ test('artifact audit rejects root requests and enforces base without touching lo
   const temp=mkdtempSync(path.join(tmpdir(),'mecoffe-pages-test-'))
   try{
     writeFileSync(path.join(temp,'index.html'),'<script src="/mecoffe-scene/assets/app.js"></script>')
+    for(const route of ENTRY_ROUTES){mkdirSync(path.join(temp,route),{recursive:true});writeFileSync(path.join(temp,route,'index.html'),'ENTRY')}
     writeFileSync(path.join(temp,'bad.js'),'fetch("/mecoffe/scene.json")')
     assert.throws(()=>assertArtifact(temp),/root asset URL/)
     writeFileSync(path.join(temp,'bad.js'),'fetch("/mecoffe-scene/mecoffe/scene.json")')

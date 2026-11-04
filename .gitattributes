@@ -11,6 +11,7 @@ frontend/public/mecoffe/campuses/**/*.json -text diff
 frontend/public/mecoffe/scenarios/**/*.json -text diff
 
 # Keep downloaded OSM bytes identical to the recorded SHA-256 on Windows.
+frontend/public/mecoffe/scenarios/**/gis/*.geojson -text diff
 data/osm/*.osm -text diff
 
 # Keep the pinned model bundle byte-identical for offline integrity tests.

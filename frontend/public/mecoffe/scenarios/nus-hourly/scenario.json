@@ -134,7 +134,13 @@
     "campus3d.json": "9135e746cd35c3ed640120bcfbebddeac18c3a735c87c84b1a9f2465ffd9d291",
     "asset_assignments.json": "b7996f507a01b520aa2bb495e9b33a5b369549be70c0836aa56cf2d670da8553",
     "landcover.json": "670d4ab5ccfbe7863a9965454866e2d9041a0831475c7d7060e84cf9fbfa0e48",
-    "location_mapping.json": "a981d3d12286c28fdca0733521c44ee897372648445926de42d01eca555fde40"
+    "location_mapping.json": "a981d3d12286c28fdca0733521c44ee897372648445926de42d01eca555fde40",
+    "gis/buildings.geojson": "642c6e240816ae2ee723db8c18a059738938bb9f010f8d26b7b7351cd80834e9",
+    "gis/roads.geojson": "449a2a375fadf4b9221fbc87cb3c7ff3c8cd8adf2930cde04a0e898d026ce19d",
+    "gis/landcover.geojson": "91ee145dfbca39e9f402de6c7c6c565b17c314ed439791809039605ae8ea56b9",
+    "gis/water.geojson": "fd8d87c210f6f612df4f60b578b4b46581f220ac1ff7bcd4b17101c4dd4901d0",
+    "gis/boundary.geojson": "7fb8b13d62adefe2d3e24c1d8a2b7be2842103e38a7ebe0390d9ae8941d007a6",
+    "gis/pois.geojson": "0e91ef65f8a0097c74cfbbc8ae930269caf7ee258ef2749e20574c44b50df29e"
   },
   "replay_format": null
 }

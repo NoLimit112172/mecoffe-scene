@@ -1,0 +1,341 @@
+{
+  "type": "FeatureCollection",
+  "name": "landcover",
+  "schema_version": "mecoffe.gis.v1",
+  "source": {
+    "source_url": "https://api.openstreetmap.org/api/0.6/map?bbox=117.1194,31.8180,117.1283,31.8270",
+    "downloaded_at_utc": "2026-11-03T05:01:24.973987+00:00",
+    "sha256": "663062802ab35914d085a7a97d2be29001d0d6bc786b69b688608bdd37ee6437",
+    "bbox": [
+      117.1194,
+      31.818,
+      117.1283,
+      31.827
+    ],
+    "license": "ODbL-1.0",
+    "attribution": "© OpenStreetMap contributors",
+    "relation_id": "14093671",
+    "osm_generator": "openstreetmap-cgimap 2.1.0 (2089598 spike-07.openstreetmap.org)",
+    "license_url": "https://www.openstreetmap.org/copyright"
+  },
+  "coordinate_system": "WGS84 longitude, latitude",
+  "notice": "人物所在楼栋与行走路线为展示层示意，OASIS 没有位置数据",
+  "features": [
+    {
+      "type": "Feature",
+      "id": "way/1426386891",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              117.119826398,
+              31.820299001
+            ],
+            [
+              117.119824799,
+              31.820078802
+            ],
+            [
+              117.120102803,
+              31.820077399
+            ],
+            [
+              117.120104401,
+              31.820297499
+            ],
+            [
+              117.119826398,
+              31.820299001
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "feature_id": "way/1426386891",
+        "name": "",
+        "category": "pitch",
+        "sport": "badminton"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "way/1426386892",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              117.119830398,
+              31.820553598
+            ],
+            [
+              117.119829097,
+              31.820344704
+            ],
+            [
+              117.120112403,
+              31.8203434
+            ],
+            [
+              117.120113704,
+              31.820552303
+            ],
+            [
+              117.119830398,
+              31.820553598
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "feature_id": "way/1426386892",
+        "name": "",
+        "category": "pitch",
+        "sport": "tennis"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "way/1426386893",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              117.119863802,
+              31.820028602
+            ],
+            [
+              117.119861495,
+              31.819806803
+            ],
+            [
+              117.120146801,
+              31.819804599
+            ],
+            [
+              117.120149098,
+              31.820026498
+            ],
+            [
+              117.119863802,
+              31.820028602
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "feature_id": "way/1426386893",
+        "name": "",
+        "category": "pitch",
+        "sport": "badminton"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "way/1426386900",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              117.122126503,
+              31.818513103
+            ],
+            [
+              117.122124598,
+              31.818353699
+            ],
+            [
+              117.122122798,
+              31.818194204
+            ],
+            [
+              117.122510803,
+              31.818190904
+            ],
+            [
+              117.122514602,
+              31.818509803
+            ],
+            [
+              117.122126503,
+              31.818513103
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "feature_id": "way/1426386900",
+        "name": "",
+        "category": "pitch",
+        "sport": "badminton"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "way/1426386901",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              117.122106996,
+              31.818510504
+            ],
+            [
+              117.121490099,
+              31.818512897
+            ],
+            [
+              117.121488702,
+              31.818249198
+            ],
+            [
+              117.122105504,
+              31.818246797
+            ],
+            [
+              117.122106996,
+              31.818510504
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "feature_id": "way/1426386901",
+        "name": "",
+        "category": "pitch",
+        "sport": "basketball"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "way/1501639765",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              117.120225896,
+              31.821921797
+            ],
+            [
+              117.120222203,
+              31.820974202
+            ],
+            [
+              117.120949905,
+              31.820972097
+            ],
+            [
+              117.1209538,
+              31.821919702
+            ],
+            [
+              117.120225896,
+              31.821921797
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "feature_id": "way/1501639765",
+        "name": "",
+        "category": "pitch",
+        "sport": "soccer"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "way/1501639767",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              117.120470104,
+              31.822079304
+            ],
+            [
+              117.120296101,
+              31.821976404
+            ],
+            [
+              117.120503497,
+              31.821977097
+            ],
+            [
+              117.120499603,
+              31.8220086
+            ],
+            [
+              117.120496702,
+              31.822024401
+            ],
+            [
+              117.120492098,
+              31.822038601
+            ],
+            [
+              117.120486404,
+              31.822051902
+            ],
+            [
+              117.120470104,
+              31.822079304
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "feature_id": "way/1501639767",
+        "name": "",
+        "category": "pitch",
+        "sport": "athletics"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "way/1501639768",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              117.120707803,
+              31.822082704
+            ],
+            [
+              117.120683005,
+              31.822044303
+            ],
+            [
+              117.120671299,
+              31.822009697
+            ],
+            [
+              117.120669499,
+              31.821975199
+            ],
+            [
+              117.120882897,
+              31.821977996
+            ],
+            [
+              117.120707803,
+              31.822082704
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "feature_id": "way/1501639768",
+        "name": "",
+        "category": "pitch",
+        "sport": "athletics"
+      }
+    }
+  ]
+}

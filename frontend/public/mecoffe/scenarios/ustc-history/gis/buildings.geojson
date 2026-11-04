@@ -1,0 +1,1692 @@
+{
+  "type": "FeatureCollection",
+  "name": "buildings",
+  "schema_version": "mecoffe.gis.v1",
+  "source": {
+    "source_url": "https://api.openstreetmap.org/api/0.6/map?bbox=117.1194,31.8180,117.1283,31.8270",
+    "downloaded_at_utc": "2026-11-03T05:01:24.973987+00:00",
+    "sha256": "663062802ab35914d085a7a97d2be29001d0d6bc786b69b688608bdd37ee6437",
+    "bbox": [
+      117.1194,
+      31.818,
+      117.1283,
+      31.827
+    ],
+    "license": "ODbL-1.0",
+    "attribution": "© OpenStreetMap contributors",
+    "relation_id": "14093671",
+    "osm_generator": "openstreetmap-cgimap 2.1.0 (2089598 spike-07.openstreetmap.org)",
+    "license_url": "https://www.openstreetmap.org/copyright"
+  },
+  "coordinate_system": "WGS84 longitude, latitude",
+  "notice": "人物所在楼栋与行走路线为展示层示意，OASIS 没有位置数据",
+  "features": [
+    {
+      "type": "Feature",
+      "id": "way/1435368245",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              117.120378001,
+              31.819005904
+            ],
+            [
+              117.120377303,
+              31.818727996
+            ],
+            [
+              117.1207438,
+              31.818727304
+            ],
+            [
+              117.120744499,
+              31.819005203
+            ],
+            [
+              117.120378001,
+              31.819005904
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "feature_id": "way/1435368245",
+        "name": "5号楼",
+        "name_source": "osm",
+        "category": "dormitory",
+        "building_type": "dormitory",
+        "height_m": 19.2,
+        "levels": 6,
+        "height_source": "default",
+        "levels_source": "default",
+        "prototype_id": "building.procedural.dormitory",
+        "variant_id": "default",
+        "location_ids": []
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "way/1435368246",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              117.119975295,
+              31.819620401
+            ],
+            [
+              117.119972798,
+              31.819349597
+            ],
+            [
+              117.120362305,
+              31.8193435
+            ],
+            [
+              117.120359405,
+              31.819622397
+            ],
+            [
+              117.119975295,
+              31.819620401
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "feature_id": "way/1435368246",
+        "name": "6号楼",
+        "name_source": "osm",
+        "category": "dormitory",
+        "building_type": "dormitory",
+        "height_m": 19.2,
+        "levels": 6,
+        "height_source": "default",
+        "levels_source": "default",
+        "prototype_id": "building.procedural.dormitory",
+        "variant_id": "compact",
+        "location_ids": [
+          "ug_dorm_west"
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "way/1435368247",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              117.120170002,
+              31.820358797
+            ],
+            [
+              117.1201658,
+              31.820069296
+            ],
+            [
+              117.120588901,
+              31.8200648
+            ],
+            [
+              117.120593103,
+              31.820354498
+            ],
+            [
+              117.120170002,
+              31.820358797
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "feature_id": "way/1435368247",
+        "name": "7号楼",
+        "name_source": "osm",
+        "category": "dormitory",
+        "building_type": "dormitory",
+        "height_m": 19.2,
+        "levels": 6,
+        "height_source": "default",
+        "levels_source": "default",
+        "prototype_id": "building.procedural.dormitory",
+        "variant_id": "default",
+        "location_ids": []
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "way/1435368248",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              117.120970904,
+              31.820549704
+            ],
+            [
+              117.120971603,
+              31.8202539
+            ],
+            [
+              117.1213997,
+              31.820254601
+            ],
+            [
+              117.121398895,
+              31.820550496
+            ],
+            [
+              117.120970904,
+              31.820549704
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "feature_id": "way/1435368248",
+        "name": "8号楼",
+        "name_source": "osm",
+        "category": "dormitory",
+        "building_type": "dormitory",
+        "height_m": 19.2,
+        "levels": 6,
+        "height_source": "default",
+        "levels_source": "default",
+        "prototype_id": "building.procedural.dormitory",
+        "variant_id": "default",
+        "location_ids": [
+          "grad_apartment"
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "way/1435368249",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              117.121000804,
+              31.818488498
+            ],
+            [
+              117.120999005,
+              31.818215599
+            ],
+            [
+              117.121386004,
+              31.818213702
+            ],
+            [
+              117.121387803,
+              31.8184866
+            ],
+            [
+              117.121000804,
+              31.818488498
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "feature_id": "way/1435368249",
+        "name": "4号楼",
+        "name_source": "osm",
+        "category": "dormitory",
+        "building_type": "dormitory",
+        "height_m": 19.2,
+        "levels": 6,
+        "height_source": "default",
+        "levels_source": "default",
+        "prototype_id": "building.procedural.dormitory",
+        "variant_id": "extended",
+        "location_ids": []
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "way/1435368250",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              117.121433696,
+              31.822024104
+            ],
+            [
+              117.121426298,
+              31.821174903
+            ],
+            [
+              117.122166797,
+              31.821170298
+            ],
+            [
+              117.1221741,
+              31.8220195
+            ],
+            [
+              117.121433696,
+              31.822024104
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "feature_id": "way/1435368250",
+        "name": "体育馆",
+        "name_source": "osm",
+        "category": "sports",
+        "building_type": "yes",
+        "height_m": 6.4,
+        "levels": 2,
+        "height_source": "default",
+        "levels_source": "default",
+        "prototype_id": "building.procedural.sports",
+        "variant_id": "default",
+        "location_ids": []
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "way/1435368251",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              117.121081297,
+              31.8198765
+            ],
+            [
+              117.121074703,
+              31.819673604
+            ],
+            [
+              117.121519004,
+              31.8196631
+            ],
+            [
+              117.121815096,
+              31.8197577
+            ],
+            [
+              117.121735598,
+              31.819937402
+            ],
+            [
+              117.121513405,
+              31.819866401
+            ],
+            [
+              117.121081297,
+              31.8198765
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "feature_id": "way/1435368251",
+        "name": "3号楼",
+        "name_source": "osm",
+        "category": "dormitory",
+        "building_type": "dormitory",
+        "height_m": 19.2,
+        "levels": 6,
+        "height_source": "default",
+        "levels_source": "default",
+        "prototype_id": "building.procedural.dormitory",
+        "variant_id": "default",
+        "location_ids": []
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "way/1435368252",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              117.1212832,
+              31.8193577
+            ],
+            [
+              117.121279803,
+              31.819169302
+            ],
+            [
+              117.121742796,
+              31.819163303
+            ],
+            [
+              117.122005198,
+              31.819244997
+            ],
+            [
+              117.121929299,
+              31.819421201
+            ],
+            [
+              117.121707402,
+              31.819352196
+            ],
+            [
+              117.1212832,
+              31.8193577
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "feature_id": "way/1435368252",
+        "name": "2号楼",
+        "name_source": "osm",
+        "category": "dormitory",
+        "building_type": "dormitory",
+        "height_m": 19.2,
+        "levels": 6,
+        "height_source": "default",
+        "levels_source": "default",
+        "prototype_id": "building.procedural.dormitory",
+        "variant_id": "default",
+        "location_ids": []
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "way/1435368253",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              117.121664399,
+              31.818881501
+            ],
+            [
+              117.121659996,
+              31.818690899
+            ],
+            [
+              117.122122798,
+              31.818683201
+            ],
+            [
+              117.122390895,
+              31.818767701
+            ],
+            [
+              117.122313895,
+              31.818944004
+            ],
+            [
+              117.122093004,
+              31.818874396
+            ],
+            [
+              117.121664399,
+              31.818881501
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "feature_id": "way/1435368253",
+        "name": "1号楼",
+        "name_source": "osm",
+        "category": "dormitory",
+        "building_type": "dormitory",
+        "height_m": 19.2,
+        "levels": 6,
+        "height_source": "default",
+        "levels_source": "default",
+        "prototype_id": "building.procedural.dormitory",
+        "variant_id": "default",
+        "location_ids": [
+          "ug_dorm_east"
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "way/1435370291",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              117.123110204,
+              31.818764904
+            ],
+            [
+              117.1231076,
+              31.818341099
+            ],
+            [
+              117.123604103,
+              31.818339004
+            ],
+            [
+              117.1236064,
+              31.818718904
+            ],
+            [
+              117.123606696,
+              31.818762701
+            ],
+            [
+              117.123110204,
+              31.818764904
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "feature_id": "way/1435370291",
+        "name": "师生活动中心",
+        "name_source": "osm",
+        "category": "education",
+        "building_type": "school",
+        "height_m": 16.0,
+        "levels": 5,
+        "height_source": "default",
+        "levels_source": "default",
+        "prototype_id": "building.procedural.education",
+        "variant_id": "default",
+        "location_ids": [
+          "shop_merchant_001"
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "way/1435377493",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              117.124418098,
+              31.819196299
+            ],
+            [
+              117.124420903,
+              31.8186021
+            ],
+            [
+              117.124488896,
+              31.818606903
+            ],
+            [
+              117.124497405,
+              31.8182749
+            ],
+            [
+              117.125470702,
+              31.818276501
+            ],
+            [
+              117.1254665,
+              31.8186205
+            ],
+            [
+              117.125357399,
+              31.818626598
+            ],
+            [
+              117.125357399,
+              31.818662597
+            ],
+            [
+              117.125503302,
+              31.818683102
+            ],
+            [
+              117.125503302,
+              31.818887598
+            ],
+            [
+              117.125276399,
+              31.818871698
+            ],
+            [
+              117.125274504,
+              31.819189204
+            ],
+            [
+              117.124846301,
+              31.819197504
+            ],
+            [
+              117.124418098,
+              31.819196299
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "feature_id": "way/1435377493",
+        "name": "3号学科楼",
+        "name_source": "osm",
+        "category": "education",
+        "building_type": "university",
+        "height_m": 16.0,
+        "levels": 5,
+        "height_source": "default",
+        "levels_source": "default",
+        "prototype_id": "building.procedural.education",
+        "variant_id": "default",
+        "location_ids": []
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "way/1435377494",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              117.126146204,
+              31.818451401
+            ],
+            [
+              117.126145601,
+              31.818339903
+            ],
+            [
+              117.126089896,
+              31.818340101
+            ],
+            [
+              117.126089695,
+              31.818285099
+            ],
+            [
+              117.126884999,
+              31.818282302
+            ],
+            [
+              117.126885295,
+              31.818342296
+            ],
+            [
+              117.126874203,
+              31.818342403
+            ],
+            [
+              117.126874796,
+              31.818448703
+            ],
+            [
+              117.126146204,
+              31.818451401
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "feature_id": "way/1435377494",
+        "name": "2号学科楼A区",
+        "name_source": "osm",
+        "category": "education",
+        "building_type": "university",
+        "height_m": 16.0,
+        "levels": 5,
+        "height_source": "default",
+        "levels_source": "default",
+        "prototype_id": "building.procedural.education",
+        "variant_id": "extended",
+        "location_ids": [
+          "teaching_main"
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "way/1435377495",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              117.126283099,
+              31.818832398
+            ],
+            [
+              117.1262822,
+              31.818743302
+            ],
+            [
+              117.126305802,
+              31.818743204
+            ],
+            [
+              117.126305495,
+              31.818715001
+            ],
+            [
+              117.126261497,
+              31.818715298
+            ],
+            [
+              117.126260502,
+              31.818619403
+            ],
+            [
+              117.126909205,
+              31.8186147
+            ],
+            [
+              117.126910295,
+              31.818722303
+            ],
+            [
+              117.126888301,
+              31.818722501
+            ],
+            [
+              117.126889402,
+              31.818827902
+            ],
+            [
+              117.126283099,
+              31.818832398
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "feature_id": "way/1435377495",
+        "name": "2号学科楼B区",
+        "name_source": "osm",
+        "category": "education",
+        "building_type": "university",
+        "height_m": 16.0,
+        "levels": 5,
+        "height_source": "default",
+        "levels_source": "default",
+        "prototype_id": "building.procedural.education",
+        "variant_id": "compact",
+        "location_ids": []
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "way/1435377496",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              117.126420905,
+              31.819222604
+            ],
+            [
+              117.126420704,
+              31.819098102
+            ],
+            [
+              117.126490496,
+              31.819098003
+            ],
+            [
+              117.126490401,
+              31.819070997
+            ],
+            [
+              117.126471698,
+              31.819071096
+            ],
+            [
+              117.126471402,
+              31.818983097
+            ],
+            [
+              117.127154799,
+              31.818981901
+            ],
+            [
+              117.127155297,
+              31.819221498
+            ],
+            [
+              117.126420905,
+              31.819222604
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "feature_id": "way/1435377496",
+        "name": "2号学科楼C区",
+        "name_source": "osm",
+        "category": "education",
+        "building_type": "university",
+        "height_m": 16.0,
+        "levels": 5,
+        "height_source": "default",
+        "levels_source": "default",
+        "prototype_id": "building.procedural.education",
+        "variant_id": "compact",
+        "location_ids": []
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "way/1435377497",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              117.127252004,
+              31.819214402
+            ],
+            [
+              117.127251295,
+              31.819038603
+            ],
+            [
+              117.127387799,
+              31.819038199
+            ],
+            [
+              117.127387704,
+              31.819012199
+            ],
+            [
+              117.127377797,
+              31.819012298
+            ],
+            [
+              117.127375902,
+              31.818598197
+            ],
+            [
+              117.127388804,
+              31.818598197
+            ],
+            [
+              117.127388698,
+              31.818569401
+            ],
+            [
+              117.127007203,
+              31.818570498
+            ],
+            [
+              117.127006505,
+              31.818388503
+            ],
+            [
+              117.127644401,
+              31.818386704
+            ],
+            [
+              117.127645301,
+              31.818594303
+            ],
+            [
+              117.127660701,
+              31.818594303
+            ],
+            [
+              117.127662203,
+              31.819004402
+            ],
+            [
+              117.127644401,
+              31.819004402
+            ],
+            [
+              117.127645099,
+              31.819213404
+            ],
+            [
+              117.127252004,
+              31.819214402
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "feature_id": "way/1435377497",
+        "name": "2号学科楼D区",
+        "name_source": "osm",
+        "category": "education",
+        "building_type": "university",
+        "height_m": 16.0,
+        "levels": 5,
+        "height_source": "default",
+        "levels_source": "default",
+        "prototype_id": "building.procedural.education",
+        "variant_id": "default",
+        "location_ids": []
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "way/1435377498",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              117.126116399,
+              31.819916997
+            ],
+            [
+              117.126143198,
+              31.819695404
+            ],
+            [
+              117.126793404,
+              31.819734596
+            ],
+            [
+              117.127132403,
+              31.819703903
+            ],
+            [
+              117.127153603,
+              31.820005696
+            ],
+            [
+              117.126845403,
+              31.820003097
+            ],
+            [
+              117.126116399,
+              31.819916997
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "feature_id": "way/1435377498",
+        "name": "信智大楼A区",
+        "name_source": "osm",
+        "category": "education",
+        "building_type": "university",
+        "height_m": 16.0,
+        "levels": 5,
+        "height_source": "default",
+        "levels_source": "default",
+        "prototype_id": "building.procedural.education",
+        "variant_id": "extended",
+        "location_ids": []
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "way/1435377499",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              117.126840302,
+              31.820432703
+            ],
+            [
+              117.126845403,
+              31.820003097
+            ],
+            [
+              117.127153603,
+              31.820005696
+            ],
+            [
+              117.127148597,
+              31.820435302
+            ],
+            [
+              117.126840302,
+              31.820432703
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "feature_id": "way/1435377499",
+        "name": "信智大楼B区",
+        "name_source": "osm",
+        "category": "education",
+        "building_type": "university",
+        "height_m": 16.0,
+        "levels": 5,
+        "height_source": "default",
+        "levels_source": "default",
+        "prototype_id": "building.procedural.education",
+        "variant_id": "extended",
+        "location_ids": []
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "way/1435377500",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              117.126146405,
+              31.820726097
+            ],
+            [
+              117.126120103,
+              31.820491401
+            ],
+            [
+              117.126840302,
+              31.820432703
+            ],
+            [
+              117.127148597,
+              31.820435302
+            ],
+            [
+              117.127143305,
+              31.820737698
+            ],
+            [
+              117.126784904,
+              31.820701303
+            ],
+            [
+              117.126146405,
+              31.820726097
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "feature_id": "way/1435377500",
+        "name": "信智大楼C区",
+        "name_source": "osm",
+        "category": "education",
+        "building_type": "university",
+        "height_m": 16.0,
+        "levels": 5,
+        "height_source": "default",
+        "levels_source": "default",
+        "prototype_id": "building.procedural.education",
+        "variant_id": "compact",
+        "location_ids": []
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "way/1435377501",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              117.123303503,
+              31.820714703
+            ],
+            [
+              117.1233078,
+              31.820134803
+            ],
+            [
+              117.123959,
+              31.8201384
+            ],
+            [
+              117.123954703,
+              31.820718102
+            ],
+            [
+              117.123303503,
+              31.820714703
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "feature_id": "way/1435377501",
+        "name": "图书教育中心A区",
+        "name_source": "osm",
+        "category": "library",
+        "building_type": "university",
+        "height_m": 16.0,
+        "levels": 5,
+        "height_source": "default",
+        "levels_source": "default",
+        "prototype_id": "building.procedural.education",
+        "variant_id": "default",
+        "location_ids": [
+          "library_main"
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "way/1435377502",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              117.123684595,
+              31.820023602
+            ],
+            [
+              117.123683198,
+              31.819736404
+            ],
+            [
+              117.123908101,
+              31.819735604
+            ],
+            [
+              117.123907995,
+              31.819706304
+            ],
+            [
+              117.124764105,
+              31.819703102
+            ],
+            [
+              117.1247642,
+              31.819740604
+            ],
+            [
+              117.125005995,
+              31.819739704
+            ],
+            [
+              117.125007402,
+              31.8200188
+            ],
+            [
+              117.123684595,
+              31.820023602
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "feature_id": "way/1435377502",
+        "name": "图书教育中心C区",
+        "name_source": "osm",
+        "category": "library",
+        "building_type": "university",
+        "height_m": 16.0,
+        "levels": 5,
+        "height_source": "default",
+        "levels_source": "default",
+        "prototype_id": "building.procedural.education",
+        "variant_id": "extended",
+        "location_ids": []
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "way/1435377503",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              117.124013995,
+              31.820379697
+            ],
+            [
+              117.124707702,
+              31.820378501
+            ],
+            [
+              117.124707596,
+              31.820311402
+            ],
+            [
+              117.125059201,
+              31.8203108
+            ],
+            [
+              117.125060302,
+              31.820728399
+            ],
+            [
+              117.1240148,
+              31.820730198
+            ],
+            [
+              117.124013995,
+              31.820379697
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "feature_id": "way/1435377503",
+        "name": "图书教育中心B区",
+        "name_source": "osm",
+        "category": "library",
+        "building_type": "university",
+        "height_m": 16.0,
+        "levels": 5,
+        "height_source": "default",
+        "levels_source": "default",
+        "prototype_id": "building.procedural.education",
+        "variant_id": "default",
+        "location_ids": []
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "way/1435377504",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              117.1240639,
+              31.822362896
+            ],
+            [
+              117.124060396,
+              31.821850301
+            ],
+            [
+              117.124426502,
+              31.821848503
+            ],
+            [
+              117.124429899,
+              31.822361097
+            ],
+            [
+              117.1240639,
+              31.822362896
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "feature_id": "way/1435377504",
+        "name": "教工食堂",
+        "name_source": "osm",
+        "category": "dining",
+        "building_type": "university",
+        "height_m": 9.6,
+        "levels": 3,
+        "height_source": "default",
+        "levels_source": "default",
+        "prototype_id": "building.procedural.education",
+        "variant_id": "default",
+        "location_ids": [
+          "shop_merchant_002"
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "way/1435377505",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              117.121295901,
+              31.821021002
+            ],
+            [
+              117.121768504,
+              31.820448
+            ],
+            [
+              117.121652703,
+              31.819671797
+            ],
+            [
+              117.122035701,
+              31.819730504
+            ],
+            [
+              117.122170205,
+              31.820433701
+            ],
+            [
+              117.122093597,
+              31.8206162
+            ],
+            [
+              117.121684498,
+              31.8210321
+            ],
+            [
+              117.121295901,
+              31.821021002
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "feature_id": "way/1435377505",
+        "name": "学生食堂A区",
+        "name_source": "osm",
+        "category": "dining",
+        "building_type": "university",
+        "height_m": 9.6,
+        "levels": 3,
+        "height_source": "default",
+        "levels_source": "default",
+        "prototype_id": "building.procedural.education",
+        "variant_id": "compact",
+        "location_ids": []
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "way/1435377506",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              117.1236064,
+              31.818718904
+            ],
+            [
+              117.123618201,
+              31.818898399
+            ],
+            [
+              117.1226327,
+              31.818924399
+            ],
+            [
+              117.122074905,
+              31.819618098
+            ],
+            [
+              117.121705698,
+              31.819536602
+            ],
+            [
+              117.122313895,
+              31.818710297
+            ],
+            [
+              117.122471705,
+              31.818641203
+            ],
+            [
+              117.1236064,
+              31.818718904
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "feature_id": "way/1435377506",
+        "name": "学生食堂B区",
+        "name_source": "osm",
+        "category": "dining",
+        "building_type": "university",
+        "height_m": 9.6,
+        "levels": 3,
+        "height_source": "default",
+        "levels_source": "default",
+        "prototype_id": "building.procedural.education",
+        "variant_id": "default",
+        "location_ids": []
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "way/1435377507",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              117.1261599,
+              31.821800902
+            ],
+            [
+              117.126164705,
+              31.821186
+            ],
+            [
+              117.127042904,
+              31.821183204
+            ],
+            [
+              117.1270461,
+              31.821393303
+            ],
+            [
+              117.126999001,
+              31.821394598
+            ],
+            [
+              117.126987602,
+              31.821809203
+            ],
+            [
+              117.1261599,
+              31.821800902
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "feature_id": "way/1435377507",
+        "name": "1号学科楼A区",
+        "name_source": "osm",
+        "category": "education",
+        "building_type": "university",
+        "height_m": 16.0,
+        "levels": 5,
+        "height_source": "default",
+        "levels_source": "default",
+        "prototype_id": "building.procedural.education",
+        "variant_id": "compact",
+        "location_ids": []
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "way/1435377508",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              117.1240351,
+              31.821586198
+            ],
+            [
+              117.124034603,
+              31.821388402
+            ],
+            [
+              117.124661999,
+              31.821386999
+            ],
+            [
+              117.124662603,
+              31.821584903
+            ],
+            [
+              117.1240351,
+              31.821586198
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "feature_id": "way/1435377508",
+        "name": "教工公寓",
+        "name_source": "osm",
+        "category": "dormitory",
+        "building_type": "university",
+        "height_m": 19.2,
+        "levels": 6,
+        "height_source": "default",
+        "levels_source": "default",
+        "prototype_id": "building.procedural.education",
+        "variant_id": "default",
+        "location_ids": [
+          "faculty_main"
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "way/1435377509",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              117.1271675,
+              31.821684602
+            ],
+            [
+              117.127170496,
+              31.821178302
+            ],
+            [
+              117.127652498,
+              31.821180398
+            ],
+            [
+              117.127649301,
+              31.821686796
+            ],
+            [
+              117.1271675,
+              31.821684602
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "feature_id": "way/1435377509",
+        "name": "1号学科楼D区",
+        "name_source": "osm",
+        "category": "education",
+        "building_type": "university",
+        "height_m": 16.0,
+        "levels": 5,
+        "height_source": "default",
+        "levels_source": "default",
+        "prototype_id": "building.procedural.education",
+        "variant_id": "compact",
+        "location_ids": []
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "way/1435377510",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              117.125960897,
+              31.822208303
+            ],
+            [
+              117.125960897,
+              31.822029698
+            ],
+            [
+              117.126698199,
+              31.822027099
+            ],
+            [
+              117.126700104,
+              31.8222094
+            ],
+            [
+              117.125960897,
+              31.822208303
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "feature_id": "way/1435377510",
+        "name": "1号学科楼B区",
+        "name_source": "osm",
+        "category": "education",
+        "building_type": "university",
+        "height_m": 16.0,
+        "levels": 5,
+        "height_source": "default",
+        "levels_source": "default",
+        "prototype_id": "building.procedural.education",
+        "variant_id": "compact",
+        "location_ids": []
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "way/1435377511",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              117.126700104,
+              31.8222094
+            ],
+            [
+              117.126698199,
+              31.822027099
+            ],
+            [
+              117.127657504,
+              31.822019904
+            ],
+            [
+              117.127659303,
+              31.822202502
+            ],
+            [
+              117.126700104,
+              31.8222094
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "feature_id": "way/1435377511",
+        "name": "1号学科楼C区",
+        "name_source": "osm",
+        "category": "education",
+        "building_type": "university",
+        "height_m": 16.0,
+        "levels": 5,
+        "height_source": "default",
+        "levels_source": "default",
+        "prototype_id": "building.procedural.education",
+        "variant_id": "compact",
+        "location_ids": []
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "way/1435377512",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              117.124752102,
+              31.822179803
+            ],
+            [
+              117.124755701,
+              31.822003797
+            ],
+            [
+              117.125316597,
+              31.822012197
+            ],
+            [
+              117.1253286,
+              31.821433799
+            ],
+            [
+              117.124971998,
+              31.821428502
+            ],
+            [
+              117.124976698,
+              31.821200498
+            ],
+            [
+              117.1255049,
+              31.821208304
+            ],
+            [
+              117.1254848,
+              31.822190703
+            ],
+            [
+              117.124752102,
+              31.822179803
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "feature_id": "way/1435377512",
+        "name": "行政服务中心",
+        "name_source": "osm",
+        "category": "office",
+        "building_type": "university",
+        "height_m": 12.8,
+        "levels": 4,
+        "height_source": "default",
+        "levels_source": "default",
+        "prototype_id": "building.procedural.education",
+        "variant_id": "extended",
+        "location_ids": []
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "way/1501639766",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              117.119907705,
+              31.821945099
+            ],
+            [
+              117.119906297,
+              31.820970703
+            ],
+            [
+              117.119999703,
+              31.820950298
+            ],
+            [
+              117.120008202,
+              31.821964299
+            ],
+            [
+              117.119907705,
+              31.821945099
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "feature_id": "way/1501639766",
+        "name": "未命名建筑（way/1501639766）",
+        "name_source": "display_fallback",
+        "category": "sports",
+        "building_type": "grandstand",
+        "height_m": 6.4,
+        "levels": 2,
+        "height_source": "default",
+        "levels_source": "default",
+        "prototype_id": "building.procedural.other",
+        "variant_id": "compact",
+        "location_ids": []
+      }
+    }
+  ]
+}

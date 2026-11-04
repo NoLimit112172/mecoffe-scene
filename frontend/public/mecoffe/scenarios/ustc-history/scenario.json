@@ -161,7 +161,13 @@
     "landcover.json": "609ff4622bb2fb7555ef7584274fcf82bdcd5e8f0dea3991da4bb343510fef2c",
     "location_mapping.json": "be1fac8b73212a473f3f5ba14c58836983db4799afcc26196e745205827856b9",
     "trajectory.json": "5f0dab8be406725e9842d3282b88f6ef1081427d60af109274742518d33b22bf",
-    "surroundings.json": "1b5c0a832945c51e1f12c7138b3d4bfa69e0aa88ff3e82ea5bd5ce01498de5f0"
+    "surroundings.json": "1b5c0a832945c51e1f12c7138b3d4bfa69e0aa88ff3e82ea5bd5ce01498de5f0",
+    "gis/buildings.geojson": "f1e6e5308f44ac79715349af1bf76e5f894d1129418a9b91cdb2bd5e97f9e790",
+    "gis/roads.geojson": "47d092d0cd7256f8c8e42fe2fe497fe967df26a194da8bc74c0fe926d152f063",
+    "gis/landcover.geojson": "1abd776034bdf6279644259aa5bdccb49e8cbabc425b63fa23d9e8d745980d9b",
+    "gis/water.geojson": "76a8e0109ed64894a1da92848dc1b2c78aaf65b002f2005e5d18f4846f6066c1",
+    "gis/boundary.geojson": "129f54793590b20c067b6be7e189ecb5d391908ae1de53172a1596a1bc8efd59",
+    "gis/pois.geojson": "b830c1f8bfac22c7fed440b3877c3fdead015fde1dedfa0ddfb32b56b2effb17"
   },
   "replay_format": "mecoffe.scene.v1"
 }

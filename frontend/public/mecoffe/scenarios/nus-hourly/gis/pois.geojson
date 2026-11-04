@@ -1,0 +1,2190 @@
+{
+  "type": "FeatureCollection",
+  "name": "pois",
+  "schema_version": "mecoffe.gis.v1",
+  "source": {
+    "source_url": "https://api.openstreetmap.org/api/0.6/map?bbox=103.771,1.292,103.779,1.3",
+    "downloaded_at_utc": "2026-11-03T07:36:11.586106+00:00",
+    "sha256": "31f19c9919e87ce833f592cff615097b6829cdecd8ae8f4adb6be897d7c2d63f",
+    "bbox": [
+      103.771,
+      1.292,
+      103.779,
+      1.3
+    ],
+    "license": "ODbL-1.0",
+    "license_url": "https://www.openstreetmap.org/copyright",
+    "attribution": "© OpenStreetMap contributors",
+    "osm_generator": "openstreetmap-cgimap 2.1.0 (2298491 spike-07.openstreetmap.org)"
+  },
+  "coordinate_system": "WGS84 longitude, latitude",
+  "notice": "人物所在楼栋与行走路线为展示层示意，OASIS 没有位置数据",
+  "features": [
+    {
+      "type": "Feature",
+      "id": "node/10128318316",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.774878201,
+          1.295038797
+        ]
+      },
+      "properties": {
+        "feature_id": "node/10128318316",
+        "name": "",
+        "category": "bicycle_parking",
+        "prototype_id": null,
+        "location_ids": [],
+        "illustrative": false
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "node/10571950597",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.773392899,
+          1.296734898
+        ]
+      },
+      "properties": {
+        "feature_id": "node/10571950597",
+        "name": "NUS Co-op@Central Library",
+        "category": "stationery",
+        "prototype_id": null,
+        "location_ids": [],
+        "illustrative": false
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "node/10574193143",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.773615196,
+          1.2949239
+        ]
+      },
+      "properties": {
+        "feature_id": "node/10574193143",
+        "name": "",
+        "category": "bench",
+        "prototype_id": null,
+        "location_ids": [],
+        "illustrative": false
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "node/10574193144",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.773478698,
+          1.294959603
+        ]
+      },
+      "properties": {
+        "feature_id": "node/10574193144",
+        "name": "",
+        "category": "bench",
+        "prototype_id": null,
+        "location_ids": [],
+        "illustrative": false
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "node/10595350812",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.776358402,
+          1.293888998
+        ]
+      },
+      "properties": {
+        "feature_id": "node/10595350812",
+        "name": "",
+        "category": "parking_entrance",
+        "prototype_id": null,
+        "location_ids": [],
+        "illustrative": false
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "node/10595350828",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.777596301,
+          1.293182501
+        ]
+      },
+      "properties": {
+        "feature_id": "node/10595350828",
+        "name": "",
+        "category": "research_institute",
+        "prototype_id": null,
+        "location_ids": [],
+        "illustrative": false
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "node/10598564862",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.7733688,
+          1.293202502
+        ]
+      },
+      "properties": {
+        "feature_id": "node/10598564862",
+        "name": "",
+        "category": "taxi",
+        "prototype_id": null,
+        "location_ids": [],
+        "illustrative": false
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "node/10698657251",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.773667703,
+          1.294800801
+        ]
+      },
+      "properties": {
+        "feature_id": "node/10698657251",
+        "name": "",
+        "category": "taxi",
+        "prototype_id": null,
+        "location_ids": [],
+        "illustrative": false
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "node/10701624937",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.774135199,
+          1.292462802
+        ]
+      },
+      "properties": {
+        "feature_id": "node/10701624937",
+        "name": "",
+        "category": "parking",
+        "prototype_id": null,
+        "location_ids": [],
+        "illustrative": false
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "node/10703322126",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.7722468,
+          1.294596197
+        ]
+      },
+      "properties": {
+        "feature_id": "node/10703322126",
+        "name": "",
+        "category": "waste_disposal",
+        "prototype_id": null,
+        "location_ids": [],
+        "illustrative": false
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "node/10814040028",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.774643904,
+          1.294611198
+        ]
+      },
+      "properties": {
+        "feature_id": "node/10814040028",
+        "name": "",
+        "category": "taxi",
+        "prototype_id": null,
+        "location_ids": [],
+        "illustrative": false
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "node/10831778552",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.772185199,
+          1.296013301
+        ]
+      },
+      "properties": {
+        "feature_id": "node/10831778552",
+        "name": "Asia Research Institute",
+        "category": "school",
+        "prototype_id": null,
+        "location_ids": [],
+        "illustrative": false
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "node/10858000128",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.776386999,
+          1.298975599
+        ]
+      },
+      "properties": {
+        "feature_id": "node/10858000128",
+        "name": "",
+        "category": "vending_machine",
+        "prototype_id": null,
+        "location_ids": [],
+        "illustrative": false
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "node/10901301144",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.775281604,
+          1.299697996
+        ]
+      },
+      "properties": {
+        "feature_id": "node/10901301144",
+        "name": "",
+        "category": "toilets",
+        "prototype_id": null,
+        "location_ids": [],
+        "illustrative": false
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "node/10902436952",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.773890099,
+          1.2945206
+        ]
+      },
+      "properties": {
+        "feature_id": "node/10902436952",
+        "name": "",
+        "category": "parking_space",
+        "prototype_id": null,
+        "location_ids": [],
+        "illustrative": false
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "node/11026965735",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.772333004,
+          1.294643501
+        ]
+      },
+      "properties": {
+        "feature_id": "node/11026965735",
+        "name": "Thai Cuisine",
+        "category": "restaurant",
+        "prototype_id": null,
+        "location_ids": [],
+        "illustrative": false
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "node/11026965736",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.772304902,
+          1.294702497
+        ]
+      },
+      "properties": {
+        "feature_id": "node/11026965736",
+        "name": "Chinese Cooked Food",
+        "category": "restaurant",
+        "prototype_id": null,
+        "location_ids": [],
+        "illustrative": false
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "node/11026965737",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.7723188,
+          1.294672001
+        ]
+      },
+      "properties": {
+        "feature_id": "node/11026965737",
+        "name": "Snacks & Kway Teow",
+        "category": "restaurant",
+        "prototype_id": null,
+        "location_ids": [],
+        "illustrative": false
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "node/11026965738",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.7725519,
+          1.294609903
+        ]
+      },
+      "properties": {
+        "feature_id": "node/11026965738",
+        "name": "Fresh Fruits & Juices",
+        "category": "restaurant",
+        "prototype_id": null,
+        "location_ids": [],
+        "illustrative": false
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "node/11026965739",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.772564899,
+          1.294582401
+        ]
+      },
+      "properties": {
+        "feature_id": "node/11026965739",
+        "name": "Drinks & Snacks",
+        "category": "beverages",
+        "prototype_id": null,
+        "location_ids": [],
+        "illustrative": false
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "node/11026965740",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.772383397,
+          1.294537004
+        ]
+      },
+      "properties": {
+        "feature_id": "node/11026965740",
+        "name": "Roasted Delights",
+        "category": "restaurant",
+        "prototype_id": null,
+        "location_ids": [],
+        "illustrative": false
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "node/11026965741",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.772427996,
+          1.294446703
+        ]
+      },
+      "properties": {
+        "feature_id": "node/11026965741",
+        "name": "Muslim",
+        "category": "restaurant",
+        "prototype_id": null,
+        "location_ids": [],
+        "illustrative": false
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "node/11026965742",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.772412101,
+          1.294475103
+        ]
+      },
+      "properties": {
+        "feature_id": "node/11026965742",
+        "name": "Indian",
+        "category": "restaurant",
+        "prototype_id": null,
+        "location_ids": [],
+        "illustrative": false
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "node/11026965743",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.772397097,
+          1.294506804
+        ]
+      },
+      "properties": {
+        "feature_id": "node/11026965743",
+        "name": "Vegetarian",
+        "category": "restaurant",
+        "prototype_id": null,
+        "location_ids": [],
+        "illustrative": false
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "node/11026965744",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.772292704,
+          1.294730699
+        ]
+      },
+      "properties": {
+        "feature_id": "node/11026965744",
+        "name": "Yong Tau Foo & Laksa",
+        "category": "restaurant",
+        "prototype_id": null,
+        "location_ids": [],
+        "illustrative": false
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "node/11137500570",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.774387001,
+          1.292520296
+        ]
+      },
+      "properties": {
+        "feature_id": "node/11137500570",
+        "name": "The Spread",
+        "category": "restaurant",
+        "prototype_id": null,
+        "location_ids": [],
+        "illustrative": false
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "node/11137500578",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.773864398,
+          1.292553004
+        ]
+      },
+      "properties": {
+        "feature_id": "node/11137500578",
+        "name": "",
+        "category": "drinking_water",
+        "prototype_id": null,
+        "location_ids": [],
+        "illustrative": false
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "node/11137500580",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.773886797,
+          1.292597403
+        ]
+      },
+      "properties": {
+        "feature_id": "node/11137500580",
+        "name": "",
+        "category": "toilets",
+        "prototype_id": null,
+        "location_ids": [],
+        "illustrative": false
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "node/11137500581",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.774448,
+          1.292356197
+        ]
+      },
+      "properties": {
+        "feature_id": "node/11137500581",
+        "name": "",
+        "category": "toilets",
+        "prototype_id": null,
+        "location_ids": [],
+        "illustrative": false
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "node/11173633074",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.771787597,
+          1.299274398
+        ]
+      },
+      "properties": {
+        "feature_id": "node/11173633074",
+        "name": "Cheers",
+        "category": "convenience",
+        "prototype_id": null,
+        "location_ids": [],
+        "illustrative": false
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "node/11210351493",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.773908198,
+          1.294591296
+        ]
+      },
+      "properties": {
+        "feature_id": "node/11210351493",
+        "name": "",
+        "category": "vending_machine",
+        "prototype_id": null,
+        "location_ids": [],
+        "illustrative": false
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "node/11210351494",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.774090204,
+          1.294304997
+        ]
+      },
+      "properties": {
+        "feature_id": "node/11210351494",
+        "name": "Cool Spot",
+        "category": "convenience",
+        "prototype_id": null,
+        "location_ids": [],
+        "illustrative": false
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "node/11224856637",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.7730577,
+          1.296678897
+        ]
+      },
+      "properties": {
+        "feature_id": "node/11224856637",
+        "name": "",
+        "category": "toilets",
+        "prototype_id": null,
+        "location_ids": [],
+        "illustrative": false
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "node/11224856638",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.773524899,
+          1.297676396
+        ]
+      },
+      "properties": {
+        "feature_id": "node/11224856638",
+        "name": "",
+        "category": "toilets",
+        "prototype_id": null,
+        "location_ids": [],
+        "illustrative": false
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "node/11243901178",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.7723479,
+          1.2946118
+        ]
+      },
+      "properties": {
+        "feature_id": "node/11243901178",
+        "name": "Western",
+        "category": "restaurant",
+        "prototype_id": null,
+        "location_ids": [],
+        "illustrative": false
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "node/11243901179",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.7723702,
+          1.294568201
+        ]
+      },
+      "properties": {
+        "feature_id": "node/11243901179",
+        "name": "Noodle",
+        "category": "restaurant",
+        "prototype_id": null,
+        "location_ids": [],
+        "illustrative": false
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "node/11243901180",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.772504404,
+          1.294705096
+        ]
+      },
+      "properties": {
+        "feature_id": "node/11243901180",
+        "name": "Liang Ban Gong Fu",
+        "category": "restaurant",
+        "prototype_id": null,
+        "location_ids": [],
+        "illustrative": false
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "node/11243901181",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.772516998,
+          1.294677199
+        ]
+      },
+      "properties": {
+        "feature_id": "node/11243901181",
+        "name": "Fong Seng Nasi Lemak",
+        "category": "restaurant",
+        "prototype_id": null,
+        "location_ids": [],
+        "illustrative": false
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "node/11252774939",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.7755743,
+          1.295037403
+        ]
+      },
+      "properties": {
+        "feature_id": "node/11252774939",
+        "name": "",
+        "category": "taxi",
+        "prototype_id": null,
+        "location_ids": [],
+        "illustrative": false
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "node/11252774941",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.775618504,
+          1.294349001
+        ]
+      },
+      "properties": {
+        "feature_id": "node/11252774941",
+        "name": "",
+        "category": "toilets",
+        "prototype_id": null,
+        "location_ids": [],
+        "illustrative": false
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "node/11252774959",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.775841098,
+          1.2941441
+        ]
+      },
+      "properties": {
+        "feature_id": "node/11252774959",
+        "name": "",
+        "category": "taxi",
+        "prototype_id": null,
+        "location_ids": [],
+        "illustrative": false
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "node/11252774986",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.774676099,
+          1.294682397
+        ]
+      },
+      "properties": {
+        "feature_id": "node/11252774986",
+        "name": "The Coffee Bean & Tea Leaf",
+        "category": "cafe",
+        "prototype_id": null,
+        "location_ids": [],
+        "illustrative": false
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "node/11252774987",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.774485502,
+          1.294791997
+        ]
+      },
+      "properties": {
+        "feature_id": "node/11252774987",
+        "name": "Smooy",
+        "category": "ice_cream",
+        "prototype_id": null,
+        "location_ids": [],
+        "illustrative": false
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "node/11252779752",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.773459304,
+          1.296618004
+        ]
+      },
+      "properties": {
+        "feature_id": "node/11252779752",
+        "name": "",
+        "category": "toilets",
+        "prototype_id": null,
+        "location_ids": [],
+        "illustrative": false
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "node/11274534148",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.772512797,
+          1.295537102
+        ]
+      },
+      "properties": {
+        "feature_id": "node/11274534148",
+        "name": "",
+        "category": "toilets",
+        "prototype_id": null,
+        "location_ids": [],
+        "illustrative": false
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "node/11277450494",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.771998704,
+          1.295970403
+        ]
+      },
+      "properties": {
+        "feature_id": "node/11277450494",
+        "name": "",
+        "category": "parking_entrance",
+        "prototype_id": null,
+        "location_ids": [],
+        "illustrative": false
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "node/11358426456",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.774326498,
+          1.2925885
+        ]
+      },
+      "properties": {
+        "feature_id": "node/11358426456",
+        "name": "",
+        "category": "parking_entrance",
+        "prototype_id": null,
+        "location_ids": [],
+        "illustrative": false
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "node/11518340609",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.7742474,
+          1.294821899
+        ]
+      },
+      "properties": {
+        "feature_id": "node/11518340609",
+        "name": "",
+        "category": "toilets",
+        "prototype_id": null,
+        "location_ids": [],
+        "illustrative": false
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "node/12187161007",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.772957598,
+          1.2989705
+        ]
+      },
+      "properties": {
+        "feature_id": "node/12187161007",
+        "name": "",
+        "category": "parking_entrance",
+        "prototype_id": null,
+        "location_ids": [],
+        "illustrative": false
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "node/12189706383",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.778286301,
+          1.296315904
+        ]
+      },
+      "properties": {
+        "feature_id": "node/12189706383",
+        "name": "Carpark 6A",
+        "category": "parking",
+        "prototype_id": null,
+        "location_ids": [],
+        "illustrative": false
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "node/12189706385",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.778348298,
+          1.296352102
+        ]
+      },
+      "properties": {
+        "feature_id": "node/12189706385",
+        "name": "",
+        "category": "parking_entrance",
+        "prototype_id": null,
+        "location_ids": [],
+        "illustrative": false
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "node/13136654599",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.774292198,
+          1.293233601
+        ]
+      },
+      "properties": {
+        "feature_id": "node/13136654599",
+        "name": "",
+        "category": "toilets",
+        "prototype_id": null,
+        "location_ids": [],
+        "illustrative": false
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "node/13449880518",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.773172401,
+          1.298774403
+        ]
+      },
+      "properties": {
+        "feature_id": "node/13449880518",
+        "name": "",
+        "category": "bicycle_parking",
+        "prototype_id": null,
+        "location_ids": [],
+        "illustrative": false
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "node/13449880521",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.775137397,
+          1.298684804
+        ]
+      },
+      "properties": {
+        "feature_id": "node/13449880521",
+        "name": "",
+        "category": "bicycle_parking",
+        "prototype_id": null,
+        "location_ids": [],
+        "illustrative": false
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "node/13463448683",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.7723488,
+          1.295961104
+        ]
+      },
+      "properties": {
+        "feature_id": "node/13463448683",
+        "name": "Wan Boo Sow Research Centre for Chinese Culture",
+        "category": "research_institute",
+        "prototype_id": null,
+        "location_ids": [],
+        "illustrative": false
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "node/13578771901",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.774727499,
+          1.294739198
+        ]
+      },
+      "properties": {
+        "feature_id": "node/13578771901",
+        "name": "Makan Boleh",
+        "category": "restaurant",
+        "prototype_id": null,
+        "location_ids": [],
+        "illustrative": false
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "node/14213426701",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.774898801,
+          1.294953002
+        ]
+      },
+      "properties": {
+        "feature_id": "node/14213426701",
+        "name": "",
+        "category": "shower",
+        "prototype_id": null,
+        "location_ids": [],
+        "illustrative": false
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "node/14321073414",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.774246204,
+          1.294828896
+        ]
+      },
+      "properties": {
+        "feature_id": "node/14321073414",
+        "name": "",
+        "category": "drinking_water",
+        "prototype_id": null,
+        "location_ids": [],
+        "illustrative": false
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "node/1534822512",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.771249297,
+          1.298142199
+        ]
+      },
+      "properties": {
+        "feature_id": "node/1534822512",
+        "name": "",
+        "category": "taxi",
+        "prototype_id": null,
+        "location_ids": [],
+        "illustrative": false
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "node/1534827185",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.771985498,
+          1.298127504
+        ]
+      },
+      "properties": {
+        "feature_id": "node/1534827185",
+        "name": "",
+        "category": "taxi",
+        "prototype_id": null,
+        "location_ids": [],
+        "illustrative": false
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "node/1534859239",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.772948098,
+          1.296445703
+        ]
+      },
+      "properties": {
+        "feature_id": "node/1534859239",
+        "name": "",
+        "category": "atm",
+        "prototype_id": null,
+        "location_ids": [],
+        "illustrative": false
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "node/1736137835",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.777336501,
+          1.297026799
+        ]
+      },
+      "properties": {
+        "feature_id": "node/1736137835",
+        "name": "Carpark 6B",
+        "category": "parking",
+        "prototype_id": null,
+        "location_ids": [],
+        "illustrative": false
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "node/1748955732",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.774154602,
+          1.292316402
+        ]
+      },
+      "properties": {
+        "feature_id": "node/1748955732",
+        "name": "",
+        "category": "taxi",
+        "prototype_id": null,
+        "location_ids": [],
+        "illustrative": false
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "node/2491314422",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.774932102,
+          1.2986827
+        ]
+      },
+      "properties": {
+        "feature_id": "node/2491314422",
+        "name": "Cheers",
+        "category": "convenience",
+        "prototype_id": null,
+        "location_ids": [],
+        "illustrative": false
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "node/2491328390",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.773178797,
+          1.296897603
+        ]
+      },
+      "properties": {
+        "feature_id": "node/2491328390",
+        "name": "",
+        "category": "atm",
+        "prototype_id": null,
+        "location_ids": [],
+        "illustrative": false
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "node/3232898483",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.774187697,
+          1.294403796
+        ]
+      },
+      "properties": {
+        "feature_id": "node/3232898483",
+        "name": "",
+        "category": "vending_machine",
+        "prototype_id": null,
+        "location_ids": [],
+        "illustrative": false
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "node/3445966846",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.7731931,
+          1.2965489
+        ]
+      },
+      "properties": {
+        "feature_id": "node/3445966846",
+        "name": "",
+        "category": "photo_booth",
+        "prototype_id": null,
+        "location_ids": [],
+        "illustrative": false
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "node/4018093552",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.7776255,
+          1.297106803
+        ]
+      },
+      "properties": {
+        "feature_id": "node/4018093552",
+        "name": "Spinelli",
+        "category": "cafe",
+        "prototype_id": null,
+        "location_ids": [],
+        "illustrative": false
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "node/4132111947",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.773995499,
+          1.294333604
+        ]
+      },
+      "properties": {
+        "feature_id": "node/4132111947",
+        "name": "",
+        "category": "atm",
+        "prototype_id": null,
+        "location_ids": [],
+        "illustrative": false
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "node/4132111948",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.771836299,
+          1.295135501
+        ]
+      },
+      "properties": {
+        "feature_id": "node/4132111948",
+        "name": "",
+        "category": "toilets",
+        "prototype_id": null,
+        "location_ids": [],
+        "illustrative": false
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "node/4552260939",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.778127701,
+          1.297169701
+        ]
+      },
+      "properties": {
+        "feature_id": "node/4552260939",
+        "name": "",
+        "category": "vending_machine",
+        "prototype_id": null,
+        "location_ids": [],
+        "illustrative": false
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "node/4869133625",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.774811004,
+          1.295369999
+        ]
+      },
+      "properties": {
+        "feature_id": "node/4869133625",
+        "name": "",
+        "category": "atm",
+        "prototype_id": null,
+        "location_ids": [],
+        "illustrative": false
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "node/4869133639",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.778498397,
+          1.294271704
+        ]
+      },
+      "properties": {
+        "feature_id": "node/4869133639",
+        "name": "",
+        "category": "atm",
+        "prototype_id": null,
+        "location_ids": [],
+        "illustrative": false
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "node/5120976524",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.777250603,
+          1.297070704
+        ]
+      },
+      "properties": {
+        "feature_id": "node/5120976524",
+        "name": "",
+        "category": "parking_entrance",
+        "prototype_id": null,
+        "location_ids": [],
+        "illustrative": false
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "node/5128589587",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.773180596,
+          1.295819902
+        ]
+      },
+      "properties": {
+        "feature_id": "node/5128589587",
+        "name": "",
+        "category": "toilets",
+        "prototype_id": null,
+        "location_ids": [],
+        "illustrative": false
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "node/5128589588",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.774044497,
+          1.294012898
+        ]
+      },
+      "properties": {
+        "feature_id": "node/5128589588",
+        "name": "",
+        "category": "toilets",
+        "prototype_id": null,
+        "location_ids": [],
+        "illustrative": false
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "node/5128589589",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.7720085,
+          1.296068204
+        ]
+      },
+      "properties": {
+        "feature_id": "node/5128589589",
+        "name": "The Coffee Roaster",
+        "category": "cafe",
+        "prototype_id": null,
+        "location_ids": [],
+        "illustrative": false
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "node/5254518678",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.7748346,
+          1.298315201
+        ]
+      },
+      "properties": {
+        "feature_id": "node/5254518678",
+        "name": "",
+        "category": "parking_entrance",
+        "prototype_id": null,
+        "location_ids": [],
+        "illustrative": false
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "node/5278319644",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.771468599,
+          1.292904099
+        ]
+      },
+      "properties": {
+        "feature_id": "node/5278319644",
+        "name": "",
+        "category": "taxi",
+        "prototype_id": null,
+        "location_ids": [],
+        "illustrative": false
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "node/5894567819",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.771567099,
+          1.299207804
+        ]
+      },
+      "properties": {
+        "feature_id": "node/5894567819",
+        "name": "Arise and Shine",
+        "category": "cafe",
+        "prototype_id": null,
+        "location_ids": [],
+        "illustrative": false
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "node/5936483041",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.775528,
+          1.292620903
+        ]
+      },
+      "properties": {
+        "feature_id": "node/5936483041",
+        "name": "",
+        "category": "toilets",
+        "prototype_id": null,
+        "location_ids": [],
+        "illustrative": false
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "node/5936483042",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.7757432,
+          1.292459897
+        ]
+      },
+      "properties": {
+        "feature_id": "node/5936483042",
+        "name": "",
+        "category": "toilets",
+        "prototype_id": null,
+        "location_ids": [],
+        "illustrative": false
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "node/5936483043",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.775359298,
+          1.2932931
+        ]
+      },
+      "properties": {
+        "feature_id": "node/5936483043",
+        "name": "",
+        "category": "toilets",
+        "prototype_id": null,
+        "location_ids": [],
+        "illustrative": false
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "node/5936483044",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.774433598,
+          1.294451802
+        ]
+      },
+      "properties": {
+        "feature_id": "node/5936483044",
+        "name": "",
+        "category": "toilets",
+        "prototype_id": null,
+        "location_ids": [],
+        "illustrative": false
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "node/5936531501",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.7737665,
+          1.295296803
+        ]
+      },
+      "properties": {
+        "feature_id": "node/5936531501",
+        "name": "",
+        "category": "toilets",
+        "prototype_id": null,
+        "location_ids": [],
+        "illustrative": false
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "node/5936531502",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.773785499,
+          1.295289204
+        ]
+      },
+      "properties": {
+        "feature_id": "node/5936531502",
+        "name": "",
+        "category": "drinking_water",
+        "prototype_id": null,
+        "location_ids": [],
+        "illustrative": false
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "node/5936531503",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.773893004,
+          1.294635101
+        ]
+      },
+      "properties": {
+        "feature_id": "node/5936531503",
+        "name": "",
+        "category": "drinking_water",
+        "prototype_id": null,
+        "location_ids": [],
+        "illustrative": false
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "node/5936531504",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.772905802,
+          1.296459796
+        ]
+      },
+      "properties": {
+        "feature_id": "node/5936531504",
+        "name": "",
+        "category": "vending_machine",
+        "prototype_id": null,
+        "location_ids": [],
+        "illustrative": false
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "node/5936531505",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.7741557,
+          1.293683603
+        ]
+      },
+      "properties": {
+        "feature_id": "node/5936531505",
+        "name": "",
+        "category": "drinking_water",
+        "prototype_id": null,
+        "location_ids": [],
+        "illustrative": false
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "node/5936531506",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.774304998,
+          1.293581602
+        ]
+      },
+      "properties": {
+        "feature_id": "node/5936531506",
+        "name": "",
+        "category": "toilets",
+        "prototype_id": null,
+        "location_ids": [],
+        "illustrative": false
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "node/5936541047",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.771411297,
+          1.298742801
+        ]
+      },
+      "properties": {
+        "feature_id": "node/5936541047",
+        "name": "Platypus Foodbar (E2A)",
+        "category": "cafe",
+        "prototype_id": null,
+        "location_ids": [],
+        "illustrative": false
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "node/5971138868",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.772367196,
+          1.295150997
+        ]
+      },
+      "properties": {
+        "feature_id": "node/5971138868",
+        "name": "",
+        "category": "toilets",
+        "prototype_id": null,
+        "location_ids": [],
+        "illustrative": false
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "node/5971138873",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.772357597,
+          1.295083898
+        ]
+      },
+      "properties": {
+        "feature_id": "node/5971138873",
+        "name": "",
+        "category": "drinking_water",
+        "prototype_id": null,
+        "location_ids": [],
+        "illustrative": false
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "node/6132183506",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.771410902,
+          1.298274399
+        ]
+      },
+      "properties": {
+        "feature_id": "node/6132183506",
+        "name": "",
+        "category": "atm",
+        "prototype_id": null,
+        "location_ids": [],
+        "illustrative": false
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "node/687602963",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.7752657,
+          1.299426599
+        ]
+      },
+      "properties": {
+        "feature_id": "node/687602963",
+        "name": "The Tea Party",
+        "category": "cafe",
+        "prototype_id": null,
+        "location_ids": [],
+        "illustrative": false
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "node/687602967",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.776327503,
+          1.299116199
+        ]
+      },
+      "properties": {
+        "feature_id": "node/687602967",
+        "name": "",
+        "category": "pharmacy",
+        "prototype_id": null,
+        "location_ids": [],
+        "illustrative": false
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "node/687602970",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.7744754,
+          1.294522902
+        ]
+      },
+      "properties": {
+        "feature_id": "node/687602970",
+        "name": "The Terrace",
+        "category": "restaurant",
+        "prototype_id": null,
+        "location_ids": [],
+        "illustrative": false
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "node/6938838857",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.771436998,
+          1.298126002
+        ]
+      },
+      "properties": {
+        "feature_id": "node/6938838857",
+        "name": "LiHO",
+        "category": "cafe",
+        "prototype_id": null,
+        "location_ids": [],
+        "illustrative": false
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "node/6938838859",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.774967499,
+          1.298604603
+        ]
+      },
+      "properties": {
+        "feature_id": "node/6938838859",
+        "name": "Central Square Canteen",
+        "category": "food_court",
+        "prototype_id": null,
+        "location_ids": [],
+        "illustrative": false
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "node/6968810621",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.777202801,
+          1.297470101
+        ]
+      },
+      "properties": {
+        "feature_id": "node/6968810621",
+        "name": "",
+        "category": "taxi",
+        "prototype_id": null,
+        "location_ids": [],
+        "illustrative": false
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "node/7886527608",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.771358404,
+          1.298758404
+        ]
+      },
+      "properties": {
+        "feature_id": "node/7886527608",
+        "name": "Humble Origins",
+        "category": "cafe",
+        "prototype_id": null,
+        "location_ids": [],
+        "illustrative": false
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "node/8002821813",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.777378996,
+          1.297305696
+        ]
+      },
+      "properties": {
+        "feature_id": "node/8002821813",
+        "name": "",
+        "category": "taxi",
+        "prototype_id": null,
+        "location_ids": [],
+        "illustrative": false
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "node/8002821814",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.7747763,
+          1.298652402
+        ]
+      },
+      "properties": {
+        "feature_id": "node/8002821814",
+        "name": "Chagee",
+        "category": "cafe",
+        "prototype_id": null,
+        "location_ids": [],
+        "illustrative": false
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "node/8415404623",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.7733894,
+          1.296558703
+        ]
+      },
+      "properties": {
+        "feature_id": "node/8415404623",
+        "name": "Anna’s x Union The SoupSpoon",
+        "category": "cafe",
+        "prototype_id": null,
+        "location_ids": [],
+        "illustrative": false
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "node/8666521241",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.771525603,
+          1.297833399
+        ]
+      },
+      "properties": {
+        "feature_id": "node/8666521241",
+        "name": "Starbucks",
+        "category": "cafe",
+        "prototype_id": null,
+        "location_ids": [],
+        "illustrative": false
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "node/9326540667",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.773027996,
+          1.2964201
+        ]
+      },
+      "properties": {
+        "feature_id": "node/9326540667",
+        "name": "",
+        "category": "vending_machine",
+        "prototype_id": null,
+        "location_ids": [],
+        "illustrative": false
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "node/9326540668",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.773065598,
+          1.296409604
+        ]
+      },
+      "properties": {
+        "feature_id": "node/9326540668",
+        "name": "",
+        "category": "vending_machine",
+        "prototype_id": null,
+        "location_ids": [],
+        "illustrative": false
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "node/9326562225",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.776502501,
+          1.298825404
+        ]
+      },
+      "properties": {
+        "feature_id": "node/9326562225",
+        "name": "",
+        "category": "vending_machine",
+        "prototype_id": null,
+        "location_ids": [],
+        "illustrative": false
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "node/9742757287",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.773563598,
+          1.298327297
+        ]
+      },
+      "properties": {
+        "feature_id": "node/9742757287",
+        "name": "",
+        "category": "taxi",
+        "prototype_id": null,
+        "location_ids": [],
+        "illustrative": false
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "node/9781243796",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.775718003,
+          1.294339198
+        ]
+      },
+      "properties": {
+        "feature_id": "node/9781243796",
+        "name": "Nami Café",
+        "category": "cafe",
+        "prototype_id": null,
+        "location_ids": [],
+        "illustrative": false
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "node/9781262727",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.775546,
+          1.294300896
+        ]
+      },
+      "properties": {
+        "feature_id": "node/9781262727",
+        "name": "",
+        "category": "bicycle_parking",
+        "prototype_id": null,
+        "location_ids": [],
+        "illustrative": false
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "node/9857399898",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.771515303,
+          1.297946498
+        ]
+      },
+      "properties": {
+        "feature_id": "node/9857399898",
+        "name": "Techno Edge Canteen",
+        "category": "food_court",
+        "prototype_id": null,
+        "location_ids": [],
+        "illustrative": false
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "node/9891006015",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.773705799,
+          1.299198199
+        ]
+      },
+      "properties": {
+        "feature_id": "node/9891006015",
+        "name": "",
+        "category": "vending_machine",
+        "prototype_id": null,
+        "location_ids": [],
+        "illustrative": false
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "node/9891032617",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.773807196,
+          1.299122099
+        ]
+      },
+      "properties": {
+        "feature_id": "node/9891032617",
+        "name": "Isaac Manasseh Meyer Trust Fund Auditorium",
+        "category": "events_venue",
+        "prototype_id": null,
+        "location_ids": [],
+        "illustrative": false
+      }
+    }
+  ]
+}

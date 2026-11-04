@@ -3,7 +3,7 @@ import fs from 'node:fs'
 import path from 'node:path'
 
 export const PAGES_BASE='/mecoffe-scene/'
-export const ENTRY_ROUTES=['mecoffe','mecoffe3d','mecoffe3d/assets','licenses']
+export const ENTRY_ROUTES=['mecoffe','mecoffe3d','mecoffe3d/assets','mecoffe-gis','licenses']
 export function publishedCatalog(catalog,base=PAGES_BASE){
   return {...catalog,prototypes:catalog.prototypes.filter(item=>item.source.type!=='rocketbox').map(item=>({
     ...item,preview:base+item.preview.replace(/^\/+/, '')
@@ -20,7 +20,7 @@ export function safePublicFile(root,relative){
 export function pagesFiles(publicRoot,catalog){
   const files=new Set(['favicon.svg'])
   function add(relative){if(fs.existsSync(safePublicFile(publicRoot,relative)))files.add(relative);else throw new Error('Missing published asset: '+relative)}
-  function directory(relative){for(const entry of fs.readdirSync(safePublicFile(publicRoot,relative),{withFileTypes:true})){const name=relative+'/'+entry.name;if(entry.isSymbolicLink())throw new Error('Symlink assets are not supported');if(entry.isDirectory())directory(name);else add(name)}}
+  function directory(relative){for(const entry of fs.readdirSync(safePublicFile(publicRoot,relative),{withFileTypes:true})){if(entry.name.endsWith('.tmp'))continue;const name=relative+'/'+entry.name;if(entry.isSymbolicLink())throw new Error('Symlink assets are not supported');if(entry.isDirectory())directory(name);else add(name)}}
   for(let i=0;i<3;i++){add(`assets/bgrd-${i}.json`);add(`assets/bgrd-${i}.png`)}
   for(const name of ['scene.json','latest-demo.json','latest-network.json','sync-status.json','campus3d.json','campus3d_mapping.json','campus3d_landcover.json','campus3d_surroundings.json'])add('mecoffe/'+name)
   directory('mecoffe/campuses');directory('mecoffe/scenarios')
@@ -51,7 +51,7 @@ export function artifactStats(root){
 
 export function assertArtifact(root,base=PAGES_BASE){
   const problems=[]
-  function walk(folder){for(const entry of fs.readdirSync(folder,{withFileTypes:true})){const file=path.join(folder,entry.name);if(entry.isDirectory())walk(file);else if(/\.(?:html|js|css|json|md|txt)$/i.test(file)){
+  function walk(folder){for(const entry of fs.readdirSync(folder,{withFileTypes:true})){const file=path.join(folder,entry.name);if(entry.isDirectory())walk(file);else if(/\.(?:html|js|mjs|css|json|geojson|md|txt)$/i.test(file)){
     const text=fs.readFileSync(file,'utf8')
     // Logical Vue route strings are allowed; these directory prefixes denote
     // fetched data/images, not router destinations. Inspect JSON metadata too.
@@ -61,6 +61,7 @@ export function assertArtifact(root,base=PAGES_BASE){
     if(/[a-z]:[\\/]+Users[\\/]+Lenovo/i.test(text))problems.push(path.relative(root,file)+': local personal path')
   }}}
   walk(root)
+  for(const route of ENTRY_ROUTES)if(!fs.existsSync(path.join(root,route,'index.html')))problems.push(`Missing static route ${route}`)
   if(fs.existsSync(path.join(root,'mecoffe/assets3d/rocketbox')))problems.push('Excluded Rocketbox library present')
   // The scenario page rejects any file whose bytes differ from the manifest,
   // so a line-ending change at checkout would break it only after deployment.

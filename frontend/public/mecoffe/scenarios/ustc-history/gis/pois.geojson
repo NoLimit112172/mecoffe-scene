@@ -1,0 +1,201 @@
+{
+  "type": "FeatureCollection",
+  "name": "pois",
+  "schema_version": "mecoffe.gis.v1",
+  "source": {
+    "source_url": "https://api.openstreetmap.org/api/0.6/map?bbox=117.1194,31.8180,117.1283,31.8270",
+    "downloaded_at_utc": "2026-11-03T05:01:24.973987+00:00",
+    "sha256": "663062802ab35914d085a7a97d2be29001d0d6bc786b69b688608bdd37ee6437",
+    "bbox": [
+      117.1194,
+      31.818,
+      117.1283,
+      31.827
+    ],
+    "license": "ODbL-1.0",
+    "attribution": "© OpenStreetMap contributors",
+    "relation_id": "14093671",
+    "osm_generator": "openstreetmap-cgimap 2.1.0 (2089598 spike-07.openstreetmap.org)",
+    "license_url": "https://www.openstreetmap.org/copyright"
+  },
+  "coordinate_system": "WGS84 longitude, latitude",
+  "notice": "人物所在楼栋与行走路线为展示层示意，OASIS 没有位置数据",
+  "features": [
+    {
+      "type": "Feature",
+      "id": "location/faculty_main",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          117.124348576,
+          31.821486625
+        ]
+      },
+      "properties": {
+        "feature_id": "location/faculty_main",
+        "name": "教工公寓",
+        "category": "mapped_location",
+        "location_ids": [
+          "faculty_main"
+        ],
+        "building_id": "way/1435377508",
+        "illustrative": true,
+        "prototype_id": "building.procedural.education"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "location/grad_apartment",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          117.121185275,
+          31.820402175
+        ]
+      },
+      "properties": {
+        "feature_id": "location/grad_apartment",
+        "name": "8号楼",
+        "category": "mapped_location",
+        "location_ids": [
+          "grad_apartment"
+        ],
+        "building_id": "way/1435368248",
+        "illustrative": true,
+        "prototype_id": "building.procedural.dormitory"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "location/library_main",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          117.123631251,
+          31.820426502
+        ]
+      },
+      "properties": {
+        "feature_id": "location/library_main",
+        "name": "图书教育中心A区",
+        "category": "mapped_location",
+        "location_ids": [
+          "library_main"
+        ],
+        "building_id": "way/1435377501",
+        "illustrative": true,
+        "prototype_id": "building.procedural.education"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "location/shop_merchant_001",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          117.123407001,
+          31.818585322
+        ]
+      },
+      "properties": {
+        "feature_id": "location/shop_merchant_001",
+        "name": "师生活动中心",
+        "category": "mapped_location",
+        "location_ids": [
+          "shop_merchant_001"
+        ],
+        "building_id": "way/1435370291",
+        "illustrative": true,
+        "prototype_id": "building.procedural.education"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "location/shop_merchant_002",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          117.124245174,
+          31.822105699
+        ]
+      },
+      "properties": {
+        "feature_id": "location/shop_merchant_002",
+        "name": "教工食堂",
+        "category": "mapped_location",
+        "location_ids": [
+          "shop_merchant_002"
+        ],
+        "building_id": "way/1435377504",
+        "illustrative": true,
+        "prototype_id": "building.procedural.education"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "location/teaching_main",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          117.126498836,
+          31.818354026
+        ]
+      },
+      "properties": {
+        "feature_id": "location/teaching_main",
+        "name": "2号学科楼A区",
+        "category": "mapped_location",
+        "location_ids": [
+          "teaching_main"
+        ],
+        "building_id": "way/1435377494",
+        "illustrative": true,
+        "prototype_id": "building.procedural.education"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "location/ug_dorm_east",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          117.122040831,
+          31.81880695
+        ]
+      },
+      "properties": {
+        "feature_id": "location/ug_dorm_east",
+        "name": "1号楼",
+        "category": "mapped_location",
+        "location_ids": [
+          "ug_dorm_east"
+        ],
+        "building_id": "way/1435368253",
+        "illustrative": true,
+        "prototype_id": "building.procedural.dormitory"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "location/ug_dorm_west",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          117.120167451,
+          31.819483974
+        ]
+      },
+      "properties": {
+        "feature_id": "location/ug_dorm_west",
+        "name": "6号楼",
+        "category": "mapped_location",
+        "location_ids": [
+          "ug_dorm_west"
+        ],
+        "building_id": "way/1435368246",
+        "illustrative": true,
+        "prototype_id": "building.procedural.dormitory"
+      }
+    }
+  ]
+}

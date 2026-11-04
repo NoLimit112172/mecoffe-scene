@@ -2,6 +2,23 @@
 
 **草案，待与 OASIS 调度器负责人确认。** 本文定义地图准备模块的文件边界，不表示调度器已经实现或接受此协议。人物调度、agent 决策、模拟时间、购买与互动轨迹不由本流水线生成。
 
+## 里程碑 8：场景包 GIS 图层扩展（仍为草案）
+
+`scenario --manifest ...` 在原有米制文件之外输出 `gis/`，不要求调用者重新下载地图。六个文件均为 WGS84 / RFC 7946 GeoJSON FeatureCollection，无旧 crs 字段，坐标固定 `[longitude, latitude]`。数据来自原场景 `projection` 所记录公式的反算；不替换来源、不生成轨迹。
+
+| 文件 | 内容 |
+| --- | --- |
+| `gis/buildings.geojson` | 原始轮廓及孔洞；name、name_source、category、building_type、height_m、levels、height_source、levels_source、prototype_id、variant_id、location_ids |
+| `gis/roads.geojson` | 校内道路及输入显式保存的周边道路；name、highway、walkable、layer、bridge、surrounding。校外道路 walkable 为 false，不加入 A* |
+| `gis/landcover.geojson` | 地表轮廓及 category、sport、name |
+| `gis/water.geojson` | 水域轮廓；不凭空生成实测深度或地形 |
+| `gis/boundary.geojson` | 完整原始校界 MultiPolygon，保留独立区域和孔洞 |
+| `gis/pois.geojson` | 输入已有 POI；已有显式 OASIS 映射另以 location/ID 点展示并标 illustrative。没有 POI 时输出空集合 |
+
+每份集合保留 source/attribution/许可和“人物所在楼栋与行走路线为展示层示意，OASIS 没有位置数据”。height_source 原样继承；数据中写有高度不等于经过实地测量核验。名称缺失不冒充真实名称。第二阶段底图和第三阶段 POI 自动映射均未启用。
+
+`scenario.json.files` 以 `gis/<layer>.geojson` 为键记录文件字节 SHA-256；Git 保持字节原样。前端 GIS 模式显式加载并校验六份图层，旧沙盘默认不请求它们。场景时间与原 OASIS 轨迹仍使用原字段；没有模拟数据的清单只显示地图。结构说明见 [GIS 架构](gis-architecture.md)。
+
 ## 输入与调用方式
 
 仅接受 **OpenStreetMap 官方数据** 或 **调用方提供的 GeoJSON**。坐标统一为 RFC 7946 / WGS84 经纬度，坐标顺序固定 `[longitude, latitude]`，不接受 GCJ-02、BD-09、投影米坐标或含旧 `crs` 声明的 GeoJSON。不得将不同坐标系混用，也不会抓取高德、百度或 Google。

@@ -2,7 +2,7 @@ const fs=require('node:fs'),path=require('node:path'),assert=require('node:asser
 const {servePages}=require('./serve-pages.cjs');
 const {chromium}=require(process.env.PLAYWRIGHT_MODULE||path.join(process.env.USERPROFILE,'.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules/playwright'));
 const output=path.resolve(__dirname,'../logs/milestone7');fs.mkdirSync(output,{recursive:true});
-const routes=[['root','/'],['2d','/mecoffe'],['3d','/mecoffe3d'],['assets','/mecoffe3d/assets'],['nus','/mecoffe3d?campus=nus'],['ustc-scenario','/mecoffe3d?scenario=ustc-history'],['nus-scenario','/mecoffe3d?scenario=nus-hourly'],['excluded-library','/mecoffe3d/assets?source=rocketbox'],['licenses','/licenses']];
+const routes=[['root','/'],['2d','/mecoffe'],['3d','/mecoffe3d'],['assets','/mecoffe3d/assets'],['nus','/mecoffe3d?campus=nus'],['ustc-scenario','/mecoffe3d?scenario=ustc-history'],['nus-scenario','/mecoffe3d?scenario=nus-hourly'],['excluded-library','/mecoffe3d/assets?source=rocketbox'],['gis-ustc','/mecoffe-gis?scenario=ustc-history'],['gis-nus','/mecoffe-gis?scenario=nus-hourly'],['licenses','/licenses']];
 async function ready(page,name){
   await page.locator('h1').first().waitFor({timeout:120000});assert(!await page.locator('vite-error-overlay').count());
   if(['root','3d','ustc-scenario'].includes(name)){
@@ -15,6 +15,9 @@ async function ready(page,name){
   }else if(name==='nus'||name==='nus-scenario'){
     await page.locator('.model-layout canvas').waitFor({timeout:120000});assert.match(await page.locator('aside').textContent(),/226/);
     if(name==='nus-scenario')assert.match(await page.getByTestId('simulation-time').textContent(),/尚无模拟数据/);
+  }else if(name.startsWith('gis-')){
+    await page.locator('.gis-loading').waitFor({state:'hidden',timeout:120000});await page.locator('.maplibregl-canvas').waitFor();assert.match(await page.title(),/GIS 模式/);
+    if(name==='gis-nus')assert.match(await page.getByTestId('gis-data-notice').textContent(),/尚无模拟数据/);
   }else assert.match(await page.locator('main').textContent(),/Tiffany Do.*MIT/s);
   assert.equal(await page.locator('[role=alert]').count(),0)
 }

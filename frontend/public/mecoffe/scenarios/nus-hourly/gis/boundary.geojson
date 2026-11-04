@@ -1,0 +1,62 @@
+{
+  "type": "FeatureCollection",
+  "name": "boundary",
+  "schema_version": "mecoffe.gis.v1",
+  "source": {
+    "source_url": "https://api.openstreetmap.org/api/0.6/map?bbox=103.771,1.292,103.779,1.3",
+    "downloaded_at_utc": "2026-11-03T07:36:11.586106+00:00",
+    "sha256": "31f19c9919e87ce833f592cff615097b6829cdecd8ae8f4adb6be897d7c2d63f",
+    "bbox": [
+      103.771,
+      1.292,
+      103.779,
+      1.3
+    ],
+    "license": "ODbL-1.0",
+    "license_url": "https://www.openstreetmap.org/copyright",
+    "attribution": "© OpenStreetMap contributors",
+    "osm_generator": "openstreetmap-cgimap 2.1.0 (2298491 spike-07.openstreetmap.org)"
+  },
+  "coordinate_system": "WGS84 longitude, latitude",
+  "notice": "人物所在楼栋与行走路线为展示层示意，OASIS 没有位置数据",
+  "features": [
+    {
+      "type": "Feature",
+      "id": "campus-boundary",
+      "geometry": {
+        "type": "MultiPolygon",
+        "coordinates": [
+          [
+            [
+              [
+                103.770999996,
+                1.292000003
+              ],
+              [
+                103.779000004,
+                1.292000003
+              ],
+              [
+                103.779000004,
+                1.299999997
+              ],
+              [
+                103.770999996,
+                1.299999997
+              ],
+              [
+                103.770999996,
+                1.292000003
+              ]
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "feature_id": "campus-boundary",
+        "name": "NUS central campus · modeling pipeline validation",
+        "category": "boundary"
+      }
+    }
+  ]
+}
