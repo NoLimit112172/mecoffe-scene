@@ -2,10 +2,11 @@ import {MercatorCoordinate} from 'maplibre-gl'
 import {Vector4} from 'three'
 import {featureCentre} from './model.js'
 import {layoutLabels} from '../campus3dScreen.js'
+import {ConfigRelations} from './ConfigRelations.js'
 
 // Screen-pixel badges projected at the true extrusion roof height, no remote glyphs.
 export class IndoorRoofLabels {
-  constructor(view){this.view=view;this.elements=new Map();this.pins=new Map();this.host=document.createElement('div');this.host.className='gis-indoor-roofs';Object.assign(this.host.style,{position:'absolute',inset:'0',pointerEvents:'none',zIndex:'1'});view.host.append(this.host);this.render=()=>this.update();view.map.on('render',this.render)}
+  constructor(view){this.view=view;this.elements=new Map();this.pins=new Map();this.host=document.createElement('div');this.host.className='gis-indoor-roofs';Object.assign(this.host.style,{position:'absolute',inset:'0',pointerEvents:'none',zIndex:'1'});view.host.append(this.host);this.relations=view.replay.scenario.manifest.preview_mode==='config'?new ConfigRelations(view,this.host):null;this.render=()=>this.update();view.map.on('render',this.render)}
   updatePeople(){
     const {view}=this,people=view.replay.personData(),outside=new Set(people.map(p=>p.id))
     for(const [id,el]of this.pins)if(!outside.has(id)){el.remove();this.pins.delete(id)}
@@ -19,6 +20,7 @@ export class IndoorRoofLabels {
   update(){
     this.updatePeople()
     const {view}=this,matrix=view.characters.mapProjection,width=view.host.clientWidth,height=view.host.clientHeight,counts=view.replay.occupancy.buildings,items=[]
+    this.relations?.update(matrix,width,height)
     const center=view.map.getCenter(),key=[center.lng,center.lat,view.map.getZoom(),view.map.getPitch(),view.map.getBearing(),width,height,view.occupancyKey,view.visibility.buildings].join('|')
     if(matrix&&key===this.lastKey)return
     this.lastKey=matrix?key:null

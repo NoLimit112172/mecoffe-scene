@@ -1026,8 +1026,8 @@ export class Campus3DScene {
       if(relation.source!==id&&relation.target!==id)continue
       const otherId=relation.source===id?relation.target:relation.source
       if(!this.people.has(otherId))continue
-      const line=screenLine(arcPoints(new THREE.Vector3(),new THREE.Vector3(1,0,0)),{color:relation.source===id?0x4c8ba6:0xb49b61,opacity:.55})
-      line.userData.people=[id,otherId];this.relationLayer.add(line)
+      const line=screenLine(arcPoints(new THREE.Vector3(),new THREE.Vector3(1,0,0)),{color:this.index.scene.meta?.config_preview&&relation.relation==='competition'?0x9366a6:relation.source===id?0x4c8ba6:0xb49b61,opacity:.55})
+      line.userData.people=[id,otherId];line.userData.relation=relation.relation;this.relationLayer.add(line)
     }
     this.updateRelations()
     if(this.host?.dataset)this.host.dataset.relationshipLines=String(this.relationLayer.children.length)

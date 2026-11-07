@@ -1,0 +1,63 @@
+{
+  "population_request": {
+    "visitor": {
+      "description": "样例来访者",
+      "count": 2,
+      "request_persona": true,
+      "use_cfps": true,
+      "where": {},
+      "strata": [],
+      "fixed": {},
+      "generate": {
+        "visit_goal": {
+          "type": "string",
+          "title": "参观目的",
+          "description": "合成的参观意向",
+          "show_in_persona": true
+        }
+      }
+    },
+    "guide": {
+      "description": "样例讲解员",
+      "count": 2,
+      "request_persona": true,
+      "use_cfps": true,
+      "where": {},
+      "strata": [],
+      "fixed": {},
+      "generate": {
+        "specialty": {
+          "type": "string_list",
+          "title": "讲解方向",
+          "description": "合成的讲解主题",
+          "max_items": 2,
+          "show_in_persona": true
+        }
+      }
+    },
+    "operator": {
+      "description": "样例场地工作人员",
+      "count": 2,
+      "request_persona": false,
+      "use_cfps": false,
+      "where": {},
+      "strata": [],
+      "fixed": {
+        "duty": "合成的场地接待"
+      },
+      "generate": {}
+    }
+  },
+  "policy_registry": {
+    "schema_version": "1.0",
+    "registry_version": "synthetic-only",
+    "items": []
+  },
+  "role_design": {
+    "role_policies": [],
+    "budget_fields": {},
+    "assumptions": [
+      "完全合成的测试输入"
+    ]
+  }
+}

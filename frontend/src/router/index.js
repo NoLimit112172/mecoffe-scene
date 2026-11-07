@@ -14,7 +14,7 @@ import SimulationLayout from '../layouts/SimulationLayout.vue'
 import CityMapView from '../views/CityMapView.vue'
 
 const routes = [
-  {path:'/mecoffe-gis',name:'mecoffe-gis',component:()=>import('../views/MeCoffeGis.vue')},
+  {path:'/mecoffe-gis',name:'mecoffe-gis',component:()=>import('../views/MeCoffeGisEntry.vue')},
   {path:'/licenses',name:'licenses',component:()=>import('../views/SourceLicenses.vue')},
   {
     path: '/',

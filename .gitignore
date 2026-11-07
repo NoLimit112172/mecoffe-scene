@@ -1,5 +1,8 @@
 node_modules/
 frontend/dist/
+frontend/dist-embed/
+data/private/
+docs/showcase-20261106/
 logs/
 __pycache__/
 backups/

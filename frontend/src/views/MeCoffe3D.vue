@@ -8,8 +8,8 @@
         </nav>
         <Campus3DVisualControls :building-style="scenario?.manifest.style?.buildings || 'yulan'" v-model:character-pool="characterPool" :quality="quality" @update:quality="chooseQuality" v-model:cycle="dayCycle" v-model:hour="previewHour" :clock="'光照：展示效果'" />
         <span v-if="styleBusy" role="status" class="style-status">正在准备三维素材…</span>
-        <RouterLink to="/mecoffe" class="old-page">二维沙盘 ↗</RouterLink>
-        <RouterLink :to="{path:'/mecoffe-gis',query:{scenario:scenario?.manifest.id || 'ustc-history'}}" class="old-page">GIS 模式 ↗</RouterLink>
+        <RouterLink v-if="!isConfigPreview" to="/mecoffe" class="old-page">二维沙盘 ↗</RouterLink>
+        <RouterLink :to="{path:'/mecoffe-gis',query:isConfigPreview?previewQuery(route.query):{scenario:scenario?.manifest.id || 'ustc-history'}}" class="old-page">GIS 模式 ↗</RouterLink>
         <RouterLink to="/mecoffe3d/assets" class="old-page">场景素材库 ↗</RouterLink>
       </div>
     </header>
@@ -19,15 +19,15 @@
     <p v-if="styleError" role="alert" class="data-notice">{{styleError}}</p>
 
     <template v-if="index && !loadError">
-      <div class="data-notice" data-testid="simulation-time">{{dayDisplay?.label || currentDay.label}} · 天内回放进度 {{dayDisplay?.progress || 0}}% · 昼夜变化为展示效果</div>
+      <div v-if="!isConfigPreview" class="data-notice" data-testid="simulation-time">{{dayDisplay?.label || currentDay.label}} · 天内回放进度 {{dayDisplay?.progress || 0}}% · 昼夜变化为展示效果</div>
       <div class="data-notice" :class="requestedMode" data-testid="data-notice">{{ dataNotice }}</div>
-      <p v-if="indoorState.accounting" class="population-accounting" data-testid="person-accounting">人物去向：室外 {{indoorState.accounting.visible}} + 楼内 {{indoorState.accounting.inside}} = {{indoorState.accounting.total}} 人 · {{indoorState.accounting.valid?'全部可定位':'请重新加载场景'}}<span v-if="selectedId"> · <i aria-hidden="true" style="color:#4c8ba6">━</i> 关注他人 <i aria-hidden="true" style="color:#b49b61">━</i> 被关注（楼内连接屋顶）</span></p>
+      <p v-if="indoorState.accounting" class="population-accounting" data-testid="person-accounting">人物去向：室外 {{indoorState.accounting.visible}} + 楼内 {{indoorState.accounting.inside}} = {{indoorState.accounting.total}} 人 · {{indoorState.accounting.valid?'全部可定位':'请重新加载场景'}}<span v-if="selectedId"> · <i aria-hidden="true" style="color:#4c8ba6">━</i> 关注他人 <i aria-hidden="true" style="color:#b49b61">━</i> 被关注（楼内连接屋顶）<template v-if="isConfigPreview"> <i aria-hidden="true" style="color:#9366a6">━</i> 竞争关系</template></span></p>
 
       <p v-if="qualityNotice" role="status" class="data-notice">{{ qualityNotice }}</p>
       <section class="kpis" aria-label="回放指标">
         <div><span>{{ isNetwork ? '人物关系输入' : currentDay.label }}</span><strong>{{ scene.people.length }}<small> 人</small></strong><em>快照 {{ meta.snapshot_revision ? `v${meta.snapshot_revision}` : '历史版本' }}</em></div>
-        <div><span>初始关注关系</span><strong>{{ follows.length }}<small> 条</small></strong><em>{{ isNetwork ? '静态网络，尚未运行' : '与原数据保持一致' }}</em></div>
-        <div><span>{{ isDemo ? '演示订单 / 金额' : '回放订单 / 金额' }}</span><strong data-testid="order-count">{{ state.orders }}<small> 单</small></strong><em>¥{{ revenue }} · {{ isNetwork ? '无行为轨迹' : `${cursor} / ${scene.events.length} 条事件` }}</em></div>
+        <div><span>{{isConfigPreview?'初始关系':'初始关注关系'}}</span><strong>{{ isConfigPreview?scene.relationships.length:follows.length }}<small> 条</small></strong><em>{{ isNetwork ? '静态网络，尚未运行' : '与原数据保持一致' }}</em></div>
+        <div><span>{{ isConfigPreview ? '事件 / 订单' : isDemo ? '演示订单 / 金额' : '回放订单 / 金额' }}</span><strong data-testid="order-count">{{ state.orders }}<small> 单</small></strong><em>¥{{ revenue }} · {{ isNetwork ? '无行为轨迹' : `${cursor} / ${scene.events.length} 条事件` }}</em></div>
         <div><span>人物移动 · 展示层</span><strong data-testid="active-walkers">{{ motion.active }}<small> 人在途</small></strong><em>排队 {{ motion.queued }} 笔<span v-if="motion.unreachable"> · 不可达 {{ motion.unreachable }} 笔</span></em></div>
       </section>
 
@@ -46,7 +46,7 @@
             </template>
             <span v-else>点击查看人物与事件</span>
           </div>
-          <div class="map-legend"><span><i aria-hidden="true" style="background:#7c9cab"></i>教学 / 科研</span><span><i aria-hidden="true" style="background:#bc7859"></i>住宿</span><span><i aria-hidden="true" style="background:#65a89b"></i>公共设施</span><div class="role-key"><span v-for="(color, role) in CHARACTER_ROLE_COLORS" :key="role"><i aria-hidden="true" :style="{background:color}"></i>{{ roleNames[role] }}</span></div><p>写实人物为外观示意；脚下颜色表示角色<br>人物活动限制在建成区校界内<br>水域不可行走，仅跨水道路 / 桥面可通行<br>跑道外圈、球场排布、桥型与水深：展示设定<br>树木、路灯、长椅、草地纹理：<b>装饰</b><br>楼顶人数与光照：展示示意；楼层仍为默认值<br>校外道路仅展示，不参与寻路<br>左键旋转 · 右键平移 · 滚轮缩放</p></div>
+          <div class="map-legend"><span><i aria-hidden="true" style="background:#7c9cab"></i>教学 / 科研</span><span><i aria-hidden="true" style="background:#bc7859"></i>住宿</span><span><i aria-hidden="true" style="background:#65a89b"></i>公共设施</span><div class="role-key"><span v-for="(color, role) in legendRoles" :key="role"><i aria-hidden="true" :style="{background:color}"></i>{{ roleLabels[role] || role }}</span></div><p>写实人物为外观示意；脚下颜色表示角色<br>人物活动限制在建成区校界内<br>水域不可行走，仅跨水道路 / 桥面可通行<br>跑道外圈、球场排布、桥型与水深：展示设定<br>树木、路灯、长椅、草地纹理：<b>装饰</b><br>楼顶人数与光照：展示示意；楼层仍为默认值<br>校外道路仅展示，不参与寻路<br>左键旋转 · 右键平移 · 滚轮缩放</p></div>
           <a class="osm-credit" href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener noreferrer">© OpenStreetMap contributors</a>
       <div v-if="characterStatus.visibleReady < characterStatus.visibleTotal || characterStatus.failed" class="data-notice character-loading" role="status"><span>正在加载人物 {{ characterStatus.visibleReady || 0 }}/{{ characterStatus.visibleTotal || 0 }}…</span><button v-if="characterStatus.failed" @click="renderer?.retryCharacters()">重试 {{ characterStatus.failed }} 个模型</button></div>
           <div v-if="loading" class="map-loading">正在构建校园三维体块…</div>
@@ -88,6 +88,7 @@
               <code>{{ selected.id }}</code>
               <p class="person-placement"><i class="fa-solid fa-location-dot" aria-hidden="true"></i>{{ personPlacement(selected.id) }}</p>
               <p v-if="selected.bio" class="person-bio">{{ selected.bio }}</p>
+              <ConfigProfileFields v-if="isConfigPreview" :person="selected"/>
               <details v-if="mappingEntry(selected)?.note" class="mapping-note">
                 <summary>位置说明</summary><p>{{ mappingEntry(selected).note }}</p>
               </details>
@@ -96,6 +97,7 @@
                 <div><dt>被关注</dt><dd>{{ selectedFollowers.length }}</dd></div>
               </dl>
               <div v-if="selectedFollowing.length" class="relation-buttons" aria-label="关注对象"><button v-for="person in selectedFollowing" :key="person.id" @click="selectPerson(person.id)">{{ person.name }}</button></div>
+              <div v-if="isConfigPreview&&otherRelations.length" class="relation-buttons"><span>竞争关系</span><button v-for="entry in otherRelations" :key="entry.source+entry.target" @click="selectPerson(entry.other.id)">{{entry.other.name}}</button></div>
               <div v-if="selectedHistory.length" class="person-history">
                 <h3>近期行为</h3>
                 <ol><li v-for="event in selectedHistory.slice(0, 5)" :key="event.key">{{ describeEvent(index, event) }}</li></ol>
@@ -121,7 +123,7 @@
             </template>
           </div>
           <div v-else class="side-content">
-            <div class="section-heading"><h2>真实楼栋 · 示意对应</h2><small>8 个地点</small></div><p class="muted">轮廓与楼名来自 OSM。下面是原沙盘地点的人工展示映射，咖啡店不是核实店址。</p>
+            <div class="section-heading"><h2>真实楼栋 · 示意对应</h2><small>{{Object.keys(mappingData?.mappings || {}).length}} 个地点</small></div><p class="muted">轮廓与楼名来自 OSM。{{isConfigPreview?'下面是当前配置的展示映射。楼栋安置为示意。':'下面是原沙盘地点的人工展示映射，咖啡店不是核实店址。'}}</p>
             <div v-for="[key, entry] in Object.entries(mappingData?.mappings || {})" :key="key" class="mapping-row">
               <b><i class="fa-solid fa-location-dot" aria-hidden="true"></i>{{ buildingById.get(entry.osm_id)?.name || entry.osm_id }}</b>
               <small>{{ key }}</small><p>{{ entry.note }}</p>
@@ -130,7 +132,7 @@
         </aside>
       </main>
 
-      <footer class="timeline-panel" aria-label="回放时间轴">
+      <footer v-if="!isConfigPreview" class="timeline-panel" aria-label="回放时间轴">
         <div class="timeline-header">
           <div class="timeline-heading">
             <i class="fa-solid fa-clock" aria-hidden="true"></i>
@@ -175,7 +177,9 @@
 <script setup>
 import {IS_PAGES} from '../mecoffe/publicUrl.js'
 import { computed, nextTick, onBeforeUnmount, onMounted, ref, shallowRef, watch } from 'vue'
-import { RouterLink } from 'vue-router'
+import { RouterLink, useRoute } from 'vue-router'
+import ConfigProfileFields from '../components/ConfigProfileFields.vue'
+import {previewQuery} from '../mecoffe/configPreviewStore.js'
 import Campus3DVisualControls from '../components/Campus3DVisualControls.vue'
 import { Campus3DScene } from '../mecoffe/Campus3DScene.js'
 import { describeEvent, EVENT_LABELS, indexScene, personHistory, stateAt } from '../mecoffe/replay.js'
@@ -187,6 +191,7 @@ import {displayDate} from '../mecoffe/indoorMotion.js'
 import { visualClock } from '../mecoffe/campus3dPresentation.js'
 
 const props=defineProps({scenario:{type:Object,default:null}})
+const route=useRoute(),isConfigPreview=computed(()=>props.scenario?.manifest.preview_mode==='config')
 const modes = [{ key: 'demo', label: '新版演示' }, { key: 'network', label: '关系网络' }, { key: 'history', label: '历史回放' }]
 const tabs = [
   { key: 'events', label: '事件', icon: 'fa-list-ul' },
@@ -221,7 +226,7 @@ const characterPool = ref('campus')
 const characterStatus = ref({available:0,visibleReady:0,visibleTotal:0,failed:0})
 const styleBusy = ref(0)
 const styleError = ref('')
-const dayCycle = ref(true)
+const dayCycle = ref(!isConfigPreview.value)
 const previewHour = ref(12)
 const roleNames = { undergraduate_consumer:'本科生', graduate_consumer:'研究生', teacher_consumer:'教师', merchant:'商家' }
 const dayPosition = ref(0)
@@ -244,7 +249,7 @@ const atEnd = computed(() => index.value && dayPosition.value >= days.value.leng
 const dayIndex = computed(() => Math.max(0, Math.min(days.value.length - 1, Math.floor(dayPosition.value))))
 const currentDay = computed(() => days.value[dayIndex.value] || { label: '', complete: true })
 const dayDisplay=computed(()=>sourceTime.value?displayDate(sourceTime.value,dayPosition.value,index.value):null)
-const simulatedClock=computed(()=>props.scenario?scenarioTime(props.scenario.manifest.simulation_time,Math.max(0,dayPosition.value-(days.value[0]?.step===0?1:0))):null)
+const simulatedClock=computed(()=>props.scenario&&!isConfigPreview.value?scenarioTime(props.scenario.manifest.simulation_time,Math.max(0,dayPosition.value-(days.value[0]?.step===0?1:0))):null)
 const lightClock = computed(() => simulatedClock.value && dayCycle.value ? {...simulatedClock.value,label:simulatedClock.value.label.slice(11)} : visualClock(dayPosition.value,{cycle:dayCycle.value,hour:previewHour.value}))
 function lightSettings(){return simulatedClock.value && dayCycle.value?{cycle:false,hour:simulatedClock.value.hour}:{position:dayPosition.value,cycle:dayCycle.value,hour:previewHour.value}}
 const state = computed(() => index.value ? stateAt(index.value, cursor.value) : null)
@@ -255,6 +260,7 @@ const buildingById = computed(() => new Map((campusData.value?.buildings || []).
 const selected = computed(() => index.value?.people.get(selectedId.value))
 const selectedFollowing = computed(() => follows.value.filter(edge => edge.source === selectedId.value).map(edge => index.value.people.get(edge.target)).filter(Boolean))
 const selectedFollowers = computed(() => follows.value.filter(edge => edge.target === selectedId.value))
+const otherRelations=computed(()=>(scene.value?.relationships||[]).filter(e=>e.relation==='competition'&&(e.source===selectedId.value||e.target===selectedId.value)).map(e=>({...e,other:index.value.people.get(e.source===selectedId.value?e.target:e.source)})))
 const selectedHistory = computed(() => selected.value ? personHistory(index.value, selectedId.value, cursor.value, 20) : [])
 const recentEvents = computed(() => scene.value?.events.slice(Math.max(0, cursor.value - 30), cursor.value).reverse() || [])
 const roster = computed(() => (scene.value?.people || []).filter(person => `${person.name} ${person.id}`.toLowerCase().includes(query.value.trim().toLowerCase())))
@@ -266,6 +272,7 @@ const hoverStyle = computed(() => {
   return { left: `${Math.max(10, Math.min(rect.width - 265, card.x - rect.left + 14))}px`, top: `${Math.max(70, Math.min(rect.height - 110, card.y - rect.top + verticalOffset))}px` }
 })
 const dataNotice = computed(() => {
+  if (isConfigPreview.value) return '配置预览 · 尚未运行模拟。人物与关系来自所选配置，楼栋安置为展示示意。事件 0 · 订单 0。'
   if (isDemo.value) return `新版演示：快照 v${meta.value?.snapshot_revision} 的 30 天规则演示，非 OASIS 运行结果。购买与传播按本地示例规则生成。`
   if (isNetwork.value) return `关系网络：快照 v${meta.value?.snapshot_revision} 的静态人物与关注输入，尚未运行；不含购买、发帖或访谈轨迹。`
   return `历史回放：原 OASIS 运行状态 ${meta.value?.status}，完整完成 ${meta.value?.completed_steps}/${meta.value?.total_steps} 天；第 24 天只有部分记录，后续天数未补造。`
@@ -273,6 +280,8 @@ const dataNotice = computed(() => {
 const mappingEntry = person => mappingData.value?.mappings[resolveHomeKey(person)]
 const mappedBuilding = person => buildingById.value.get(mappingEntry(person)?.osm_id)
 const roleColor = role => ({ merchant: '#bb7545', undergraduate_consumer: '#3888aa', graduate_consumer: '#8a78b4', teacher_consumer: '#58916a' }[role] || '#637d8a')
+const roleLabels=computed(()=>isConfigPreview.value?Object.fromEntries((scene.value?.people||[]).map(p=>[p.role,p.role_label])):roleNames)
+const legendRoles=computed(()=>isConfigPreview.value?Object.fromEntries((scene.value?.people||[]).map(p=>[p.role,roleColor(p.role)])):CHARACTER_ROLE_COLORS)
 
 function selectPerson(id) {
   selectedId.value = id
@@ -362,7 +371,7 @@ watch(characterPool, value => void applyStyle('setCharacterPool',value))
 watch([dayPosition, dayCycle, previewHour], () => renderer?.setLighting(lightSettings()))
 
 async function fetchJson(file, signal) {
-  if(props.scenario){const key=({'scene.json':'trajectory.json','campus3d_mapping.json':'location_mapping.json','campus3d_landcover.json':'landcover.json','campus3d_surroundings.json':'surroundings.json'})[file]||file;return props.scenario.files[key] || (key==='surroundings.json'?{roads:[]}:null)}
+  if(props.scenario){const key=({'latest-network.json':'trajectory.json','scene.json':'trajectory.json','campus3d_mapping.json':'location_mapping.json','campus3d_landcover.json':'landcover.json','campus3d_surroundings.json':'surroundings.json'})[file]||file;return props.scenario.files[key] || (key==='surroundings.json'?{roads:[]}:null)}
   if(file==='entrances.json')file='scenarios/ustc-history/entrances.json'
   const response = await fetch(`${import.meta.env.BASE_URL}mecoffe/${file}`, { cache: 'no-store', signal })
   if (!response.ok) throw new Error(`${file}: HTTP ${response.status}`)
@@ -442,7 +451,7 @@ async function loadScene(mode) {
     if (current === generation) loading.value = false
   }
 }
-onMounted(() => { document.title = props.scenario?.manifest.title || 'MeCoffe · 中科大高新校区三维沙盘'; void loadScene(props.scenario?'history':'demo') })
+onMounted(() => { document.title = props.scenario?.manifest.title || 'MeCoffe · 中科大高新校区三维沙盘'; void loadScene(isConfigPreview.value?'network':props.scenario?'history':'demo') })
 onBeforeUnmount(() => { generation += 1; controller?.abort(); stopTimeline(); renderer?.dispose(); renderer = null; if (import.meta.env.DEV) delete window.__mecoffe3d })
 </script>
 

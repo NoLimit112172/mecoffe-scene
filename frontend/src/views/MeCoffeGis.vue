@@ -1,7 +1,7 @@
 <template>
   <div class="gis-page" :data-indoor-occupancy="JSON.stringify(occupancy.buildings)" :data-inside="occupancy.inside" :data-person-accounting="JSON.stringify(occupancy.accounting)" :data-position="position.toFixed(6)" :data-cursor="cursor" :data-active-walkers="activeWalkers" :data-ready-models="modelStatus.visibleReady||0" :data-render-frames="telemetry.renderFrames||0" :data-worst-frame="telemetry.worstFrameMs||0" :data-average-fps="telemetry.averageFps||0" :data-model-draw-calls="telemetry.drawCalls||0">
     <header class="gis-header"><div class="gis-brand"><span class="gis-logo">◈</span><div><p>MECOFFE / GIS</p><h1>{{scenario?.manifest.title || 'GIS 校园活动地图'}}</h1></div></div><nav>
-      <details ref="scenarioPicker" class="scenario-picker" @keydown.esc.prevent="closeScenarioPicker" @focusout="blurScenarioPicker">
+      <details v-if="!isConfigPreview" ref="scenarioPicker" class="scenario-picker" @keydown.esc.prevent="closeScenarioPicker" @focusout="blurScenarioPicker">
         <summary aria-label="GIS 场景" aria-haspopup="listbox">场景 · {{scenarioChoices.find(item=>item.id===scenarioId)?.title || '选择场景'}} <span>⌄</span></summary>
         <div role="listbox" aria-label="可用场景" class="scenario-options" @keydown.down.prevent="moveScenarioOption($event,1)" @keydown.up.prevent="moveScenarioOption($event,-1)">
           <button v-for="item in scenarioChoices" :key="item.id" :data-scenario-id="item.id" role="option" :aria-selected="item.id===scenarioId" @click="changeScenario(item.id)">{{item.title}}<small>{{item.simulation_data?'有模拟回放':'地图预览'}}</small></button>
@@ -11,16 +11,16 @@
     <p class="gis-notice" role="note">ⓘ 人物所在楼栋与行走路线为展示层示意，OASIS 没有位置数据。建筑缺失高度采用标注的估算或默认值。</p>
     <div v-if="error" class="gis-error" role="alert"><strong>场景未能完整显示</strong><span>{{error}}</span><button @click="load">重新加载</button></div>
     <template v-if="scenario">
-      <section class="gis-metrics" aria-label="场景概览"><div><span>建筑</span><strong>{{layers?.buildings.features.length || 0}}<small> 栋</small></strong></div><div><span>道路与步道</span><strong>{{layers?.roads.features.length || 0}}<small> 段</small></strong></div><div><span>模拟人物</span><strong>{{population}}<small> 人</small></strong></div><div><span>{{hasSimulation?'回放订单':'模拟状态'}}</span><strong>{{hasSimulation?orders:'尚无模拟数据'}}<small v-if="hasSimulation"> 单</small></strong></div><div><span>模拟日期 · {{clock?.timezone}}</span><strong class="clock" data-testid="gis-time">{{dateDisplay?.label}}</strong></div></section>
-      <p class="gis-data-note" data-testid="gis-data-notice">{{hasSimulation?`已有 OASIS 运行记录 · 完成 ${scenario.files['trajectory.json'].meta.completed_steps}/${scenario.files['trajectory.json'].meta.total_steps} 步；缺失记录未补造。`:'尚无模拟数据 · 仅显示地图、建筑及场景模拟时间，不生成人物或活动。'}}<span v-if="unreachable"> · {{unreachable}} 笔购买未找到可通行展示路线</span></p>
+      <section class="gis-metrics" aria-label="场景概览"><div><span>建筑</span><strong>{{layers?.buildings.features.length || 0}}<small> 栋</small></strong></div><div><span>道路与步道</span><strong>{{layers?.roads.features.length || 0}}<small> 段</small></strong></div><div><span>模拟人物</span><strong>{{population}}<small> 人</small></strong></div><div><span>{{hasSimulation?'回放订单':'模拟状态'}}</span><strong>{{hasSimulation?orders:isConfigPreview?'配置预览':'尚无模拟数据'}}<small v-if="hasSimulation"> 单</small></strong></div><div v-if="!isConfigPreview"><span>模拟日期 · {{clock?.timezone}}</span><strong class="clock" data-testid="gis-time">{{dateDisplay?.label}}</strong></div></section>
+      <p class="gis-data-note" data-testid="gis-data-notice">{{isConfigPreview?'配置预览 · 尚未运行模拟 · 事件 0 · 订单 0 · 楼栋安置为展示示意。':hasSimulation?`已有 OASIS 运行记录 · 完成 ${scenario.files['trajectory.json'].meta.completed_steps}/${scenario.files['trajectory.json'].meta.total_steps} 步；缺失记录未补造。`:'尚无模拟数据 · 仅显示地图、建筑及场景模拟时间，不生成人物或活动。'}}<span v-if="unreachable"> · {{unreachable}} 笔购买未找到可通行展示路线</span></p>
     </template>
-    <p v-if="hasSimulation&&occupancy.accounting" class="population-accounting" data-testid="person-accounting">人物去向：室外 {{occupancy.accounting.visible}} + 楼内 {{occupancy.accounting.inside}} = {{occupancy.accounting.total}} 人 · {{occupancy.accounting.valid?'全部可定位':'请重新加载场景'}}</p>
+    <p v-if="(hasSimulation||isConfigPreview)&&occupancy.accounting" class="population-accounting" data-testid="person-accounting">人物去向：室外 {{occupancy.accounting.visible}} + 楼内 {{occupancy.accounting.inside}} = {{occupancy.accounting.total}} 人 · {{occupancy.accounting.valid?'全部可定位':'请重新加载场景'}}</p>
     <div class="gis-layout">
       <main class="gis-map-wrap"><div ref="host" class="gis-map" aria-label="GIS 校园地图"></div><div v-if="loading" class="gis-loading" role="status">正在准备地图…</div><template v-else-if="scenario"><div class="gis-map-tools"><span class="gis-map-badge">{{basemap==='offline'?'离线矢量地图':'OpenStreetMap 底图'}}</span><button @click="renderer?.resetCamera()">全景</button><button :disabled="!selectedPerson" @click="renderer?.focusPerson(selectedPerson.id)">人物特写</button></div><div class="gis-legend"><b>图例</b><span><i style="background:#8fb3bf"></i>教学 / 科研</span><span><i style="background:#d6b78e"></i>住宿</span><span><i style="background:#99cbd4"></i>水域</span><span><i style="background:#3185a0;border-radius:50%"></i>人物 · 远景简化</span><small>拖动平移 · 右键拖动旋转 / 倾斜 · 滚轮缩放</small></div><div v-if="modelStatus.visibleTotal" class="gis-model-status" role="status">{{modelStatus.visibleReady===modelStatus.visibleTotal?'近景三维人物':`人物模型准备中 ${modelStatus.visibleReady||0}/${modelStatus.visibleTotal}`}}<button v-if="modelStatus.failed" @click="load">重试</button></div></template></main>
       <aside class="gis-panel">
         <section><h2>地图与图层</h2><label class="basemap-label">底图<select aria-label="底图" v-model="basemap" :disabled="loading" @change="setBasemap"><option v-for="item in basemaps" :key="item.id" :value="item.id">{{item.label}}</option></select></label><p v-if="basemapNote" class="panel-hint" role="status">{{basemapNote}}</p><div class="layer-grid"><label v-for="(label,key) in layerLabels" :key="key"><input type="checkbox" :aria-label="`${label}图层`" v-model="visibility[key]" :disabled="loading" @change="setLayers"/>{{label}}</label></div></section>
         <section><h2>查找地点</h2><input class="gis-search" type="search" aria-label="搜索楼栋或地点" v-model="query" placeholder="搜索楼名或地点名称"/><div class="search-results"><button v-for="item in results" :key="item.layer+item.feature.id" @click="renderer?.focusFeature(item)"><strong>{{item.feature.properties.name||'未命名地点'}}</strong><small>{{item.info.category.name}} <span v-if="item.info.category.code" class="gis-data-code">{{item.info.category.code}}</span><span v-for="location in item.info.locations" :key="location.id"> · {{location.name}} <span class="gis-data-code">{{location.id}}</span></span></small></button><p v-if="query&&!results.length" class="panel-hint">未找到匹配地点。</p></div></section>
-        <section v-if="selected" class="gis-info" data-testid="gis-query-card"><h2>{{selectedPerson?'人物信息':'地点信息'}}</h2><template v-if="selectedPerson"><h3>{{selectedPerson.name}}</h3><span class="role-badge">{{selectedPerson.role_label}}</span><p>{{selectedPerson.bio || '暂无画像摘要'}}</p><button @click="renderer?.focusPerson(selectedPerson.id)">定位并查看人物</button><h4>当前活动</h4><p>{{selectedPlacement}}</p><p v-for="event in activity" :key="event.key" class="activity-item">{{describeEvent(index,event)}}</p><p v-if="!activity.length" class="panel-hint">当前时间之前暂无该人物活动。</p></template><template v-else><h3>{{selected.feature.properties.name || selectedInfo.category.name}}</h3>
+        <section v-if="selected" class="gis-info" data-testid="gis-query-card"><h2>{{selectedPerson?'人物信息':'地点信息'}}</h2><template v-if="selectedPerson"><h3>{{selectedPerson.name}}</h3><span class="role-badge">{{selectedPerson.role_label}}</span><p>{{selectedPerson.bio || '暂无画像摘要'}}</p><ConfigProfileFields v-if="isConfigPreview" :person="selectedPerson"/><button @click="renderer?.focusPerson(selectedPerson.id)">定位并查看人物</button><h4>{{isConfigPreview?'示意安置':'当前活动'}}</h4><p>{{selectedPlacement}}</p><p v-for="event in activity" :key="event.key" class="activity-item">{{describeEvent(index,event)}}</p><div v-if="isConfigPreview" class="config-relations"><h4>关注 {{personFollowing.length}} 人 · 被关注 {{personFollowers.length}} 人</h4><button v-for="person in personFollowing" :key="person.id" @click="renderer?.focusPerson(person.id)">{{person.name}}</button></div><p v-if="!activity.length" class="panel-hint">{{isConfigPreview?'尚未运行模拟。':'当前时间之前暂无该人物活动。'}}</p></template><template v-else><h3>{{selected.feature.properties.name || selectedInfo.category.name}}</h3>
           <dl><dt>类别</dt><dd>{{selectedInfo.category.name}} <small v-if="selectedInfo.category.code" class="gis-data-code">{{selectedInfo.category.code}}</small></dd><dt v-if="selected.feature.properties.height_m">高度</dt><dd v-if="selected.feature.properties.height_m">{{selected.feature.properties.height_m}} 米</dd><dt v-if="selected.feature.properties.height_m">高度来源</dt><dd v-if="selected.feature.properties.height_m">{{heightDescription(selected.feature.properties.height_source)}}</dd><dt>素材原型</dt><dd>{{selectedInfo.prototype.name}} <small v-if="selectedInfo.prototype.code" class="gis-data-code">{{selectedInfo.prototype.code}}</small></dd><dt>OASIS 地点</dt><dd><span v-for="location in selectedInfo.locations" :key="location.id" class="mapped-location">{{location.name}} <small class="gis-data-code">{{location.id}}</small></span><span v-if="!selectedInfo.locations.length">无显式映射</span></dd></dl>
           <p v-for="entry in selectedEntrances" :key="entry.id" class="panel-hint">{{entry.source==='osm'?'OSM 入口标注':'推断入口'}}（示意） <button @click="renderer?.focusFeature({layer:'entrances',feature:layers.entrances.features.find(f=>f.id===entry.id)})">定位入口</button></p><div v-if="buildingResidents.length" class="indoor-residents"><h4>楼内 {{buildingResidents.length}} 人（示意）</h4><button v-for="person in buildingResidents" :key="person.id" :data-person-id="person.id" @click="renderer?.focusPerson(person.id)">{{person.name}} · {{person.role_label}}</button></div>
           <details class="data-details"><summary>数据详情</summary><p class="panel-hint">数据来源 ID <span>{{selectedInfo.sourceId}}</span></p></details>
@@ -29,12 +29,14 @@
         <section v-if="scenario" class="panel-hint"><p>{{scenario.manifest.map.source.attribution}}</p><p>地图坐标：WGS84<br/>空间位置与路线：展示示意</p></section>
       </aside>
     </div>
-    <footer v-if="scenario" class="gis-timeline"><div class="gis-play-row"><button class="gis-play" :disabled="loading" @click="togglePlay">{{playing?'暂停':hasSimulation?'播放回放':'播放时间'}}</button><button :disabled="loading" @click="jump(-1)">上一步</button><button :disabled="loading" @click="jump(1)">下一步</button><button v-if="hasSimulation" :disabled="loading" @click="previewWalking">看人物行走</button><label>速度 <select aria-label="回放速度" v-model.number="speed"><option v-for="value in [.5,1,2,4,8]" :value="value" :key="value">{{value}}×</option></select></label><span class="timeline-summary">{{currentStep}} <small v-if="hasSimulation">· {{activeWalkers}} 人在途</small></span></div><input aria-label="GIS 模拟时间进度" type="range" min="0" :max="maxPosition" step="0.001" v-model.number="position" @input="seek"/><div class="gis-time-endpoints"><span>天内回放进度 {{dateDisplay?.progress||0}}% · 昼夜变化为展示效果 · 起始日期 {{scenario.manifest.simulation_time.start.slice(0,10)}}</span><span>{{hasSimulation?'依据已有运行记录回放':'按场景清单的时间步推进'}}</span></div></footer>
+    <footer v-if="scenario&&!isConfigPreview" class="gis-timeline"><div class="gis-play-row"><button class="gis-play" :disabled="loading" @click="togglePlay">{{playing?'暂停':hasSimulation?'播放回放':'播放时间'}}</button><button :disabled="loading" @click="jump(-1)">上一步</button><button :disabled="loading" @click="jump(1)">下一步</button><button v-if="hasSimulation" :disabled="loading" @click="previewWalking">看人物行走</button><label>速度 <select aria-label="回放速度" v-model.number="speed"><option v-for="value in [.5,1,2,4,8]" :value="value" :key="value">{{value}}×</option></select></label><span class="timeline-summary">{{currentStep}} <small v-if="hasSimulation">· {{activeWalkers}} 人在途</small></span></div><input aria-label="GIS 模拟时间进度" type="range" min="0" :max="maxPosition" step="0.001" v-model.number="position" @input="seek"/><div class="gis-time-endpoints"><span>天内回放进度 {{dateDisplay?.progress||0}}% · 昼夜变化为展示效果 · 起始日期 {{scenario.manifest.simulation_time.start.slice(0,10)}}</span><span>{{hasSimulation?'依据已有运行记录回放':'按场景清单的时间步推进'}}</span></div></footer>
   </div>
 </template>
 <script setup>
 import {computed,nextTick,onBeforeUnmount,onMounted,reactive,ref,shallowRef,watch} from 'vue'
 import {RouterLink,useRoute,useRouter} from 'vue-router'
+import ConfigProfileFields from '../components/ConfigProfileFields.vue'
+import {previewQuery} from '../mecoffe/configPreviewStore.js'
 import 'maplibre-gl/dist/maplibre-gl.css'
 import {loadScenario,loadScenarioDirectory,directoryScenarioId,scenarioTime} from '../mecoffe/scenario.js'
 import {personHistory,stateAt,describeEvent} from '../mecoffe/replay.js'
@@ -45,6 +47,8 @@ import {createGisDisplay} from '../mecoffe/gis/engine.js'
 import {ASSET_CATALOG} from '../mecoffe/assetCatalog.js'
 import {featureInfo} from '../mecoffe/gis/labels.js'
 import {displayDate} from '../mecoffe/indoorMotion.js'
+const props=defineProps({previewScenario:{type:Object,default:null}})
+const isConfigPreview=computed(()=>props.previewScenario?.manifest.preview_mode==='config')
 const route=useRoute(),router=useRouter(),directory=shallowRef(null),scenarioPicker=ref(null)
 const scenarioChoices=computed(()=>directory.value?.scenarios||[]),scenarioId=computed(()=>typeof route.query.scenario==='string'?route.query.scenario:directory.value?.default_id||'')
 const scenario=shallowRef(null),layers=shallowRef(null),index=shallowRef(null),host=ref(null),loading=ref(true),error=ref(''),query=ref(''),selected=shallowRef(null)
@@ -60,10 +64,12 @@ const selectedEntrances=computed(()=>{const f=selected.value?.feature;if(!f)retu
 const buildingResidents=computed(()=>selected.value?.type==='feature'?(occupancy.value.buildings[selected.value.feature.id]||[]).map(id=>index.value?.people.get(id)).filter(Boolean):[])
 const currentStep=computed(()=>index.value?index.value.days[Math.min(index.value.days.length-1,Math.floor(position.value))]?.label:dateDisplay.value?.label.split(' · ')[0])
 const labelOptions=computed(()=>({catalog:ASSET_CATALOG,mapping:scenario.value?.files['location_mapping.json']||{}}))
-const results=computed(()=>layers.value?searchPlaces(layers.value,query.value).map(item=>({...item,info:featureInfo(item.feature,labelOptions.value)})):[]),sandboxUrl=computed(()=>({path:'/mecoffe3d',query:{scenario:scenarioId.value}}))
+const results=computed(()=>layers.value?searchPlaces(layers.value,query.value).map(item=>({...item,info:featureInfo(item.feature,labelOptions.value)})):[]),sandboxUrl=computed(()=>({path:'/mecoffe3d',query:isConfigPreview.value?previewQuery(route.query):{scenario:scenarioId.value}}))
 const selectedInfo=computed(()=>selected.value?.type==='feature'?featureInfo(selected.value.feature,labelOptions.value):null)
 const selectedPerson=computed(()=>selected.value?.type==='person'?index.value?.people.get(selected.value.id):null),selectedWalking=computed(()=>{position.value;return Boolean(replay?.people.get(selectedPerson.value?.id)?.walker)})
 const activity=computed(()=>selectedPerson.value&&index.value?personHistory(index.value,selectedPerson.value.id,cursor.value,5):[])
+const personFollowing=computed(()=>(index.value?.scene.relationships||[]).filter(e=>e.relation==='follow'&&e.source===selectedPerson.value?.id).map(e=>index.value.people.get(e.target)))
+const personFollowers=computed(()=>(index.value?.scene.relationships||[]).filter(e=>e.relation==='follow'&&e.target===selectedPerson.value?.id))
 let renderer=null,replay=null,controller=null,frame=0,lastTime=0,lastUi=0,lastMap=0,lastDraw=0,generation=0,disposed=false
 function sync(){if(!replay)return;position.value=replay.position;cursor.value=replay.cursor;activeWalkers.value=replay.personData().length;unreachable.value=replay.unreachable;occupancy.value={...replay.occupancy,accounting:replay.motion?.accounting};telemetry.value=renderer?.getStats()||{}}
 function tick(now){
@@ -82,13 +88,17 @@ async function load(){
   renderer?.dispose();renderer=null;replay?.dispose();replay=null
   scenario.value=null;layers.value=null;index.value=null;position.value=0;cursor.value=0;activeWalkers.value=0
   try{
-    const nextDirectory=await loadScenarioDirectory({signal:controller.signal})
-    if(disposed||token!==generation)return
-    directory.value=nextDirectory
-    const id=directoryScenarioId(nextDirectory,route.query.scenario),value=await loadScenario(id,{signal:controller.signal,includeGis:true})
-    if(disposed||token!==generation)return
-    const entry=nextDirectory.scenarios.find(item=>item.id===id)
-    if(entry.title!==value.manifest.title||entry.simulation_data!==value.manifest.simulation_data)throw new Error('场景目录已过期，请重新生成目录')
+    let value=props.previewScenario
+    if(!value){
+      const nextDirectory=await loadScenarioDirectory({signal:controller.signal})
+      if(disposed||token!==generation)return
+      directory.value=nextDirectory
+      const id=directoryScenarioId(nextDirectory,route.query.scenario)
+      value=await loadScenario(id,{signal:controller.signal,includeGis:true})
+      if(disposed||token!==generation)return
+      const entry=nextDirectory.scenarios.find(item=>item.id===id)
+      if(entry.title!==value.manifest.title||entry.simulation_data!==value.manifest.simulation_data)throw new Error('场景目录已过期，请重新生成目录')
+    }
     const geo=gisLayers(value),nextReplay=new GisReplay(value);replay=nextReplay;index.value=nextReplay.index;scenario.value=value;layers.value=geo
     await nextReplay.prepare(controller.signal);if(disposed||token!==generation)return
     await nextTick();if(disposed||token!==generation)return

@@ -1,0 +1,133 @@
+{
+  "schema_version": "1.0",
+  "snapshot_id": "snapshot_synthetic_config",
+  "snapshot_revision": 2,
+  "selection_request_id": "selection_synthetic_config",
+  "dataset_version": "synthetic-only",
+  "seed": 42,
+  "nodes": [
+    {
+      "entity_id": "sample_person_01",
+      "role": "visitor",
+      "request_persona": true,
+      "name": "样例人物 01",
+      "bio": "完全合成的测试人物，用于配置预览验收。",
+      "static_attributes": {
+        "gender": "male",
+        "age": 21,
+        "custom_static": "合成静态属性"
+      },
+      "dynamic_attributes": {
+        "visit_goal": "合成的校园参观"
+      }
+    },
+    {
+      "entity_id": "sample_person_02",
+      "role": "visitor",
+      "request_persona": true,
+      "name": "样例人物 02",
+      "bio": "完全合成的测试人物，用于配置预览验收。",
+      "static_attributes": {
+        "gender": "female",
+        "age": 22,
+        "custom_static": "合成静态属性"
+      },
+      "dynamic_attributes": {
+        "visit_goal": "合成的校园参观"
+      }
+    },
+    {
+      "entity_id": "sample_person_03",
+      "role": "guide",
+      "request_persona": true,
+      "name": "样例人物 03",
+      "bio": "完全合成的测试人物，用于配置预览验收。",
+      "static_attributes": {
+        "gender": "male",
+        "age": 23,
+        "custom_static": "合成静态属性"
+      },
+      "dynamic_attributes": {
+        "specialty": [
+          "合成主题甲",
+          "合成主题乙"
+        ]
+      }
+    },
+    {
+      "entity_id": "sample_person_04",
+      "role": "guide",
+      "request_persona": true,
+      "name": "样例人物 04",
+      "bio": "完全合成的测试人物，用于配置预览验收。",
+      "static_attributes": {
+        "gender": "female",
+        "age": 24,
+        "custom_static": "合成静态属性"
+      },
+      "dynamic_attributes": {
+        "specialty": [
+          "合成主题甲",
+          "合成主题乙"
+        ]
+      }
+    },
+    {
+      "entity_id": "sample_person_05",
+      "role": "operator",
+      "request_persona": false,
+      "name": "样例人物 05",
+      "bio": "完全合成的测试人物，用于配置预览验收。",
+      "static_attributes": {
+        "gender": "male",
+        "age": 25,
+        "custom_static": "合成静态属性"
+      },
+      "dynamic_attributes": {
+        "duty": "合成的场地接待"
+      }
+    },
+    {
+      "entity_id": "sample_person_06",
+      "role": "operator",
+      "request_persona": false,
+      "name": "样例人物 06",
+      "bio": "完全合成的测试人物，用于配置预览验收。",
+      "static_attributes": {
+        "gender": "female",
+        "age": 26,
+        "custom_static": "合成静态属性"
+      },
+      "dynamic_attributes": {
+        "duty": "合成的场地接待"
+      }
+    }
+  ],
+  "edges": [
+    {
+      "source": "sample_person_01",
+      "target": "sample_person_03",
+      "relation": "follow"
+    },
+    {
+      "source": "sample_person_03",
+      "target": "sample_person_01",
+      "relation": "follow"
+    },
+    {
+      "source": "sample_person_02",
+      "target": "sample_person_04",
+      "relation": "follow"
+    },
+    {
+      "source": "sample_person_05",
+      "target": "sample_person_06",
+      "relation": "competition"
+    },
+    {
+      "source": "sample_person_06",
+      "target": "sample_person_01",
+      "relation": "follow"
+    }
+  ]
+}

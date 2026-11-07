@@ -7,7 +7,7 @@ export function nextDisplayDeparture(previous,now){return Math.max(now,(previous
 export class GisReplay {
   constructor(scenario){
     this.scenario=scenario;this.campus=scenario.files['campus3d.json'];this.position=0;this.cursor=0;this.drainSeconds=0;this.emptyPeople=new Map()
-    const data=scenario.manifest.simulation_data?scenario.files['trajectory.json']:null
+    const data=(scenario.manifest.simulation_data || scenario.manifest.preview_mode==='config')?scenario.files['trajectory.json']:null
     this.index=data?indexScene(data):null
     this.entrances=scenario.files['entrances.json']
     if(data){this.motion=new IndoorMotion({campus:this.campus,mapping:scenario.files['location_mapping.json'],index:this.index,entrances:this.entrances,landcovers:scenario.files['landcover.json'].features});this.routing=this.motion.routing}

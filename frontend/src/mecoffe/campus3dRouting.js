@@ -10,7 +10,7 @@ export const SHOP_KEYS = ['shop_merchant_001', 'shop_merchant_002']
 // The existing adapters have already applied campus.json's occupancy shares.
 // Preserve that assignment instead of inventing another allocation in 3D.
 export function resolveHomeKey(person) {
-  return person.role === 'merchant' ? person.home_location_id : person.building_id
+  return person.location_key || (person.role === 'merchant' ? person.home_location_id : person.building_id)
 }
 
 export function polygonCenter(polygon) {

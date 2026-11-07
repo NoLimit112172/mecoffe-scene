@@ -377,6 +377,7 @@ def convert(trajectory_path: Path, snapshot_path: Path, campus_path: Path) -> di
             "partial": trajectory.get("partial"),
             "plan_id": meta.get("plan_id"),
             "snapshot_id": meta.get("snapshot_id"),
+            "snapshot_revision": meta.get("snapshot_revision"),
             "completed_steps": meta.get("completed_steps"),
             "total_steps": meta.get("total_steps"),
             "step_unit": meta.get("step_unit"),
