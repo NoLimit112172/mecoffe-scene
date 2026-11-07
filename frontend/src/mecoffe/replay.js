@@ -1,3 +1,5 @@
+import {describeUnsuccessfulEvent} from './eventPresentation.js'
+import {shopName} from './shopPresentation.js'
 // MeCoffe 回放的纯函数部分：不依赖 Vue / Pixi，便于单独测试。
 // 游标 cursor 表示“已经发生的事件条数”，即 events[0 .. cursor-1] 已发生。
 
@@ -175,18 +177,20 @@ export function cupsByPersonAt(index, cursor) {
 export function describeEvent(index, event) {
   const name = id => index.people.get(id)?.name || id
   const actor = name(event.actor)
+  const generic=index.scene?.meta?.generic_replay===true
+  const store=generic&&event.brand_id?shopName(index,event.brand_id):''
   switch (event.type) {
     case 'post': return `${actor} 发帖：${event.text || ''}`
     case 'comment': return `${actor} 评论了 ${name(event.target)} 的帖子：${event.text || ''}`
-    case 'purchase': return `${actor} 购买 ${event.product_name || event.brand_id} ×${event.quantity || 1}，¥${((event.amount_fen || 0) / 100).toFixed(2)}`
-    case 'ad': return `${actor} 投放广告（定向 ${event.targeted?.length || 0} 人）：${event.text || ''}`
+    case 'purchase': return `${actor} 购买 ${store?store+' · ':''}${event.product_name || event.brand_id} ×${event.quantity || 1}，¥${((event.amount_fen || 0) / 100).toFixed(2)}`
+    case 'ad': return `${actor} ${store?`为 ${store} `:''}投放广告（定向 ${event.targeted?.length || 0} 人）：${event.text || ''}`
     case 'exposure': return `${actor} 的信息流返回了 ${(event.brand_ids || []).join('、') || '广告'} 的广告帖`
     case 'follow': return `${actor} 关注了 ${name(event.target)}`
     case 'interview': return `${actor} 接受${event.round === 'pre' ? '基线' : event.round === 'post' ? '后测' : ''}访谈：${event.text || ''}`
-    case 'price': return `${actor} 调整价格`
-    case 'declined': return `${actor} 的 ${event.action} 动作被拒绝${event.text ? '：'+event.text : ''}`
-    case 'unknown': return `${actor} 的 ${event.action} 结果未知${event.text ? '：'+event.text : ''}`
-    case 'failed': return `${actor} 的 ${event.action} 动作执行失败`
+    case 'price': return `${actor} ${store?`调整 ${store} 的价格`:'调整价格'}`
+    case 'declined':
+    case 'unknown':
+    case 'failed': return describeUnsuccessfulEvent(actor,event)
     default: return `${actor} 执行 ${event.action || event.type}`
   }
 }

@@ -1,4 +1,5 @@
 // Configuration inputs are kept in memory. This adapter never creates activity.
+import {presentRole,snapshotRoleDescriptions} from './rolePresentation.js'
 const ENTITY_ID = /^[A-Za-z][A-Za-z0-9_.:-]{0,127}$/
 const CONTEXT_ID = /^[A-Za-z0-9][A-Za-z0-9_.:-]{0,127}$/
 const STAGE_STATES = new Set(['pending', 'running', 'completed', 'failed'])
@@ -102,7 +103,8 @@ function validatePopulationRequest(request, snapshot) {
 function fallbackPopulationRequest(snapshot) {
   const counts = new Map()
   for (const node of snapshot.nodes) counts.set(node.role, (counts.get(node.role) || 0) + 1)
-  return Object.fromEntries([...counts].map(([role, count]) => [role, {description: role, count, generate: {}}]))
+  const descriptions=snapshotRoleDescriptions(snapshot)
+  return Object.fromEntries([...counts].map(([role, count]) => [role, {description: descriptions.get(role)||role, count, generate: {}}]))
 }
 
 /** 统一校验本地原始文件与服务端阶段响应，保留所有画像原值。 */
@@ -200,7 +202,8 @@ export function buildConfigPreviewScenario(input, mapScenario, placementRules = 
       : Object.hasOwn(rules.roleRules, node.role) ? rules.roleRules[node.role] : null
     const osmId = explicit || fallback
     const locationKey = keyByBuilding.get(osmId)
-    return {...clone(node), id: node.entity_id, name: node.name || node.entity_id, role_label: request.description,
+    const identity=presentRole(node.role,request.description)
+    return {...clone(node), id: node.entity_id, name: node.name || node.entity_id, role_label: identity.label, role_description: identity.description,
       bio: node.bio || node.description || '', gender: {male: 'm', female: 'f'}[node.static_attributes?.gender],
       age: node.static_attributes?.age, profile: clone(node.dynamic_attributes || {}),
       profile_fields: profileFields(node, request), location_key: locationKey,

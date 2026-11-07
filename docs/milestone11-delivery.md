@@ -51,7 +51,7 @@
 | 命令 | 结果 |
 | --- | --- |
 | `python -X utf8 -m unittest discover -s adapter -v` | 90 项通过 |
-| `npm --prefix frontend test` | 265 项通过 |
+| `npm --prefix frontend test` | 279 项通过（含本轮追加修正） |
 | `npm --prefix frontend run build` | 通过 |
 | `npm --prefix frontend run build:pages` | 通过 |
 | `npm --prefix frontend run check:pages` | 通过 |
@@ -98,3 +98,55 @@ GIS 回归性能（MapLibre render 事件间隔）：中科大全景 88.87 FPS /
 2. 两个只读产物接口：`.../artifacts/trajectory`、`.../artifacts/population-snapshot`。检查当前用户、会话及运行归属；仅终态开放轨迹，快照取本次运行冻结版本，不返回当前可变 network 数据。
 3. 运行详情能返回本次 `config_id`，若能返回引擎运行编号也提供 `engine_run_id`；对应计划应仍是本次冻结版本。前端会检查快照 ID/revision 和计划 ID/revision，一旦不一致即停止加载。
 4. 与 Alemax067 确认接口路径、未就绪状态码（草案 409）和终态状态值，然后用一份获准本地联调的终态轨迹验收。团队数据及截图留在私有目录，不进入公开 Pages 或 embed 静态目录。
+
+
+## 验收追加修正：同楼多门店、角色短名与动作原因
+
+本轮在 `feat/replay-generic` 上追加提交，父提交为 `b44d159`，不改写旧提交，不改 main 或 social-sim，不推送。5180 开发服务保持运行。
+
+### 修正内容
+
+1. **同楼全部门店**：新增 `shopPresentation.js`，品牌按 `brand_id` 稳定字典序编号 A–Z、AA…，同一品牌集合不受输入顺序或视图影响。两页统一显示“学生食堂A区 · 门店 A / B / C（示意）”；点击标签可打开楼栋卡，列出全部门店和商品，事件面板也使用同一名称。零楼内人数时仍保留门店标签。原始场景、品牌、地图和地点映射未修改。品牌集合发生变化会重新编号，编号不跨不同实验持久化。
+2. **显式角色说明**：配置优先 `population_request[role].description`；回放在有配套角色阶段输入时沿用该字段，否则读冻结快照节点的 `role_description`。同角色存在多份显式说明时优先明确中文说明，再按稳定字典序选择。当前团队计划的 `role_policies` 只有策略绑定，没有身份简介，未擅自添加计划字段，也不从策略编号、姓名、bio 或英文角色 ID 猜身份。短名最多 14 个 Unicode 字符加省略号，`role_description` 保存全文，图例与人物卡支持悬停和“角色说明”详情。只有合成快照新增了合法的显式测试元数据“样例访客／样例经营者／样例研究人员”，并非硬编码翻译。
+3. **可读动作结果**：被拒优先显示 `reason` 等可读内容，未知优先显示 `message`，动作名使用已有中文动作字典；无可读字段时显示清楚的缺省说明。`action / outcome / raw_result` 完整保留在独立可展开的“数据详情”。长说明在正文截断，原始结果完整保留；方括号开头的普通原因也可读。未修改任何计数或动画判定。
+
+### 本轮改动文件
+
+- 展示函数：`frontend/src/mecoffe/shopPresentation.js`、`rolePresentation.js`、`eventPresentation.js`。
+- 共享适配与回放：`configPreview.js`、`genericReplay.js`、`replay.js`。
+- 三维与 GIS 渲染：`Campus3DScene.js`、`Campus3DIndoor.js`、`gis/IndoorLayer.js`、`gis/MapLibreScene.js`。
+- 两页与折叠详情：`frontend/src/views/MeCoffe3D.vue`、`MeCoffeGis.vue`、`frontend/src/components/EventResultDetails.vue`。
+- 合成样例：`frontend/tests/fixtures/generic-replay/snapshot.json`，仅增加显式角色说明。
+- 新测试：`shopPresentation.test.js`、`rolePresentation.test.js`、`eventPresentation.test.js`（位于 `frontend/tests/`）；浏览器 `scripts/test-milestone11-fixes.cjs`。
+- 本交付说明。
+
+### 本轮验证
+
+| 命令 | 结果 |
+| --- | --- |
+| `python -X utf8 -m unittest discover -s adapter -v` | 90 项通过 |
+| `npm --prefix frontend test` | 279 项通过 |
+| `npm --prefix frontend run build` | 通过 |
+| `npm --prefix frontend run build:pages` | 通过 |
+| `npm --prefix frontend run check:pages` | 通过 |
+| `npm --prefix frontend run build:embed` | 通过；113.74 MB / 242 文件 |
+| `node scripts/audit-public.cjs` | 通过，findings=[] |
+| `node scripts/test-milestone11-fixes.cjs` | 通过；14 张本地修正截图 |
+| `node scripts/test-milestone11-fixes.cjs --embed` | 通过；严格静态 `/scene/`，14 张嵌入版修正截图 |
+| `node scripts/test-run-replay.cjs --embed` | 通过；原同源运行接口 mock 回归 |
+| `node scripts/test-milestone11.cjs --embed` | 通过；原多文件、ZIP、样例和视图切换回归 |
+
+两页均验证 7 人、2 个成功订单，被拒和未知各 1 条。展开的数据详情逐字段与合成轨迹原始结果一致。浏览器异常、异常 HTTP 响应、非预期外部请求列表均为空。没有新增依赖，未使用团队私有样例或访问团队服务器。
+
+### 本轮截图与 QA
+
+统一目录 `logs/milestone11/`（不提交 Git）：
+
+- `fixes-embed-3d-multi-shop-label.png`、`fixes-embed-gis-multi-shop-label.png`：同楼完整门店标签。
+- `fixes-embed-3d-building-shops.png`、`fixes-embed-gis-building-shops.png`：门店名称与品牌对应列表。
+- `fixes-embed-3d-chinese-roles.png`、`fixes-embed-gis-chinese-roles.png`：中文角色与全文说明。
+- `fixes-embed-3d-declined-readable.png`、`fixes-embed-3d-unknown-readable.png`：可读拒绝／未知说明。
+- `fixes-embed-3d-declined-raw.png`、`fixes-embed-3d-unknown-raw.png`：展开后保留原始数据；GIS 有同名 `gis` 系列。
+- `fixes-local-qa.json`、`fixes-embed-qa.json`：每项验收与截图清单；`fixes-local-*` 为相应本地截图。
+
+本轮全量测试与构建日志使用 `logs/milestone11-fixes-*.txt`。已知边界仍是尚未接真实终态运行、接口路径待团队确认；缺少显式角色说明时按要求保留原名。位置和走路路线仍为展示示意。

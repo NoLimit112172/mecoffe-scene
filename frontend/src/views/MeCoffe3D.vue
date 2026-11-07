@@ -47,7 +47,7 @@
             </template>
             <span v-else>点击查看人物与事件</span>
           </div>
-          <div class="map-legend"><span><i aria-hidden="true" style="background:#7c9cab"></i>教学 / 科研</span><span><i aria-hidden="true" style="background:#bc7859"></i>住宿</span><span><i aria-hidden="true" style="background:#65a89b"></i>公共设施</span><div class="role-key"><span v-for="(color, role) in legendRoles" :key="role"><i aria-hidden="true" :style="{background:color}"></i>{{ roleLabels[role] || role }}</span></div><p>写实人物为外观示意；脚下颜色表示角色<br>人物活动限制在建成区校界内<br>水域不可行走，仅跨水道路 / 桥面可通行<br>跑道外圈、球场排布、桥型与水深：展示设定<br>树木、路灯、长椅、草地纹理：<b>装饰</b><br>楼顶人数与光照：展示示意；楼层仍为默认值<br>校外道路仅展示，不参与寻路<br>左键旋转 · 右键平移 · 滚轮缩放</p></div>
+          <div class="map-legend"><span><i aria-hidden="true" style="background:#7c9cab"></i>教学 / 科研</span><span><i aria-hidden="true" style="background:#bc7859"></i>住宿</span><span><i aria-hidden="true" style="background:#65a89b"></i>公共设施</span><div class="role-key"><span v-for="(color, role) in legendRoles" :key="role" :title="roleDescriptions[role] || roleLabels[role] || role"><i aria-hidden="true" :style="{background:color}"></i>{{ roleLabels[role] || role }}</span></div><p>写实人物为外观示意；脚下颜色表示角色<br>人物活动限制在建成区校界内<br>水域不可行走，仅跨水道路 / 桥面可通行<br>跑道外圈、球场排布、桥型与水深：展示设定<br>树木、路灯、长椅、草地纹理：<b>装饰</b><br>楼顶人数与光照：展示示意；楼层仍为默认值<br>校外道路仅展示，不参与寻路<br>左键旋转 · 右键平移 · 滚轮缩放</p></div>
           <a class="osm-credit" href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener noreferrer">© OpenStreetMap contributors</a>
       <div v-if="characterStatus.visibleReady < characterStatus.visibleTotal || characterStatus.failed" class="data-notice character-loading" role="status"><span>正在加载人物 {{ characterStatus.visibleReady || 0 }}/{{ characterStatus.visibleTotal || 0 }}…</span><button v-if="characterStatus.failed" @click="renderer?.retryCharacters()">重试 {{ characterStatus.failed }} 个模型</button></div>
           <div v-if="loading" class="map-loading">正在构建校园三维体块…</div>
@@ -68,15 +68,15 @@
             <p v-if="isNetwork" class="muted">此模式只有人物与关注关系，没有订单或可播放的行为。选择“人物”可查看关注对象。</p>
             <p v-else-if="!recentEvents.length" class="empty">播放或单步查看事件。购买事件会触发沿 OSM 路网的往返动画。</p>
             <div v-if="recentEvents.length" class="event-list">
-              <button v-for="event in recentEvents" :key="event.key" class="event-row" type="button" @click="selectPerson(event.actor)">
+              <article v-for="event in recentEvents" :key="event.key" class="event-entry" :data-event-outcome="event.outcome || event.type"><button class="event-row" type="button" @click="selectPerson(event.actor)">
                 <span class="event-meta">
                   <span>{{ event.step === 0 ? '初始化' : `第 ${event.step} 天` }}</span>
                   <span class="event-kind">{{ EVENT_LABELS[event.type] || event.type }}</span>
                 </span>
                 <span>{{ describeEvent(index, event) }}</span>
-              </button>
+              </button><EventResultDetails :event="event"/></article>
             </div>
-            <div class="brand-totals"><div v-for="(brand, i) in scene.brands" :key="brand.brand_id"><i aria-hidden="true" :style="{ background: brandColors[i % brandColors.length] }"></i><span>{{ brand.product_name }}</span><b>{{ state.cups[brand.brand_id] }} 杯</b></div></div>
+            <div class="brand-totals"><div v-for="shop in displayedShops" :key="shop.brandId" :data-shop-brand="shop.brandId"><i aria-hidden="true" :style="{ background: brandColors[shop.ordinal % brandColors.length] }"></i><span><b class="shop-name">{{shop.name}}</b><small>{{shop.productName}}</small></span><b>{{ state.cups[shop.brandId] }} 杯</b></div></div>
           </div>
           <div v-else-if="activeTab === 'people'" class="side-content">
             <div class="section-heading"><h2>人物名册</h2><small>{{ roster.length }} 人</small></div>
@@ -84,11 +84,11 @@
             <article v-if="selected" class="person-detail">
               <div class="person-title">
                 <span class="person-dot" :style="{ background: roleColor(selected.role) }"></span>
-                <h2>{{ selected.name }}</h2><small>{{ selected.role_label }}</small>
+                <h2>{{ selected.name }}</h2><small :title="selected.role_description || selected.role_label">{{ selected.role_label }}</small>
               </div>
               <code>{{ selected.id }}</code>
               <p class="person-placement"><i class="fa-solid fa-location-dot" aria-hidden="true"></i>{{ personPlacement(selected.id) }}</p>
-              <p v-if="selected.bio" class="person-bio">{{ selected.bio }}</p>
+              <p v-if="selected.bio" class="person-bio">{{ selected.bio }}</p><details v-if="selected.role_description" class="role-description"><summary>角色说明</summary><p>{{selected.role_description}}</p><small>角色标识：{{selected.role}}</small></details>
               <ConfigProfileFields v-if="isIntegratedScene" :person="selected"/>
               <details v-if="mappingEntry(selected)?.note" class="mapping-note">
                 <summary>位置说明</summary><p>{{ mappingEntry(selected).note }}</p>
@@ -101,7 +101,7 @@
               <div v-if="isIntegratedScene&&otherRelations.length" class="relation-buttons"><span>竞争关系</span><button v-for="entry in otherRelations" :key="entry.source+entry.target" @click="selectPerson(entry.other.id)">{{entry.other.name}}</button></div>
               <div v-if="selectedHistory.length" class="person-history">
                 <h3>近期行为</h3>
-                <ol><li v-for="event in selectedHistory.slice(0, 5)" :key="event.key">{{ describeEvent(index, event) }}</li></ol>
+                <ol><li v-for="event in selectedHistory.slice(0, 5)" :key="event.key">{{ describeEvent(index, event) }}<EventResultDetails :event="event"/></li></ol>
               </div>
             </article>
             <p v-if="!roster.length" class="empty">没有匹配的人物。</p>
@@ -115,10 +115,11 @@
                 <i class="fa-solid fa-building" aria-hidden="true"></i>
                 <div><h3>{{ selectedBuilding.name }}</h3><p>楼内 {{ buildingResidents.length }} 人（示意）</p></div>
               </div>
+              <section v-if="buildingShops.length" class="building-shops" data-testid="building-shops"><h4>本楼门店（示意）</h4><div v-for="shop in buildingShops" :key="shop.brandId" :data-shop-brand="shop.brandId"><b>{{shop.name}}</b><span>{{shop.productName}}</span><small>{{shop.brandId}}</small></div></section>
               <p v-if="!buildingResidents.length" class="empty">当前没有楼内人员。</p>
               <div v-else class="roster" aria-label="楼内人员">
                 <button v-for="person in buildingResidents" :key="person.id" @click="selectPerson(person.id)">
-                  <span class="person-dot" :style="{ background: roleColor(person.role) }"></span><span>{{ person.name }}<small>{{ person.role_label }}</small></span>
+                  <span class="person-dot" :style="{ background: roleColor(person.role) }"></span><span>{{ person.name }}<small :title="person.role_description || person.role_label">{{ person.role_label }}</small></span>
                 </button>
               </div>
             </template>
@@ -180,6 +181,8 @@ import {IS_PAGES} from '../mecoffe/publicUrl.js'
 import { computed, nextTick, onBeforeUnmount, onMounted, ref, shallowRef, watch } from 'vue'
 import { RouterLink, useRoute } from 'vue-router'
 import ConfigProfileFields from '../components/ConfigProfileFields.vue'
+import EventResultDetails from '../components/EventResultDetails.vue'
+import {shopEntries, shopsInBuilding} from '../mecoffe/shopPresentation.js'
 import {previewQuery} from '../mecoffe/configPreviewStore.js'
 import Campus3DVisualControls from '../components/Campus3DVisualControls.vue'
 import { Campus3DScene } from '../mecoffe/Campus3DScene.js'
@@ -286,6 +289,9 @@ const mappingEntry = person => mappingData.value?.mappings[resolveHomeKey(person
 const mappedBuilding = person => buildingById.value.get(mappingEntry(person)?.osm_id)
 const roleColor = role => displayRoleColor(role,{ merchant: '#bb7545', undergraduate_consumer: '#3888aa', graduate_consumer: '#8a78b4', teacher_consumer: '#58916a' })
 const roleLabels=computed(()=>isIntegratedScene.value?Object.fromEntries((scene.value?.people||[]).map(p=>[p.role,p.role_label])):roleNames)
+const roleDescriptions=computed(()=>Object.fromEntries((scene.value?.people||[]).map(p=>[p.role,p.role_description || p.role_label])))
+const displayedShops=computed(()=>index.value?shopEntries(index.value):[])
+const buildingShops=computed(()=>index.value&&mappingData.value&&selectedBuilding.value?shopsInBuilding(index.value,mappingData.value,selectedBuilding.value.osm_id):[])
 const legendRoles=computed(()=>isIntegratedScene.value?Object.fromEntries((scene.value?.people||[]).map(p=>[p.role,roleColor(p.role)])):CHARACTER_ROLE_COLORS)
 
 function selectPerson(id) {
@@ -660,3 +666,9 @@ onBeforeUnmount(() => { generation += 1; controller?.abort(); stopTimeline(); re
 }
 .character-loading{position:absolute;z-index:8;top:70px;left:14px;max-width:340px;display:flex;align-items:center;justify-content:space-between;gap:10px}.character-loading button{border:1px solid #b7cbbb;border-radius:5px;padding:3px 8px;background:white;color:#376e59}
 </style>
+
+<style scoped>
+.event-entry{min-width:0}.event-entry>.event-row{width:100%;text-align:left}.event-entry :deep(.event-result-details){margin:4px 8px 10px}.brand-totals .shop-name{display:block;font-size:11px;font-weight:600}.brand-totals small{display:block;color:var(--muted);margin-top:3px;line-height:1.5}.building-shops{margin:12px 0;border:1px solid #d8e5dc;border-radius:8px;background:#f5f9f6;padding:10px}.building-shops h4{font-size:12px;margin:0 0 10px}.building-shops>div{padding:8px 0;border-top:1px solid #e0e8e2;display:grid;gap:4px}.building-shops b{font-size:12px;color:#276856}.building-shops span,.building-shops small{font-size:11px;color:#6f837b;overflow-wrap:anywhere}.role-description{font-size:11px;color:#607c71;margin:10px 0}.role-description summary{cursor:pointer}.role-description p{line-height:1.7}.role-description small{overflow-wrap:anywhere}
+</style>
+
+<style scoped>.role-key [title]{pointer-events:auto}</style>

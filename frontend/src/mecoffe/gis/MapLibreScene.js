@@ -1,3 +1,4 @@
+import {shopLabelFeatures,shopsInBuilding,buildingShopLabel} from '../shopPresentation.js'
 import * as maplibregl from 'maplibre-gl'
 import workerUrl from 'maplibre-gl/dist/maplibre-gl-worker.mjs?worker&url'
 import {GisCharacterLayer} from './CharacterLayer.js'
@@ -48,7 +49,7 @@ export class MapLibreScene {
   }
   installLayers(){
     const m=this.map
-    for(const [name,data] of Object.entries(this.layers))m.addSource(name,{type:'geojson',data,promoteId:'feature_id',attribution:name==='boundary'?sourceAttribution(data.source?.attribution):undefined})
+    for(const [name,data] of Object.entries(this.layers))m.addSource(name,{type:'geojson',data:name==='buildings'?shopLabelFeatures(this.replay.index,this.replay.scenario.files['location_mapping.json'],data):data,promoteId:'feature_id',attribution:name==='boundary'?sourceAttribution(data.source?.attribution):undefined})
     const add=layer=>m.addLayer(layer)
     add({id:'campus-fill',type:'fill',source:'boundary',paint:{'fill-color':'#dbe6cf','fill-opacity':1}})
     add({id:'landcover-fill',type:'fill',source:'landcover',paint:{'fill-color':['match',['get','category'],'pitch','#c1d7ab','track','#ce9c83','parking','#d8d4c4','forest','#91b599','grass','#c9ddb5','#d2dfbe'],'fill-opacity':.85}})
@@ -62,7 +63,7 @@ export class MapLibreScene {
     add({id:'buildings',type:'fill-extrusion',source:'buildings',paint:{'fill-extrusion-color':colour,'fill-extrusion-height':['get','height_m'],'fill-extrusion-base':0,'fill-extrusion-opacity':.96,'fill-extrusion-vertical-gradient':true}})
     add({id:'building-outlines',type:'line',source:'buildings',paint:{'line-color':'#6f8c88','line-width':1,'line-opacity':.5}})
     add({id:'building-selection',type:'fill-extrusion',source:'buildings',filter:['==',['get','feature_id'],''],paint:{'fill-extrusion-color':'#e4b756','fill-extrusion-height':['+', ['get','height_m'],.25],'fill-extrusion-opacity':.75}})
-    add({id:'building-labels',type:'symbol',source:'buildings',minzoom:15.5,filter:['all',['!=',['get','name'],''],['!=',['get','name_source'],'display_fallback']],layout:{...font,'text-field':['get','name']},paint:textPaint})
+    add({id:'building-labels',type:'symbol',source:'buildings',minzoom:15.5,filter:['all',['!=',['get','name'],''],['!=',['get','name_source'],'display_fallback']],layout:{...font,'text-field':['coalesce',['get','display_shop_label'],['get','name']]},paint:textPaint})
     add({id:'road-labels',type:'symbol',source:'roads',minzoom:15,filter:['!=',['get','name'],''],layout:{...font,'symbol-placement':'line','symbol-spacing':250,'text-field':['get','name'],'text-size':11},paint:textPaint})
     add({id:'pois',type:'circle',source:'pois',minzoom:16.5,paint:{'circle-radius':['case',['==',['get','category'],'mapped_location'],5,3],'circle-color':'#b27241','circle-stroke-color':'#fffaf0','circle-stroke-width':1.5}})
     add({id:'poi-labels',type:'symbol',source:'pois',minzoom:18,filter:['!=',['get','name'],''],layout:{...font,'text-field':['get','name'],'text-anchor':'top','text-offset':[0,.7],'text-size':11},paint:textPaint})
@@ -121,11 +122,12 @@ export class MapLibreScene {
       coordinate=localToPoint(record,this.replay)
       this.popupPerson=item.id
     }else{
-      const p=item.feature.properties,info=this.describeFeature(item.feature);title.textContent=p.name||info.category.name||'未命名要素'
+      const p=item.feature.properties,info=this.describeFeature(item.feature),mapping=this.replay.scenario.files['location_mapping.json'],shops=item.layer==='buildings'?shopsInBuilding(this.replay.index,mapping,item.feature.id):[];title.textContent=shops.length?buildingShopLabel(this.replay.index,mapping,item.feature.id,p.name||info.category.name):p.name||info.category.name||'未命名要素'
       appendLabel(body,info.category)
       if(p.height_m)body.append(` · ${p.height_m} 米`)
       body.append(' · ');appendLabel(body,info.prototype)
       for(const location of info.locations){body.append(' · '+location.name+' ');appendCode(body,location.id)}
+      for(const shop of shops){const entry=document.createElement('span');entry.textContent=`${shop.name} · ${shop.productName}`;entry.style.display='block';entry.dataset.shopBrand=shop.brandId;body.append(entry)}
       if(p.source)body.append(' · '+(p.source==='osm'?'OSM 入口标注':'推断入口')+'（示意）')
       coordinate=featureCentre(item.feature)
     }

@@ -20,7 +20,8 @@
       "dynamic_attributes": {
         "interest_topic": "合成数据与校园交流",
         "spending_limit_yuan": 101
-      }
+      },
+      "role_description": "样例访客"
     },
     {
       "entity_id": "synthetic_person_02",
@@ -36,7 +37,8 @@
       "dynamic_attributes": {
         "interest_topic": "合成数据与校园交流",
         "spending_limit_yuan": 102
-      }
+      },
+      "role_description": "样例访客"
     },
     {
       "entity_id": "synthetic_person_03",
@@ -52,7 +54,8 @@
       "dynamic_attributes": {
         "interest_topic": "合成数据与校园交流",
         "spending_limit_yuan": 103
-      }
+      },
+      "role_description": "样例经营者"
     },
     {
       "entity_id": "synthetic_person_04",
@@ -68,7 +71,8 @@
       "dynamic_attributes": {
         "interest_topic": "合成数据与校园交流",
         "spending_limit_yuan": 104
-      }
+      },
+      "role_description": "样例经营者"
     },
     {
       "entity_id": "synthetic_person_05",
@@ -84,7 +88,8 @@
       "dynamic_attributes": {
         "interest_topic": "合成数据与校园交流",
         "spending_limit_yuan": 105
-      }
+      },
+      "role_description": "样例经营者"
     },
     {
       "entity_id": "synthetic_person_06",
@@ -100,7 +105,8 @@
       "dynamic_attributes": {
         "interest_topic": "合成数据与校园交流",
         "spending_limit_yuan": 106
-      }
+      },
+      "role_description": "样例研究人员"
     },
     {
       "entity_id": "synthetic_person_07",
@@ -116,7 +122,8 @@
       "dynamic_attributes": {
         "interest_topic": "合成数据与校园交流",
         "spending_limit_yuan": 107
-      }
+      },
+      "role_description": "样例研究人员"
     }
   ],
   "edges": [

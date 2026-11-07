@@ -49,6 +49,8 @@ export function validateRunReplay({trajectory, snapshot, plan, roles, context={}
   const total = integer(meta.total_steps, '计划步数', 1)
   if (completed > total || total > 10000) fail('INVALID_REPLAY', '运行步数范围无效')
   if (plan.runtime?.num_steps != null && plan.runtime.num_steps !== total) fail('PLAN_MISMATCH', '轨迹与执行计划的步数不一致')
+  // Optional role-stage metadata wins; otherwise use only explicit frozen
+  // snapshot role descriptions. Native plan policy IDs carry no identity text.
   const normalized = normalizeConfigPreview({network:snapshot, roles, seed:plan.runtime?.seed})
   const ids = new Set(snapshot.nodes.map(node=>node.entity_id))
   if(plan.population.expected_agent_count!==ids.size)fail('POPULATION_MISMATCH','计划人数与冻结人物快照不一致')

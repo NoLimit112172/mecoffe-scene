@@ -1,3 +1,4 @@
+import {shopEntries,shopsInBuilding,buildingShopLabel} from './shopPresentation.js'
 import {SpatialWorker} from './spatialWorker.js'
 import {AdaptiveQuality,consolidateMaterialGroups,tripQueueEntries} from './renderPerformance.js'
 // Three.js presentation layer. The OSM graph constrains the drawn trips only;
@@ -204,7 +205,7 @@ export class Campus3DScene {
     this.buildingStyle = 'procedural'
     this.lighting = { cycle: true, position: 0, hour: 12 }
     this.representatives = this.indoor?new Set():idleRepresentatives(index.scene.people)
-    this.brandColors = new Map(index.scene.brands.map((brand, k) => [brand.brand_id, BRAND_COLORS[k % BRAND_COLORS.length]]))
+    this.brandColors = new Map(shopEntries(index).map(shop => [shop.brandId, BRAND_COLORS[shop.ordinal % BRAND_COLORS.length]]))
   }
 
   async init() {
@@ -425,11 +426,10 @@ export class Campus3DScene {
       // building remains in pickTargets and exposes its name on hover.
       if (keys.length) {
         const center = polygonCenter(building.polygon)
-        const shopIndex = this.index.scene.brands.findIndex(brand => keys.includes(brandLocationKey(this.index,brand.brand_id)))
-        const prefix = shopIndex >= 0 ? `门店 ${String.fromCharCode(65 + shopIndex)}（示意）· ` : ''
-        this.addCampusLabel(building.osm_id, `${prefix}${name}`,
+        const shops=shopsInBuilding(this.index,this.mapping,building.osm_id)
+        this.addCampusLabel(building.osm_id, buildingShopLabel(this.index,this.mapping,building.osm_id,name),
           new THREE.Vector3(center.x, building.height_m + TERRAIN_LEVELS.buildingBase + 5, -center.y),
-          shopIndex >= 0 ? `#${BRAND_COLORS[shopIndex % BRAND_COLORS.length].toString(16).padStart(6, '0')}` : '#294e48')
+          shops.length ? `#${BRAND_COLORS[shops[0].ordinal % BRAND_COLORS.length].toString(16).padStart(6, '0')}` : '#294e48')
       }
     }
     if(this.indoor){this.doorMarkers=new Campus3DEntrances({scene:this.scene,campus:this.campus,entrances:this.indoor.entrances,elevation:p=>this.personElevation(p)});if(this.host?.dataset)this.host.dataset.entranceCount=String(this.doorMarkers.frames.size)}
@@ -474,12 +474,22 @@ export class Campus3DScene {
     element.appendChild(badge)
     element.title = text
     element.setAttribute('data-campus-label', id)
+    const shops=shopsInBuilding(this.index,this.mapping,id)
+    if(shops.length){
+      element.dataset.shopBuilding=id;element.dataset.shopBrands=shops.map(shop=>shop.brandId).join(',')
+      element.title=text+'\n'+shops.map(shop=>`${shop.name} · ${shop.productName}`).join('\n')
+      element.setAttribute('role','button');element.tabIndex=0
+      element.addEventListener('pointerdown',event=>event.stopPropagation())
+      const select=()=>{if(this.indoor)focusIndoorBuilding(this,id);this.onBuildingSelect?.(id)}
+      element.addEventListener('click',event=>{event.stopPropagation();select()})
+      element.addEventListener('keydown',event=>{if(['Enter',' '].includes(event.key)){event.preventDefault();select()}})
+    }
     Object.assign(element.style, {
       position: 'absolute', font: '600 12px/18px "Microsoft YaHei",sans-serif',
       padding: '3px 7px', color, background: 'rgba(255,255,255,.96)',
       border: '1px solid rgba(70,104,92,.28)', borderRadius: '5px',
       boxShadow: '0 1px 4px rgba(29,61,50,.12)', whiteSpace: 'nowrap',
-      overflow: 'hidden', textOverflow: 'ellipsis', pointerEvents: 'none',
+      overflow: 'hidden', textOverflow: 'ellipsis', pointerEvents: shops.length?'auto':'none',cursor:shops.length?'pointer':'default',
       boxSizing: 'border-box', width: 'max-content',
     })
     const leader = document.createElementNS('http://www.w3.org/2000/svg', 'line')
@@ -490,7 +500,7 @@ export class Campus3DScene {
     this.labelLeaders.appendChild(leader)
     // Integer offsetWidth can round the natural text width down at fractional
     // device scales; two spare CSS pixels prevent unwanted final-character … .
-    this.labels.push({ id, position, element, leader, badge,
+    this.labels.push({ id, position, element, leader, badge, shopCount:shops.length,
       width: Math.ceil(element.getBoundingClientRect().width) + 2, height: Math.ceil(element.getBoundingClientRect().height) })
   }
 
