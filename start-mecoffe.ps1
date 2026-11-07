@@ -1,4 +1,4 @@
-﻿# 本地一键启动：验证解释器、生成数据、确认服务就绪，再打开新版演示。
+﻿# 本地一键启动：验证解释器、生成数据、确认服务就绪，再打开中科大三维历史回放。
 param(
     [switch]$NoBrowser,
     [switch]$Rebuild,
@@ -8,7 +8,8 @@ $ErrorActionPreference = 'Stop'
 $Root = [IO.Path]::GetFullPath($PSScriptRoot)
 $Frontend = Join-Path $Root 'frontend'
 $Logs = Join-Path $Root 'logs'
-$Url = "http://127.0.0.1:$Port/mecoffe"
+$BaseUrl = "http://127.0.0.1:$Port"
+$Url = "$BaseUrl/mecoffe3d?scenario=ustc-history"
 $Scene = Join-Path $Frontend 'public\mecoffe\scene.json'
 $DemoPath = Join-Path $Frontend 'public\mecoffe\latest-demo.json'
 $NetworkPath = Join-Path $Frontend 'public\mecoffe\latest-network.json'
@@ -237,11 +238,12 @@ try {
         }
         Write-Host "本项目服务已就绪（进程 $($child.Id)），日志：$out"
     }
-    Write-Host "已就绪：$Url"
-    Write-Host "二维校园沙盘：$Url"
-    Write-Host "三维校园沙盘：http://127.0.0.1:$Port/mecoffe3d"
-    Write-Host "三维素材库：http://127.0.0.1:$Port/mecoffe3d/assets"
-    Write-Host "NUS 建模预览：http://127.0.0.1:$Port/mecoffe3d?campus=nus"
+    Write-Host "已就绪：$BaseUrl"
+    Write-Host "中科大三维沙盘 · 历史回放：$Url"
+    Write-Host "中科大 GIS · 历史回放：$BaseUrl/mecoffe-gis?scenario=ustc-history"
+    Write-Host "三维素材库：$BaseUrl/mecoffe3d/assets"
+    Write-Host "NUS 建模预览：$BaseUrl/mecoffe3d?campus=nus"
+    Write-Host "旧版二维沙盘：$BaseUrl/mecoffe"
     if (-not $NoBrowser) { Start-Process $Url }
 } catch {
     Write-Host "启动失败：$($_.Exception.Message)" -ForegroundColor Red

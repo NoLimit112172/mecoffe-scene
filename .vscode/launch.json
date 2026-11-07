@@ -2,19 +2,19 @@
   "version": "0.2.0",
   "configurations": [
     {
-      "name": "MeCoffe：二维校园沙盘",
+      "name": "MeCoffe：中科大三维沙盘 · 历史回放",
       "type": "pwa-chrome",
       "request": "launch",
-      "url": "http://127.0.0.1:5180/mecoffe",
+      "url": "http://127.0.0.1:5180/mecoffe3d?scenario=ustc-history",
       "webRoot": "${workspaceFolder}/frontend",
       "preLaunchTask": "MeCoffe：启动场景服务",
       "presentation": { "group": "MeCoffe", "order": 1 }
     },
     {
-      "name": "MeCoffe：三维校园沙盘",
+      "name": "MeCoffe：中科大 GIS · 历史回放",
       "type": "pwa-chrome",
       "request": "launch",
-      "url": "http://127.0.0.1:5180/mecoffe3d",
+      "url": "http://127.0.0.1:5180/mecoffe-gis?scenario=ustc-history",
       "webRoot": "${workspaceFolder}/frontend",
       "preLaunchTask": "MeCoffe：启动场景服务",
       "presentation": { "group": "MeCoffe", "order": 2 }
@@ -36,6 +36,15 @@
       "webRoot": "${workspaceFolder}/frontend",
       "preLaunchTask": "MeCoffe：启动场景服务",
       "presentation": { "group": "MeCoffe", "order": 4 }
+    },
+    {
+      "name": "MeCoffe：旧版二维沙盘",
+      "type": "pwa-chrome",
+      "request": "launch",
+      "url": "http://127.0.0.1:5180/mecoffe",
+      "webRoot": "${workspaceFolder}/frontend",
+      "preLaunchTask": "MeCoffe：启动场景服务",
+      "presentation": { "group": "MeCoffe", "order": 5 }
     }
   ]
 }

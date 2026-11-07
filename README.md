@@ -4,7 +4,7 @@
 
 [三维校园](https://nolimit112172.github.io/mecoffe-scene/mecoffe3d) · [二维沙盘](https://nolimit112172.github.io/mecoffe-scene/mecoffe) · [素材库](https://nolimit112172.github.io/mecoffe-scene/mecoffe3d/assets) · [NUS 地图](https://nolimit112172.github.io/mecoffe-scene/mecoffe3d?campus=nus) · [中科大历史场景](https://nolimit112172.github.io/mecoffe-scene/mecoffe3d?scenario=ustc-history) · [NUS 小时场景](https://nolimit112172.github.io/mecoffe-scene/mecoffe3d?scenario=nus-hourly) · [来源与许可](https://nolimit112172.github.io/mecoffe-scene/licenses)
 
-本地开发仍使用 `http://127.0.0.1:5180/`：在 VS Code 打开项目或 `mecoffe-scene.code-workspace`，按 F5 选择原有四个启动入口；首次先执行 `npm --prefix frontend ci`。地图生成、素材库、测试和构建任务继续可用。
+本地开发使用 `http://127.0.0.1:5180/`。在 VS Code 打开项目或 `mecoffe-scene.code-workspace`，默认按 F5 打开中科大三维历史回放。GIS 历史回放可在「运行和调试」的下拉框中选择。首次先执行 `npm --prefix frontend ci`。
 
 Pages 使用独立构建模式，不影响本地路径和完整素材库：
 
@@ -42,14 +42,15 @@ git clone https://github.com/NoLimit112172/mecoffe-scene.git
 
 用 VS Code 的“文件 → 从文件打开工作区”打开 `mecoffe-scene.code-workspace`，或直接打开本文件夹。扩展面板中的“工作区推荐”提供 **Vue - Official（Vue.volar）**、**Python**、**Pylance**；Chrome 调试由 VS Code 内置 JavaScript 调试器提供。工作区搜索默认排除依赖、构建产物、原始大数据和派生校园 JSON；文件仍在磁盘上，可直接打开。
 
-在左侧“运行和调试”的下拉框选择入口，再按 **F5**。四个入口按以下顺序排列，共用启动任务：自动启动或复用本项目的 **5180** 服务，校验就绪后打开相应 Chrome 调试页。
+**F5** 默认打开中科大三维历史回放。要切换视图，在左侧「运行和调试」的下拉框选择入口，VS Code 会记住选中的配置。五个入口共用启动任务，自动启动或复用 **5180** 服务，校验就绪后打开相应的 Chrome 调试页。
 
 | F5 启动项 | 页面 |
 | --- | --- |
-| **MeCoffe：二维校园沙盘** | <http://127.0.0.1:5180/mecoffe> |
-| **MeCoffe：三维校园沙盘** | <http://127.0.0.1:5180/mecoffe3d> |
+| **MeCoffe：中科大三维沙盘 · 历史回放**（默认） | <http://127.0.0.1:5180/mecoffe3d?scenario=ustc-history> |
+| **MeCoffe：中科大 GIS · 历史回放** | <http://127.0.0.1:5180/mecoffe-gis?scenario=ustc-history> |
 | **MeCoffe：三维素材库** | <http://127.0.0.1:5180/mecoffe3d/assets> |
 | **MeCoffe：NUS 建模预览** | <http://127.0.0.1:5180/mecoffe3d?campus=nus> |
+| **MeCoffe：旧版二维沙盘** | <http://127.0.0.1:5180/mecoffe> |
 
 NUS 入口只预览通用流水线生成的地图，没有模拟数据。三维人物与场景外观已按里程碑 5 更新，三种回放模式及二维页面保持原有行为。停止调试不会停止后台开发服务，下次 F5 会复用它。
 
@@ -62,9 +63,9 @@ NUS 入口只预览通用流水线生成的地图，没有模拟数据。三维�
 .\start-mecoffe.ps1 -Port 5181 -NoBrowser # 可选其他端口；F5 入口固定为 5180
 ```
 
-脚本就绪后打印全部四个地址；不带 `-NoBrowser` 时仍只自动打开二维页面。每次仍完整生成并校验数据，内容一致时保留原文件，避免重复替换引起 Windows 文件占用错误；输入变化时发布新结果。服务在后台运行，日志在 `logs/`。默认端口 5180 被其他项目占用时，脚本报错退出并保留现有进程。
+脚本就绪后打印上述五个页面地址。直接运行脚本会打开中科大三维历史回放，使用 `-NoBrowser` 可只启动服务。脚本会生成并校验数据，内容一致时保留原文件，避免重复替换引起 Windows 文件占用错误。服务在后台运行，日志在 `logs/`。默认端口 5180 被其他项目占用时，脚本报错退出并保留现有进程。
 
-也可以在 `frontend/` 终端运行 `npm run dev`，会自动打开同一个新版演示页面。该项目默认固定使用 5180，访问首页 `/` 也会跳到 `/mecoffe`。MeCoffe 三种展示模式都不需要另开后端或填写 API 密钥；`frontend/.env.example` 仅保留可选配置说明。
+也可以在 `frontend/` 终端运行 `npm run dev`，然后打开上表中的页面。MeCoffe 三种展示模式都不需要另开后端或填写 API 密钥。`frontend/.env.example` 提供可选配置说明。
 
 ### 常用任务
 
@@ -72,7 +73,7 @@ NUS 入口只预览通用流水线生成的地图，没有模拟数据。三维�
 
 | 任务 | 作用 |
 | --- | --- |
-| **MeCoffe：启动场景服务** | 只启动/复用服务，打印四个页面地址 |
+| **MeCoffe：启动场景服务** | 启动或复用服务，打印五个页面地址 |
 | **MeCoffe：生成地图场景（OSM 范围）** | 交互输入新地图 ID、标题和四边经纬度，下载 OSM 并生成地图 |
 | **MeCoffe：生成地图场景（GeoJSON 文件）** | 输入文件路径、新地图 ID 和标题，生成调用方地图 |
 | **MeCoffe：重建中科大场景** | 从已保存 OSM 使用 `--profile ustc_legacy` 重建到 `campuses/ustc/`，原校园数据和映射保持不变 |

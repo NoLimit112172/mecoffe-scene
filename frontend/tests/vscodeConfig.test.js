@@ -160,6 +160,11 @@ function validateLaunchReferences(document, tasksDocument) {
     assert.ok(routes.has(url.pathname), `Missing router path: ${url.pathname}`)
     assert.ok(labels.has(launch.preLaunchTask), `Missing preLaunchTask: ${launch.preLaunchTask}`)
     requireDirectory(workspacePath(launch.webRoot), launch.name)
+    const scenario = url.searchParams.get('scenario')
+    if (scenario) {
+      assert.match(scenario, /^[a-zA-Z0-9][a-zA-Z0-9_-]{0,63}$/)
+      requireFile(join(root, 'frontend/public/mecoffe/scenarios', scenario, 'scenario.json'), launch.name)
+    }
     const campus = url.searchParams.get('campus')
     if (campus) {
       assert.match(campus, /^[a-zA-Z0-9][a-zA-Z0-9_-]{0,63}$/)
@@ -184,12 +189,14 @@ test('VS Code JSONC parsing keeps URLs, escaped strings and literal comment mark
   assert.throws(() => parseJsonc('{/* unclosed'), /Unclosed/)
 })
 
-test('all four ordered Chrome launch entries resolve to real routes and a ready-server task', () => {
+test('VS Code defaults to 3D history and offers GIS, assets, NUS, and legacy 2D', () => {
   const launches = launchConfig(), tasks = tasksConfig()
   validateLaunchReferences(launches, tasks)
   assert.deepEqual(launches.configurations.map(launch => new URL(launch.url).pathname + new URL(launch.url).search),
-    ['/mecoffe', '/mecoffe3d', '/mecoffe3d/assets', '/mecoffe3d?campus=nus'])
-  assert.equal(new Set(launches.configurations.map(launch => launch.name)).size, 4)
+    ['/mecoffe3d?scenario=ustc-history', '/mecoffe-gis?scenario=ustc-history', '/mecoffe3d/assets', '/mecoffe3d?campus=nus', '/mecoffe'])
+  assert.equal(new Set(launches.configurations.map(launch => launch.name)).size, launches.configurations.length)
+  assert.ok(!launches.configurations.some(launch => launch.name === 'MeCoffe：二维校园沙盘'),
+    'Retire the previously saved default name so VS Code selects the new first entry')
   assert.equal(new Set(launches.configurations.map(launch => launch.presentation.group)).size, 1)
   for (const [index, launch] of launches.configurations.entries()) {
     assert.ok(['chrome', 'pwa-chrome'].includes(launch.type))
