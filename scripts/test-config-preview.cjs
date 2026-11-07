@@ -33,14 +33,17 @@ async function mock(page,status){await page.route('**/api/sessions/**',route=>{c
   browser=await chromium.launch({channel:'chrome',headless:true});
   if(embed){
     const landing=await open(base+'/');
-    await landing.getByLabel('人物关系文件',{exact:true}).waitFor();
+    await landing.getByTestId('embed-welcome').waitFor();
+    assert.equal(await landing.getByLabel('配置文件',{exact:true}).count(),0);
+    assert.match(await landing.getByTestId('embed-welcome').innerText(),/session.*config/s);
+    await landing.getByText('开发者调试',{exact:true}).click();
+    await landing.getByLabel('配置文件',{exact:true}).waitFor();
     await landing.close();
-    report.checks.push('embed root opens configuration upload');
+    report.checks.push('embed root explains entry parameters; local import is collapsed in developer tools');
   }
   const page=await open(base+'/mecoffe3d?preview=local');
-  await page.getByLabel('人物关系文件',{exact:true}).setInputFiles(path.join(fixtures,'snapshot.json'));
-  await page.getByLabel('角色字段文件',{exact:true}).setInputFiles(path.join(fixtures,'preparation.json'));
-  await page.getByRole('button',{name:'加载配置',exact:true}).click();await ready(page);await shot(page,'3d-overview');
+  await page.getByLabel('配置文件',{exact:true}).setInputFiles([path.join(fixtures,'snapshot.json'),path.join(fixtures,'preparation.json')]);
+  await ready(page);await shot(page,'3d-overview');
   const selected=snapshot.nodes.find(n=>snapshot.edges.some(e=>e.source===n.entity_id));
   await page.locator(`.roster [data-person-id="${selected.entity_id}"]`).click();
   await page.locator('.person-detail [aria-label="人物属性"]').waitFor();await shot(page,'profile');
@@ -55,7 +58,7 @@ async function mock(page,status){await page.route('**/api/sessions/**',route=>{c
   await page.close();
   if(!privateInput){
     const remote=await browser.newPage({viewport:{width:1600,height:1000}});remote.on('pageerror',e=>report.errors.push(e.message));await mock(remote);
-    await remote.goto(base+'/mecoffe3d?session=synthetic-session&config=synthetic-config');await ready(remote);await remote.locator('.preview-bar a').click();await ready(remote,true);await remote.reload();await ready(remote,true);await remote.close();report.checks.push('same-origin remote StageDetail data, view switch and GIS refresh');
+    await remote.goto(base+'/mecoffe3d?session=synthetic-session&config=synthetic-config');await ready(remote);assert.equal(await remote.getByLabel('配置文件',{exact:true}).count(),0);await remote.locator('.preview-bar a').click();await ready(remote,true);await remote.reload();await ready(remote,true);await remote.close();report.checks.push('same-origin remote StageDetail data, no import UI, view switch and GIS refresh');
     for(const [status,text,name]of [['pending',/尚未准备完成/,'stage-pending'],[401,/登录已失效/,'login-expired'],[404,/配置不存在/,'config-not-found']]){
       const errorPage=await browser.newPage({viewport:{width:1600,height:1000}});await mock(errorPage,status);await errorPage.goto(base+'/mecoffe3d?session=synthetic-session&config=synthetic-config');await errorPage.getByTestId('config-preview-error').waitFor();assert.match(await errorPage.getByTestId('config-preview-error').innerText(),text);assert.equal(await errorPage.locator('.map-canvas canvas').count(),0);await shot(errorPage,name);await errorPage.close();report.checks.push(name);
     }

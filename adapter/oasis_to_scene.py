@@ -13,6 +13,7 @@
 from __future__ import annotations
 
 import argparse
+import copy
 import hashlib
 import json
 import sys
@@ -179,8 +180,11 @@ def first_target(action: dict, kind: str) -> dict:
     return {}
 
 
-def build_events(trajectory: dict, people_ids: set[str]) -> tuple[list[dict], dict]:
+def build_events(trajectory: dict, people_ids: set[str], plan: dict | None = None) -> tuple[list[dict], dict]:
     objects = trajectory["objects"]
+    economy = (plan or {}).get("economy", {})
+    brands_by_owner = {brand["owner_entity_id"]: brand["brand_id"] for brand in economy.get("brands", [])}
+    products_by_name = {product["product_name"]: product for product in economy.get("products", [])}
     ad_by_post = {ad["post_id"]: ad for ad in objects.get("ads", [])}
     posts = {}
     for post in objects.get("posts", []):
@@ -219,8 +223,14 @@ def build_events(trajectory: dict, people_ids: set[str]) -> tuple[list[dict], di
             "action": name,
         }
 
-        if outcome == "failed":
-            event["type"] = "failed"
+        if outcome not in {"executed", "failed", "declined", "unknown"}:
+            raise SceneError(f"动作 {action['id']} 的结果状态无效：{outcome}")
+        if plan is not None:
+            event["outcome"] = outcome
+        if outcome in {"failed", "declined", "unknown"}:
+            event["type"] = outcome
+            if outcome != "failed":
+                event["outcome"] = outcome
             result = action.get("result")
             event["text"] = result if isinstance(result, str) else json.dumps(result, ensure_ascii=False)
             events.append(event)
@@ -241,6 +251,18 @@ def build_events(trajectory: dict, people_ids: set[str]) -> tuple[list[dict], di
             event["text"] = args.get("content", "")
         elif name == "purchase_product":
             product = first_target(action, "product")
+            if plan is not None:
+                product_name = args.get("product_name") or result.get("product_name") or product.get("product_name")
+                configured = products_by_name.get(product_name)
+                if configured is None:
+                    raise SceneError(f"购买动作 {action['id']} 引用了计划里不存在的商品")
+                expected_brand = configured["brand_id"]
+                if product.get("brand_id") not in (None, expected_brand):
+                    raise SceneError(f"购买动作 {action['id']} 的品牌与计划不一致")
+                owner = next(brand["owner_entity_id"] for brand in economy["brands"] if brand["brand_id"] == expected_brand)
+                if product.get("owner_entity_id") not in (None, owner):
+                    raise SceneError(f"购买动作 {action['id']} 的经营者与计划不一致")
+                product = {**product, "brand_id": expected_brand, "owner_entity_id": owner}
             order_id = result.get("order_id")
             if not order_id:
                 raise SceneError(f"购买动作 {action['id']} 执行成功却没有订单号")
@@ -255,7 +277,9 @@ def build_events(trajectory: dict, people_ids: set[str]) -> tuple[list[dict], di
             event["quantity"] = result.get("quantity", 1)
             event["product_name"] = result.get("product_name")
         elif name == "publish_ad":
-            event["brand_id"] = actor
+            if plan is not None and actor not in brands_by_owner:
+                raise SceneError(f"广告动作 {action['id']} 的执行者没有对应品牌")
+            event["brand_id"] = brands_by_owner[actor] if plan is not None else actor
             event["post_id"] = result.get("post_id")
             event["text"] = args.get("content", "")
             event["cost_fen"] = result.get("cost_fen")
@@ -271,8 +295,15 @@ def build_events(trajectory: dict, people_ids: set[str]) -> tuple[list[dict], di
             event["round"] = "pre" if event_id.startswith("pre_") else "post" if event_id.startswith("post_") else "other"
             event["prompt"] = args.get("prompt", "")
         elif name == "set_product_price":
-            event["brand_id"] = actor
-            event["price_fen"] = result.get("price") or args.get("price")
+            if plan is not None:
+                product = products_by_name.get(args.get("product_name"))
+                if product is None or brands_by_owner.get(actor) != product["brand_id"]:
+                    raise SceneError(f"调价动作 {action['id']} 的商品或品牌归属不一致")
+                event["brand_id"] = product["brand_id"]
+                event["price_fen"] = result.get("price_fen", result.get("price", args.get("price_fen", args.get("price"))))
+            else:
+                event["brand_id"] = actor
+                event["price_fen"] = result.get("price") or args.get("price")
         events.append(event)
 
     # 信息流里实际返回的广告帖：投放名单不等于看到，只有返回记录才算一次曝光
@@ -325,7 +356,7 @@ def build_brands(trajectory: dict, campus: dict) -> list[dict]:
 def build_days(trajectory: dict, events: list[dict], noop_by_day: Counter) -> list[dict]:
     meta = trajectory["metadata"]
     # 只有“未操作”记录的日子也要出现在时间轴上（例如中断前的最后一天）
-    last_step = max([e["step"] for e in events] + list(noop_by_day))
+    last_step = max([e["step"] for e in events] + list(noop_by_day), default=0)
     by_day = {}
     for event in events:
         by_day.setdefault(event["step"], Counter())[event["type"]] += 1
@@ -341,10 +372,86 @@ def build_days(trajectory: dict, events: list[dict], noop_by_day: Counter) -> li
     return days
 
 
-def convert(trajectory_path: Path, snapshot_path: Path, campus_path: Path) -> dict:
+def role_hash(seed: int, role: str) -> int:
+    """按 UTF-8 FNV-1a 计算角色安置种子，与配置预览的缺省规则一致。"""
+    value = 0x811C9DC5
+    for byte in f"{seed}|{role}".encode("utf-8"):
+        value = ((value ^ byte) * 0x01000193) & 0xFFFFFFFF
+    return value
+
+
+def build_generic_people(snapshot: dict, campus: dict, population_request: dict | None = None,
+                         placement_rules: dict | None = None) -> list[dict]:
+    """按显式规则或种子安置任意角色，保留画像原始 key 和值。"""
+    by_building = building_index(campus)
+    building_ids = sorted(by_building)
+    if not building_ids:
+        raise SceneError("通用回放地图没有可安置的楼栋")
+    rules = placement_rules or {}
+    role_rules, entity_rules = rules.get("roles", {}), rules.get("entities", {})
+    nodes = snapshot["nodes"]
+    roles, entities = {node["role"] for node in nodes}, {node["entity_id"] for node in nodes}
+    if len(entities) != len(nodes):
+        raise SceneError("人口快照里的人物编号重复")
+    for values, known in ((role_rules, roles), (entity_rules, entities)):
+        if not isinstance(values, dict) or any(key not in known or building not in by_building for key, building in values.items()):
+            raise SceneError("楼栋安置规则引用了不存在的角色、人物或建筑")
+    seed = snapshot.get("seed", 0)
+    if type(seed) is not int:
+        raise SceneError("人口快照 seed 必须为整数")
+    people = []
+    for node in nodes:
+        role, entity = node["role"], node["entity_id"]
+        selected = entity_rules.get(entity) or role_rules.get(role)
+        if selected is None:
+            for key in (f"{role}:{entity}", role):
+                location = next((location for location in campus["locations"] if key in location.get("default_for_roles", [])), None)
+                if location and location.get("buildings"):
+                    selected = sorted(building["building_id"] for building in location["buildings"])[0]
+                    break
+        selected = selected or building_ids[role_hash(seed, role) % len(building_ids)]
+        static, dynamic = node.get("static_attributes") or {}, node.get("dynamic_attributes") or {}
+        request = (population_request or {}).get(role, {})
+        fields = [{"key": key, "label": key, "value": copy.deepcopy(value), "source": "static"}
+                  for key, value in static.items()]
+        fields.extend({"key": key, "label": request.get("generate", {}).get(key, {}).get("title", key),
+                       "value": copy.deepcopy(value), "source": "dynamic"} for key, value in dynamic.items())
+        people.append({**copy.deepcopy(node), "id": entity, "role_label": request.get("description", role),
+                       "name": node.get("name") or entity, "gender": {"male": "m", "female": "f"}.get(static.get("gender")),
+                       "age": static.get("age"), "bio": node.get("bio") or node.get("description") or "",
+                       "profile": copy.deepcopy(dynamic), "profile_fields": fields, "location_key": selected,
+                       "building_id": selected, "home_location_id": by_building[selected], "indoor": True})
+    return people
+
+
+def build_generic_brands(plan: dict, people: list[dict]) -> list[dict]:
+    """通过品牌与具体经营者实体建立门店映射，品牌 ID 与人物 ID 分开。"""
+    economy = plan.get("economy", {})
+    by_person = {person["id"]: person for person in people}
+    brands, seen_brands, seen_owners = [], set(), set()
+    for brand in economy.get("brands", []):
+        brand_id, owner = brand["brand_id"], brand["owner_entity_id"]
+        if brand_id in seen_brands or owner in seen_owners or owner not in by_person:
+            raise SceneError("计划中的品牌或经营者绑定无效")
+        seen_brands.add(brand_id)
+        seen_owners.add(owner)
+        products = [product for product in economy.get("products", []) if product["brand_id"] == brand_id]
+        brands.append({"brand_id": brand_id, "merchant_id": owner, "owner_entity_id": owner,
+                       "product_name": " / ".join(product["product_name"] for product in products) or brand_id,
+                       "location_id": by_person[owner]["home_location_id"],
+                       "building_id": by_person[owner]["building_id"]})
+    if any(product["brand_id"] not in seen_brands for product in economy.get("products", [])):
+        raise SceneError("商品引用了不存在的品牌")
+    return brands
+
+
+def convert(trajectory_path: Path, snapshot_path: Path, campus_path: Path, *, plan_path: Path | None = None,
+            population_request: dict | None = None, placement_rules: dict | None = None) -> dict:
+    """将冻结快照及终态轨迹转成场景，传入计划时启用通用角色和品牌。"""
     trajectory = load_json(trajectory_path)
     snapshot = load_json(snapshot_path)
     campus = load_json(campus_path)
+    plan = load_json(plan_path) if plan_path is not None else None
 
     if trajectory.get("kind") != "oasis.interaction_trajectory":
         raise SceneError("输入不是 OASIS 交互轨迹（kind 应为 oasis.interaction_trajectory）")
@@ -355,13 +462,23 @@ def convert(trajectory_path: Path, snapshot_path: Path, campus_path: Path) -> di
             f"提供的快照是 {snapshot.get('snapshot_id')} r{snapshot.get('snapshot_revision')}，二者不是同一次运行"
         )
 
-    people = build_people(snapshot, trajectory, campus)
+    if plan is not None:
+        if trajectory.get("schema_version") != "1.0" or trajectory.get("status") not in {"completed", "failed", "cancelled"}:
+            raise SceneError("通用回放需要格式 1.0 的终态轨迹")
+        if plan.get("plan_id") != meta.get("plan_id"):
+            raise SceneError("轨迹与计划编号不一致")
+        population = plan.get("population", {})
+        if (population.get("snapshot_id"), population.get("snapshot_revision")) != (snapshot.get("snapshot_id"), snapshot.get("snapshot_revision")):
+            raise SceneError("计划与冻结快照的版本不一致")
+    people = (build_generic_people(snapshot, campus, population_request, placement_rules)
+              if plan is not None else build_people(snapshot, trajectory, campus))
+    brands = build_generic_brands(plan, people) if plan is not None else build_brands(trajectory, campus)
     people_ids = {p["id"] for p in people}
     run_ids = {a["entity_id"] for a in trajectory["agents"]}
     if run_ids != people_ids:
         raise SceneError(f"运行中的人物与快照不一致：运行独有 {sorted(run_ids - people_ids)[:5]}，快照独有 {sorted(people_ids - run_ids)[:5]}")
 
-    events, extra = build_events(trajectory, people_ids)
+    events, extra = build_events(trajectory, people_ids, plan)
     relationships = [
         {"source": edge["source"], "target": edge["target"], "relation": edge.get("relation", "follow")}
         for edge in trajectory.get("initial_relationships", [])
@@ -398,7 +515,7 @@ def convert(trajectory_path: Path, snapshot_path: Path, campus_path: Path) -> di
             "noop": sum(extra["noop_by_day"].values()),
         },
         "campus": campus,
-        "brands": build_brands(trajectory, campus),
+        "brands": brands,
         "people": people,
         "relationships": relationships,
         "posts": {str(k): v for k, v in extra["posts"].items()},
@@ -413,9 +530,10 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--snapshot", type=Path, default=DEFAULT_SNAPSHOT)
     parser.add_argument("--campus", type=Path, default=DEFAULT_CAMPUS)
     parser.add_argument("--output", type=Path, default=DEFAULT_OUTPUT)
+    parser.add_argument("--plan", type=Path, help="提供计划时启用任意角色与品牌的通用转换")
     args = parser.parse_args(argv)
     try:
-        scene = convert(args.trajectory, args.snapshot, args.campus)
+        scene = convert(args.trajectory, args.snapshot, args.campus, plan_path=args.plan)
     except SceneError as error:
         print(f"转换失败：{error}", file=sys.stderr)
         return 1

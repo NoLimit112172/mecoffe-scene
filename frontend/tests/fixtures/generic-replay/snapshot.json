@@ -1,0 +1,144 @@
+{
+  "schema_version": "1.0",
+  "snapshot_id": "snapshot_synthetic_replay",
+  "snapshot_revision": 2,
+  "selection_request_id": "selection_synthetic_replay",
+  "dataset_version": "synthetic-replay-only",
+  "seed": 2026,
+  "nodes": [
+    {
+      "entity_id": "synthetic_person_01",
+      "role": "visitor",
+      "request_persona": true,
+      "name": "样例人物 01",
+      "bio": "完全合成的回放测试人物，用于验证通用角色、品牌与动作结果。",
+      "static_attributes": {
+        "gender": "male",
+        "age": 21,
+        "education_status": "student_bachelor"
+      },
+      "dynamic_attributes": {
+        "interest_topic": "合成数据与校园交流",
+        "spending_limit_yuan": 101
+      }
+    },
+    {
+      "entity_id": "synthetic_person_02",
+      "role": "visitor",
+      "request_persona": true,
+      "name": "样例人物 02",
+      "bio": "完全合成的回放测试人物，用于验证通用角色、品牌与动作结果。",
+      "static_attributes": {
+        "gender": "female",
+        "age": 22,
+        "education_status": "student_bachelor"
+      },
+      "dynamic_attributes": {
+        "interest_topic": "合成数据与校园交流",
+        "spending_limit_yuan": 102
+      }
+    },
+    {
+      "entity_id": "synthetic_person_03",
+      "role": "operator",
+      "request_persona": true,
+      "name": "样例人物 03",
+      "bio": "完全合成的回放测试人物，用于验证通用角色、品牌与动作结果。",
+      "static_attributes": {
+        "gender": "male",
+        "age": 23,
+        "education_status": "graduate"
+      },
+      "dynamic_attributes": {
+        "interest_topic": "合成数据与校园交流",
+        "spending_limit_yuan": 103
+      }
+    },
+    {
+      "entity_id": "synthetic_person_04",
+      "role": "operator",
+      "request_persona": true,
+      "name": "样例人物 04",
+      "bio": "完全合成的回放测试人物，用于验证通用角色、品牌与动作结果。",
+      "static_attributes": {
+        "gender": "female",
+        "age": 24,
+        "education_status": "graduate"
+      },
+      "dynamic_attributes": {
+        "interest_topic": "合成数据与校园交流",
+        "spending_limit_yuan": 104
+      }
+    },
+    {
+      "entity_id": "synthetic_person_05",
+      "role": "operator",
+      "request_persona": true,
+      "name": "样例人物 05",
+      "bio": "完全合成的回放测试人物，用于验证通用角色、品牌与动作结果。",
+      "static_attributes": {
+        "gender": "male",
+        "age": 25,
+        "education_status": "graduate"
+      },
+      "dynamic_attributes": {
+        "interest_topic": "合成数据与校园交流",
+        "spending_limit_yuan": 105
+      }
+    },
+    {
+      "entity_id": "synthetic_person_06",
+      "role": "research",
+      "request_persona": true,
+      "name": "样例人物 06",
+      "bio": "完全合成的回放测试人物，用于验证通用角色、品牌与动作结果。",
+      "static_attributes": {
+        "gender": "female",
+        "age": 26,
+        "education_status": "graduate"
+      },
+      "dynamic_attributes": {
+        "interest_topic": "合成数据与校园交流",
+        "spending_limit_yuan": 106
+      }
+    },
+    {
+      "entity_id": "synthetic_person_07",
+      "role": "research",
+      "request_persona": true,
+      "name": "样例人物 07",
+      "bio": "完全合成的回放测试人物，用于验证通用角色、品牌与动作结果。",
+      "static_attributes": {
+        "gender": "male",
+        "age": 27,
+        "education_status": "graduate"
+      },
+      "dynamic_attributes": {
+        "interest_topic": "合成数据与校园交流",
+        "spending_limit_yuan": 107
+      }
+    }
+  ],
+  "edges": [
+    {
+      "source": "synthetic_person_01",
+      "target": "synthetic_person_03",
+      "relation": "follow"
+    },
+    {
+      "source": "synthetic_person_02",
+      "target": "synthetic_person_04",
+      "relation": "follow"
+    },
+    {
+      "source": "synthetic_person_06",
+      "target": "synthetic_person_01",
+      "relation": "follow"
+    },
+    {
+      "source": "synthetic_person_03",
+      "target": "synthetic_person_04",
+      "relation": "competition"
+    }
+  ]
+}

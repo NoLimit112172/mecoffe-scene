@@ -11,6 +11,8 @@ export const EVENT_LABELS = {
   interview: '访谈',
   price: '调价',
   failed: '动作失败',
+  declined: '被拒绝',
+  unknown: '结果未知',
   other: '其他动作',
 }
 
@@ -182,6 +184,8 @@ export function describeEvent(index, event) {
     case 'follow': return `${actor} 关注了 ${name(event.target)}`
     case 'interview': return `${actor} 接受${event.round === 'pre' ? '基线' : event.round === 'post' ? '后测' : ''}访谈：${event.text || ''}`
     case 'price': return `${actor} 调整价格`
+    case 'declined': return `${actor} 的 ${event.action} 动作被拒绝${event.text ? '：'+event.text : ''}`
+    case 'unknown': return `${actor} 的 ${event.action} 结果未知${event.text ? '：'+event.text : ''}`
     case 'failed': return `${actor} 的 ${event.action} 动作执行失败`
     default: return `${actor} 执行 ${event.action || event.type}`
   }

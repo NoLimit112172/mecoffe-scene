@@ -30,6 +30,13 @@ GIS 场景下拉框读取自动生成的 `frontend/public/mecoffe/scenarios/inde
 
 “新版演示”使用明确的脚本规则，供检查场景、动画和接口，不是新一轮 OASIS 实验结果。演示价格、概率、抽样和每日购买上限在 `scene/demo.json` 中公开配置；不得据此报告销量预测或消费者偏好变化。
 
+
+## social-sim 本地预览与嵌入
+
+开发调试入口：`http://127.0.0.1:5180/mecoffe3d?preview=local`，GIS 使用 `/mecoffe-gis?preview=local`。支持一次选择多个 JSON、拖放、ZIP，以及“加载合成样例 / 加载合成回放样例”；配置预览仅快照必需。所有导入数据只留在标签页内存，不上传或保存。
+
+团队嵌入包：`npm --prefix frontend run build:embed`，产物为 `frontend/dist-embed/`，挂载在同源 `/scene/`。不带参数时显示接入说明；配置用 `?session=<id>&config=<id>`，运行回放用 `?session=<id>&run=<id>`。运行产物接口仍是待团队确认的草案，当前仅完成合成数据和 mock 验证。详见 [social-sim 接入说明](docs/social-sim-integration.md)。
+
 ## 在 VS Code 里运行
 
 源码仓库：<https://github.com/NoLimit112172/mecoffe-scene>，包含运行所需的团队输入和美术素材；仓库公开与 Pages 启用由所有者完成。首次在另一台电脑使用时：

@@ -1,0 +1,190 @@
+{
+  "schema_version": "1.0",
+  "plan_id": "plan_synthetic_replay",
+  "plan_revision": 1,
+  "capability_version": "oasis-8607dba-v2",
+  "scenario": {
+    "title": "完全合成的通用校园实验",
+    "goal": "验证任意角色、三个独立品牌和被拒动作的展示。全部内容为合成样例。",
+    "background": "合成场景中的人物可以交流和购买样例商品。",
+    "source_asset_ids": []
+  },
+  "population": {
+    "snapshot_id": "snapshot_synthetic_replay",
+    "snapshot_revision": 2,
+    "expected_agent_count": 7
+  },
+  "policy_registry_version": "registry_synthetic_replay_v1",
+  "role_policies": [
+    {
+      "role_id": "visitor",
+      "policy_id": "policy_visitor"
+    },
+    {
+      "role_id": "operator",
+      "policy_id": "policy_operator"
+    },
+    {
+      "role_id": "research",
+      "policy_id": "policy_research"
+    }
+  ],
+  "platform": {
+    "type": "twitter",
+    "recsys_type": "random",
+    "max_rec_post_len": 10,
+    "refresh_rec_post_count": 5,
+    "following_post_count": 5,
+    "show_score": true,
+    "allow_self_rating": false,
+    "use_openai_embedding": false
+  },
+  "runtime": {
+    "num_steps": 2,
+    "semaphore": 2,
+    "seed": 2026,
+    "time": {
+      "mode": "step_index",
+      "unit": "day"
+    },
+    "activation": {
+      "mode": "per_role_probability",
+      "probability_by_role": {
+        "visitor": 1,
+        "operator": 1,
+        "research": 1
+      }
+    },
+    "action_timeout_seconds": 60,
+    "run_timeout_seconds": 600,
+    "on_action_error": "fail_run"
+  },
+  "initial_state": {
+    "seed_posts": []
+  },
+  "events": [],
+  "observation": {
+    "interval_steps": 1,
+    "metrics": [
+      "post_count",
+      "follow_count"
+    ],
+    "report_format": "markdown"
+  },
+  "economy": {
+    "currency": "CNY",
+    "brands": [
+      {
+        "brand_id": "brand_alpha",
+        "owner_entity_id": "synthetic_person_03",
+        "marketing_budget_fen": 100000,
+        "campaign_cost_fen": 100,
+        "ad_audience_size": 2,
+        "ad_duration_steps": 1
+      },
+      {
+        "brand_id": "brand_beta",
+        "owner_entity_id": "synthetic_person_04",
+        "marketing_budget_fen": 100000,
+        "campaign_cost_fen": 100,
+        "ad_audience_size": 2,
+        "ad_duration_steps": 1
+      },
+      {
+        "brand_id": "brand_gamma",
+        "owner_entity_id": "synthetic_person_05",
+        "marketing_budget_fen": 100000,
+        "campaign_cost_fen": 100,
+        "ad_audience_size": 2,
+        "ad_duration_steps": 1
+      }
+    ],
+    "products": [
+      {
+        "product_ref": "synthetic_product_1",
+        "product_name": "样例商品甲",
+        "brand_id": "brand_alpha",
+        "price_fen": 990,
+        "min_price_fen": 100,
+        "max_price_fen": 3000,
+        "unit_cost_fen": null,
+        "inventory_units": null,
+        "public_from_step": 0,
+        "awareness_terms": [
+          "样例商品甲"
+        ]
+      },
+      {
+        "product_ref": "synthetic_product_2",
+        "product_name": "样例商品乙",
+        "brand_id": "brand_beta",
+        "price_fen": 1200,
+        "min_price_fen": 100,
+        "max_price_fen": 3000,
+        "unit_cost_fen": null,
+        "inventory_units": null,
+        "public_from_step": 0,
+        "awareness_terms": [
+          "样例商品乙"
+        ]
+      },
+      {
+        "product_ref": "synthetic_product_3",
+        "product_name": "样例商品丙",
+        "brand_id": "brand_gamma",
+        "price_fen": 1600,
+        "min_price_fen": 100,
+        "max_price_fen": 3000,
+        "unit_cost_fen": null,
+        "inventory_units": null,
+        "public_from_step": 0,
+        "awareness_terms": [
+          "样例商品丙"
+        ]
+      }
+    ],
+    "wallets": [
+      {
+        "entity_id": "synthetic_person_01",
+        "balance_fen": 20000,
+        "known_product_refs": [
+          "synthetic_product_1",
+          "synthetic_product_2",
+          "synthetic_product_3"
+        ]
+      },
+      {
+        "entity_id": "synthetic_person_02",
+        "balance_fen": 20000,
+        "known_product_refs": [
+          "synthetic_product_1",
+          "synthetic_product_2",
+          "synthetic_product_3"
+        ]
+      },
+      {
+        "entity_id": "synthetic_person_06",
+        "balance_fen": 20000,
+        "known_product_refs": [
+          "synthetic_product_1",
+          "synthetic_product_2",
+          "synthetic_product_3"
+        ]
+      },
+      {
+        "entity_id": "synthetic_person_07",
+        "balance_fen": 20000,
+        "known_product_refs": [
+          "synthetic_product_1",
+          "synthetic_product_2",
+          "synthetic_product_3"
+        ]
+      }
+    ],
+    "rules": {
+      "max_quantity_per_purchase": 1,
+      "max_units_per_consumer_per_step": 1,
+      "allow_self_purchase": false
+    }
+  }
+}

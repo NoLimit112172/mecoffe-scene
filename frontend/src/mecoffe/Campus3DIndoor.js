@@ -1,3 +1,4 @@
+import {displayRoleColor} from './characterDisplay.js'
 import * as THREE from 'three'
 import {polygonCenter} from './campus3dRouting.js'
 import {outsidePerson} from './indoorMotion.js'
@@ -7,7 +8,7 @@ import {TERRAIN_LEVELS} from './campus3dTerrain.js'
 export function placeIndoorPeople(view){
   if(!view.routeLayer){view.routeLayer=new THREE.Group();view.scene.add(view.routeLayer)}
   for(const p of view.indoor.people.values()){
-    const figure=new THREE.Group(),body=new THREE.Object3D(),color=view.brandColors.get(p.id)||({undergraduate_consumer:0x3888aa,graduate_consumer:0x8a78b4,teacher_consumer:0x58916a,merchant:0xbb7545}[p.person.role]||0x6587a7)
+    const figure=new THREE.Group(),body=new THREE.Object3D(),color=view.brandColors.get(p.id)||parseInt(displayRoleColor(p.person.role,{undergraduate_consumer:'#3888aa',graduate_consumer:'#8a78b4',teacher_consumer:'#58916a',merchant:'#bb7545'}).slice(1),16)
     const base=new THREE.Mesh(new THREE.CircleGeometry(2.6,12),new THREE.MeshBasicMaterial({color,transparent:true,opacity:.25,depthWrite:false}));base.rotation.x=-Math.PI/2;base.position.y=.05
     const walkHalo=new THREE.Mesh(new THREE.RingGeometry(2.8,3.8,20),new THREE.MeshBasicMaterial({color:0xfff7d6,transparent:true,opacity:.8,side:THREE.DoubleSide,depthWrite:false}));walkHalo.rotation.x=-Math.PI/2;walkHalo.position.y=.12
     const hit=new THREE.Mesh(new THREE.SphereGeometry(4,6,4),new THREE.MeshBasicMaterial({visible:false}));hit.position.y=4.5;hit.userData.person=p.person

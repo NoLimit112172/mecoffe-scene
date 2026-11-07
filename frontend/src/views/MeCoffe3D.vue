@@ -8,8 +8,8 @@
         </nav>
         <Campus3DVisualControls :building-style="scenario?.manifest.style?.buildings || 'yulan'" v-model:character-pool="characterPool" :quality="quality" @update:quality="chooseQuality" v-model:cycle="dayCycle" v-model:hour="previewHour" :clock="'光照：展示效果'" />
         <span v-if="styleBusy" role="status" class="style-status">正在准备三维素材…</span>
-        <RouterLink v-if="!isConfigPreview" to="/mecoffe" class="old-page">二维沙盘 ↗</RouterLink>
-        <RouterLink :to="{path:'/mecoffe-gis',query:isConfigPreview?previewQuery(route.query):{scenario:scenario?.manifest.id || 'ustc-history'}}" class="old-page">GIS 模式 ↗</RouterLink>
+        <RouterLink v-if="!isIntegratedScene" to="/mecoffe" class="old-page">二维沙盘 ↗</RouterLink>
+        <RouterLink :to="{path:'/mecoffe-gis',query:isIntegratedScene?previewQuery(route.query):{scenario:scenario?.manifest.id || 'ustc-history'}}" class="old-page">GIS 模式 ↗</RouterLink>
         <RouterLink to="/mecoffe3d/assets" class="old-page">场景素材库 ↗</RouterLink>
       </div>
     </header>
@@ -21,7 +21,8 @@
     <template v-if="index && !loadError">
       <div v-if="!isConfigPreview" class="data-notice" data-testid="simulation-time">{{dayDisplay?.label || currentDay.label}} · 天内回放进度 {{dayDisplay?.progress || 0}}% · 昼夜变化为展示效果</div>
       <div class="data-notice" :class="requestedMode" data-testid="data-notice">{{ dataNotice }}</div>
-      <p v-if="indoorState.accounting" class="population-accounting" data-testid="person-accounting">人物去向：室外 {{indoorState.accounting.visible}} + 楼内 {{indoorState.accounting.inside}} = {{indoorState.accounting.total}} 人 · {{indoorState.accounting.valid?'全部可定位':'请重新加载场景'}}<span v-if="selectedId"> · <i aria-hidden="true" style="color:#4c8ba6">━</i> 关注他人 <i aria-hidden="true" style="color:#b49b61">━</i> 被关注（楼内连接屋顶）<template v-if="isConfigPreview"> <i aria-hidden="true" style="color:#9366a6">━</i> 竞争关系</template></span></p>
+      <p v-if="isGenericReplay" class="data-notice" data-testid="replay-outcomes">本记录含被拒 {{replayOutcomeCounts.declined}} 条 · 结果未知 {{replayOutcomeCounts.unknown}} 条；仅已执行的动作计入成功结果。</p>
+      <p v-if="indoorState.accounting" class="population-accounting" data-testid="person-accounting">人物去向：室外 {{indoorState.accounting.visible}} + 楼内 {{indoorState.accounting.inside}} = {{indoorState.accounting.total}} 人 · {{indoorState.accounting.valid?'全部可定位':'请重新加载场景'}}<span v-if="selectedId"> · <i aria-hidden="true" style="color:#4c8ba6">━</i> 关注他人 <i aria-hidden="true" style="color:#b49b61">━</i> 被关注（楼内连接屋顶）<template v-if="isIntegratedScene"> <i aria-hidden="true" style="color:#9366a6">━</i> 竞争关系</template></span></p>
 
       <p v-if="qualityNotice" role="status" class="data-notice">{{ qualityNotice }}</p>
       <section class="kpis" aria-label="回放指标">
@@ -63,7 +64,7 @@
             </nav>
           </div>
           <div v-if="activeTab === 'events'" class="side-content">
-            <div class="section-heading"><h2>{{ isNetwork ? '关注关系输入' : '事件记录' }}</h2><small>{{ isDemo ? '规则演示' : isNetwork ? '尚未运行' : '历史 OASIS' }}</small></div>
+            <div class="section-heading"><h2>{{ isNetwork ? '关注关系输入' : '事件记录' }}</h2><small>{{ isDemo ? '规则演示' : isNetwork ? '尚未运行' : isGenericReplay ? (meta.synthetic ? '合成回放' : '运行回放') : '历史 OASIS' }}</small></div>
             <p v-if="isNetwork" class="muted">此模式只有人物与关注关系，没有订单或可播放的行为。选择“人物”可查看关注对象。</p>
             <p v-else-if="!recentEvents.length" class="empty">播放或单步查看事件。购买事件会触发沿 OSM 路网的往返动画。</p>
             <div v-if="recentEvents.length" class="event-list">
@@ -75,7 +76,7 @@
                 <span>{{ describeEvent(index, event) }}</span>
               </button>
             </div>
-            <div class="brand-totals"><div v-for="(brand, i) in scene.brands" :key="brand.brand_id"><i aria-hidden="true" :style="{ background: brandColors[i % 2] }"></i><span>{{ brand.product_name }}</span><b>{{ state.cups[brand.brand_id] }} 杯</b></div></div>
+            <div class="brand-totals"><div v-for="(brand, i) in scene.brands" :key="brand.brand_id"><i aria-hidden="true" :style="{ background: brandColors[i % brandColors.length] }"></i><span>{{ brand.product_name }}</span><b>{{ state.cups[brand.brand_id] }} 杯</b></div></div>
           </div>
           <div v-else-if="activeTab === 'people'" class="side-content">
             <div class="section-heading"><h2>人物名册</h2><small>{{ roster.length }} 人</small></div>
@@ -88,7 +89,7 @@
               <code>{{ selected.id }}</code>
               <p class="person-placement"><i class="fa-solid fa-location-dot" aria-hidden="true"></i>{{ personPlacement(selected.id) }}</p>
               <p v-if="selected.bio" class="person-bio">{{ selected.bio }}</p>
-              <ConfigProfileFields v-if="isConfigPreview" :person="selected"/>
+              <ConfigProfileFields v-if="isIntegratedScene" :person="selected"/>
               <details v-if="mappingEntry(selected)?.note" class="mapping-note">
                 <summary>位置说明</summary><p>{{ mappingEntry(selected).note }}</p>
               </details>
@@ -97,7 +98,7 @@
                 <div><dt>被关注</dt><dd>{{ selectedFollowers.length }}</dd></div>
               </dl>
               <div v-if="selectedFollowing.length" class="relation-buttons" aria-label="关注对象"><button v-for="person in selectedFollowing" :key="person.id" @click="selectPerson(person.id)">{{ person.name }}</button></div>
-              <div v-if="isConfigPreview&&otherRelations.length" class="relation-buttons"><span>竞争关系</span><button v-for="entry in otherRelations" :key="entry.source+entry.target" @click="selectPerson(entry.other.id)">{{entry.other.name}}</button></div>
+              <div v-if="isIntegratedScene&&otherRelations.length" class="relation-buttons"><span>竞争关系</span><button v-for="entry in otherRelations" :key="entry.source+entry.target" @click="selectPerson(entry.other.id)">{{entry.other.name}}</button></div>
               <div v-if="selectedHistory.length" class="person-history">
                 <h3>近期行为</h3>
                 <ol><li v-for="event in selectedHistory.slice(0, 5)" :key="event.key">{{ describeEvent(index, event) }}</li></ol>
@@ -185,13 +186,15 @@ import { Campus3DScene } from '../mecoffe/Campus3DScene.js'
 import { describeEvent, EVENT_LABELS, indexScene, personHistory, stateAt } from '../mecoffe/replay.js'
 import { advancePosition, clampPosition, cursorAtPosition, dataFileForMode, positionAtCursor, validateDataMode } from '../mecoffe/campus3dPlayback.js'
 import { resolveHomeKey } from '../mecoffe/campus3dRouting.js'
-import { CHARACTER_ROLE_COLORS } from '../mecoffe/characterDisplay.js'
+import { CHARACTER_ROLE_COLORS, displayRoleColor } from '../mecoffe/characterDisplay.js'
 import {scenarioTime} from '../mecoffe/scenario.js'
 import {displayDate} from '../mecoffe/indoorMotion.js'
 import { visualClock } from '../mecoffe/campus3dPresentation.js'
 
 const props=defineProps({scenario:{type:Object,default:null}})
 const route=useRoute(),isConfigPreview=computed(()=>props.scenario?.manifest.preview_mode==='config')
+const isGenericReplay=computed(()=>props.scenario?.manifest.preview_mode==='replay')
+const isIntegratedScene=computed(()=>isConfigPreview.value||isGenericReplay.value)
 const modes = [{ key: 'demo', label: '新版演示' }, { key: 'network', label: '关系网络' }, { key: 'history', label: '历史回放' }]
 const tabs = [
   { key: 'events', label: '事件', icon: 'fa-list-ul' },
@@ -199,7 +202,7 @@ const tabs = [
   { key: 'mapping', label: '地点映射', icon: 'fa-map-location-dot' },
   { key: 'building', label: '楼栋', icon: 'fa-building' },
 ]
-const brandColors = ['#22856e', '#bd7545']
+const brandColors = ['#22856e', '#bd7545', '#578db2', '#966ba7', '#b29646']
 const index = shallowRef(null)
 const campusData = shallowRef(null)
 const indoorState=shallowRef({buildings:{},persons:{},inside:0}), selectedBuildingId=ref(null), sourceTime=shallowRef(null)
@@ -226,7 +229,7 @@ const characterPool = ref('campus')
 const characterStatus = ref({available:0,visibleReady:0,visibleTotal:0,failed:0})
 const styleBusy = ref(0)
 const styleError = ref('')
-const dayCycle = ref(!isConfigPreview.value)
+const dayCycle = ref(!isIntegratedScene.value)
 const previewHour = ref(12)
 const roleNames = { undergraduate_consumer:'本科生', graduate_consumer:'研究生', teacher_consumer:'教师', merchant:'商家' }
 const dayPosition = ref(0)
@@ -263,6 +266,7 @@ const selectedFollowers = computed(() => follows.value.filter(edge => edge.targe
 const otherRelations=computed(()=>(scene.value?.relationships||[]).filter(e=>e.relation==='competition'&&(e.source===selectedId.value||e.target===selectedId.value)).map(e=>({...e,other:index.value.people.get(e.source===selectedId.value?e.target:e.source)})))
 const selectedHistory = computed(() => selected.value ? personHistory(index.value, selectedId.value, cursor.value, 20) : [])
 const recentEvents = computed(() => scene.value?.events.slice(Math.max(0, cursor.value - 30), cursor.value).reverse() || [])
+const replayOutcomeCounts=computed(()=>({declined:scene.value?.events.filter(e=>e.type==='declined').length||0,unknown:scene.value?.events.filter(e=>e.type==='unknown').length||0}))
 const roster = computed(() => (scene.value?.people || []).filter(person => `${person.name} ${person.id}`.toLowerCase().includes(query.value.trim().toLowerCase())))
 const hoverStyle = computed(() => {
   const card = hoverCard.value
@@ -272,6 +276,7 @@ const hoverStyle = computed(() => {
   return { left: `${Math.max(10, Math.min(rect.width - 265, card.x - rect.left + 14))}px`, top: `${Math.max(70, Math.min(rect.height - 110, card.y - rect.top + verticalOffset))}px` }
 })
 const dataNotice = computed(() => {
+  if (isGenericReplay.value) return `${meta.value?.synthetic?'合成样例 · ':''}运行回放：${meta.value?.partial?'部分记录 · ':''}完成 ${meta.value?.completed_steps}/${meta.value?.total_steps} 步。楼栋与路线为展示示意${meta.value?.time_source==='display_default'?'，日期为展示设定':''}。`
   if (isConfigPreview.value) return '配置预览 · 尚未运行模拟。人物与关系来自所选配置，楼栋安置为展示示意。事件 0 · 订单 0。'
   if (isDemo.value) return `新版演示：快照 v${meta.value?.snapshot_revision} 的 30 天规则演示，非 OASIS 运行结果。购买与传播按本地示例规则生成。`
   if (isNetwork.value) return `关系网络：快照 v${meta.value?.snapshot_revision} 的静态人物与关注输入，尚未运行；不含购买、发帖或访谈轨迹。`
@@ -279,9 +284,9 @@ const dataNotice = computed(() => {
 })
 const mappingEntry = person => mappingData.value?.mappings[resolveHomeKey(person)]
 const mappedBuilding = person => buildingById.value.get(mappingEntry(person)?.osm_id)
-const roleColor = role => ({ merchant: '#bb7545', undergraduate_consumer: '#3888aa', graduate_consumer: '#8a78b4', teacher_consumer: '#58916a' }[role] || '#637d8a')
-const roleLabels=computed(()=>isConfigPreview.value?Object.fromEntries((scene.value?.people||[]).map(p=>[p.role,p.role_label])):roleNames)
-const legendRoles=computed(()=>isConfigPreview.value?Object.fromEntries((scene.value?.people||[]).map(p=>[p.role,roleColor(p.role)])):CHARACTER_ROLE_COLORS)
+const roleColor = role => displayRoleColor(role,{ merchant: '#bb7545', undergraduate_consumer: '#3888aa', graduate_consumer: '#8a78b4', teacher_consumer: '#58916a' })
+const roleLabels=computed(()=>isIntegratedScene.value?Object.fromEntries((scene.value?.people||[]).map(p=>[p.role,p.role_label])):roleNames)
+const legendRoles=computed(()=>isIntegratedScene.value?Object.fromEntries((scene.value?.people||[]).map(p=>[p.role,roleColor(p.role)])):CHARACTER_ROLE_COLORS)
 
 function selectPerson(id) {
   selectedId.value = id

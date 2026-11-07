@@ -4,9 +4,14 @@ import {LineGeometry} from 'three/addons/lines/LineGeometry.js'
 import {LineMaterial} from 'three/addons/lines/LineMaterial.js'
 
 export const RELATION_LINE_WIDTH=2.8
+export function relationLineStyle(distance) {
+  const amount = Math.max(0, Math.min(1, (Number(distance) - 260) / 900)) || 0
+  return {width: RELATION_LINE_WIDTH + amount * 1.4, opacity: .55 + amount * .24}
+}
+
 export function screenLine(points,{color=0x4c8ba6,opacity=.58,width=RELATION_LINE_WIDTH}={}){
   const geometry=new LineGeometry().setPositions(points.flatMap(p=>[p.x,p.y,p.z]))
-  const material=new LineMaterial({color,linewidth:width,worldUnits:false,transparent:true,opacity,depthTest:false,depthWrite:false})
+  const material=new LineMaterial({color,linewidth:width,worldUnits:false,transparent:true,opacity,depthTest:false,depthWrite:false,fog:false})
   const line=new Line2(geometry,material)
   line.userData.bloomOcclusion=false;line.renderOrder=7;line.frustumCulled=false
   return line

@@ -16,15 +16,43 @@ function stable(value){
   if(value&&typeof value==='object')return Object.fromEntries(Object.keys(value).sort().map(key=>[key,stable(value[key])]));
   return value;
 }
+// 既有获准公开的运行使用内容摘要白名单，不因改名或复制而失效。
+const approvedTrajectories=new Set([
+  'b5a810f6a79943ac3348da93c1fc9479e3149571717662263007523a2a6afe04',
+]);
+// 当前没有需保留的真实执行计划；以后须经明确授权才能登记摘要。
+const approvedPlans=new Set();
+function digest(value){return crypto.createHash('sha256').update(JSON.stringify(stable(value))).digest('hex')}
+const syntheticName=/^(?:样例人物|合成人物|synthetic\b|sample\b|test\b)/i;
+function syntheticTrajectory(value){
+  if(value.metadata?.synthetic!==true||!Array.isArray(value.agents)||!value.agents.length)return false;
+  const subjects=[...value.agents,...(Array.isArray(value.actions)?value.actions.map(action=>action?.actor).filter(Boolean):[])];
+  return subjects.every(person=>{
+    const names=['name','display_name','user_name'].filter(key=>person?.[key]!=null).map(key=>person[key]);
+    return names.length>0&&names.every(name=>typeof name==='string'&&syntheticName.test(name));
+  });
+}
+function syntheticPlan(value){
+  return value.synthetic===true||value.metadata?.synthetic===true||
+    [value.scenario?.title,value.scenario?.goal].some(text=>typeof text==='string'&&/(?:完全合成|合成(?:测试|样例)|synthetic)/i.test(text));
+}
 function privateData(value){
   if(!value||typeof value!=='object')return false;
-  if(value.meta?.config_preview===true&&Array.isArray(value.people)&&value.people.length>0)return true;
+  if((value.meta?.config_preview===true||value.meta?.generic_replay===true||value.meta?.mode==='generic_replay')&&
+      Array.isArray(value.people)&&value.people.length>0)return true;
+  if(value.kind==='oasis.interaction_trajectory'){
+    if(approvedTrajectories.has(digest(value)))return false;
+    if(!syntheticTrajectory(value))return true;
+  }
+  if(typeof value.plan_id==='string'&&value.population&&typeof value.population==='object'){
+    if(approvedPlans.has(digest(value)))return false;
+    if(!syntheticPlan(value))return true;
+  }
   const nodes=Array.isArray(value.nodes)&&value.nodes.some(node=>node?.entity_id&&node?.role&&('static_attributes'in node||'dynamic_attributes'in node));
   if(nodes){
-    const digest=crypto.createHash('sha256').update(JSON.stringify(stable(value))).digest('hex');
-    if(approvedSnapshots.has(digest))return false;
+    if(approvedSnapshots.has(digest(value)))return false;
     const synthetic=/^synthetic(?:-|_|$)/i.test(value.dataset_version||'');
-    const names=value.nodes.filter(node=>node.name).every(node=>/^(?:样例人物|合成人物|synthetic\b|sample\b|test\b)/i.test(node.name));
+    const names=value.nodes.filter(node=>node.name).every(node=>syntheticName.test(node.name));
     if(!synthetic||!names)return true;
   }
   if(value.population_request&&typeof value.population_request==='object'){

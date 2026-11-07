@@ -13,6 +13,14 @@ export function resolveHomeKey(person) {
   return person.location_key || (person.role === 'merchant' ? person.home_location_id : person.building_id)
 }
 
+// Explicit run data binds each brand to its owner's mapped building. Legacy files keep their own IDs.
+export function brandLocationKey(index, brandId) {
+  return index.brands?.get(brandId)?.location_id || `shop_${brandId}`
+}
+export function brandLocationKeys(index) {
+  return new Set(index.scene.brands.map(brand => brandLocationKey(index, brand.brand_id)))
+}
+
 export function polygonCenter(polygon) {
   if (!polygon?.length) throw new Error('楼栋缺少多边形')
   let area2 = 0

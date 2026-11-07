@@ -75,7 +75,7 @@ export function embedPreparation(root) {
       // 常见入口有真实目录，反向代理仍应仅为 /scene/ 子应用配置 HTML 回退。
       fs.writeFileSync(path.join(out, '404.html'), index)
       const stats = assertEmbedArtifact(out)
-      console.log(`\nEmbed artifact: ${(stats.totalBytes / 1e6).toFixed(2)} MB; ${stats.files} files; no configuration or run records`)
+      console.log(`\nEmbed artifact: ${(stats.totalBytes / 1e6).toFixed(2)} MB; ${stats.files} files; synthetic samples only; no private configuration or run records`)
     },
   }}
 }

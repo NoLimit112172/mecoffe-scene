@@ -99,13 +99,19 @@ function validatePopulationRequest(request, snapshot) {
   }
 }
 
+function fallbackPopulationRequest(snapshot) {
+  const counts = new Map()
+  for (const node of snapshot.nodes) counts.set(node.role, (counts.get(node.role) || 0) + 1)
+  return Object.fromEntries([...counts].map(([role, count]) => [role, {description: role, count, generate: {}}]))
+}
+
 /** 统一校验本地原始文件与服务端阶段响应，保留所有画像原值。 */
 export function normalizeConfigPreview({network, roles, session, config, seed} = {}) {
   const networkPayload = stagePayload(network, 'network')
-  const rolesPayload = stagePayload(roles, 'roles')
   const snapshot = object(networkPayload.snapshot) ? networkPayload.snapshot : networkPayload
-  const populationRequest = rolesPayload.population_request
   validateSnapshot(snapshot)
+  if (roles === undefined && (session !== undefined || config !== undefined)) fail('INVALID_ROLES', '远程配置必须提供同一份配置的角色阶段产物')
+  const populationRequest = roles === undefined ? fallbackPopulationRequest(snapshot) : stagePayload(roles, 'roles').population_request
   validatePopulationRequest(populationRequest, snapshot)
   const selectedSeed = seed ?? snapshot.seed ?? 0
   if (!Number.isSafeInteger(selectedSeed)) fail('INVALID_SEED', '配置种子必须是安全整数')
@@ -113,7 +119,7 @@ export function normalizeConfigPreview({network, roles, session, config, seed} =
   if (session !== undefined) context.session_id = contextId(session, '会话编号')
   if (config !== undefined) context.config_id = contextId(config, '配置编号')
   for (const stage of [network, roles]) {
-    if (stage.config_id !== undefined && context.config_id !== undefined && stage.config_id !== context.config_id) {
+    if (stage?.config_id !== undefined && context.config_id !== undefined && stage.config_id !== context.config_id) {
       fail('CONFIG_MISMATCH', '角色与关系数据不属于所选配置')
     }
   }

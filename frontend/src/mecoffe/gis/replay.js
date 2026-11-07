@@ -1,3 +1,4 @@
+import {displayRoleColor} from '../characterDisplay.js'
 import {indexScene} from '../replay.js'
 import {cursorAtPosition,advancePosition,positionAtCursor} from '../campus3dPlayback.js'
 import {IndoorMotion,INDOOR_DEFAULTS} from '../indoorMotion.js'
@@ -32,7 +33,7 @@ export class GisReplay {
   personLocation(id){return this.motion?.personLocation(id)||{inside:false}}
   personData(){return (this.motion?.outside||[]).map(p=>({...p,lngLat:localToLngLat(p,this.campus.projection)}))}
   pointFeatures(ready=new Set()){
-    return {type:'FeatureCollection',features:this.personData().map(p=>({type:'Feature',id:p.id,geometry:{type:'Point',coordinates:p.lngLat},properties:{id:p.id,name:p.person.name,role:p.person.role,color:ROLE_COLORS[p.person.role]||'#68868a',walking:Boolean(p.walker?.moving),modelReady:ready.has(p.id)}}))}
+    return {type:'FeatureCollection',features:this.personData().map(p=>({type:'Feature',id:p.id,geometry:{type:'Point',coordinates:p.lngLat},properties:{id:p.id,name:p.person.name,role:p.person.role,color:displayRoleColor(p.person.role,ROLE_COLORS),walking:Boolean(p.walker?.moving),modelReady:ready.has(p.id)}}))}
   }
   routeFeatures(){return {type:'FeatureCollection',features:this.personData().filter(p=>p.walker&&['outbound','return'].includes(p.walker.phase)).map(p=>({type:'Feature',id:p.id,properties:{id:p.id},geometry:{type:'LineString',coordinates:p.walker.points.map(q=>localToLngLat(q,this.campus.projection))}}))}}
   dispose(){this.motion?.people.clear();this.motion?.routes.clear()}

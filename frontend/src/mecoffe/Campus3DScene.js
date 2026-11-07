@@ -6,11 +6,11 @@ import * as THREE from 'three'
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js'
 import { prototypeParams, selectPrototype, getPrototype, campusBuildingPrototype } from './assetCatalog.js'
 import {
-  createRouting, polygonCenter, resolveHomeKey, reverseRoute, routeBetweenMappings,
+  createRouting, polygonCenter, resolveHomeKey, brandLocationKey, brandLocationKeys, reverseRoute, routeBetweenMappings,
 } from './campus3dRouting.js'
 import { campusBoundaryBounds, fitCampusView } from './campus3dView.js'
 import { layoutLabels, personScaleForCamera } from './campus3dScreen.js'
-import { CHARACTER_BASE_COLORS } from './characterDisplay.js'
+import { CHARACTER_BASE_COLORS, displayRoleColor } from './characterDisplay.js'
 import { Campus3DBase } from './Campus3DBase.js'
 import { Campus3DSports } from './Campus3DSports.js'
 import { sportsExclusions } from './campus3dSportsModel.js'
@@ -26,7 +26,7 @@ import { Campus3DEnvironment } from './Campus3DEnvironment.js'
 import { EventEffects, SelectiveBloom } from './Campus3DEffects.js'
 import { visualClock, idleRepresentatives, displayOccupancy } from './campus3dPresentation.js'
 import {IndoorMotion} from './indoorMotion.js'
-import {screenLine,updateScreenLine} from './Campus3DAnnotations.js'
+import {screenLine,updateScreenLine,relationLineStyle} from './Campus3DAnnotations.js'
 import {arcPoints} from './Campus3DEffects.js'
 import {Campus3DEntrances} from './Campus3DEntrances.js'
 import {positionAtCursor} from './campus3dPlayback.js'
@@ -342,6 +342,7 @@ export class Campus3DScene {
     this.indoorPreview?.update()
     this.updateScreenVisuals()
     this.eventEffects?.updateScreen(this.camera,this.host.clientHeight)
+    if(this.relationLayer.children.length)this.relationsDirty=true
     if(this.relationsDirty){this.updateRelations();this.relationsDirty=false}
     this.realCharacterBatch?.update(this.visualSeconds,this.camera,this.host?.clientHeight||800)
     this.emitCharacterStatus()
@@ -424,8 +425,7 @@ export class Campus3DScene {
       // building remains in pickTargets and exposes its name on hover.
       if (keys.length) {
         const center = polygonCenter(building.polygon)
-        const shopKey = keys.find(key => key.startsWith('shop_'))
-        const shopIndex = shopKey ? [...this.brandColors.keys()].indexOf(shopKey.slice(5)) : -1
+        const shopIndex = this.index.scene.brands.findIndex(brand => keys.includes(brandLocationKey(this.index,brand.brand_id)))
         const prefix = shopIndex >= 0 ? `门店 ${String.fromCharCode(65 + shopIndex)}（示意）· ` : ''
         this.addCampusLabel(building.osm_id, `${prefix}${name}`,
           new THREE.Vector3(center.x, building.height_m + TERRAIN_LEVELS.buildingBase + 5, -center.y),
@@ -435,7 +435,7 @@ export class Campus3DScene {
     if(this.indoor){this.doorMarkers=new Campus3DEntrances({scene:this.scene,campus:this.campus,entrances:this.indoor.entrances,elevation:p=>this.personElevation(p)});if(this.host?.dataset)this.host.dataset.entranceCount=String(this.doorMarkers.frames.size)}
     this.shopMarkers = new Map()
     for (const brandId of this.brandColors.keys()) {
-      const anchor = this.routing.anchors.get(`shop_${brandId}`)
+      const anchor = this.routing.anchors.get(brandLocationKey(this.index,brandId))
       if (!anchor) continue
       // Position-only anchor for recorded arrival effects; no static landmark.
       const marker = new THREE.Object3D()
@@ -601,7 +601,7 @@ export class Campus3DScene {
         }
         const color = person.role === 'merchant'
           ? this.brandColors.get(person.id) || ROLE_COLORS.merchant
-          : ROLE_COLORS[person.role] || 0x6587a7
+          : parseInt(displayRoleColor(person.role,CHARACTER_BASE_COLORS).slice(1),16)
         const figure = new THREE.Group()
         // Only hit proxies and role markers live here; Rocketbox owns bodies.
         const body = new THREE.Object3D()
@@ -733,8 +733,8 @@ export class Campus3DScene {
 
   standingClearanceRoutes(radius) {
     if(this.standingRouteRadius===radius)return this.standingRoutes
-    const routes=[]
-    for(const key of this.routing.anchors.keys())if(!key.startsWith('shop_'))for(const shop of this.routing.anchors.keys())if(shop.startsWith('shop_')) {
+    const routes=[],shops=brandLocationKeys(this.index)
+    for(const key of this.routing.anchors.keys())if(!shops.has(key))for(const shop of shops) {
       const route=routeBetweenMappings(this.routing,key,shop)
       if(route) {
         routes.push(route.points)
@@ -748,8 +748,8 @@ export class Campus3DScene {
 
   decorationAvoidance() {
     if(this.indoor)return {points:[],routes:this.indoor.entrances.entrances.map(e=>e.connector.map(([x,y])=>({x,y}))),clearance:8}
-    const routes=[]
-    for(const key of this.routing.anchors.keys())if(!key.startsWith('shop_'))for(const shop of this.routing.anchors.keys())if(shop.startsWith('shop_')) {
+    const routes=[],shops=brandLocationKeys(this.index)
+    for(const key of this.routing.anchors.keys())if(!shops.has(key))for(const shop of shops) {
       const route=routeBetweenMappings(this.routing,key,shop)
       if(route) {
         routes.push(route.points)
@@ -789,6 +789,7 @@ export class Campus3DScene {
   }
 
   playEvent(event) {
+    if(event.outcome&&event.outcome!=='executed')return
     this.invalidate()
     const entry = this.people.get(event.actor)
     if (!entry) return
@@ -802,7 +803,7 @@ export class Campus3DScene {
       const order = event.order_id || event.key
       if (this.seenOrders.has(order)) return
       this.seenOrders.add(order)
-      const route = routeBetweenMappings(this.routing, entry.key, `shop_${event.brand_id}`)
+      const route = routeBetweenMappings(this.routing, entry.key, brandLocationKey(this.index,event.brand_id))
       if (!route) {
         this.unreachable += 1
         this.emitStats()
@@ -1026,7 +1027,7 @@ export class Campus3DScene {
       if(relation.source!==id&&relation.target!==id)continue
       const otherId=relation.source===id?relation.target:relation.source
       if(!this.people.has(otherId))continue
-      const line=screenLine(arcPoints(new THREE.Vector3(),new THREE.Vector3(1,0,0)),{color:this.index.scene.meta?.config_preview&&relation.relation==='competition'?0x9366a6:relation.source===id?0x4c8ba6:0xb49b61,opacity:.55})
+      const line=screenLine(arcPoints(new THREE.Vector3(),new THREE.Vector3(1,0,0)),{color:(this.index.scene.meta?.config_preview||this.index.scene.meta?.generic_replay)&&relation.relation==='competition'?0x9366a6:relation.source===id?0x4c8ba6:0xb49b61,opacity:.55})
       line.userData.people=[id,otherId];line.userData.relation=relation.relation;this.relationLayer.add(line)
     }
     this.updateRelations()
@@ -1040,9 +1041,11 @@ export class Campus3DScene {
     return entry.figure.position.clone().add(new THREE.Vector3(0,8*entry.figure.scale.x,0))
   }
   updateRelations() {
+    const style=relationLineStyle(this.camera?.position && this.controls?.target ? this.camera.position.distanceTo(this.controls.target) : 0)
     for(const line of this.relationLayer.children){
       const [a,b]=line.userData.people.map(id=>this.relationshipEndpoint(id));if(!a||!b)continue
       if(a.distanceTo(b)<1){a.x-=7;b.x+=7}
+      line.material.linewidth=style.width;line.material.opacity=style.opacity
       updateScreenLine(line,arcPoints(a,b))
     }
   }

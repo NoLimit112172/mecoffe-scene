@@ -1,6 +1,6 @@
 // One deterministic presentation clock and occupancy model for GIS and sandbox.
 // No new OASIS locations/actions and no edits to the original A* graph.
-import {createRouting,routeBetweenMappings,resolveHomeKey} from './campus3dRouting.js'
+import {createRouting,routeBetweenMappings,resolveHomeKey,brandLocationKey} from './campus3dRouting.js'
 import {positionAtCursor} from './campus3dPlayback.js'
 import {tripQueueEntries} from './renderPerformance.js'
 import {displayRoutePoints} from './campus3dCrowd.js'
@@ -46,7 +46,7 @@ export class IndoorMotion {
     for(const [key,anchor]of this.routing.anchors){const door=this.byBuilding.get(anchor.building.osm_id);if(!door||!this.routing.nodes.has(door.road_node_id))throw new Error('楼栋入口与步行图不匹配');anchor.node=this.routing.nodes.get(door.road_node_id);anchor.door=door}
     this.obstacles=buildSpatialEnvironment(campus,landcovers).obstacles
     for(const person of index?.scene.people||[]){const key=resolveHomeKey(person),anchor=this.routing.anchors.get(key);if(!anchor)throw new Error('人物缺少楼栋映射');this.people.set(person.id,{id:person.id,person,key,homeBuilding:anchor.building.osm_id,home:point(anchor.door.point),...point(anchor.door.point),heading:0,queue:[],walker:null,hasCoffee:false,transitionScale:1})}
-    this.purchases=(index?.scene.events||[]).flatMap((event,i)=>event.type==='purchase'?[{event,tick:Math.floor(positionAtCursor(index,i+1)*this.options.secondsPerDay*this.options.hz+1e-7)}]:[])
+    this.purchases=(index?.scene.events||[]).flatMap((event,i)=>event.type==='purchase'&&(!event.outcome||event.outcome==='executed')?[{event,tick:Math.floor(positionAtCursor(index,i+1)*this.options.secondsPerDay*this.options.hz+1e-7)}]:[])
     this.reset()
   }
   reset(){this.tick=0;this.nextPurchase=0;this.unreachable=0;this.seen=new Set();this.departures=new Map();for(const p of this.people.values())Object.assign(p,{...p.home,walker:null,queue:[],hasCoffee:false,transitionScale:1});this.revision++}
@@ -57,8 +57,9 @@ export class IndoorMotion {
     while(this.tick<target){this.tick++;while(this.purchases[this.nextPurchase]?.tick<=Math.min(this.tick,eventLimit))this.event(this.purchases[this.nextPurchase++].event);this.admit();for(const p of this.people.values())this.move(p,1/this.options.hz)}
   }
   event(event){
+    if(event.type!=='purchase'||(event.outcome&&event.outcome!=='executed'))return
     const p=this.people.get(event.actor),order=event.order_id||event.key;if(!p||this.seen.has(order))return;this.seen.add(order)
-    const path=this.pathFor(p,`shop_${event.brand_id}`);if(!path){this.unreachable++;return}p.queue.push({event,...path})
+    const path=this.pathFor(p,brandLocationKey(this.index,event.brand_id));if(!path){this.unreachable++;return}p.queue.push({event,...path})
   }
   pathFor(p,target){
     const key=p.key+'|'+target
@@ -78,7 +79,7 @@ export class IndoorMotion {
   async prepareRoutes(signal){
     for(const {event}of this.purchases){
       if(signal?.aborted)throw new DOMException('场景加载已取消','AbortError')
-      const p=this.people.get(event.actor),target=`shop_${event.brand_id}`
+      const p=this.people.get(event.actor),target=brandLocationKey(this.index,event.brand_id)
       if(p&&!this.routes.has(p.key+'|'+target)){this.pathFor(p,target);await new Promise(resolve=>setTimeout(resolve,0))}
     }
   }
