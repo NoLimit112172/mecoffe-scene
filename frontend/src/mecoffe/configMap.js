@@ -1,4 +1,5 @@
 // The map is static and population-free. Verify its files before applying private input.
+import {sha256Hex} from './sha256.js'
 export async function loadConfigMap({signal, fetcher=fetch, base=import.meta.env?.BASE_URL || '/'}={}) {
   const directory = `${base}mecoffe/config-map/`
   const response = await fetcher(directory+'scenario.json', {signal,cache:'no-store'})
@@ -12,8 +13,7 @@ export async function loadConfigMap({signal, fetcher=fetch, base=import.meta.env
     const file = await fetcher(directory+name, {signal,cache:'no-store'})
     if (!file.ok) throw new Error('配置预览地图文件缺失')
     const bytes = await file.arrayBuffer()
-    const digest = await crypto.subtle.digest('SHA-256', bytes)
-    const hash = Array.from(new Uint8Array(digest), v=>v.toString(16).padStart(2,'0')).join('')
+    const hash = await sha256Hex(bytes)
     if (hash !== expected) throw new Error('配置预览地图版本不一致，请重新加载')
     files[name] = JSON.parse(new TextDecoder().decode(bytes))
   }))

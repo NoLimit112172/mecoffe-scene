@@ -1,4 +1,5 @@
 // Prepared scenario loading only; replay.js remains the simulation log reader.
+import {sha256Hex} from './sha256.js'
 export function scenarioId(value) {
   if(typeof value!=='string'||!/^[A-Za-z0-9][A-Za-z0-9_-]{0,63}$/.test(value))throw new Error('场景编号无效')
   return value
@@ -60,7 +61,7 @@ export async function loadScenario(id,{signal,fetcher=fetch,base=import.meta.env
     if(!gis&&!/^[a-z_0-9-]+\.json$/.test(name))throw new Error('场景文件名无效')
     if(gis&&!includeGis)return
     const {data,text}=await read(name)
-    const digest=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(text)),actual=Array.from(new Uint8Array(digest),b=>b.toString(16).padStart(2,'0')).join('')
+    const actual=await sha256Hex(new TextEncoder().encode(text))
     if(actual!==expected)throw new Error(`场景文件 ${name} 已改变，请重新生成场景`)
     files[name]=data
   }))

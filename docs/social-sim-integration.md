@@ -1,6 +1,6 @@
 # social-sim 场景接入：配置预览与运行回放
 
-接入状态（2026-11-08）：师兄已同意可选三维/GIS 及同源 `/scene/` 方向；学弟有本地补丁，仍待提 PR、审查、合并和部署。Alemax067 按团队规范默认审查，接口路径和部署方式在 PR 中提出并确认。方向认可不等于补丁已批准或服务器已上线。部署后使用 [联调清单](scene-integration-checklist.md) 验收。
+接入状态（里程碑 13）：师兄已认可可选三维/GIS 及同源 `/scene/` 方向，团队 PR #11 正在审查。根据师兄实测反馈，本轮修复普通 HTTP 哈希兼容，并改读运行冻结计划；第三个 `artifacts/plan` 接口需学弟补入 PR，具体路径和部署方式仍以审查为准。修复后的嵌入包与真实服务器联调还需验收，不能把方向认可或测试部署等同于正式完成。使用 [联调清单](scene-integration-checklist.md) 验收。
 
 ## 接入范围
 
@@ -133,16 +133,18 @@ GIS 使用 `/scene/mecoffe-gis/`。iframe 内切换视图时保持相同的配�
 | 顺序 | 接口 | 用途与归属 |
 | --- | --- | --- |
 | 1 | `GET /api/sessions/{session_id}/runs/{run_id}` | 已有接口。取得运行状态及本次运行的 `config_id`，不能用配置页当前选中的版本替代。 |
-| 2 | `GET /api/sessions/{session_id}/runs/{run_id}/artifacts/trajectory` | 学弟本地补丁有待审实现，未部署。返回该次终态运行导出的 `trajectory.json` 原文。 |
-| 3 | `GET /api/sessions/{session_id}/runs/{run_id}/artifacts/population-snapshot` | 学弟本地补丁有待审实现，未部署。返回该次运行冻结时使用的快照，不能读取后来被重新生成的 network 快照。 |
-| 4 | `GET /api/sessions/{session_id}/configs/{config_id}/stages/plan` | 已有接口。读取 `StageDetail.payload` 中的计划，取得品牌、商品及具体经营者的绑定。 |
+| 2 | `GET /api/sessions/{session_id}/runs/{run_id}/artifacts/trajectory` | 团队 PR #11 有待审实现。返回该次终态运行导出的 `trajectory.json` 原文。 |
+| 3 | `GET /api/sessions/{session_id}/runs/{run_id}/artifacts/population-snapshot` | 团队 PR #11 有待审实现。返回该次运行冻结时使用的快照，不能读取后来被重新生成的 network 快照。 |
+| 4 | `GET /api/sessions/{session_id}/runs/{run_id}/artifacts/plan` | 新增提议路径，需学弟补进 PR。只返回该次运行 `bundle.json` 中的 `simulation_plan` 原样字段（不是整个 bundle 或 StageDetail）。 |
 | 5 | `GET /api/sessions/{session_id}/configs/{config_id}/stages/roles` | 可选展示信息。只读取运行详情指定的配置；取 `payload.population_request[role].description` 和字段标题。 |
 
-两个新接口均为只读：沿用团队登录、会话归属和运行归属检查，执行顺序是确认当前用户可访问会话，再确认运行属于该会话。后端只允许读取指定运行的已登记产物，不接收客户端文件路径，不开放整个运行目录。轨迹接口仅在运行终态开放；还在排队或执行时返回明确的未就绪信息。冻结快照必须来自该次运行实际使用的冻结版本。响应使用 JSON，保留原始字段和值。
+三个运行产物接口（trajectory、population-snapshot、plan）均为只读：执行登录 → 会话归属 → 运行归属检查。后端只允许读取指定运行的已登记文件，检查目录和符号链接，不接收客户端文件路径，不开放整个运行目录。三个接口都只在运行终态开放；排队或执行时返回 409 未就绪。冻结快照取该次运行实际使用的版本；冻结计划只返回该次 `bundle.json.simulation_plan`，不泄露整个 bundle、其他内部配置或密钥。轨迹按原始字节返回，计划字段不重组、不改版本，三个响应都保留原始字段和值。
+
+模型绑定可能使 `plan_for_current_models()` 在创建运行时生成新的计划修订版。配置 `stages/plan` 可能仍是 v1，而该运行冻结计划/轨迹已经是 v2，因此正常回放优先请求上述 `artifacts/plan`，不读取配置阶段计划。**仅冻结计划接口返回 404 时**兼容旧后端，再请求运行详情 `config_id` 的 `stages/plan`；快照、计划 ID/revision 和运行轨迹都一致才回放。若旧计划不一致，提示“团队后端需要提供该次运行冻结的计划接口”，不使用错误计划凑数。401、409、其他 HTTP 错误、网络异常或无效 JSON 不触发该回退。
 
 前端在处理运行详情后，才请求对应终态产物；401 显示登录失效，404 显示运行或产物不存在/无访问权限。失败运行若存在有效终态轨迹且 `partial: true`，允许回放已有部分并明确显示不完整；没有可回放轨迹时说明原因。禁止拿另一次运行或另一个配置的数据填空。
 
-转换前严格校验轨迹 `metadata.snapshot_id`、`metadata.snapshot_revision` 与冻结快照一致，并校验计划的人口引用和 `plan_id`。发现不一致即报错。人物以 `entity_id` 关联；门店以 `brand_id → owner_entity_id → 经营者示意楼栋` 关联。广告通过发起者实体找到品牌，调价通过商品及经营者找到品牌，不假设 `brand_id` 等于人物 ID。金额仍是整数分。
+转换前严格校验轨迹 `metadata.snapshot_id`、`metadata.snapshot_revision` 与冻结快照一致，并校验冻结计划的人口引用及 `plan_id/plan_revision`。发现不一致即报错。人物以 `entity_id` 关联；门店以 `brand_id → owner_entity_id → 经营者示意楼栋` 关联。广告通过发起者实体找到品牌，调价通过商品及经营者找到品牌，不假设 `brand_id` 等于人物 ID。金额仍是整数分。
 
 任意角色沿用配置预览的显式安置规则和 FNV-1a 种子兜底规则；运行回放优先采用 `plan.runtime.seed`，缺省再取快照 seed 或 0。楼栋、入口、行走路线继续是展示示意，OASIS 没有位置数据。显示层不向引擎写位置，不让配置期管理员工具代替模拟人物动作。
 
@@ -162,7 +164,13 @@ Python 调用方还可传入 `population_request` 和 `placement_rules` 以提�
 
 1. 用合成样例验证非 MeCoffe 角色、品牌 ID 与人物 ID 不同、多家门店均可显示；三维和 GIS 的人数、关系、订单与输入一致。
 2. mock 验证运行中、失败且有部分轨迹、401、404，以及快照 ID 或 revision 不一致时的提示；没有完整输入时不展示另一次结果。
-3. 团队实现两个产物接口后，提供一份允许本地验证的终态运行；用其冻结快照和计划验证同一次运行的完整数据链。真实团队数据和截图只留本地，不进入公开仓库及 Pages/embed 产物。
+3. 团队提供三个产物接口后，提供一份允许本地验证的终态运行；用其冻结快照和冻结计划验证同一次运行的完整数据链。模型配置变化后复用旧配置再次运行，新旧两次均可回放。真实团队数据和截图只留本地，不进入公开仓库及 Pages/embed 产物。
 4. 在登录的团队页面内打开 iframe，并刷新 `/scene/mecoffe3d/`、`/scene/mecoffe-gis/`，检查 Cookie、资源路径、切换参数和会话权限。
 
 权威空间状态、人物自主移动动作和环境反馈闭环仍留待后续阶段讨论。
+
+### 普通 HTTP 兼容
+
+嵌入页可以通过 `http://服务器IP:端口/scene/` 与主站同源提供。非 localhost 的普通 HTTP 没有 `crypto.subtle` 时，地图加载器使用本项目自行实现的纯 JavaScript SHA-256，仍逐个检查文件哈希；HTTPS/localhost 可用时优先使用 Web Crypto，两者摘要一致。不修改浏览器安全策略，也不跳过地图完整性校验。
+
+场景页路径已排查 `crypto.randomUUID`、剪贴板、服务工作线程、文件选择器等安全上下文 API：没有其他直接依赖。旧 `TopologyEditor.vue` 的 `copyDebugJson()` 使用 `navigator.clipboard`，不在三维/GIS/素材库/嵌入入口的执行路径，本轮未修改旧编辑器。普通文件导入使用标准 input，MapLibre 使用普通 Worker。

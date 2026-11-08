@@ -251,17 +251,29 @@ export async function loadRunReplay({session,run,signal,fetcher=fetch}={}){
   if(!object(detail)||detail.id!==run)fail('RUN_MISMATCH','运行详情与所选运行不一致')
   if(!TERMINAL.has(detail.status))fail('RUN_PENDING','运行尚未结束，终态轨迹还未准备完成')
   const config=contextId(detail.config_id,'配置编号')
-  const [trajectory,snapshot,stage]=await Promise.all([
+  async function readPlan(){
+    try{return {plan:await read(prefix+'/artifacts/plan','冻结执行计划'),legacy:false}}
+    catch(error){
+      if(error.code!=='REPLAY_NOT_FOUND')throw error
+      const stage=await read(`/api/sessions/${encodeURIComponent(session)}/configs/${encodeURIComponent(config)}/stages/plan`,'执行计划')
+      if(!object(stage))fail('INVALID_RESPONSE','执行计划响应格式不正确')
+      if(stage.name!=='plan'||stage.status!=='completed'||!object(stage.payload))fail('PLAN_PENDING','该次运行的执行计划尚未准备完成')
+      if(stage.config_id!=null&&stage.config_id!==config)fail('PLAN_MISMATCH','执行计划不属于该次运行的配置')
+      return {plan:stage.payload,legacy:true}
+    }
+  }
+  const [trajectory,snapshot,selected]=await Promise.all([
     read(prefix+'/artifacts/trajectory','运行轨迹'),read(prefix+'/artifacts/population-snapshot','冻结快照'),
-    read(`/api/sessions/${encodeURIComponent(session)}/configs/${encodeURIComponent(config)}/stages/plan`,'执行计划')])
-  if(!object(stage))fail('INVALID_RESPONSE','执行计划响应格式不正确')
+    readPlan()])
+  if(!object(selected.plan))fail('INVALID_RESPONSE','冻结执行计划响应格式不正确')
   if(!object(trajectory))fail('INVALID_RESPONSE','运行轨迹响应格式不正确')
-  if(stage.name!=='plan'||stage.status!=='completed'||!object(stage.payload))fail('PLAN_PENDING','该次运行的执行计划尚未准备完成')
-  if(stage.config_id!=null&&stage.config_id!==config)fail('PLAN_MISMATCH','执行计划不属于该次运行的配置')
   if(trajectory.status!==detail.status)fail('RUN_MISMATCH','运行状态与轨迹状态不一致，请稍后重试')
-  const result={trajectory,snapshot,plan:stage.payload,context:{session_id:session,run_id:run,config_id:config}}
+  const result={trajectory,snapshot,plan:selected.plan,context:{session_id:session,run_id:run,config_id:config}}
   if(detail.engine_run_id!=null)result.context.engine_run_id=detail.engine_run_id
-  validateRunReplay(result)
+  try{validateRunReplay(result)}catch(error){
+    if(selected.legacy&&error.code==='PLAN_MISMATCH')fail('FROZEN_PLAN_REQUIRED','团队后端需要提供该次运行冻结的计划接口（artifacts/plan）；配置计划与实际运行的编号、版本或内容不一致')
+    throw error
+  }
   // 核心输入先严格校验；角色阶段缺失或不合格只能影响展示名称。
   // 同源登录失效与主动取消仍交由页面处理，不能当作普通缺省值。
   try{

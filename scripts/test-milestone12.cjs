@@ -27,6 +27,7 @@ async function mocked(mode){
     if(url.pathname===api)return route.fulfill({json:{id:run,config_id:config,status:'completed',engine_run_id:trajectory.run_id}});
     if(url.pathname===api+'/artifacts/trajectory')return route.fulfill({json:trajectory});
     if(url.pathname===api+'/artifacts/population-snapshot')return route.fulfill({json:snapshot});
+    if(url.pathname===api+'/artifacts/plan')return route.fulfill({status:404,json:{detail:'合成旧后端，尚无冻结计划接口'}});
     if(url.pathname===stages+'plan')return route.fulfill({json:{name:'plan',status:'completed',config_id:config,payload:plan}});
     if(url.pathname===stages+'roles'){
       if(mode==='missing')return route.fulfill({status:404,json:{detail:'合成的角色阶段缺失'}});

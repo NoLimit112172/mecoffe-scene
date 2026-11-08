@@ -27,7 +27,7 @@ function roleStage(bundle=sample(),config='config_test'){
     Object.entries(roleLabels).map(([role,description])=>[role,{description,count:bundle.snapshot.nodes.filter(n=>n.role===role).length,generate:{}}]))}}
 }
 function mock(bundle=sample(), detail={id:'business_run',config_id:'config_test',status:'completed',engine_run_id:'engine_synthetic_replay'}) {
-  return async url=>url.endsWith('/stages/roles')?{ok:false,status:404}:response(url.endsWith('/artifacts/trajectory')?bundle.trajectory
+  return async url=>url.endsWith('/stages/roles')||url.endsWith('/artifacts/plan')?{ok:false,status:404}:response(url.endsWith('/artifacts/trajectory')?bundle.trajectory
     :url.endsWith('/artifacts/population-snapshot')?bundle.snapshot
       :url.endsWith('/stages/plan')?{name:'plan',status:'completed',payload:bundle.plan}:detail)
 }
@@ -224,11 +224,62 @@ test('terminal loader fetches the exact run frozen artifacts and same config pla
   assert.deepEqual(calls.map(c=>c.url).sort(),[
     '/api/sessions/session_test/runs/business_run','/api/sessions/session_test/runs/business_run/artifacts/trajectory',
     '/api/sessions/session_test/runs/business_run/artifacts/population-snapshot','/api/sessions/session_test/configs/config_test/stages/plan',
+    '/api/sessions/session_test/runs/business_run/artifacts/plan',
     '/api/sessions/session_test/configs/config_test/stages/roles',
   ].sort())
   assert(calls.every(c=>c.options.credentials==='same-origin'&&c.options.cache==='no-store'&&c.options.signal===signal&&!c.options.headers))
   validateRunReplay(bundle)
   assert.equal(sceneOf(bundle).meta.application_run_id,'business_run')
+})
+
+test('frozen run plan revision 2 is used even when the configuration plan remains revision 1',async()=>{
+  const source=sample(),configPlan=structuredClone(source.plan)
+  source.plan.plan_revision=2;source.trajectory.metadata.plan_revision=2
+  const calls=[],fallback=mock(source)
+  const bundle=await loadRunReplay({session:'session_test',run:'business_run',fetcher:async url=>{
+    calls.push(url)
+    if(url.endsWith('/artifacts/plan'))return response(source.plan)
+    if(url.endsWith('/stages/plan'))return response({name:'plan',status:'completed',payload:configPlan})
+    return fallback(url)
+  }})
+  assert.equal(bundle.plan.plan_revision,2)
+  assert.equal(sceneOf(bundle).meta.plan_revision,2)
+  assert.equal(sceneOf(bundle).summary.orders,2)
+  assert(!calls.some(url=>url.endsWith('/stages/plan')))
+  assert(calls.some(url=>url.endsWith('/configs/config_test/stages/roles')))
+})
+
+test('legacy configuration plan fallback requires frozen endpoint 404 and an exact version match',async()=>{
+  const loaded=await loadRunReplay({session:'session_test',run:'business_run',fetcher:mock()})
+  assert.equal(sceneOf(loaded).summary.orders,2)
+  const source=sample(),configPlan=structuredClone(source.plan)
+  source.plan.plan_revision=2;source.trajectory.metadata.plan_revision=2
+  const fallback=mock(source)
+  await assert.rejects(()=>loadRunReplay({session:'session_test',run:'business_run',fetcher:async url=>
+    url.endsWith('/stages/plan')?response({name:'plan',status:'completed',payload:configPlan}):fallback(url)}),
+    error=>error.code==='FROZEN_PLAN_REQUIRED'&&/团队后端需要提供该次运行冻结的计划接口/.test(error.message))
+})
+
+test('frozen plan errors never fall back, and frozen plan identity checks remain strict',async()=>{
+  const source=sample(),fallback=mock(source),abort=new DOMException('synthetic cancelled','AbortError')
+  const variants=[
+    [()=>({ok:false,status:401}),code('LOGIN_REQUIRED')],
+    [()=>({ok:false,status:409}),code('RUN_PENDING')],
+    [()=>({ok:false,status:500}),code('HTTP_ERROR')],
+    [()=>{throw TypeError('offline')},code('NETWORK_ERROR')],
+    [()=>{throw abort},e=>e===abort],
+    [()=>({ok:true,status:200,json:async()=>{throw SyntaxError('bad JSON')}}),code('INVALID_RESPONSE')],
+    [()=>response(null),code('INVALID_RESPONSE')],
+    [()=>response({...source.plan,plan_revision:99}),code('PLAN_MISMATCH')],
+    [()=>response({...source.plan,population:{...source.plan.population,snapshot_revision:99}}),code('PLAN_MISMATCH')],
+  ]
+  for(const [answer,expected]of variants){
+    const calls=[]
+    await assert.rejects(()=>loadRunReplay({session:'session_test',run:'business_run',fetcher:async url=>{
+      calls.push(url);return url.endsWith('/artifacts/plan')?answer():fallback(url)
+    }}),expected)
+    assert(!calls.some(url=>url.endsWith('/stages/plan')))
+  }
 })
 
 test('remote replay uses role descriptions from the run config and preserves frozen identities and results',async()=>{
