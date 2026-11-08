@@ -105,7 +105,7 @@
               </div>
             </article>
             <p v-if="!roster.length" class="empty">没有匹配的人物。</p>
-            <div class="roster" aria-label="人物名册"><button v-for="person in roster" :key="person.id" :data-person-id="person.id" :class="{ selected: selectedId === person.id }" @click="selectPerson(person.id)"><span class="person-dot" :style="{ background: roleColor(person.role) }"></span><span>{{ person.name }}<small>{{ mappedBuilding(person)?.name || person.role_label }}</small></span><i aria-hidden="true" v-if="selectedId === person.id" class="fa-solid fa-chevron-right"></i></button></div>
+            <div class="roster" aria-label="人物名册"><button v-for="person in roster" :key="person.id" :data-person-id="person.id" :class="{ selected: selectedId === person.id }" @click="selectPerson(person.id)"><span class="person-dot" :style="{ background: roleColor(person.role) }"></span><span>{{ person.name }}<small :title="person.role_description || person.role_label">{{ isGenericReplay ? person.role_label + (mappedBuilding(person)?.name ? ' · ' + mappedBuilding(person).name : '') : mappedBuilding(person)?.name || person.role_label }}</small></span><i aria-hidden="true" v-if="selectedId === person.id" class="fa-solid fa-chevron-right"></i></button></div>
           </div>
           <div v-else-if="activeTab === 'building'" class="side-content">
             <div class="section-heading"><h2>楼栋详情</h2></div>

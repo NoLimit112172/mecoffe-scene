@@ -230,7 +230,7 @@ export function buildGenericReplayScenario(bundle,mapScenario){
   return scenario
 }
 
-/** 按草案接口读取运行详情、冻结快照、轨迹及该次配置的计划。 */
+/** 读取冻结运行输入，再补充该配置的可选角色展示说明。 */
 export async function loadRunReplay({session,run,signal,fetcher=fetch}={}){
   contextId(session,'会话编号');contextId(run,'运行编号')
   const prefix=`/api/sessions/${encodeURIComponent(session)}/runs/${encodeURIComponent(run)}`
@@ -242,7 +242,10 @@ export async function loadRunReplay({session,run,signal,fetcher=fetch}={}){
     if(response.status===404)fail('REPLAY_NOT_FOUND',`${label}不存在或当前账号无权访问`)
     if(response.status===409)fail('RUN_PENDING','运行产物尚未准备完成，请等待任务结束后重试')
     if(!response.ok)fail('HTTP_ERROR',`运行服务暂不可用（${response.status}）`)
-    try{return await response.json()}catch{fail('INVALID_RESPONSE',`${label}不是有效 JSON`)}
+    try{return await response.json()}catch(error){
+      if(error.name==='AbortError')throw error
+      fail('INVALID_RESPONSE',`${label}不是有效 JSON`)
+    }
   }
   const detail=await read(prefix,'运行')
   if(!object(detail)||detail.id!==run)fail('RUN_MISMATCH','运行详情与所选运行不一致')
@@ -259,5 +262,15 @@ export async function loadRunReplay({session,run,signal,fetcher=fetch}={}){
   const result={trajectory,snapshot,plan:stage.payload,context:{session_id:session,run_id:run,config_id:config}}
   if(detail.engine_run_id!=null)result.context.engine_run_id=detail.engine_run_id
   validateRunReplay(result)
+  // 核心输入先严格校验；角色阶段缺失或不合格只能影响展示名称。
+  // 同源登录失效与主动取消仍交由页面处理，不能当作普通缺省值。
+  try{
+    const roles=await read(`/api/sessions/${encodeURIComponent(session)}/configs/${encodeURIComponent(config)}/stages/roles`,'角色说明')
+    if(!object(roles)||roles.name!=='roles'||roles.status!=='completed'||!object(roles.payload))return result
+    normalizeConfigPreview({network:snapshot,roles,session,config,seed:result.plan.runtime?.seed})
+    result.roles=roles
+  }catch(error){
+    if(error.name==='AbortError'||error.code==='LOGIN_REQUIRED')throw error
+  }
   return result
 }

@@ -1,5 +1,7 @@
 # social-sim 场景接入：配置预览与运行回放
 
+接入状态（2026-11-08）：师兄已同意可选三维/GIS 及同源 `/scene/` 方向；学弟有本地补丁，仍待提 PR、审查、合并和部署。Alemax067 按团队规范默认审查，接口路径和部署方式在 PR 中提出并确认。方向认可不等于补丁已批准或服务器已上线。部署后使用 [联调清单](scene-integration-checklist.md) 验收。
+
 ## 接入范围
 
 配置的 network 阶段完成后，可以在三维校园和 GIS 中查看人物画像、初始关系及楼内人数。页面标注“配置预览 · 尚未运行模拟”。人物位置由显式规则或确定性规则分配，属于展示示意。所有事件、订单和在途人数均为零。
@@ -131,9 +133,10 @@ GIS 使用 `/scene/mecoffe-gis/`。iframe 内切换视图时保持相同的配�
 | 顺序 | 接口 | 用途与归属 |
 | --- | --- | --- |
 | 1 | `GET /api/sessions/{session_id}/runs/{run_id}` | 已有接口。取得运行状态及本次运行的 `config_id`，不能用配置页当前选中的版本替代。 |
-| 2 | `GET /api/sessions/{session_id}/runs/{run_id}/artifacts/trajectory` | 待团队实现。返回该次终态运行导出的 `trajectory.json` 原文。 |
-| 3 | `GET /api/sessions/{session_id}/runs/{run_id}/artifacts/population-snapshot` | 待团队实现。返回该次运行冻结时使用的快照，不能读取后来被重新生成的 network 快照。 |
+| 2 | `GET /api/sessions/{session_id}/runs/{run_id}/artifacts/trajectory` | 学弟本地补丁有待审实现，未部署。返回该次终态运行导出的 `trajectory.json` 原文。 |
+| 3 | `GET /api/sessions/{session_id}/runs/{run_id}/artifacts/population-snapshot` | 学弟本地补丁有待审实现，未部署。返回该次运行冻结时使用的快照，不能读取后来被重新生成的 network 快照。 |
 | 4 | `GET /api/sessions/{session_id}/configs/{config_id}/stages/plan` | 已有接口。读取 `StageDetail.payload` 中的计划，取得品牌、商品及具体经营者的绑定。 |
+| 5 | `GET /api/sessions/{session_id}/configs/{config_id}/stages/roles` | 可选展示信息。只读取运行详情指定的配置；取 `payload.population_request[role].description` 和字段标题。 |
 
 两个新接口均为只读：沿用团队登录、会话归属和运行归属检查，执行顺序是确认当前用户可访问会话，再确认运行属于该会话。后端只允许读取指定运行的已登记产物，不接收客户端文件路径，不开放整个运行目录。轨迹接口仅在运行终态开放；还在排队或执行时返回明确的未就绪信息。冻结快照必须来自该次运行实际使用的冻结版本。响应使用 JSON，保留原始字段和值。
 
@@ -142,6 +145,8 @@ GIS 使用 `/scene/mecoffe-gis/`。iframe 内切换视图时保持相同的配�
 转换前严格校验轨迹 `metadata.snapshot_id`、`metadata.snapshot_revision` 与冻结快照一致，并校验计划的人口引用和 `plan_id`。发现不一致即报错。人物以 `entity_id` 关联；门店以 `brand_id → owner_entity_id → 经营者示意楼栋` 关联。广告通过发起者实体找到品牌，调价通过商品及经营者找到品牌，不假设 `brand_id` 等于人物 ID。金额仍是整数分。
 
 任意角色沿用配置预览的显式安置规则和 FNV-1a 种子兜底规则；运行回放优先采用 `plan.runtime.seed`，缺省再取快照 seed 或 0。楼栋、入口、行走路线继续是展示示意，OASIS 没有位置数据。显示层不向引擎写位置，不让配置期管理员工具代替模拟人物动作。
+
+回放先严格核对轨迹、冻结快照和计划，再独立读取上述可选 roles。有效角色说明优先于冻结快照内的 `role_description`，都没有时显示原始角色 ID；短名截断、全文说明和原始 ID 保留。角色阶段返回 404/409、未完成、无效 JSON、格式或配置不匹配、网络异常时忽略这份展示信息，回放及其人数、安置、订单和动作保持不变；401 仍提示登录失效，`AbortError` 继续向上传递。不能使用会话当前选中的另一个配置补角色名。长期若允许配置阶段重生成，应将展示说明随运行冻结；当前角色阶段仅补充展示，不替代冻结输入。
 
 动作 `outcome` 单独处理：`executed` 才能进入成功动作路径；`failed`、`declined`、`unknown` 保留为各自状态的事件。被拒或结果未知的购买不增加订单、不产生取杯动画；未知发帖不作为成功帖子。终态 `objects` 是审计对象，不能直接当成所有人物在时间轴起点就知道的信息。
 

@@ -11,7 +11,7 @@ const read=name=>JSON.parse(fs.readFileSync(path.join(fixture,name+'.json'),'utf
 const sample=()=>({trajectory:read('trajectory'),snapshot:read('snapshot'),plan:read('plan')});
 const session='synthetic-session',run='synthetic-run',config='synthetic-config';
 const api=`/api/sessions/${session}/runs/${run}`;
-const expectedUrls=[api,api+'/artifacts/trajectory',api+'/artifacts/population-snapshot',`/api/sessions/${session}/configs/${config}/stages/plan`].sort();
+const expectedUrls=[api,api+'/artifacts/trajectory',api+'/artifacts/population-snapshot',`/api/sessions/${session}/configs/${config}/stages/plan`,`/api/sessions/${session}/configs/${config}/stages/roles`].sort();
 const report={mode:tag,source:'synthetic-only',viewport:'1600x1000',expected:{people:7,relationships:4,brands:3,orders:2,declined:1,unknown:1,failed:1},checks:[],apiRequests:[],errors:[],badResponses:[],externalRequests:[]};
 let server,browser;
 const entry=(view='mecoffe3d')=>`${base}/${view}/?session=${session}&run=${run}`;
@@ -34,6 +34,7 @@ async function mock(context,mode='completed'){
       if(url.pathname===api+'/artifacts/trajectory')return route.fulfill({json:input.trajectory});
       if(url.pathname===api+'/artifacts/population-snapshot')return route.fulfill({json:input.snapshot});
       if(url.pathname===`/api/sessions/${session}/configs/${config}/stages/plan`)return route.fulfill({json:{name:'plan',status:'completed',payload:input.plan}});
+      if(url.pathname===`/api/sessions/${session}/configs/${config}/stages/roles`)return route.fulfill({status:404,json:{detail:'合成运行未附角色阶段'}});
       throw Error('Unexpected synthetic API route: '+url.pathname);
     }
     return route.continue();
@@ -71,10 +72,10 @@ async function endReplay(page,gis=false){
   browser=await chromium.launch({channel:'chrome',headless:true});
   const context=await browser.newContext({viewport:{width:1600,height:1000}}),calls=await mock(context);
   const page=await pageFor(context),response=await page.goto(entry(),{waitUntil:'domcontentloaded'});assert.equal(response.status(),200);
-  await ready(page);assert.deepEqual(calls.slice(0,4).map(c=>c.path).sort(),expectedUrls);
+  await ready(page);assert.deepEqual(calls.slice(0,5).map(c=>c.path).sort(),expectedUrls);
   await shot(page,'3d-overview');await endReplay(page);await shot(page,'3d-outcomes');
   await page.getByText('被拒绝',{exact:true}).scrollIntoViewIfNeeded();await shot(page,'declined-action');
-  report.checks.push('remote terminal run: exact four same-origin read-only APIs, 7 people / 4 edges / 2 orders / 1 declined / 1 unknown, no import UI');
+  report.checks.push('remote terminal run: four required same-origin APIs plus optional roles fallback, 7 people / 4 edges / 2 orders / 1 declined / 1 unknown, no import UI');
   await page.locator('.preview-bar a').click();await ready(page,true);
   let url=new URL(page.url());assert.equal(url.searchParams.get('session'),session);assert.equal(url.searchParams.get('run'),run);assert.equal(url.searchParams.get('config'),null);
   assert.equal(await page.locator('.gis-roster [data-person-id]').count(),7);

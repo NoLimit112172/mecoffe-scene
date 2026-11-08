@@ -21,8 +21,13 @@ function mapScenario() {
 const sceneOf = bundle => buildGenericReplayScenario(bundle,mapScenario()).files['trajectory.json']
 const code = expected => error => error.code===expected
 const response = value => ({ok:true,status:200,json:async()=>value})
+const roleLabels={visitor:'样例校园访客',operator:'样例门店经营者',research:'样例科研人员'}
+function roleStage(bundle=sample(),config='config_test'){
+  return {name:'roles',status:'completed',config_id:config,payload:{population_request:Object.fromEntries(
+    Object.entries(roleLabels).map(([role,description])=>[role,{description,count:bundle.snapshot.nodes.filter(n=>n.role===role).length,generate:{}}]))}}
+}
 function mock(bundle=sample(), detail={id:'business_run',config_id:'config_test',status:'completed',engine_run_id:'engine_synthetic_replay'}) {
-  return async url=>response(url.endsWith('/artifacts/trajectory')?bundle.trajectory
+  return async url=>url.endsWith('/stages/roles')?{ok:false,status:404}:response(url.endsWith('/artifacts/trajectory')?bundle.trajectory
     :url.endsWith('/artifacts/population-snapshot')?bundle.snapshot
       :url.endsWith('/stages/plan')?{name:'plan',status:'completed',payload:bundle.plan}:detail)
 }
@@ -219,10 +224,85 @@ test('terminal loader fetches the exact run frozen artifacts and same config pla
   assert.deepEqual(calls.map(c=>c.url).sort(),[
     '/api/sessions/session_test/runs/business_run','/api/sessions/session_test/runs/business_run/artifacts/trajectory',
     '/api/sessions/session_test/runs/business_run/artifacts/population-snapshot','/api/sessions/session_test/configs/config_test/stages/plan',
+    '/api/sessions/session_test/configs/config_test/stages/roles',
   ].sort())
   assert(calls.every(c=>c.options.credentials==='same-origin'&&c.options.cache==='no-store'&&c.options.signal===signal&&!c.options.headers))
   validateRunReplay(bundle)
   assert.equal(sceneOf(bundle).meta.application_run_id,'business_run')
+})
+
+test('remote replay uses role descriptions from the run config and preserves frozen identities and results',async()=>{
+  const source=sample(),before=JSON.stringify(source),calls=[],fetcher=mock(source),stage=roleStage(source)
+  const loaded=await loadRunReplay({session:'session_test',run:'business_run',config:'currently_selected_other_config',fetcher:async(url,options)=>{
+    calls.push({url,options});return url.endsWith('/stages/roles')?response(stage):fetcher(url)
+  }})
+  assert(calls.some(c=>c.url==='/api/sessions/session_test/configs/config_test/stages/roles'))
+  assert(!calls.some(c=>c.url.includes('currently_selected_other_config')))
+  assert.deepEqual(loaded.roles,stage)
+  const scene=sceneOf(loaded),baseline=sceneOf({...loaded,roles:undefined})
+  for(const person of scene.people){
+    assert.equal(person.role_label,roleLabels[person.role])
+    assert.equal(person.role_description,roleLabels[person.role])
+    const frozen=source.snapshot.nodes.find(n=>n.entity_id===person.id)
+    assert.equal(person.role,frozen.role)
+    assert.deepEqual(person.static_attributes,frozen.static_attributes)
+    assert.deepEqual(person.dynamic_attributes,frozen.dynamic_attributes)
+  }
+  assert.deepEqual(scene.people.map(p=>[p.id,p.role,p.location_key]),baseline.people.map(p=>[p.id,p.role,p.location_key]))
+  for(const key of ['events','relationships','brands','summary','days'])assert.deepEqual(scene[key],baseline[key])
+  assert.equal(JSON.stringify(source),before)
+})
+
+test('missing or invalid optional roles degrade to original names without changing the replay',async()=>{
+  const source=sample();source.snapshot.nodes.forEach(n=>delete n.role_description)
+  const fetcher=mock(source),load=roles=>loadRunReplay({session:'session_test',run:'business_run',fetcher:async(url)=>url.endsWith('/stages/roles')?roles():fetcher(url)})
+  const baseline=sceneOf(await load(()=>({ok:false,status:404})))
+  const variants=[
+    ()=>({ok:false,status:404}),()=>({ok:false,status:409}),()=>({ok:false,status:500}),
+    ()=>{throw TypeError('synthetic offline')},
+    ()=>({ok:true,status:200,json:async()=>{throw SyntaxError('synthetic malformed JSON')}}),
+    ()=>response(null),()=>response({name:'roles',status:'pending',payload:null}),
+    ()=>response({name:'roles',status:'failed',payload:null}),
+    ()=>response({name:'roles',status:'completed',payload:{population_request:[]}}),
+    ()=>response({...roleStage(source),name:'plan'}),
+    ()=>response(roleStage(source,'different_config')),
+    ()=>{const stage=roleStage(source);stage.payload.population_request.visitor.count++;return response(stage)},
+    ()=>{const stage=roleStage(source);stage.payload.population_request.visitor.description='';return response(stage)},
+  ]
+  for(const variant of variants){
+    const bundle=await load(variant)
+    assert.equal(bundle.roles,undefined)
+    const scene=sceneOf(bundle)
+    assert(scene.people.every(p=>p.role_label===p.role))
+    assert.deepEqual(scene,baseline)
+  }
+})
+
+test('optional roles keep explicit frozen descriptions as the second fallback',async()=>{
+  const bundle=await loadRunReplay({session:'session_test',run:'business_run',fetcher:mock()})
+  for(const person of sceneOf(bundle).people){
+    const frozen=bundle.snapshot.nodes.find(n=>n.entity_id===person.id)
+    assert.equal(person.role_description,frozen.role_description)
+    assert.equal(person.role_label,frozen.role_description)
+  }
+})
+
+test('optional roles never swallow login expiry or cancellation during fetch or JSON parsing',async()=>{
+  const fetcher=mock(),abort=new DOMException('synthetic cancelled','AbortError')
+  for(const [roles,expected] of [
+    [()=>({ok:false,status:401}),code('LOGIN_REQUIRED')],
+    [()=>{throw abort},e=>e===abort],
+    [()=>({ok:true,status:200,json:async()=>{throw abort}}),e=>e===abort],
+  ])await assert.rejects(()=>loadRunReplay({session:'session_test',run:'business_run',fetcher:async(url)=>url.endsWith('/stages/roles')?roles():fetcher(url)}),expected)
+})
+
+test('invalid frozen inputs fail strictly before optional role metadata is requested',async()=>{
+  const source=sample();source.snapshot.snapshot_revision++
+  const fetcher=mock(source),calls=[]
+  await assert.rejects(()=>loadRunReplay({session:'session_test',run:'business_run',fetcher:async(url)=>{
+    calls.push(url);return url.endsWith('/stages/roles')?response(roleStage(source)):fetcher(url)
+  }}),code('SNAPSHOT_MISMATCH'))
+  assert(!calls.some(url=>url.endsWith('/stages/roles')))
 })
 
 test('loader separates login, missing, pending, malformed, unavailable and aborted responses',async()=>{

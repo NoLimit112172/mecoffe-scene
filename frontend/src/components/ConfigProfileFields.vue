@@ -1,7 +1,7 @@
 <template>
-  <div v-if="person?.profile_fields?.length" class="profile-fields">
+  <div v-if="person?.profile_fields?.length || person?.role" class="profile-fields">
     <dl aria-label="人物属性"><div v-for="field in person.profile_fields" :key="field.source+':'+field.key"><dt>{{field.label}}</dt><dd>{{format(display(field))}}</dd></div></dl>
-    <details class="raw-fields"><summary>数据详情</summary><dl aria-label="原始人物属性"><div v-for="field in person.profile_fields" :key="field.source+':'+field.key"><dt><code>{{field.key}}</code></dt><dd>{{raw(field.value)}}</dd></div></dl></details>
+    <details class="raw-fields"><summary>数据详情</summary><dl aria-label="原始人物属性"><div v-if="person.role"><dt><code>role</code></dt><dd>{{raw(person.role)}}</dd></div><div v-for="field in person.profile_fields" :key="field.source+':'+field.key"><dt><code>{{field.key}}</code></dt><dd>{{raw(field.value)}}</dd></div></dl></details>
   </div>
 </template>
 <script setup>
