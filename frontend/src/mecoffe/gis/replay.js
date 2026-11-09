@@ -3,6 +3,7 @@ import {indexScene} from '../replay.js'
 import {cursorAtPosition,advancePosition,positionAtCursor} from '../campus3dPlayback.js'
 import {IndoorMotion,INDOOR_DEFAULTS} from '../indoorMotion.js'
 import {localToLngLat,ROLE_COLORS} from './model.js'
+import {advanceLiveMotion,enqueueLivePurchase,refreshLiveIndex} from '../liveRender.js'
 export const DISPLAY_ROUTE_HEADWAY=INDOOR_DEFAULTS.headwaySeconds
 export function nextDisplayDeparture(previous,now){return Math.max(now,(previous??-Infinity)+DISPLAY_ROUTE_HEADWAY)}
 export class GisReplay {
@@ -21,7 +22,11 @@ export class GisReplay {
   get pending(){return this.motion?.pending||0}
   get occupancy(){return this.motion?.snapshot||{buildings:{},persons:{},inside:0}}
   seek(position){this.position=Math.max(0,Math.min(this.maxPosition,Number(position)||0));this.cursor=this.index?cursorAtPosition(this.index,this.position):0;this.drainSeconds=0;this.motion?.reset();this.motion?.sync(this.position)}
-  event(event){this.motion?.event(event)}
+  event(event){if(this.scenario.manifest.preview_mode==='live')enqueueLivePurchase(this.motion,event);else this.motion?.event(event)}
+  /** 运行中只更新数据索引，保留人物、寻路缓存和 WebGL 图层。 */
+  updateLive(){if(this.index)refreshLiveIndex(this.index,this.scenario.files['trajectory.json']);this.motion.purchases=[];this.cursor=this.index.scene.events.length;this.position=this.index.days.length;return this.index}
+  advanceLive(milliseconds){if(this.motion)this.liveSeconds=advanceLiveMotion(this.motion,milliseconds,this.liveSeconds||0)}
+  followLiveLatest(){this.motion?.reset();if(this.motion)this.motion.purchases=[];this.liveSeconds=0}
   prepare(signal){return this.motion?.prepareRoutes(signal)||Promise.resolve()}
   admit(){this.motion?.admit()}
   advance(milliseconds,speed=1){

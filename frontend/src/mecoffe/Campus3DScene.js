@@ -32,6 +32,7 @@ import {arcPoints} from './Campus3DEffects.js'
 import {Campus3DEntrances} from './Campus3DEntrances.js'
 import {positionAtCursor} from './campus3dPlayback.js'
 import {placeIndoorPeople,syncIndoorView,indoorScreen,focusIndoorBuilding,updateIndoorGlow} from './Campus3DIndoor.js'
+import {advanceLiveMotion,enqueueLivePurchase,liveEventLabel} from './liveRender.js'
 import { Campus3DInteriorPreview } from './Campus3DInteriorPreview.js'
 
 const BRAND_COLORS = prototypeParams('building.component.shop-sign').marker_colors.map(value=>parseInt(value.slice(1),16))
@@ -342,6 +343,7 @@ export class Campus3DScene {
     this.renderDirty=false
     this.indoorPreview?.update()
     this.updateScreenVisuals()
+    this.updateLiveBubbles()
     this.eventEffects?.updateScreen(this.camera,this.host.clientHeight)
     if(this.relationLayer.children.length)this.relationsDirty=true
     if(this.relationsDirty){this.updateRelations();this.relationsDirty=false}
@@ -835,6 +837,45 @@ export class Campus3DScene {
     }
   }
 
+  /** 实时快报复用既有场景；只有核实后的 purchase 才进入行走队列。 */
+  playLiveEvent(event) {
+    this.liveMode=true
+    if(event.type==='purchase'){
+      enqueueLivePurchase(this.indoor,event)
+      this.invalidate()
+      return
+    }
+    const entry=this.people.get(event.actor)
+    if(!entry)return
+    // Lightweight DOM bubbles remain crisp and do not expose raw tool results.
+    const element=document.createElement('div')
+    element.className='campus-live-bubble'
+    element.textContent=`${entry.person.name} · ${liveEventLabel(event)}`
+    Object.assign(element.style,{position:'absolute',left:'50%',top:'25%',zIndex:6,pointerEvents:'none',maxWidth:'230px',padding:'8px 11px',borderRadius:'10px',background:'#fffffff5',border:'1px solid #aac8bc',boxShadow:'0 3px 14px #24473c24',color:'#244b40',font:'12px/1.5 system-ui,sans-serif',transform:'translate(-50%,-100%)'})
+    this.host.append(element)
+    this.liveBubbles ||= []
+    this.liveBubbles.push({element,actor:event.actor,until:this.visualSeconds+5})
+    while(this.liveBubbles.length>8)this.liveBubbles.shift().element.remove()
+    this.invalidate()
+  }
+
+  updateLiveBubbles(){
+    const next=[]
+    for(const item of this.liveBubbles||[]){
+      if(item.until<this.visualSeconds){item.element.remove();continue}
+      const entry=this.people.get(item.actor),location=this.indoor?.personLocation(item.actor)
+      const building=location?.inside&&this.campus.buildings.find(b=>b.osm_id===location.buildingId)
+      const point=entry?.figure.position.clone()||new THREE.Vector3()
+      if(building){const polygon=building.polygon;point.set(polygon.reduce((s,p)=>s+p[0],0)/polygon.length,(building.height_m||15)+8,-polygon.reduce((s,p)=>s+p[1],0)/polygon.length)}else point.y+=12
+      point.project(this.camera)
+      item.element.style.left=`${(point.x+1)*.5*this.host.clientWidth}px`
+      item.element.style.top=`${(1-point.y)*.5*this.host.clientHeight}px`
+      item.element.style.display=point.z<1&&Math.abs(point.x)<1.1&&Math.abs(point.y)<1.1?'':'none'
+      next.push(item)
+    }
+    this.liveBubbles=next
+  }
+
   drainTripQueue() {
     for(const entry of tripQueueEntries(this.people.values(),this.walkers.size,this.tripAdmission.total,this.tripAdmission.perStore))this.startNextTrip(entry)
   }
@@ -874,7 +915,7 @@ export class Campus3DScene {
   }
 
   updateWalkers(delta) {
-    if(this.indoor){if(!this.timelinePlaying){this.indoorDrain+=delta;this.indoor.sync(this.indoorPosition,this.indoorDrain)}syncIndoorView(this);return}
+    if(this.indoor){if(this.liveMode)this.liveMotionSeconds=advanceLiveMotion(this.indoor,delta*1000,this.liveMotionSeconds||0);else if(!this.timelinePlaying){this.indoorDrain+=delta;this.indoor.sync(this.indoorPosition,this.indoorDrain)}syncIndoorView(this);return}
     let changed = false
     // Small, swept steps keep both the frame endpoints and the interval safe.
     // Only display travel is delayed by a queue; replay events/stats are intact.
@@ -1309,6 +1350,8 @@ export class Campus3DScene {
   dispose() {
     if (this.disposed) return
     this.disposed = true
+    for(const item of this.liveBubbles||[])item.element.remove()
+    this.liveBubbles=[]
     this.spatialWorker?.dispose()
     if (this.frame) cancelAnimationFrame(this.frame)
     this.resizeObserver?.disconnect()

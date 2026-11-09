@@ -1,5 +1,5 @@
 <template>
-  <div class="campus3d-page" :data-indoor-occupancy="JSON.stringify(indoorState.buildings)" :data-inside="indoorState.inside" :data-person-accounting="JSON.stringify(indoorState.accounting)">
+  <div class="campus3d-page" :class="{'integrated-page':isIntegratedScene,'details-open':detailsOpen}" :data-live-mode="isLive" :data-live-revision="liveState?.revision || 0" :data-indoor-occupancy="JSON.stringify(indoorState.buildings)" :data-inside="indoorState.inside" :data-person-accounting="JSON.stringify(indoorState.accounting)">
     <header class="page-header">
       <div class="title-group"><span class="logo"><i aria-hidden="true" class="fa-solid fa-cubes"></i></span><div><h1>{{scenario?.manifest.title || '中科大高新校区 · 三维校园沙盘'}}</h1><p>MeCoffe / 阶段 1 · OSM 建筑体块与步行路网</p></div></div>
       <div class="header-actions">
@@ -19,7 +19,7 @@
     <p v-if="styleError" role="alert" class="data-notice">{{styleError}}</p>
 
     <template v-if="index && !loadError">
-      <div v-if="!isConfigPreview" class="data-notice" data-testid="simulation-time">{{dayDisplay?.label || currentDay.label}} · 天内回放进度 {{dayDisplay?.progress || 0}}% · 昼夜变化为展示效果</div>
+      <div v-if="!isConfigPreview&&!isLive" class="data-notice" data-testid="simulation-time">{{dayDisplay?.label || currentDay.label}} · 天内回放进度 {{dayDisplay?.progress || 0}}% · 昼夜变化为展示效果</div>
       <div class="data-notice" :class="requestedMode" data-testid="data-notice">{{ dataNotice }}</div>
       <p v-if="isGenericReplay" class="data-notice" data-testid="replay-outcomes">本记录含被拒 {{replayOutcomeCounts.declined}} 条 · 结果未知 {{replayOutcomeCounts.unknown}} 条；仅已执行的动作计入成功结果。</p>
       <p v-if="indoorState.accounting" class="population-accounting" data-testid="person-accounting">人物去向：室外 {{indoorState.accounting.visible}} + 楼内 {{indoorState.accounting.inside}} = {{indoorState.accounting.total}} 人 · {{indoorState.accounting.valid?'全部可定位':'请重新加载场景'}}<span v-if="selectedId"> · <i aria-hidden="true" style="color:#4c8ba6">━</i> 关注他人 <i aria-hidden="true" style="color:#b49b61">━</i> 被关注（楼内连接屋顶）<template v-if="isIntegratedScene"> <i aria-hidden="true" style="color:#9366a6">━</i> 竞争关系</template></span></p>
@@ -28,10 +28,11 @@
       <section class="kpis" aria-label="回放指标">
         <div><span>{{ isNetwork ? '人物关系输入' : currentDay.label }}</span><strong>{{ scene.people.length }}<small> 人</small></strong><em>快照 {{ meta.snapshot_revision ? `v${meta.snapshot_revision}` : '历史版本' }}</em></div>
         <div><span>{{isConfigPreview?'初始关系':'初始关注关系'}}</span><strong>{{ isConfigPreview?scene.relationships.length:follows.length }}<small> 条</small></strong><em>{{ isNetwork ? '静态网络，尚未运行' : '与原数据保持一致' }}</em></div>
-        <div><span>{{ isConfigPreview ? '事件 / 订单' : isDemo ? '演示订单 / 金额' : '回放订单 / 金额' }}</span><strong data-testid="order-count">{{ state.orders }}<small> 单</small></strong><em>¥{{ revenue }} · {{ isNetwork ? '无行为轨迹' : `${cursor} / ${scene.events.length} 条事件` }}</em></div>
+        <div><span>{{ isLive ? '已核实订单 / 金额' : isConfigPreview ? '事件 / 订单' : isDemo ? '演示订单 / 金额' : '回放订单 / 金额' }}</span><strong data-testid="order-count">{{ confirmedTotals.orders }}<small> 单</small></strong><em>¥{{ revenue }} · {{ isLive ? `日汇总 · 已收到 ${scene.events.length} 条活动` : isNetwork ? '无行为轨迹' : `${cursor} / ${scene.events.length} 条事件` }}</em></div>
         <div><span>人物移动 · 展示层</span><strong data-testid="active-walkers">{{ motion.active }}<small> 人在途</small></strong><em>排队 {{ motion.queued }} 笔<span v-if="motion.unreachable"> · 不可达 {{ motion.unreachable }} 笔</span></em></div>
       </section>
 
+      <button v-if="isIntegratedScene" class="details-toggle" :aria-expanded="detailsOpen" aria-controls="three-scene-details" @click="detailsOpen=!detailsOpen">{{detailsOpen?'收起详情':'人物与场景详情'}}</button>
       <main class="main-layout">
         <section class="map-panel" aria-label="中科大高新校区三维场景">
           <div ref="mapEl" class="map-canvas"></div>
@@ -53,7 +54,7 @@
           <div v-if="loading" class="map-loading">正在构建校园三维体块…</div>
         </section>
 
-        <aside class="side-panel">
+        <aside id="three-scene-details" class="side-panel">
           <div class="side-panel-header">
             <p class="panel-caption">场景详情</p>
             <nav class="side-tabs" aria-label="场景信息">
@@ -64,7 +65,7 @@
             </nav>
           </div>
           <div v-if="activeTab === 'events'" class="side-content">
-            <div class="section-heading"><h2>{{ isNetwork ? '关注关系输入' : '事件记录' }}</h2><small>{{ isDemo ? '规则演示' : isNetwork ? '尚未运行' : isGenericReplay ? (meta.synthetic ? '合成回放' : '运行回放') : '历史 OASIS' }}</small></div>
+            <div class="section-heading"><h2>{{ isNetwork ? '关注关系输入' : '事件记录' }}</h2><small>{{ isLive ? (meta.synthetic ? '合成实时快报' : '实时快报') : isDemo ? '规则演示' : isNetwork ? '尚未运行' : isGenericReplay ? (meta.synthetic ? '合成回放' : '运行回放') : '历史 OASIS' }}</small></div>
             <p v-if="isNetwork" class="muted">此模式只有人物与关注关系，没有订单或可播放的行为。选择“人物”可查看关注对象。</p>
             <p v-else-if="!recentEvents.length" class="empty">播放或单步查看事件。购买事件会触发沿 OSM 路网的往返动画。</p>
             <div v-if="recentEvents.length" class="event-list">
@@ -76,7 +77,7 @@
                 <span>{{ describeEvent(index, event) }}</span>
               </button><EventResultDetails :event="event"/></article>
             </div>
-            <div class="brand-totals"><div v-for="shop in displayedShops" :key="shop.brandId" :data-shop-brand="shop.brandId"><i aria-hidden="true" :style="{ background: brandColors[shop.ordinal % brandColors.length] }"></i><span><b class="shop-name">{{shop.name}}</b><small>{{shop.productName}}</small></span><b>{{ state.cups[shop.brandId] }} 杯</b></div></div>
+            <div v-if="!isLive" class="brand-totals"><div v-for="shop in displayedShops" :key="shop.brandId" :data-shop-brand="shop.brandId"><i aria-hidden="true" :style="{ background: brandColors[shop.ordinal % brandColors.length] }"></i><span><b class="shop-name">{{shop.name}}</b><small>{{shop.productName}}</small></span><b>{{ state.cups[shop.brandId] }} 杯</b></div></div>
           </div>
           <div v-else-if="activeTab === 'people'" class="side-content">
             <div class="section-heading"><h2>人物名册</h2><small>{{ roster.length }} 人</small></div>
@@ -134,7 +135,7 @@
         </aside>
       </main>
 
-      <footer v-if="!isConfigPreview" class="timeline-panel" aria-label="回放时间轴">
+      <footer v-if="!isConfigPreview&&!isLive" class="timeline-panel" aria-label="回放时间轴">
         <div class="timeline-header">
           <div class="timeline-heading">
             <i class="fa-solid fa-clock" aria-hidden="true"></i>
@@ -178,7 +179,8 @@
 
 <script setup>
 import {IS_PAGES} from '../mecoffe/publicUrl.js'
-import { computed, nextTick, onBeforeUnmount, onMounted, ref, shallowRef, watch } from 'vue'
+import { computed, nextTick, onBeforeUnmount, onMounted, ref, shallowRef, triggerRef, watch } from 'vue'
+import {confirmedPresentationTotals,refreshLiveIndex,takeLiveAnimations} from '../mecoffe/liveRender.js'
 import { RouterLink, useRoute } from 'vue-router'
 import ConfigProfileFields from '../components/ConfigProfileFields.vue'
 import EventResultDetails from '../components/EventResultDetails.vue'
@@ -194,10 +196,11 @@ import {scenarioTime} from '../mecoffe/scenario.js'
 import {displayDate} from '../mecoffe/indoorMotion.js'
 import { visualClock } from '../mecoffe/campus3dPresentation.js'
 
-const props=defineProps({scenario:{type:Object,default:null}})
+const props=defineProps({scenario:{type:Object,default:null},liveState:{type:Object,default:null}})
+const isLive=computed(()=>props.scenario?.manifest.preview_mode==='live'),detailsOpen=ref(false)
 const route=useRoute(),isConfigPreview=computed(()=>props.scenario?.manifest.preview_mode==='config')
 const isGenericReplay=computed(()=>props.scenario?.manifest.preview_mode==='replay')
-const isIntegratedScene=computed(()=>isConfigPreview.value||isGenericReplay.value)
+const isIntegratedScene=computed(()=>isConfigPreview.value||isGenericReplay.value||isLive.value)
 const modes = [{ key: 'demo', label: '新版演示' }, { key: 'network', label: '关系网络' }, { key: 'history', label: '历史回放' }]
 const tabs = [
   { key: 'events', label: '事件', icon: 'fa-list-ul' },
@@ -259,7 +262,8 @@ const simulatedClock=computed(()=>props.scenario&&!isConfigPreview.value?scenari
 const lightClock = computed(() => simulatedClock.value && dayCycle.value ? {...simulatedClock.value,label:simulatedClock.value.label.slice(11)} : visualClock(dayPosition.value,{cycle:dayCycle.value,hour:previewHour.value}))
 function lightSettings(){return simulatedClock.value && dayCycle.value?{cycle:false,hour:simulatedClock.value.hour}:{position:dayPosition.value,cycle:dayCycle.value,hour:previewHour.value}}
 const state = computed(() => index.value ? stateAt(index.value, cursor.value) : null)
-const revenue = computed(() => (Object.values(state.value?.revenueFen || {}).reduce((sum, n) => sum + n, 0) / 100).toFixed(2))
+const confirmedTotals=computed(()=>confirmedPresentationTotals(index.value,cursor.value,isLive.value?props.liveState?.summary:null))
+const revenue = computed(() => (confirmedTotals.value.revenue_fen / 100).toFixed(2))
 const follows = computed(() => (scene.value?.relationships || []).filter(edge => edge.relation === 'follow'))
 const progressPercent = computed(() => days.value.length ? dayPosition.value / days.value.length * 100 : 0)
 const buildingById = computed(() => new Map((campusData.value?.buildings || []).map(building => [building.osm_id, building])))
@@ -279,6 +283,7 @@ const hoverStyle = computed(() => {
   return { left: `${Math.max(10, Math.min(rect.width - 265, card.x - rect.left + 14))}px`, top: `${Math.max(70, Math.min(rect.height - 110, card.y - rect.top + verticalOffset))}px` }
 })
 const dataNotice = computed(() => {
+  if(isLive.value)return '实时模式 · 本日进行中，汇总尚未更新。楼栋与路线为展示示意；仅已核实订单产生取杯动画。'
   if (isGenericReplay.value) return `${meta.value?.synthetic?'合成样例 · ':''}运行回放：${meta.value?.partial?'部分记录 · ':''}完成 ${meta.value?.completed_steps}/${meta.value?.total_steps} 步。楼栋与路线为展示示意${meta.value?.time_source==='display_default'?'，日期为展示设定':''}。`
   if (isConfigPreview.value) return '配置预览 · 尚未运行模拟。人物与关系来自所选配置，楼栋安置为展示示意。事件 0 · 订单 0。'
   if (isDemo.value) return `新版演示：快照 v${meta.value?.snapshot_revision} 的 30 天规则演示，非 OASIS 运行结果。购买与传播按本地示例规则生成。`
@@ -367,7 +372,7 @@ function previewWalking() {
   selectPerson(scene.value.events[next].actor)
   renderer?.resetCamera()
 }
-watch([playing, draining], () => {if(renderer)renderer.timelinePlaying=playing.value;renderer?.setPlaying(playing.value || draining.value)})
+watch([playing, draining], () => {if(renderer)renderer.timelinePlaying=playing.value;renderer?.setPlaying(isLive.value?!props.liveState?.paused:playing.value || draining.value)})
 watch(speed, value => renderer?.setSpeed(value))
 watch(quality, value => renderer?.setQuality(value))
 async function applyStyle(method,value) {
@@ -452,6 +457,7 @@ async function loadScene(mode) {
     view.setLighting(lightSettings())
     view.setPlaying(false)
     view.setCursor(0)
+    if(isLive.value){view.liveMode=true;if(view.indoor)view.indoor.purchases=[];applyLiveUpdate(props.liveState)}
     if (import.meta.env.DEV) window.__mecoffe3d = { view, index: index.value, campus, mapping }
   } catch (error) {
     view?.dispose()
@@ -462,6 +468,32 @@ async function loadScene(mode) {
     if (current === generation) loading.value = false
   }
 }
+const liveAnimationSeen=new Set()
+/** 增量更新保留 renderer、人物模型、路网和已在进行的展示动作。 */
+function applyLiveUpdate(state=props.liveState){
+  if(!isLive.value||!renderer||!index.value||!state)return
+  renderer.liveMode=true
+  renderer.timelinePlaying=false
+  renderer.setPlaying(!state.paused)
+  if(state.paused)return
+  refreshLiveIndex(index.value,props.scenario.files['trajectory.json'])
+  if(renderer.indoor)renderer.indoor.purchases=[]
+  for(const event of takeLiveAnimations(state,liveAnimationSeen))renderer.playLiveEvent(event)
+  dayPosition.value=index.value.days.length;precisePosition=dayPosition.value
+  triggerRef(index)
+  renderer.invalidate()
+}
+function followLiveLatest(){
+  if(!renderer)return
+  renderer.indoor?.reset();if(renderer.indoor)renderer.indoor.purchases=[]
+  renderer.liveMotionSeconds=0;renderer.eventEffects?.reset()
+  for(const item of renderer.liveBubbles||[])item.element.remove();renderer.liveBubbles=[]
+  for(const event of props.liveState?.animationQueue||[])liveAnimationSeen.add(`${event.key}|${event.type}|${event.order_id||''}|${event.evidence_status||''}`)
+  renderer.invalidate()
+}
+watch(()=>props.liveState?.revision,()=>applyLiveUpdate())
+watch(()=>props.liveState?.paused,()=>applyLiveUpdate())
+defineExpose({applyLiveUpdate,followLiveLatest})
 onMounted(() => { document.title = props.scenario?.manifest.title || 'MeCoffe · 中科大高新校区三维沙盘'; void loadScene(isConfigPreview.value?'network':props.scenario?'history':'demo') })
 onBeforeUnmount(() => { generation += 1; controller?.abort(); stopTimeline(); renderer?.dispose(); renderer = null; if (import.meta.env.DEV) delete window.__mecoffe3d })
 </script>
@@ -475,6 +507,36 @@ onBeforeUnmount(() => { generation += 1; controller?.abort(); stopTimeline(); re
 @media(min-width:1600px){.side-panel{width:350px}.page-header h1{font-size:22px}.kpis>div{padding:12px 16px}.side-content{padding:15px}.main-layout{min-height:360px}}
 @media(max-width:1000px){.page-header h1{font-size:16px}.side-panel{width:265px}.old-page{display:none}.kpis>div{padding:8px}.kpis strong{font-size:20px}.kpis em{font-size:9px}.mode-switch button{padding:7px 8px}}
 @media(max-width:720px){.campus3d-page{padding:9px;gap:7px}.page-header{flex-wrap:wrap}.page-header h1{font-size:16px}.header-actions{width:100%;justify-content:space-between}.old-page{display:block}.spatial-notice{font-size:11px}.kpis{grid-template-columns:repeat(2,minmax(0,1fr))}.main-layout{flex-direction:column;min-height:650px}.map-panel{min-height:370px}.side-panel{width:100%;height:260px}.map-legend{max-width:230px}.north-indicator{display:none}}
+</style>
+
+<style scoped>
+.details-toggle{display:none}
+.integrated-page{height:100%;min-height:0;overflow:hidden}
+.integrated-page .main-layout{min-height:0;flex:1;position:relative}
+.integrated-page .map-panel{min-height:0}
+.integrated-page .side-panel{min-height:0}
+.integrated-page .page-header h1{font-size:17px}
+.integrated-page .page-header p{display:none}
+.integrated-page .header-actions{gap:8px}
+.integrated-page .kpis>div{padding:6px 10px}
+.integrated-page .population-accounting{margin:0}
+@media(max-width:900px){
+ .integrated-page .details-toggle{display:block;align-self:flex-end;border:1px solid #b8ccbe;background:#fff;border-radius:7px;padding:5px 10px;font-size:11px}
+ .integrated-page .main-layout{flex-direction:row;min-height:0}
+ .integrated-page .side-panel{display:none}
+ .integrated-page.details-open .side-panel{display:flex;position:absolute;right:6px;top:6px;bottom:6px;width:min(310px,85%);height:auto;z-index:9;box-shadow:0 5px 24px #24473730}
+ .integrated-page .map-panel{min-height:0}
+ .integrated-page .header-actions{width:auto}
+ .integrated-page .old-page{display:none}
+ .integrated-page .map-legend{max-width:230px;padding:5px 7px}
+ .integrated-page .map-legend p{display:none}
+}
+@media(max-height:650px){
+ .integrated-page{gap:5px;padding:8px 10px}
+ .integrated-page .page-header,.integrated-page .kpis,.integrated-page .data-notice{display:none}
+ .integrated-page .population-accounting{font-size:10px}
+ .integrated-page .spatial-notice{padding:5px 8px;font-size:10px}
+}
 </style>
 
 <style scoped>

@@ -6,6 +6,7 @@ import {applyBasemap,sourceAttribution} from './basemaps.js'
 import {CATEGORY_COLORS,emptyCollection,featureCentre,mapBounds} from './model.js'
 import {localToLngLat} from './model.js'
 import {IndoorRoofLabels} from './IndoorLayer.js'
+import {liveEventLabel} from '../liveRender.js'
 
 const GROUPS={
   buildings:['buildings','building-outlines','building-labels','building-selection'],
@@ -83,6 +84,7 @@ export class MapLibreScene {
   }
   setPeople(){
     if(this.disposed||!this.map.getSource('people'))return
+    this.updateLiveBubbles()
     const data=this.replay.pointFeatures(this.characters.readyIds),key=JSON.stringify(data)
     if(key!==this.peopleKey){this.peopleKey=key;this.map.getSource('people').setData(data)}
     const occupancy=this.replay.occupancy,occupancyKey=JSON.stringify(occupancy.buildings)
@@ -136,12 +138,34 @@ export class MapLibreScene {
   }
   focusFeature(item){const centre=featureCentre(item.feature);this.select({type:'feature',...item});this.map.easeTo({center:centre,zoom:Math.max(18.6,this.map.getZoom()),duration:550})}
   focusPerson(id){const record=this.replay.people.get(id);if(!record)return;this.select({type:'person',id});const inside=this.replay.personLocation(id).inside;if(!inside)this.popup?.remove();this.map.easeTo({center:localToPoint(record,this.replay),zoom:inside?18.3:20.3,pitch:inside?52:62,bearing:-22,duration:650})}
+  showLiveEvents(events){
+    this.liveBubbles ||= []
+    for(const event of events){
+      const record=this.replay.people.get(event.actor)
+      if(!record)continue
+      const element=document.createElement('div');element.className='gis-live-bubble'
+      element.textContent=`${record.person.name} · ${liveEventLabel(event)}`
+      Object.assign(element.style,{position:'absolute',zIndex:6,pointerEvents:'none',maxWidth:'230px',padding:'8px 11px',borderRadius:'10px',background:'#fffffff5',border:'1px solid #aac8bc',boxShadow:'0 3px 14px #24473c24',color:'#244b40',font:'12px/1.5 system-ui,sans-serif',transform:'translate(-50%,-100%)'})
+      this.host.append(element);this.liveBubbles.push({element,actor:event.actor,until:(this.replay.liveSeconds||0)+5})
+    }
+    while(this.liveBubbles.length>8)this.liveBubbles.shift().element.remove()
+    this.updateLiveBubbles();this.requestFrame()
+  }
+  updateLiveBubbles(){
+    const next=[]
+    for(const item of this.liveBubbles||[]){
+      if(item.until<(this.replay.liveSeconds||0)){item.element.remove();continue}
+      const record=this.replay.people.get(item.actor);if(!record){item.element.remove();continue}
+      const p=this.map.project(localToPoint(record,this.replay));item.element.style.left=`${p.x}px`;item.element.style.top=`${p.y-25}px`;next.push(item)
+    }
+    this.liveBubbles=next
+  }
   resetCamera(animate=true){this.map.fitBounds(mapBounds(this.layers),{padding:65,pitch:52,bearing:-15,maxZoom:18,duration:animate?600:0})}
   requestFrame(){if(!this.disposed)this.map.triggerRepaint()}
   needsAnimation(){return this.map.getZoom()>=18.7&&this.visibility.people!==false&&this.replay.personData().length>0}
   setMeasuring(value){this.measuring=value;this.lastMeasuredFrame=0;this.frameDurations=[]}
   getStats(){const times=this.frameDurations;return {renderFrames:this.renderFrames,averageFps:times.length?times.length*1000/times.reduce((a,b)=>a+b,0):0,worstFrameMs:times.length?Math.max(...times):0,drawCalls:this.characters?.renderer?.info.render.calls||0}}
-  dispose(){if(this.disposed)return;this.disposed=true;this.roofLabels?.dispose();this.signal?.removeEventListener('abort',this.abort);this.resize?.disconnect();this.popup?.remove();this.map?.getCanvas().removeEventListener('webglcontextlost',this.lost);this.map?.remove()}
+  dispose(){if(this.disposed)return;this.disposed=true;for(const item of this.liveBubbles||[])item.element.remove();this.liveBubbles=[];this.roofLabels?.dispose();this.signal?.removeEventListener('abort',this.abort);this.resize?.disconnect();this.popup?.remove();this.map?.getCanvas().removeEventListener('webglcontextlost',this.lost);this.map?.remove()}
 }
 function localToPoint(record,replay){const location=replay.personLocation(record.id),building=location.inside&&replay.campus.buildings.find(b=>b.osm_id===location.buildingId);if(building){const p=building.polygon;return localToLngLat({x:p.reduce((n,v)=>n+v[0],0)/p.length,y:p.reduce((n,v)=>n+v[1],0)/p.length},replay.campus.projection)}return localToLngLat(record,replay.campus.projection)}
 function appendCode(parent,value){if(value){const span=document.createElement('small');span.className='gis-data-code';span.textContent=value;parent.append(span)}}

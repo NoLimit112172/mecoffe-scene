@@ -7,6 +7,7 @@ export const EVENT_LABELS = {
   post: '发帖',
   comment: '评论',
   purchase: '购买',
+  purchase_pending: '订单待核对',
   ad: '投放广告',
   exposure: '信息流返回广告',
   follow: '关注',
@@ -177,11 +178,13 @@ export function cupsByPersonAt(index, cursor) {
 export function describeEvent(index, event) {
   const name = id => index.people.get(id)?.name || id
   const actor = name(event.actor)
-  const generic=index.scene?.meta?.generic_replay===true
+  const live=index.scene?.meta?.live_run===true
+  const generic=index.scene?.meta?.generic_replay===true||live
   const store=generic&&event.brand_id?shopName(index,event.brand_id):''
   switch (event.type) {
     case 'post': return `${actor} 发帖：${event.text || ''}`
-    case 'comment': return `${actor} 评论了 ${name(event.target)} 的帖子：${event.text || ''}`
+    case 'comment': return live&&!event.target?`${actor} 评论了一条帖子${event.text?'：'+event.text:''}`:`${actor} 评论了 ${name(event.target)} 的帖子：${event.text || ''}`
+    case 'purchase_pending': return `${actor} ${event.evidence_status==='unverified'?'订单未核实':'尝试购买 · 订单待核对'}${store?' · '+store:''}`
     case 'purchase': return `${actor} 购买 ${store?store+' · ':''}${event.product_name || event.brand_id} ×${event.quantity || 1}，¥${((event.amount_fen || 0) / 100).toFixed(2)}`
     case 'ad': return `${actor} ${store?`为 ${store} `:''}投放广告（定向 ${event.targeted?.length || 0} 人）：${event.text || ''}`
     case 'exposure': return `${actor} 的信息流返回了 ${(event.brand_ids || []).join('、') || '广告'} 的广告帖`

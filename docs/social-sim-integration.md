@@ -1,6 +1,6 @@
 # social-sim 场景接入：配置预览与运行回放
 
-接入状态（里程碑 13）：师兄已认可可选三维/GIS 及同源 `/scene/` 方向，团队 PR #11 正在审查。根据师兄实测反馈，本轮修复普通 HTTP 哈希兼容，并改读运行冻结计划；第三个 `artifacts/plan` 接口需学弟补入 PR，具体路径和部署方式仍以审查为准。修复后的嵌入包与真实服务器联调还需验收，不能把方向认可或测试部署等同于正式完成。使用 [联调清单](scene-integration-checklist.md) 验收。
+接入状态（2026-11-09，同步自团队）：PR #11 已合并，三个终态产物接口和普通 HTTP 兼容已由团队验证。展示仍使用已部署的 33908e2。里程碑 14 在独立本地分支增加整页适配和实时数据源，未发布；实时接口仍是提议，当前用合成 mock 验证，不能把场景侧完成等同于团队后端已经提供实时接口。具体字段、增量规则和验收见 [实时接口草案](live-run-contract.md)。
 
 ## 接入范围
 
@@ -60,13 +60,13 @@ npm --prefix frontend run build:embed
 
 嵌入构建采用显式允许列表，包含程序、必要素材和固定中科大地图。它排除旧运行轨迹、真实人物快照、规则演示、配置数据和按旧人物生成的素材卡片；仅保留用于一键体验的明确合成样例。团队私有数据不得复制进构建目录。地图单独放在 `mecoffe/config-map/`，manifest 对每份几何文件记录 SHA-256，浏览器按实际字节验证。开发服务器在相同相对地址提供这份地图。
 
-素材许可与署名继续随构建提供，详见 `NOTICE.md` 和网站来源与许可页。构建产物已经被 Git 忽略，应在构建或部署流程中生成。
+素材许可与署名继续随构建提供，详见 `NOTICE.md` 和网站来源与许可页。本仓库忽略构建产物；按团队最新决定，可以将经过审计的版本化嵌入包提交到 social-sim 的 `frontend/public/scene/`，同时保留版本号和许可文件。配置及运行数据仍仅由登录接口提供，不能放进静态资源包。
 
 ## 团队 Docker 挂载方案
 
 团队当前 `compose.yaml` 将宿主端口映射到容器内的 Vite 前端，`/api` 由前端代理到 FastAPI。接入时需要让同一个前端入口提供 `/scene/` 子目录。
 
-在团队的构建或部署步骤中，将 `dist-embed/` 的内容复制到静态文件目录的 `scene/` 子目录。若继续使用当前 Vite 服务，可以在启动前生成 `frontend/public/scene/`，确保该目录不提交 Git。使用带末尾斜杠的静态入口可直接命中已生成的目录首页，例如 `/scene/mecoffe3d/?session=...&config=...`。团队应验证实际服务器对无末尾斜杠地址的跳转，以及刷新后仍返回嵌入页。
+在团队的构建或部署步骤中，将 `dist-embed/` 的内容复制到静态文件目录的 `scene/` 子目录。若继续使用当前 Vite 服务，可将审计后的版本化文件放入并提交 `frontend/public/scene/`；更新时整体替换同一版本的 HTML、JS、地图和素材，记录来源提交号。使用带末尾斜杠的静态入口可直接命中已生成的目录首页，例如 `/scene/mecoffe3d/?session=...&config=...`。团队应验证实际服务器对无末尾斜杠地址的跳转，以及刷新后仍返回嵌入页。
 
 若由 Nginx 承载统一入口，可把构建结果放在 `/srv/www/scene/`，示意配置如下。这里的路径由部署者按实际容器文件布局调整。
 
@@ -97,15 +97,18 @@ HTML 回退仅覆盖 `/scene/`，保持团队 React 应用的页面路由独立�
 配置页在 network 阶段完成后，取得当前会话和配置 ID，再拼接以下入口。参数值须使用 `encodeURIComponent`。
 
 ```html
-<iframe
-  title="人物与关系预览"
-  src="/scene/mecoffe3d/?session=SESSION_ID&config=CONFIG_ID"
-  style="width:100%;height:850px;border:0"
-  allowfullscreen>
-</iframe>
+<main class="scene-host">
+  <iframe title="人物与关系预览"
+    src="/scene/mecoffe3d/?session=SESSION_ID&config=CONFIG_ID" allowfullscreen></iframe>
+</main>
+<style>
+  /* 父容器必须有明确高度；72px 按主站自己的导航高度调整。 */
+  .scene-host { height:calc(100dvh - 72px); min-height:0; display:flex; overflow:hidden; }
+  .scene-host iframe { flex:1; width:100%; height:100%; min-width:0; min-height:0; border:0; display:block; }
+</style>
 ```
 
-GIS 使用 `/scene/mecoffe-gis/`。iframe 内切换视图时保持相同的配置参数。也可用普通链接打开独立标签页。
+旧说明中的 850px 只是示例，不是场景要求。整页入口应去掉弹窗的最大宽高，也避免主站的聊天侧栏持续挤占场景宽度；宽度不超过 900px 时，场景详情可以折叠。GIS 使用 `/scene/mecoffe-gis/`。iframe 内切换视图时保持相同的配置或运行参数。也可用普通链接打开独立标签页。
 
 服务器应允许同源嵌入，部署 CSP 需允许地图所需的 Worker 和纹理资源。若添加 iframe sandbox，需要允许脚本和同源能力，再验证 Cookie 请求、WebGL 与文件选择。外层与子应用之间若增加 `postMessage` 通信，双方应检查消息来源 origin。
 
@@ -117,9 +120,9 @@ GIS 使用 `/scene/mecoffe-gis/`。iframe 内切换视图时保持相同的配�
 4. `/scene/` 子路径的三维与 GIS 可直接打开和刷新，素材请求成功。
 5. 运行 `node scripts/audit-public.cjs`，确认当前文件和已存在的 Pages、embed 产物未混入私有配置。
 
-## 运行回放（草案，待 Alemax067 确认）
+## 终态运行回放
 
-这一轮提供前端数据源、通用转换和 mock 验证，不修改 social-sim 后端。接口路径须由 Alemax067 确认后联调。没有真实终态轨迹时使用合成的团队格式轨迹，不把合成活动显示为真实 OASIS 结果。
+这些终态接口已随团队 PR #11 合并。里程碑 14 保留其严格校验，不修改 social-sim 后端。没有真实终态轨迹时使用合成的团队格式轨迹，不把合成活动显示为真实 OASIS 结果。
 
 入口参数与配置预览分开；两种视图切换时保留同一组会话、运行参数。
 
@@ -133,9 +136,9 @@ GIS 使用 `/scene/mecoffe-gis/`。iframe 内切换视图时保持相同的配�
 | 顺序 | 接口 | 用途与归属 |
 | --- | --- | --- |
 | 1 | `GET /api/sessions/{session_id}/runs/{run_id}` | 已有接口。取得运行状态及本次运行的 `config_id`，不能用配置页当前选中的版本替代。 |
-| 2 | `GET /api/sessions/{session_id}/runs/{run_id}/artifacts/trajectory` | 团队 PR #11 有待审实现。返回该次终态运行导出的 `trajectory.json` 原文。 |
-| 3 | `GET /api/sessions/{session_id}/runs/{run_id}/artifacts/population-snapshot` | 团队 PR #11 有待审实现。返回该次运行冻结时使用的快照，不能读取后来被重新生成的 network 快照。 |
-| 4 | `GET /api/sessions/{session_id}/runs/{run_id}/artifacts/plan` | 新增提议路径，需学弟补进 PR。只返回该次运行 `bundle.json` 中的 `simulation_plan` 原样字段（不是整个 bundle 或 StageDetail）。 |
+| 2 | `GET /api/sessions/{session_id}/runs/{run_id}/artifacts/trajectory` | 返回该次终态运行导出的 `trajectory.json` 原文。 |
+| 3 | `GET /api/sessions/{session_id}/runs/{run_id}/artifacts/population-snapshot` | 返回该次运行冻结时使用的快照，不能读取后来被重新生成的 network 快照。 |
+| 4 | `GET /api/sessions/{session_id}/runs/{run_id}/artifacts/plan` | 只返回该次运行 `bundle.json` 中的 `simulation_plan` 原样字段（不是整个 bundle 或 StageDetail）。 |
 | 5 | `GET /api/sessions/{session_id}/configs/{config_id}/stages/roles` | 可选展示信息。只读取运行详情指定的配置；取 `payload.population_request[role].description` 和字段标题。 |
 
 三个运行产物接口（trajectory、population-snapshot、plan）均为只读：执行登录 → 会话归属 → 运行归属检查。后端只允许读取指定运行的已登记文件，检查目录和符号链接，不接收客户端文件路径，不开放整个运行目录。三个接口都只在运行终态开放；排队或执行时返回 409 未就绪。冻结快照取该次运行实际使用的版本；冻结计划只返回该次 `bundle.json.simulation_plan`，不泄露整个 bundle、其他内部配置或密钥。轨迹按原始字节返回，计划字段不重组、不改版本，三个响应都保留原始字段和值。
