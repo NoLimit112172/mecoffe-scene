@@ -5,7 +5,7 @@ const {liveFixture}=require('./lib/live-fixture.cjs');
 const {chromium}=require(process.env.PLAYWRIGHT_MODULE||path.join(process.env.USERPROFILE,'.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules/playwright'));
 const root=path.resolve(__dirname,'..'),out=path.join(root,'logs/milestone14');fs.mkdirSync(out,{recursive:true});
 const origin='http://127.0.0.1:5194',base=origin+'/scene';
-const report={source:'synthetic fixtures only; strict static embed + full-page iframe',checks:[],screenshots:[],errors:[],badResources:[],unexpectedApis:[],externalRequests:[]};
+const report={source:'synthetic fixtures only; strict static embed + full-page iframe',checks:[],screenshots:[],characterLoading:[],errors:[],badResources:[],unexpectedApis:[],externalRequests:[]};
 let server,browser;
 const clone=value=>structuredClone(value);
 async function mockCase(options={}){
@@ -67,7 +67,22 @@ async function ready(frame,gis=false){
   assert.match(await frame.getByRole('note').innerText(),/OASIS 没有位置数据/);
 }
 async function stat(frame,key,value){await frame.waitForFunction(({key,value})=>document.querySelector(`[data-testid="${key}"]`)?.textContent.trim()===String(value),{key,value},{timeout:30000});}
-async function shot(page,name){const file=path.join(out,name+'.png');await page.screenshot({path:file,fullPage:false});report.screenshots.push('logs/milestone14/'+name+'.png');}
+async function shot(page,name){
+  const frame=page.frames().find(frame=>frame.url().startsWith(base));
+  if(frame&&await frame.locator('.campus3d-page').count()){
+    const before=await frame.locator('.character-loading').allTextContents();
+    // Batch setup completes before lazy visible avatars finish loading. Wait
+    // for v-if removal, not CSS hiding (short windows hide some notices).
+    await frame.locator('.character-loading').waitFor({state:'detached',timeout:60000});
+    report.characterLoading.push({screenshot:name,before,after:await frame.locator('.character-loading').allTextContents()});
+  }
+  const file=path.join(out,name+'.png');await page.screenshot({path:file,fullPage:false});report.screenshots.push('logs/milestone14/'+name+'.png');
+}
+async function readableCards(frame){
+  const cards=await frame.locator('.live-cards article[data-evidence="pending"],.live-cards article[data-evidence="verified"],.live-cards article[data-evidence="unverified"]').evaluateAll(elements=>elements.map(element=>({title:element.querySelector('b').textContent,body:element.querySelector('p')?.textContent||''})));
+  assert(cards.length>0);
+  for(const card of cards){assert.notEqual(card.body,card.title);assert.match(card.body,/样例商品|门店 [A-Z]+（示意）|数量|订单号/);}
+}
 async function fit(input,frame,label){
   const parent=await input.page.evaluate(()=>({h:innerHeight,w:innerWidth,scrollH:document.documentElement.scrollHeight,scrollW:document.documentElement.scrollWidth}));
   const child=await frame.evaluate(()=>({h:innerHeight,w:innerWidth,scrollH:document.documentElement.scrollHeight,scrollW:document.documentElement.scrollWidth,
@@ -88,7 +103,8 @@ async function switchView(frame,gis){
   // Main case keeps a single Vue app and real iframe throughout live updates.
   const main=await mockCase(),frame=await open(main);await ready(frame);await stat(frame,'live-orders',0);
   await frame.locator('[data-evidence="pending"]').first().waitFor();
-  assert.match(await frame.getByTestId('live-panel').innerText(),/本日进行中，汇总尚未更新/);
+  assert.equal(await frame.getByTestId('live-day').innerText(),'第 1/2 天');
+  assert.match(await frame.getByTestId('live-progress-message').innerText(),/第 1 天进行中，汇总尚未更新/);await readableCards(frame);
   await frame.evaluate(()=>{window.__m14Canvas=document.querySelector('.map-canvas canvas')});
   await fit(main,frame,'3D wide 1600x1000');await shot(main.page,'3d-live-pending-wide');
   const initialCount=await frame.locator('[data-live-event]').count();
@@ -99,11 +115,16 @@ async function switchView(frame,gis){
   main.control.phase='confirmed';await stat(frame,'live-orders',1);await stat(frame,'live-quantity',1);
   await frame.waitForFunction(()=>document.querySelector('[data-testid="order-count"]')?.textContent.trim().startsWith('1'),null,{timeout:30000});
   await frame.locator('[data-evidence="verified"]').first().waitFor();await frame.locator('[data-evidence="unverified"]').first().waitFor();
+  assert.equal(await frame.getByTestId('live-day').innerText(),'第 2/2 天');
+  assert.match(await frame.getByTestId('live-panel').innerText(),/当前第 2 步/);
+  assert.equal(await frame.getByTestId('live-progress-message').innerText(),'第 2 天进行中，汇总尚未更新');await readableCards(frame);
   assert.equal(await frame.evaluate(()=>window.__m14Canvas===document.querySelector('.map-canvas canvas')),true,'renderer canvas remains initialized once');
   assert.match(await frame.getByTestId('live-feed').innerText(),/被拒|拒绝/);assert.match(await frame.getByTestId('live-feed').innerText(),/未知/);
   await shot(main.page,'3d-day-summary-confirmed');
   await frame.getByRole('button',{name:'暂停观看',exact:true}).click();
   await switchView(frame,true);await stat(frame,'live-orders',1);await frame.getByRole('button',{name:'继续观看',exact:true}).waitFor();
+  assert.equal(await frame.getByTestId('live-day').innerText(),'第 2/2 天');
+  assert.equal(await frame.getByTestId('live-progress-message').innerText(),'第 2 天进行中，汇总尚未更新');await readableCards(frame);
   await fit(main,frame,'GIS wide 1600x1000');await shot(main.page,'gis-live-shared-paused');
   await frame.getByRole('button',{name:'跟随最新进度',exact:true}).click();
   await frame.getByRole('button',{name:'暂停观看',exact:true}).waitFor();
@@ -115,12 +136,18 @@ async function switchView(frame,gis){
   await frame.getByRole('button',{name:'收起详情',exact:true}).click();await shot(main.page,'3d-narrow-full-page');
   await main.page.setViewportSize({width:1100,height:500});await main.page.waitForTimeout(400);await fit(main,frame,'3D short 1100x500');await shot(main.page,'3d-short-full-page');
   await switchView(frame,true);await fit(main,frame,'GIS short 1100x500');await shot(main.page,'gis-short-full-page');await switchView(frame,false);
-  main.control.phase='second';await stat(frame,'live-orders',2);main.control.terminal=true;main.control.artifactsReady=false;
+  main.control.phase='second';await stat(frame,'live-orders',2);
+  await main.page.setViewportSize({width:1600,height:1000});
+  assert.equal(await frame.getByTestId('live-day').innerText(),'全部天数已计算');
+  assert.equal(await frame.getByTestId('live-progress-message').innerText(),'全部天数已计算，等待运行收尾');
+  await shot(main.page,'3d-all-days-waiting');
+  await switchView(frame,true);assert.equal(await frame.getByTestId('live-progress-message').innerText(),'全部天数已计算，等待运行收尾');await shot(main.page,'gis-all-days-waiting');await switchView(frame,false);
+  main.control.terminal=true;main.control.artifactsReady=false;
   await frame.getByTestId('live-panel').getByText(/正式回放产物暂未就绪|正在等待/).waitFor({timeout:30000});await shot(main.page,'terminal-artifacts-wait');
   main.control.artifactsReady=true;await frame.getByTestId('live-panel').locator('[data-mode="replay"]').waitFor({timeout:1000}).catch(()=>{});
   await frame.waitForFunction(()=>document.querySelector('[data-testid="live-panel"]')?.dataset.mode==='replay',{},{timeout:30000});
   await ready(frame);assert.equal(await frame.getByTestId('config-preview').getAttribute('data-orders'),'2');await shot(main.page,'terminal-strict-replay');
-  report.checks.push('live batches, duplicate page, pending purchase, confirmed daily summary, declined/unknown, same canvas, cross-view paused state, terminal 409 then strict replay');await main.context.close();
+  report.checks.push('live batches, duplicate page, pending purchase, day=completed+1 in both views, all-days finalization wait, informative non-duplicate cards, lazy avatar notice removed, declined/unknown, same canvas, cross-view paused state, terminal 409 then strict replay');await main.context.close();
 
   const partial=await mockCase(),partialFrame=await open(partial,true);await ready(partialFrame,true);
   partial.control.phase='partial';partial.control.artifactsReady=false;await stat(partialFrame,'live-orders',2);

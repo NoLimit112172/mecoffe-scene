@@ -11,8 +11,8 @@
     <p class="gis-notice" role="note">ⓘ 人物所在楼栋与行走路线为展示层示意，OASIS 没有位置数据。建筑缺失高度采用标注的估算或默认值。</p>
     <div v-if="error" class="gis-error" role="alert"><strong>场景未能完整显示</strong><span>{{error}}</span><button @click="load">重新加载</button></div>
     <template v-if="scenario">
-      <section class="gis-metrics" aria-label="场景概览"><div><span>建筑</span><strong>{{layers?.buildings.features.length || 0}}<small> 栋</small></strong></div><div><span>道路与步道</span><strong>{{layers?.roads.features.length || 0}}<small> 段</small></strong></div><div><span>模拟人物</span><strong>{{population}}<small> 人</small></strong></div><div><span>{{isLive?'已核实订单':hasSimulation?'回放订单':'模拟状态'}}</span><strong>{{hasSimulation?orders:isConfigPreview?'配置预览':'尚无模拟数据'}}<small v-if="hasSimulation"> 单</small></strong></div><div v-if="!isConfigPreview"><span>模拟日期 · {{clock?.timezone}}</span><strong class="clock" data-testid="gis-time">{{dateDisplay?.label}}</strong></div></section>
-      <p class="gis-data-note" data-testid="gis-data-notice">{{isLive?'实时模式 · 本日进行中，汇总尚未更新。仅已核实订单计入销量；楼栋与路线为展示示意。':isConfigPreview?'配置预览 · 尚未运行模拟 · 事件 0 · 订单 0 · 楼栋安置为展示示意。':hasSimulation?`${scenario.files['trajectory.json'].meta.synthetic?'合成样例 · 运行回放':scenario.files['trajectory.json'].meta.partial?'部分运行记录':'已有 OASIS 运行记录'} · 完成 ${scenario.files['trajectory.json'].meta.completed_steps}/${scenario.files['trajectory.json'].meta.total_steps} 步；缺失记录未补造。`:'尚无模拟数据 · 仅显示地图、建筑及场景模拟时间，不生成人物或活动。'}}<span v-if="unreachable"> · {{unreachable}} 笔购买未找到可通行展示路线</span></p>
+      <section class="gis-metrics" aria-label="场景概览"><div><span>建筑</span><strong>{{layers?.buildings.features.length || 0}}<small> 栋</small></strong></div><div><span>道路与步道</span><strong>{{layers?.roads.features.length || 0}}<small> 段</small></strong></div><div><span>模拟人物</span><strong>{{population}}<small> 人</small></strong></div><div><span>{{isLive?'已核实订单':hasSimulation?'回放订单':'模拟状态'}}</span><strong>{{hasSimulation?orders:isConfigPreview?'配置预览':'尚无模拟数据'}}<small v-if="hasSimulation"> 单</small></strong></div><div v-if="!isConfigPreview"><span>{{isLive?"模拟进度":"模拟日期 · "+clock?.timezone}}</span><strong class="clock" data-testid="gis-time">{{isLive?liveProgress.label:dateDisplay?.label}}</strong></div></section>
+      <p class="gis-data-note" data-testid="gis-data-notice">{{isLive?('实时模式 · '+liveProgress.message+'。仅已核实订单计入销量；楼栋与路线为展示示意。'):isConfigPreview?'配置预览 · 尚未运行模拟 · 事件 0 · 订单 0 · 楼栋安置为展示示意。':hasSimulation?`${scenario.files['trajectory.json'].meta.synthetic?'合成样例 · 运行回放':scenario.files['trajectory.json'].meta.partial?'部分运行记录':'已有 OASIS 运行记录'} · 完成 ${scenario.files['trajectory.json'].meta.completed_steps}/${scenario.files['trajectory.json'].meta.total_steps} 步；缺失记录未补造。`:'尚无模拟数据 · 仅显示地图、建筑及场景模拟时间，不生成人物或活动。'}}<span v-if="unreachable"> · {{unreachable}} 笔购买未找到可通行展示路线</span></p>
     </template>
     <p v-if="isGenericReplay" class="gis-data-note" data-testid="replay-outcomes">本记录含被拒 {{replayOutcomeCounts.declined}} 条 · 结果未知 {{replayOutcomeCounts.unknown}} 条。楼栋与路线为展示示意。</p>
     <p v-if="(hasSimulation||isConfigPreview)&&occupancy.accounting" class="population-accounting" data-testid="person-accounting">人物去向：室外 {{occupancy.accounting.visible}} + 楼内 {{occupancy.accounting.inside}} = {{occupancy.accounting.total}} 人 · {{occupancy.accounting.valid?'全部可定位':'请重新加载场景'}}</p>
@@ -53,9 +53,11 @@ import {createGisDisplay} from '../mecoffe/gis/engine.js'
 import {ASSET_CATALOG} from '../mecoffe/assetCatalog.js'
 import {featureInfo} from '../mecoffe/gis/labels.js'
 import {displayDate} from '../mecoffe/indoorMotion.js'
+import {liveProgressPresentation} from '../mecoffe/livePresentation.js'
 import {confirmedPresentationTotals,takeLiveAnimations} from '../mecoffe/liveRender.js'
 const props=defineProps({previewScenario:{type:Object,default:null},liveState:{type:Object,default:null}})
 const isLive=computed(()=>props.previewScenario?.manifest.preview_mode==='live'),detailsOpen=ref(false)
+const liveProgress=computed(()=>liveProgressPresentation(props.liveState||{}))
 const isConfigPreview=computed(()=>props.previewScenario?.manifest.preview_mode==='config')
 const isGenericReplay=computed(()=>props.previewScenario?.manifest.preview_mode==='replay')
 const isIntegratedScene=computed(()=>isConfigPreview.value||isGenericReplay.value||isLive.value)

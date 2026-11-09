@@ -2,15 +2,15 @@
   <section class="live-panel" data-testid="live-panel" :data-mode="state.mode" :data-status="state.status" :data-paused="Boolean(state.paused)">
     <template v-if="state.mode!=='replay'">
       <div class="live-toolbar">
-        <div><span class="live-status" :class="state.status">{{statusText}}</span><strong v-if="state.bootstrap">第 {{Math.max(1,state.activeStep||state.completedStep||1)}}/{{state.bootstrap.plan.runtime.num_steps}} 天</strong><span v-if="state.bootstrap" class="live-step">当前第 {{state.activeStep||0}} 步 · 已完成 <b data-testid="live-completed">{{state.completedStep||0}}</b> 天</span></div>
+        <div><span class="live-status" :class="state.status">{{statusText}}</span><strong v-if="state.bootstrap" data-testid="live-day">{{progress.label}}</strong><span v-if="state.bootstrap" class="live-step"><template v-if="!progress.allCalculated">当前第 {{progress.day}} 步 · </template>已完成 <b data-testid="live-completed">{{state.completedStep||0}}</b> 天</span></div>
         <div class="live-actions" v-if="state.bootstrap"><button @click="$emit('pause',!state.paused)">{{state.paused?'继续观看':'暂停观看'}}</button><button @click="$emit('follow')">跟随最新进度</button></div>
       </div>
-      <p class="live-message" :class="{warning:state.error||state.partial}" role="status">{{state.message}}<button v-if="state.error" @click="$emit('retry')">重新读取</button></p>
+      <p class="live-message" :class="{warning:state.error||state.partial}" role="status" data-testid="live-progress-message">{{progress.message}}<button v-if="state.error" @click="$emit('retry')">重新读取</button></p>
       <p v-if="state.paused" class="live-message">已暂停画面，不影响后台模拟；统计与数据仍会接收。</p>
       <template v-if="state.bootstrap">
         <div class="live-totals" aria-label="已确认日汇总"><span>已核实订单 <b data-testid="live-orders">{{state.summary.orders}}</b></span><span>销量 <b data-testid="live-quantity">{{state.summary.quantity}}</b></span><span>金额 ¥{{(state.summary.revenue_fen/100).toFixed(2)}}</span><span>发帖 <b data-testid="live-posts">{{state.summary.posts}}</b></span><span class="live-muted">日汇总确认后更新</span></div>
         <p v-if="state.evidenceWarning" class="live-message warning">{{state.evidenceWarning}}</p>
-        <details class="live-feed" data-testid="live-feed" open><summary>决策快报 <small>{{state.events.length}} 条 · 被拒 {{state.summary.declined}} · 结果未知 {{state.summary.unknown}}</small></summary><div class="live-cards"><article v-for="event in recent" :key="event.key" :data-live-event="event.key" :data-evidence="event.evidence_status" :data-outcome="event.outcome"><span>{{personName(event.actor)}} · 第 {{event.step}} 天</span><b>{{eventLabel(event)}}</b><p v-if="event.text">{{event.text}}</p><small v-if="event.message">{{event.message}}</small></article><p v-if="!recent.length" class="live-muted">等待已完成决策的活动；查询与刷新不播放动画。</p></div></details>
+        <details class="live-feed" data-testid="live-feed" open><summary>决策快报 <small>{{state.events.length}} 条 · 被拒 {{state.summary.declined}} · 结果未知 {{state.summary.unknown}}</small></summary><div class="live-cards"><article v-for="event in recent" :key="event.key" :data-live-event="event.key" :data-evidence="event.evidence_status" :data-outcome="event.outcome"><span>{{personName(event.actor)}} · 第 {{event.step}} 天</span><b>{{liveEventCardTitle(event)}}</b><p v-if="cardBody(event)">{{cardBody(event)}}</p><small v-if="event.message&&event.message!==cardBody(event)&&event.message!==liveEventCardTitle(event)">{{event.message}}</small></article><p v-if="!recent.length" class="live-muted">等待已完成决策的活动；查询与刷新不播放动画。</p></div></details>
       </template>
     </template>
     <p v-else class="live-message" :class="{warning:state.differences?.length||state.partial}" role="status" data-testid="live-terminal">{{state.partial?'运行失败 · 已切换部分正式回放':'已切换正式回放，冻结版本校验通过'}}<span v-if="state.differences?.length">；实时累计与正式记录有差异，以正式回放为准：{{differenceText}}</span><span v-else>；{{state.bootstrap?'实时累计核对一致':'已读取终态产物'}}。</span></p>
@@ -18,17 +18,14 @@
 </template>
 <script setup>
 import {computed} from 'vue'
-import {actionLabel} from '../mecoffe/eventPresentation.js'
+import {liveProgressPresentation,liveEventCardTitle,liveEventCardBody} from '../mecoffe/livePresentation.js'
 const props=defineProps({state:{type:Object,required:true}})
 defineEmits(['pause','follow','retry'])
 const statusText=computed(()=>({queued:'排队中',initializing:'初始化中',running:'运行中',failed:'运行失败 · 部分结果',cancelled:'运行停止 · 部分结果',completed:'正在准备正式回放',unavailable:'需要重新登录'}[props.state.status]||'正在读取'))
 const recent=computed(()=>(props.state.events||[]).slice(-6).reverse())
+const progress=computed(()=>liveProgressPresentation(props.state))
 const personName=id=>props.state.bootstrap?.snapshot.nodes.find(p=>p.entity_id===id)?.name||id
-function eventLabel(event){
-  if(event.action==='purchase_product'&&event.outcome==='executed')return event.evidence_status==='verified'?'购买已核实':event.evidence_status==='unverified'?'订单未核实':'尝试购买 · 订单待核对'
-  const suffix={declined:'被拒绝',failed:'执行失败',unknown:'结果未知',noop:'无操作'}[event.outcome]
-  return actionLabel(event.action)+(suffix?' · '+suffix:'')
-}
+const cardBody=event=>liveEventCardBody(event,props.state.bootstrap?.plan)
 const differenceText=computed(()=>(props.state.differences||[]).map(d=>`${({orders:'订单',quantity:'销量',revenue_fen:'金额（分）',posts:'发帖',comments:'评论'})[d.field]||d.field} ${d.live}→${d.official}`).join('，'))
 </script>
 <style scoped>

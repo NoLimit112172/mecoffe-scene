@@ -26,7 +26,7 @@
 
       <p v-if="qualityNotice" role="status" class="data-notice">{{ qualityNotice }}</p>
       <section class="kpis" aria-label="回放指标">
-        <div><span>{{ isNetwork ? '人物关系输入' : currentDay.label }}</span><strong>{{ scene.people.length }}<small> 人</small></strong><em>快照 {{ meta.snapshot_revision ? `v${meta.snapshot_revision}` : '历史版本' }}</em></div>
+        <div><span>{{ isLive ? liveProgress.label : isNetwork ? '人物关系输入' : currentDay.label }}</span><strong>{{ scene.people.length }}<small> 人</small></strong><em>快照 {{ meta.snapshot_revision ? `v${meta.snapshot_revision}` : '历史版本' }}</em></div>
         <div><span>{{isConfigPreview?'初始关系':'初始关注关系'}}</span><strong>{{ isConfigPreview?scene.relationships.length:follows.length }}<small> 条</small></strong><em>{{ isNetwork ? '静态网络，尚未运行' : '与原数据保持一致' }}</em></div>
         <div><span>{{ isLive ? '已核实订单 / 金额' : isConfigPreview ? '事件 / 订单' : isDemo ? '演示订单 / 金额' : '回放订单 / 金额' }}</span><strong data-testid="order-count">{{ confirmedTotals.orders }}<small> 单</small></strong><em>¥{{ revenue }} · {{ isLive ? `日汇总 · 已收到 ${scene.events.length} 条活动` : isNetwork ? '无行为轨迹' : `${cursor} / ${scene.events.length} 条事件` }}</em></div>
         <div><span>人物移动 · 展示层</span><strong data-testid="active-walkers">{{ motion.active }}<small> 人在途</small></strong><em>排队 {{ motion.queued }} 笔<span v-if="motion.unreachable"> · 不可达 {{ motion.unreachable }} 笔</span></em></div>
@@ -194,10 +194,12 @@ import { resolveHomeKey } from '../mecoffe/campus3dRouting.js'
 import { CHARACTER_ROLE_COLORS, displayRoleColor } from '../mecoffe/characterDisplay.js'
 import {scenarioTime} from '../mecoffe/scenario.js'
 import {displayDate} from '../mecoffe/indoorMotion.js'
+import {liveProgressPresentation} from '../mecoffe/livePresentation.js'
 import { visualClock } from '../mecoffe/campus3dPresentation.js'
 
 const props=defineProps({scenario:{type:Object,default:null},liveState:{type:Object,default:null}})
 const isLive=computed(()=>props.scenario?.manifest.preview_mode==='live'),detailsOpen=ref(false)
+const liveProgress=computed(()=>liveProgressPresentation(props.liveState||{}))
 const route=useRoute(),isConfigPreview=computed(()=>props.scenario?.manifest.preview_mode==='config')
 const isGenericReplay=computed(()=>props.scenario?.manifest.preview_mode==='replay')
 const isIntegratedScene=computed(()=>isConfigPreview.value||isGenericReplay.value||isLive.value)
@@ -283,7 +285,7 @@ const hoverStyle = computed(() => {
   return { left: `${Math.max(10, Math.min(rect.width - 265, card.x - rect.left + 14))}px`, top: `${Math.max(70, Math.min(rect.height - 110, card.y - rect.top + verticalOffset))}px` }
 })
 const dataNotice = computed(() => {
-  if(isLive.value)return '实时模式 · 本日进行中，汇总尚未更新。楼栋与路线为展示示意；仅已核实订单产生取杯动画。'
+  if(isLive.value)return `实时模式 · ${liveProgress.value.message}。楼栋与路线为展示示意；仅已核实订单产生取杯动画。`
   if (isGenericReplay.value) return `${meta.value?.synthetic?'合成样例 · ':''}运行回放：${meta.value?.partial?'部分记录 · ':''}完成 ${meta.value?.completed_steps}/${meta.value?.total_steps} 步。楼栋与路线为展示示意${meta.value?.time_source==='display_default'?'，日期为展示设定':''}。`
   if (isConfigPreview.value) return '配置预览 · 尚未运行模拟。人物与关系来自所选配置，楼栋安置为展示示意。事件 0 · 订单 0。'
   if (isDemo.value) return `新版演示：快照 v${meta.value?.snapshot_revision} 的 30 天规则演示，非 OASIS 运行结果。购买与传播按本地示例规则生成。`

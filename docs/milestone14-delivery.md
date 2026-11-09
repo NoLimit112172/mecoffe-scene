@@ -16,7 +16,7 @@
 
 实时核心与展示：
 
-- `frontend/src/mecoffe/liveRun.js`、`liveRunStore.js`、`liveRender.js`
+- `frontend/src/mecoffe/liveRun.js`、`liveRunStore.js`、`liveRender.js`、`livePresentation.js`
 - `frontend/src/components/LiveRunPanel.vue`
 - `frontend/src/views/ConfigPreviewEntry.vue`、`EmbeddedSceneEntry.vue`
 - `frontend/src/views/MeCoffe3D.vue`、`MeCoffeGis.vue`
@@ -35,7 +35,7 @@
 | 命令 | 结果 |
 | --- | --- |
 | `python -m unittest discover -s adapter -p 'test_*.py'` | 90项通过。负例的校验错误输出为预期行为。 |
-| `npm --prefix frontend test` | 333项通过，0失败、0跳过。 |
+| `npm --prefix frontend test` | 验收修正后338项通过，0失败、0跳过。 |
 | `npm --prefix frontend run build` | 通过。 |
 | `npm --prefix frontend run build:pages` | 通过。 |
 | `npm --prefix frontend run check:pages` | 通过。 |
@@ -58,6 +58,7 @@
 | --- | --- |
 | 宽屏整页、运行中与待核对订单 | `3d-live-pending-wide.png` |
 | 日汇总核实后 | `3d-day-summary-confirmed.png` |
+| 全部天数完成、尚未到终态 | `3d-all-days-waiting.png`、`gis-all-days-waiting.png` |
 | GIS共享状态与暂停 | `gis-live-shared-paused.png` |
 | 窄屏及详情折叠 | `3d-narrow-full-page.png`、`3d-narrow-details.png`、`gis-narrow-details.png` |
 | 矮窗口 | `3d-short-full-page.png`、`gis-short-full-page.png` |
@@ -85,3 +86,14 @@
 仍需Alemax067确认路径、字段、轮询限流及运行页入口；团队须提供固定日汇总，不用下一天的数据库当前计数充上一天；地图选择仍沿现有固定中科大接入，并非自动按任意地名生成地图。旧运行没有新日汇总时不补造数据，正式终态回放仍可使用。
 
 未在真实团队运行验证实时展示、日志并发和日汇总开销；未验证原生引擎所有社交动作的事务行为。位置与走路动画始终是展示效果，不参与智能体决策。本地模拟验证不替代团队部署后的权限和真实运行验收。
+
+## 2026-11-09 验收显示修正
+
+在ab17838之后追加本地提交，不改写原提交、不push。仅修显示和验收等待，不修改引擎步数、动作、订单、地点映射或后端参考补丁。
+
+- 天数由 `min(completed_step + 1, total_steps)` 推导，日汇总确认后即显示下一天，不等待尚未推进的active_step。全部天数计算完成、尚未终态时明确显示“全部天数已计算，等待运行收尾”；保留错误、失败部分结果、终态尾流和产物等待的原提示。顶栏、三维KPI及GIS进度和说明共用同一展示函数。
+- 快报的购买状态只作标题；正文使用确有的商品、稳定编号的示意门店、数量和订单号状态，没有额外信息就不渲染正文。未知门店不猜测，不改写原始事件text，拒绝原因也避免重复显示。
+- 加载提示是按需加载模型尚未完成时的真实状态，成功后原有v-if会移除。之前截图只等了场景初始化。本轮截图额外等待`.character-loading`从DOM移除，避免短窗口的CSS隐藏被误认为成功。浏览器报告实际记录到`3d-all-days-waiting`截图前“正在加载人物 0/1…”、等待后空列表，证明提示正常消失；未隐藏或删除加载/失败重试逻辑。
+- 补5项纯函数测试，覆盖日汇总后active_step落后、全部完成不溢出、重要提示保留、购买卡片证据信息和无信息时省略正文；浏览器额外断言三维/GIS日数一致、卡片正文不等于标题及加载提示移除。
+
+本修正轮实跑：前端338项、`build:embed`、`audit-public`、`test-live-run`均通过。报告仍为`logs/milestone14/browser-qa.json`，新增`characterLoading`等待前后证据；相关截图已重拍。普通/Pages/Python等表中其他结果为初版ab17838的回归记录，本轮未重复运行。
