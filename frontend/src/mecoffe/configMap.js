@@ -1,4 +1,5 @@
-// The map is static and population-free. Verify its files before applying private input.
+// Explicit LEGACY USTC path: unchanged defaults for team APIs without SceneResult.
+// New SceneResult consumers must use sceneMap.loadSceneMap; errors never call this.
 import {sha256Hex} from './sha256.js'
 export async function loadConfigMap({signal, fetcher=fetch, base=import.meta.env?.BASE_URL || '/'}={}) {
   const directory = `${base}mecoffe/config-map/`

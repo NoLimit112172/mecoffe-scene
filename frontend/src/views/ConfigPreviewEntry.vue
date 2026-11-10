@@ -4,6 +4,7 @@
       <div>
         <strong>{{liveState&&liveState.mode!=='replay'?'运行中 · 实时场景':isReplay?(data?.meta.synthetic?'合成样例 · 运行回放':'运行回放'):'配置预览 · 尚未运行模拟'}}</strong>
         <p>楼栋与路线为展示示意。<template v-if="data">人物 {{data.people.length}} · 关系 {{data.relationships.length}} · 事件 {{data.events.length}} · 订单 {{data.summary.orders}}</template><template v-else>按当前选择的数据加载</template></p>
+        <small data-testid="legacy-scene-note">未提供 SceneResult，使用中科大 legacy 展示路径。</small>
       </div>
       <RouterLink :to="{path:view==='gis'?'/mecoffe3d':'/mecoffe-gis',query:sourceQuery}">{{view==='gis'?'三维沙盘':'GIS 地图'}} ↗</RouterLink>
     </header>

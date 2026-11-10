@@ -1,0 +1,572 @@
+{
+  "boundary": [
+    [
+      -300.15,
+      -33.359
+    ],
+    [
+      300.15,
+      -33.359
+    ],
+    [
+      300.15,
+      33.359
+    ],
+    [
+      -300.15,
+      33.359
+    ],
+    [
+      -300.15,
+      -33.359
+    ]
+  ],
+  "boundary_note": "Requested input extent, not a surveyed or administrative campus boundary.",
+  "boundary_polygons": [
+    {
+      "holes": [],
+      "outer": [
+        [
+          -300.15,
+          -33.359
+        ],
+        [
+          300.15,
+          -33.359
+        ],
+        [
+          300.15,
+          33.359
+        ],
+        [
+          -300.15,
+          33.359
+        ],
+        [
+          -300.15,
+          -33.359
+        ]
+      ]
+    }
+  ],
+  "bounds_m": {
+    "max_x": 300.15,
+    "max_y": 33.359,
+    "min_x": -300.15,
+    "min_y": -33.359
+  },
+  "buildings": [
+    {
+      "building_type": "school",
+      "function_evidence": [
+        {
+          "function": "education",
+          "key": "building",
+          "ref": "geojson/synthetic-building-0",
+          "source": "building_tag",
+          "value": "school"
+        }
+      ],
+      "functions": [
+        "education"
+      ],
+      "height_m": 16.0,
+      "height_source": "default",
+      "holes": [],
+      "kind": "education",
+      "levels": 5,
+      "levels_source": "default",
+      "name": "合成楼栋 0",
+      "name_source": "input",
+      "osm_id": "geojson/synthetic-building-0",
+      "polygon": [
+        [
+          -300.15,
+          0.0
+        ],
+        [
+          -255.683,
+          0.0
+        ],
+        [
+          -255.683,
+          33.359
+        ],
+        [
+          -300.15,
+          33.359
+        ],
+        [
+          -300.15,
+          0.0
+        ]
+      ],
+      "scene_eligible": true,
+      "tags": {
+        "building": "school",
+        "name": "合成楼栋 0"
+      },
+      "usable_entrance_ids": [
+        "geojson/synthetic-building-0/entrance/1"
+      ]
+    },
+    {
+      "building_type": "yes",
+      "function_annotation": {
+        "functions": [
+          "dining"
+        ],
+        "note": "仅合成验收，不能当成实际经营用途",
+        "reviewer": "synthetic-reviewer",
+        "source": "synthetic test annotation, not verified real use"
+      },
+      "function_evidence": [
+        {
+          "function": "dining",
+          "key": "functions",
+          "ref": "geojson/synthetic-building-1",
+          "source": "annotation",
+          "value": "dining"
+        },
+        {
+          "function": "dining",
+          "key": "amenity",
+          "ref": "geojson/synthetic-building-1",
+          "source": "building_tag",
+          "value": "cafe"
+        }
+      ],
+      "functions": [
+        "dining"
+      ],
+      "height_m": 9.6,
+      "height_source": "default",
+      "holes": [],
+      "kind": "dining",
+      "levels": 3,
+      "levels_source": "default",
+      "name": "合成楼栋 1",
+      "name_source": "input",
+      "osm_id": "geojson/synthetic-building-1",
+      "polygon": [
+        [
+          -188.983,
+          0.0
+        ],
+        [
+          -144.517,
+          0.0
+        ],
+        [
+          -144.517,
+          33.359
+        ],
+        [
+          -188.983,
+          33.359
+        ],
+        [
+          -188.983,
+          0.0
+        ]
+      ],
+      "scene_eligible": true,
+      "tags": {
+        "amenity": "cafe",
+        "building": "yes",
+        "name": "合成楼栋 1"
+      },
+      "usable_entrance_ids": [
+        "geojson/synthetic-building-1/entrance/1"
+      ]
+    },
+    {
+      "building_type": "dormitory",
+      "function_evidence": [
+        {
+          "function": "dormitory",
+          "key": "building",
+          "ref": "geojson/synthetic-building-2",
+          "source": "building_tag",
+          "value": "dormitory"
+        }
+      ],
+      "functions": [
+        "dormitory"
+      ],
+      "height_m": 19.2,
+      "height_source": "default",
+      "holes": [],
+      "kind": "dormitory",
+      "levels": 6,
+      "levels_source": "default",
+      "name": "合成楼栋 2",
+      "name_source": "input",
+      "osm_id": "geojson/synthetic-building-2",
+      "polygon": [
+        [
+          -77.817,
+          0.0
+        ],
+        [
+          -33.35,
+          0.0
+        ],
+        [
+          -33.35,
+          33.359
+        ],
+        [
+          -77.817,
+          33.359
+        ],
+        [
+          -77.817,
+          0.0
+        ]
+      ],
+      "scene_eligible": true,
+      "tags": {
+        "building": "dormitory",
+        "name": "合成楼栋 2"
+      },
+      "usable_entrance_ids": [
+        "geojson/synthetic-building-2/entrance/1"
+      ]
+    },
+    {
+      "building_type": "yes",
+      "function_evidence": [
+        {
+          "function": "dining",
+          "key": "amenity",
+          "ref": "geojson/synthetic-building-3",
+          "source": "building_tag",
+          "value": "cafe"
+        }
+      ],
+      "functions": [
+        "dining"
+      ],
+      "height_m": 9.6,
+      "height_source": "default",
+      "holes": [],
+      "kind": "dining",
+      "levels": 3,
+      "levels_source": "default",
+      "name": "合成楼栋 3",
+      "name_source": "input",
+      "osm_id": "geojson/synthetic-building-3",
+      "polygon": [
+        [
+          33.35,
+          0.0
+        ],
+        [
+          77.817,
+          0.0
+        ],
+        [
+          77.817,
+          33.359
+        ],
+        [
+          33.35,
+          33.359
+        ],
+        [
+          33.35,
+          0.0
+        ]
+      ],
+      "scene_eligible": true,
+      "tags": {
+        "amenity": "cafe",
+        "building": "yes",
+        "name": "合成楼栋 3"
+      },
+      "usable_entrance_ids": [
+        "geojson/synthetic-building-3/entrance/1"
+      ]
+    },
+    {
+      "building_type": "residential",
+      "function_evidence": [
+        {
+          "function": "residential",
+          "key": "building",
+          "ref": "geojson/synthetic-building-4",
+          "source": "building_tag",
+          "value": "residential"
+        }
+      ],
+      "functions": [
+        "residential"
+      ],
+      "height_m": 9.6,
+      "height_source": "default",
+      "holes": [],
+      "kind": "dormitory",
+      "levels": 3,
+      "levels_source": "default",
+      "name": "合成楼栋 4",
+      "name_source": "input",
+      "osm_id": "geojson/synthetic-building-4",
+      "polygon": [
+        [
+          144.517,
+          0.0
+        ],
+        [
+          188.983,
+          0.0
+        ],
+        [
+          188.983,
+          33.359
+        ],
+        [
+          144.517,
+          33.359
+        ],
+        [
+          144.517,
+          0.0
+        ]
+      ],
+      "scene_eligible": true,
+      "tags": {
+        "building": "residential",
+        "name": "合成楼栋 4"
+      },
+      "usable_entrance_ids": [
+        "geojson/synthetic-building-4/entrance/1"
+      ]
+    },
+    {
+      "building_type": "yes",
+      "function_evidence": [
+        {
+          "function": "library",
+          "key": "amenity",
+          "ref": "geojson/synthetic-building-5",
+          "source": "building_tag",
+          "value": "library"
+        }
+      ],
+      "functions": [
+        "library"
+      ],
+      "height_m": 16.0,
+      "height_source": "default",
+      "holes": [],
+      "kind": "library",
+      "levels": 5,
+      "levels_source": "default",
+      "name": "合成楼栋 5",
+      "name_source": "input",
+      "osm_id": "geojson/synthetic-building-5",
+      "polygon": [
+        [
+          255.683,
+          0.0
+        ],
+        [
+          300.15,
+          0.0
+        ],
+        [
+          300.15,
+          33.359
+        ],
+        [
+          255.683,
+          33.359
+        ],
+        [
+          255.683,
+          0.0
+        ]
+      ],
+      "scene_eligible": true,
+      "tags": {
+        "amenity": "library",
+        "building": "yes",
+        "name": "合成楼栋 5"
+      },
+      "usable_entrance_ids": [
+        "geojson/synthetic-building-5/entrance/1"
+      ]
+    }
+  ],
+  "campus_id": "synthetic-render-a",
+  "defaults": {
+    "levels_by_kind": {
+      "dining": 3,
+      "dormitory": 6,
+      "education": 5,
+      "library": 5,
+      "office": 4,
+      "other": 3,
+      "sports": 2
+    },
+    "note": "Missing values are display defaults, not measured or verified building dimensions.",
+    "storey_height_m": 3.2
+  },
+  "illustrative": true,
+  "landcovers": [],
+  "notice": "Map geometry and asset assignments only; no OASIS people, purchases or simulation trajectory are attached.",
+  "pois": [],
+  "projection": {
+    "earth_radius_m": 6371008.8,
+    "formula": "x = R*cos(lat0)*radians(lon-lon0); y = R*radians(lat-lat0)",
+    "method": "local_equirectangular",
+    "origin_lat": 1.294,
+    "origin_lon": 103.77269999999999,
+    "origin_method": "centre of requested WGS84 extent",
+    "units": "metres",
+    "x": "east",
+    "y": "north"
+  },
+  "roads": [
+    {
+      "highway": "footway",
+      "layer": "0",
+      "name": "",
+      "node_ids": [
+        "vertex/103.7702000000/1.2937000000/layer/0",
+        "vertex/103.7712000000/1.2937000000/layer/0",
+        "vertex/103.7722000000/1.2937000000/layer/0",
+        "vertex/103.7732000000/1.2937000000/layer/0",
+        "vertex/103.7742000000/1.2937000000/layer/0",
+        "vertex/103.7752000000/1.2937000000/layer/0"
+      ],
+      "osm_id": "geojson/synthetic-walk",
+      "points": [
+        [
+          -277.917,
+          -33.359
+        ],
+        [
+          -166.75,
+          -33.359
+        ],
+        [
+          -55.583,
+          -33.359
+        ],
+        [
+          55.583,
+          -33.359
+        ],
+        [
+          166.75,
+          -33.359
+        ],
+        [
+          277.917,
+          -33.359
+        ]
+      ],
+      "segment": 0,
+      "tags": {
+        "highway": "footway"
+      },
+      "tunnel": false,
+      "walkable": true
+    }
+  ],
+  "schema_version": "mecoffe.campus3d.v1",
+  "source": {
+    "attribution": "Entirely synthetic test geometry",
+    "bbox": [
+      103.77,
+      1.2937,
+      103.77539999999999,
+      1.2943
+    ],
+    "license": "CC0-1.0",
+    "sha256": "6aace1356812cecb1f09f530dbac79b1c2327d1cbb337e644c76732e4a6be012",
+    "source_type": "caller_geojson"
+  },
+  "stats": {
+    "buildings": 6,
+    "default_height_buildings": 6,
+    "graph_components": 1,
+    "graph_edges": 5,
+    "graph_nodes": 6,
+    "landcovers": 0,
+    "named_buildings": 6,
+    "pois": 0,
+    "road_segments": 1
+  },
+  "title": "合成校园甲",
+  "walk_graph": {
+    "directed": false,
+    "edges": [
+      {
+        "length_m": 111.167,
+        "osm_way_id": "geojson/synthetic-walk",
+        "source": "vertex/103.7702000000/1.2937000000/layer/0",
+        "target": "vertex/103.7712000000/1.2937000000/layer/0"
+      },
+      {
+        "length_m": 111.167,
+        "osm_way_id": "geojson/synthetic-walk",
+        "source": "vertex/103.7712000000/1.2937000000/layer/0",
+        "target": "vertex/103.7722000000/1.2937000000/layer/0"
+      },
+      {
+        "length_m": 111.166,
+        "osm_way_id": "geojson/synthetic-walk",
+        "source": "vertex/103.7722000000/1.2937000000/layer/0",
+        "target": "vertex/103.7732000000/1.2937000000/layer/0"
+      },
+      {
+        "length_m": 111.167,
+        "osm_way_id": "geojson/synthetic-walk",
+        "source": "vertex/103.7732000000/1.2937000000/layer/0",
+        "target": "vertex/103.7742000000/1.2937000000/layer/0"
+      },
+      {
+        "length_m": 111.167,
+        "osm_way_id": "geojson/synthetic-walk",
+        "source": "vertex/103.7742000000/1.2937000000/layer/0",
+        "target": "vertex/103.7752000000/1.2937000000/layer/0"
+      }
+    ],
+    "nodes": [
+      {
+        "id": "vertex/103.7702000000/1.2937000000/layer/0",
+        "x": -277.917,
+        "y": -33.359
+      },
+      {
+        "id": "vertex/103.7712000000/1.2937000000/layer/0",
+        "x": -166.75,
+        "y": -33.359
+      },
+      {
+        "id": "vertex/103.7722000000/1.2937000000/layer/0",
+        "x": -55.583,
+        "y": -33.359
+      },
+      {
+        "id": "vertex/103.7732000000/1.2937000000/layer/0",
+        "x": 55.583,
+        "y": -33.359
+      },
+      {
+        "id": "vertex/103.7742000000/1.2937000000/layer/0",
+        "x": 166.75,
+        "y": -33.359
+      },
+      {
+        "id": "vertex/103.7752000000/1.2937000000/layer/0",
+        "x": 277.917,
+        "y": -33.359
+      }
+    ],
+    "policy": "Only consecutive explicitly shared input vertices; geometric crossings are not connected. OSM access/foot restrictions apply; missing tags do not certify real-world access."
+  }
+}

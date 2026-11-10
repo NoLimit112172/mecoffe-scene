@@ -1,0 +1,27 @@
+{
+  "features": [],
+  "projection": {
+    "earth_radius_m": 6371008.8,
+    "formula": "x = R*cos(lat0)*radians(lon-lon0); y = R*radians(lat-lat0)",
+    "method": "local_equirectangular",
+    "origin_lat": 1.294,
+    "origin_lon": 103.77269999999999,
+    "origin_method": "centre of requested WGS84 extent",
+    "units": "metres",
+    "x": "east",
+    "y": "north"
+  },
+  "schema_version": "mecoffe.landcover.v1",
+  "source": {
+    "attribution": "Entirely synthetic test geometry",
+    "bbox": [
+      103.77,
+      1.2937,
+      103.77539999999999,
+      1.2943
+    ],
+    "license": "CC0-1.0",
+    "sha256": "6aace1356812cecb1f09f530dbac79b1c2327d1cbb337e644c76732e4a6be012",
+    "source_type": "caller_geojson"
+  }
+}

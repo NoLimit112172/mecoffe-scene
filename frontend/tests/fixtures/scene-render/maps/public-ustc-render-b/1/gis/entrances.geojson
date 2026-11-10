@@ -1,0 +1,1139 @@
+{
+  "features": [
+    {
+      "geometry": {
+        "coordinates": [
+          117.120744149,
+          31.818866253
+        ],
+        "type": "Point"
+      },
+      "id": "way/1435368245/entrance/1",
+      "properties": {
+        "building_id": "way/1435368245",
+        "category": "entrance",
+        "connected": true,
+        "facade": [
+          [
+            -292.99,
+            -415.897
+          ],
+          [
+            -292.924,
+            -384.996
+          ]
+        ],
+        "feature_id": "way/1435368245/entrance/1",
+        "id": "way/1435368245/entrance/1",
+        "illustrative": true,
+        "outward": [
+          0.9999977190733396,
+          -0.0021358483369104983
+        ],
+        "placement": "facade_midpoint",
+        "road_node_id": "node/11546061726",
+        "source": "inferred"
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          117.120360855,
+          31.819482949
+        ],
+        "type": "Point"
+      },
+      "id": "way/1435368246/entrance/1",
+      "properties": {
+        "building_id": "way/1435368246",
+        "category": "entrance",
+        "connected": true,
+        "facade": [
+          [
+            -329.034,
+            -347.379
+          ],
+          [
+            -329.308,
+            -316.367
+          ]
+        ],
+        "feature_id": "way/1435368246/entrance/1",
+        "id": "way/1435368246/entrance/1",
+        "illustrative": true,
+        "outward": [
+          0.9999609711141483,
+          0.008834944733821666
+        ],
+        "placement": "facade_midpoint",
+        "road_node_id": "node/11546061723",
+        "source": "inferred"
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          117.12037735,
+          31.820067048
+        ],
+        "type": "Point"
+      },
+      "id": "way/1435368247/entrance/1",
+      "properties": {
+        "building_id": "way/1435368247",
+        "category": "entrance",
+        "connected": true,
+        "facade": [
+          [
+            -347.6,
+            -266.674
+          ],
+          [
+            -307.625,
+            -267.174
+          ]
+        ],
+        "feature_id": "way/1435368247/entrance/1",
+        "id": "way/1435368247/entrance/1",
+        "illustrative": true,
+        "outward": [
+          -0.01250683910480452,
+          -0.9999217864291219
+        ],
+        "placement": "facade_midpoint",
+        "road_node_id": "node/11546061724",
+        "source": "inferred"
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          117.1211849,
+          31.8205501
+        ],
+        "type": "Point"
+      },
+      "id": "way/1435368248/entrance/1",
+      "properties": {
+        "building_id": "way/1435368248",
+        "category": "entrance",
+        "connected": true,
+        "facade": [
+          [
+            -231.096,
+            -213.167
+          ],
+          [
+            -271.533,
+            -213.255
+          ]
+        ],
+        "feature_id": "way/1435368248/entrance/1",
+        "id": "way/1435368248/entrance/1",
+        "illustrative": true,
+        "outward": [
+          -0.002176219591432398,
+          0.9999976320313414
+        ],
+        "placement": "facade_midpoint",
+        "road_node_id": "node/11546061712",
+        "source": "inferred"
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          117.121194304,
+          31.818487549
+        ],
+        "type": "Point"
+      },
+      "id": "way/1435368249/entrance/1",
+      "properties": {
+        "building_id": "way/1435368249",
+        "category": "entrance",
+        "connected": true,
+        "facade": [
+          [
+            -232.144,
+            -442.662
+          ],
+          [
+            -268.708,
+            -442.451
+          ]
+        ],
+        "feature_id": "way/1435368249/entrance/1",
+        "id": "way/1435368249/entrance/1",
+        "illustrative": true,
+        "outward": [
+          0.005770607341382224,
+          0.9999833499068431
+        ],
+        "placement": "facade_midpoint",
+        "road_node_id": "node/11546061729",
+        "source": "inferred"
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          117.122170448,
+          31.821594899
+        ],
+        "type": "Point"
+      },
+      "id": "way/1435368250/entrance/1",
+      "properties": {
+        "building_id": "way/1435368250",
+        "category": "entrance",
+        "connected": true,
+        "facade": [
+          [
+            -158.544,
+            -144.248
+          ],
+          [
+            -157.854,
+            -49.821
+          ]
+        ],
+        "feature_id": "way/1435368250/entrance/1",
+        "id": "way/1435368250/entrance/1",
+        "illustrative": true,
+        "outward": [
+          0.9999733032490574,
+          -0.007307036962329073
+        ],
+        "placement": "facade_midpoint",
+        "road_node_id": "node/11546057952",
+        "source": "inferred"
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          117.121624502,
+          31.819901901
+        ],
+        "type": "Point"
+      },
+      "id": "way/1435368251/entrance/1",
+      "properties": {
+        "building_id": "way/1435368251",
+        "category": "entrance",
+        "connected": true,
+        "facade": [
+          [
+            -199.284,
+            -281.34
+          ],
+          [
+            -220.277,
+            -289.235
+          ]
+        ],
+        "feature_id": "way/1435368251/entrance/1",
+        "id": "way/1435368251/entrance/1",
+        "illustrative": true,
+        "outward": [
+          -0.3520076787937892,
+          0.9359971122125369
+        ],
+        "placement": "facade_midpoint",
+        "road_node_id": "node/11546061714",
+        "source": "inferred"
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          117.121281501,
+          31.819263501
+        ],
+        "type": "Point"
+      },
+      "id": "way/1435368252/entrance/1",
+      "properties": {
+        "building_id": "way/1435368252",
+        "category": "entrance",
+        "connected": true,
+        "facade": [
+          [
+            -242.027,
+            -345.8
+          ],
+          [
+            -242.348,
+            -366.749
+          ]
+        ],
+        "feature_id": "way/1435368252/entrance/1",
+        "id": "way/1435368252/entrance/1",
+        "illustrative": true,
+        "outward": [
+          -0.9998826246211149,
+          0.015321128574318776
+        ],
+        "placement": "facade_midpoint",
+        "road_node_id": "node/11546061733",
+        "source": "inferred"
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          117.122256847,
+          31.818725451
+        ],
+        "type": "Point"
+      },
+      "id": "way/1435368253/entrance/1",
+      "properties": {
+        "building_id": "way/1435368253",
+        "category": "entrance",
+        "connected": true,
+        "facade": [
+          [
+            -162.701,
+            -420.801
+          ],
+          [
+            -137.371,
+            -411.405
+          ]
+        ],
+        "feature_id": "way/1435368253/entrance/1",
+        "id": "way/1435368253/entrance/1",
+        "illustrative": true,
+        "outward": [
+          0.34778688100453714,
+          -0.9375736159903051
+        ],
+        "placement": "facade_midpoint",
+        "road_node_id": "node/11546061717",
+        "source": "inferred"
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          117.12335845,
+          31.818763803
+        ],
+        "type": "Point"
+      },
+      "id": "way/1435370291/entrance/1",
+      "properties": {
+        "building_id": "way/1435370291",
+        "category": "entrance",
+        "connected": true,
+        "facade": [
+          [
+            -22.501,
+            -411.961
+          ],
+          [
+            -69.41,
+            -411.716
+          ]
+        ],
+        "feature_id": "way/1435370291/entrance/1",
+        "id": "way/1435370291/entrance/1",
+        "illustrative": true,
+        "outward": [
+          0.005222807104334904,
+          0.9999863610499649
+        ],
+        "placement": "facade_midpoint",
+        "road_node_id": "node/11546057960",
+        "source": "inferred"
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          117.1246322,
+          31.819196902
+        ],
+        "type": "Point"
+      },
+      "id": "way/1435377493/entrance/1",
+      "properties": {
+        "building_id": "way/1435377493",
+        "category": "entrance",
+        "connected": true,
+        "facade": [
+          [
+            94.618,
+            -363.613
+          ],
+          [
+            54.161,
+            -363.747
+          ]
+        ],
+        "feature_id": "way/1435377493/entrance/1",
+        "id": "way/1435377493/entrance/1",
+        "illustrative": true,
+        "outward": [
+          -0.0033121404204372474,
+          0.9999945148478743
+        ],
+        "placement": "facade_midpoint",
+        "road_node_id": "node/11546061674",
+        "source": "inferred"
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          117.126487347,
+          31.8182837
+        ],
+        "type": "Point"
+      },
+      "id": "way/1435377494/entrance/1",
+      "properties": {
+        "building_id": "way/1435377494",
+        "category": "entrance",
+        "connected": true,
+        "facade": [
+          [
+            212.095,
+            -465.068
+          ],
+          [
+            287.236,
+            -465.379
+          ]
+        ],
+        "feature_id": "way/1435377494/entrance/1",
+        "id": "way/1435377494/entrance/1",
+        "illustrative": true,
+        "outward": [
+          -0.0041388501119382125,
+          -0.9999914349231952
+        ],
+        "placement": "facade_midpoint",
+        "road_node_id": "node/11546057917",
+        "source": "inferred"
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          117.126586251,
+          31.81883015
+        ],
+        "type": "Point"
+      },
+      "id": "way/1435377495/entrance/1",
+      "properties": {
+        "building_id": "way/1435377495",
+        "category": "entrance",
+        "connected": true,
+        "facade": [
+          [
+            287.652,
+            -404.711
+          ],
+          [
+            230.368,
+            -404.211
+          ]
+        ],
+        "feature_id": "way/1435377495/entrance/1",
+        "id": "way/1435377495/entrance/1",
+        "illustrative": true,
+        "outward": [
+          0.008728108279253226,
+          0.9999619093374835
+        ],
+        "placement": "facade_midpoint",
+        "road_node_id": "node/11546061675",
+        "source": "inferred"
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          117.126788101,
+          31.819222051
+        ],
+        "type": "Point"
+      },
+      "id": "way/1435377496/entrance/1",
+      "properties": {
+        "building_id": "way/1435377496",
+        "category": "entrance",
+        "connected": true,
+        "facade": [
+          [
+            312.774,
+            -360.945
+          ],
+          [
+            243.388,
+            -360.822
+          ]
+        ],
+        "feature_id": "way/1435377496/entrance/1",
+        "id": "way/1435377496/entrance/1",
+        "illustrative": true,
+        "outward": [
+          0.0017726891122214464,
+          0.9999984287854212
+        ],
+        "placement": "facade_midpoint",
+        "road_node_id": "node/11546061676",
+        "source": "inferred"
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          117.127448552,
+          31.819213903
+        ],
+        "type": "Point"
+      },
+      "id": "way/1435377497/entrance/1",
+      "properties": {
+        "building_id": "way/1435377497",
+        "category": "entrance",
+        "connected": true,
+        "facade": [
+          [
+            359.051,
+            -361.845
+          ],
+          [
+            321.911,
+            -361.734
+          ]
+        ],
+        "feature_id": "way/1435377497/entrance/1",
+        "id": "way/1435377497/entrance/1",
+        "illustrative": true,
+        "outward": [
+          0.0029886780899844264,
+          0.9999955338916642
+        ],
+        "placement": "facade_midpoint",
+        "road_node_id": "node/11546061676",
+        "source": "inferred"
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          117.126129799,
+          31.8198062
+        ],
+        "type": "Point"
+      },
+      "id": "way/1435377498/entrance/1",
+      "properties": {
+        "building_id": "way/1435377498",
+        "category": "entrance",
+        "connected": true,
+        "facade": [
+          [
+            214.618,
+            -283.609
+          ],
+          [
+            217.15,
+            -308.249
+          ]
+        ],
+        "feature_id": "way/1435377498/entrance/1",
+        "id": "way/1435377498/entrance/1",
+        "illustrative": true,
+        "outward": [
+          -0.9947616674579431,
+          -0.1022214505683246
+        ],
+        "placement": "facade_midpoint",
+        "road_node_id": "node/11546061689",
+        "source": "inferred"
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          117.1271511,
+          31.820220499
+        ],
+        "type": "Point"
+      },
+      "id": "way/1435377499/entrance/1",
+      "properties": {
+        "building_id": "way/1435377499",
+        "category": "entrance",
+        "connected": true,
+        "facade": [
+          [
+            312.614,
+            -273.746
+          ],
+          [
+            312.141,
+            -225.976
+          ]
+        ],
+        "feature_id": "way/1435377499/entrance/1",
+        "id": "way/1435377499/entrance/1",
+        "illustrative": true,
+        "outward": [
+          0.999950982645274,
+          0.009901126539484429
+        ],
+        "placement": "facade_midpoint",
+        "road_node_id": "node/11546057947",
+        "source": "inferred"
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          117.126133254,
+          31.820608749
+        ],
+        "type": "Point"
+      },
+      "id": "way/1435377500/entrance/1",
+      "properties": {
+        "building_id": "way/1435377500",
+        "category": "entrance",
+        "connected": true,
+        "facade": [
+          [
+            217.453,
+            -193.641
+          ],
+          [
+            214.968,
+            -219.738
+          ]
+        ],
+        "feature_id": "way/1435377500/entrance/1",
+        "id": "way/1435377500/entrance/1",
+        "illustrative": true,
+        "outward": [
+          -0.9954970154477089,
+          0.09479289126671914
+        ],
+        "placement": "facade_midpoint",
+        "road_node_id": "node/11546061693",
+        "source": "inferred"
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          117.123629103,
+          31.820716402
+        ],
+        "type": "Point"
+      },
+      "id": "way/1435377501/entrance/1",
+      "properties": {
+        "building_id": "way/1435377501",
+        "category": "entrance",
+        "connected": true,
+        "facade": [
+          [
+            10.379,
+            -194.53
+          ],
+          [
+            -51.147,
+            -194.908
+          ]
+        ],
+        "feature_id": "way/1435377501/entrance/1",
+        "id": "way/1435377501/entrance/1",
+        "illustrative": true,
+        "outward": [
+          -0.006143628161835809,
+          0.9999811277384234
+        ],
+        "placement": "facade_midpoint",
+        "road_node_id": "node/11546061706",
+        "source": "inferred"
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          117.125006699,
+          31.819879252
+        ],
+        "type": "Point"
+      },
+      "id": "way/1435377502/entrance/1",
+      "properties": {
+        "building_id": "way/1435377502",
+        "category": "entrance",
+        "connected": true,
+        "facade": [
+          [
+            109.706,
+            -303.323
+          ],
+          [
+            109.839,
+            -272.289
+          ]
+        ],
+        "feature_id": "way/1435377502/entrance/1",
+        "id": "way/1435377502/entrance/1",
+        "illustrative": true,
+        "outward": [
+          0.9999908168475873,
+          -0.004285582865267923
+        ],
+        "placement": "facade_midpoint",
+        "road_node_id": "node/11546061678",
+        "source": "inferred"
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          117.125059752,
+          31.8205196
+        ],
+        "type": "Point"
+      },
+      "id": "way/1435377503/entrance/1",
+      "properties": {
+        "building_id": "way/1435377503",
+        "category": "entrance",
+        "connected": true,
+        "facade": [
+          [
+            114.837,
+            -193.385
+          ],
+          [
+            114.733,
+            -239.82
+          ]
+        ],
+        "feature_id": "way/1435377503/entrance/1",
+        "id": "way/1435377503/entrance/1",
+        "illustrative": true,
+        "outward": [
+          0.9999974919040362,
+          -0.002239684271735091
+        ],
+        "placement": "facade_midpoint",
+        "road_node_id": "node/11546061679",
+        "source": "inferred"
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          117.1242469,
+          31.822361997
+        ],
+        "type": "Point"
+      },
+      "id": "way/1435377504/entrance/1",
+      "properties": {
+        "building_id": "way/1435377504",
+        "category": "entrance",
+        "connected": true,
+        "facade": [
+          [
+            55.276,
+            -11.837
+          ],
+          [
+            20.696,
+            -11.637
+          ]
+        ],
+        "feature_id": "way/1435377504/entrance/1",
+        "id": "way/1435377504/entrance/1",
+        "illustrative": true,
+        "outward": [
+          0.005783593261333867,
+          0.999983274884629
+        ],
+        "placement": "facade_midpoint",
+        "road_node_id": "node/11546057967",
+        "source": "inferred"
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          117.122102953,
+          31.820082103
+        ],
+        "type": "Point"
+      },
+      "id": "way/1435377505/entrance/1",
+      "properties": {
+        "building_id": "way/1435377505",
+        "category": "entrance",
+        "connected": true,
+        "facade": [
+          [
+            -170.93,
+            -304.346
+          ],
+          [
+            -158.222,
+            -226.154
+          ]
+        ],
+        "feature_id": "way/1435377505/entrance/1",
+        "id": "way/1435377505/entrance/1",
+        "illustrative": true,
+        "outward": [
+          0.9870491370228773,
+          -0.1604182068918396
+        ],
+        "placement": "facade_midpoint",
+        "road_node_id": "node/11546061735",
+        "source": "inferred"
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          117.122353803,
+          31.819271249
+        ],
+        "type": "Point"
+      },
+      "id": "way/1435377506/entrance/1",
+      "properties": {
+        "building_id": "way/1435377506",
+        "category": "entrance",
+        "connected": true,
+        "facade": [
+          [
+            -167.226,
+            -316.845
+          ],
+          [
+            -114.525,
+            -393.981
+          ]
+        ],
+        "feature_id": "way/1435377506/entrance/1",
+        "id": "way/1435377506/entrance/1",
+        "illustrative": true,
+        "outward": [
+          0.8256875212112629,
+          0.5641277491100755
+        ],
+        "placement": "facade_midpoint",
+        "road_node_id": "node/11546061739",
+        "source": "inferred"
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          117.126603804,
+          31.821184602
+        ],
+        "type": "Point"
+      },
+      "id": "way/1435377507/entrance/1",
+      "properties": {
+        "building_id": "way/1435377507",
+        "category": "entrance",
+        "connected": true,
+        "facade": [
+          [
+            219.182,
+            -142.502
+          ],
+          [
+            302.155,
+            -142.813
+          ]
+        ],
+        "feature_id": "way/1435377507/entrance/1",
+        "id": "way/1435377507/entrance/1",
+        "illustrative": true,
+        "outward": [
+          -0.0037481809190284127,
+          -0.9999929755452277
+        ],
+        "placement": "facade_midpoint",
+        "road_node_id": "node/11546061694",
+        "source": "inferred"
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          117.124034851,
+          31.8214873
+        ],
+        "type": "Point"
+      },
+      "id": "way/1435377508/entrance/1",
+      "properties": {
+        "building_id": "way/1435377508",
+        "category": "entrance",
+        "connected": true,
+        "facade": [
+          [
+            17.975,
+            -98.002
+          ],
+          [
+            17.928,
+            -119.996
+          ]
+        ],
+        "feature_id": "way/1435377508/entrance/1",
+        "id": "way/1435377508/entrance/1",
+        "illustrative": true,
+        "outward": [
+          -0.9999977167377764,
+          0.002136941560729112
+        ],
+        "placement": "facade_midpoint",
+        "road_node_id": "node/11546057968",
+        "source": "inferred"
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          117.127411497,
+          31.82117935
+        ],
+        "type": "Point"
+      },
+      "id": "way/1435377509/entrance/1",
+      "properties": {
+        "building_id": "way/1435377509",
+        "category": "entrance",
+        "connected": true,
+        "facade": [
+          [
+            314.21,
+            -143.358
+          ],
+          [
+            359.75,
+            -143.125
+          ]
+        ],
+        "feature_id": "way/1435377509/entrance/1",
+        "id": "way/1435377509/entrance/1",
+        "illustrative": true,
+        "outward": [
+          0.005116314237984866,
+          -0.9999869115786557
+        ],
+        "placement": "facade_midpoint",
+        "road_node_id": "node/11546057947",
+        "source": "inferred"
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          117.1263305,
+          31.822208852
+        ],
+        "type": "Point"
+      },
+      "id": "way/1435377510/entrance/1",
+      "properties": {
+        "building_id": "way/1435377510",
+        "category": "entrance",
+        "connected": true,
+        "facade": [
+          [
+            269.767,
+            -28.705
+          ],
+          [
+            199.926,
+            -28.827
+          ]
+        ],
+        "feature_id": "way/1435377510/entrance/1",
+        "id": "way/1435377510/entrance/1",
+        "illustrative": true,
+        "outward": [
+          -0.0017468222657921809,
+          0.9999984743048219
+        ],
+        "placement": "facade_midpoint",
+        "road_node_id": "node/11546057932",
+        "source": "inferred"
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          117.127179704,
+          31.822205951
+        ],
+        "type": "Point"
+      },
+      "id": "way/1435377511/entrance/1",
+      "properties": {
+        "building_id": "way/1435377511",
+        "category": "entrance",
+        "connected": true,
+        "facade": [
+          [
+            269.767,
+            -28.705
+          ],
+          [
+            360.393,
+            -29.472
+          ]
+        ],
+        "feature_id": "way/1435377511/entrance/1",
+        "id": "way/1435377511/entrance/1",
+        "illustrative": true,
+        "outward": [
+          0.008463051795218104,
+          0.9999641877358967
+        ],
+        "placement": "facade_midpoint",
+        "road_node_id": "node/11546057931",
+        "source": "inferred"
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          117.125118451,
+          31.822185253
+        ],
+        "type": "Point"
+      },
+      "id": "way/1435377512/entrance/1",
+      "properties": {
+        "building_id": "way/1435377512",
+        "category": "entrance",
+        "connected": true,
+        "facade": [
+          [
+            154.944,
+            -30.784
+          ],
+          [
+            85.718,
+            -31.996
+          ]
+        ],
+        "feature_id": "way/1435377512/entrance/1",
+        "id": "way/1435377512/entrance/1",
+        "illustrative": true,
+        "outward": [
+          -0.017505190075608672,
+          0.999846772420863
+        ],
+        "placement": "facade_midpoint",
+        "road_node_id": "node/11546057932",
+        "source": "inferred"
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          117.119907001,
+          31.821457901
+        ],
+        "type": "Point"
+      },
+      "id": "way/1501639766/entrance/1",
+      "properties": {
+        "building_id": "way/1501639766",
+        "category": "entrance",
+        "connected": true,
+        "facade": [
+          [
+            -371.985,
+            -58.094
+          ],
+          [
+            -372.118,
+            -166.442
+          ]
+        ],
+        "feature_id": "way/1501639766/entrance/1",
+        "id": "way/1501639766/entrance/1",
+        "illustrative": true,
+        "outward": [
+          -0.9999992465906644,
+          0.0012275251947109287
+        ],
+        "placement": "facade_midpoint",
+        "road_node_id": "node/11546057902",
+        "source": "inferred"
+      },
+      "type": "Feature"
+    }
+  ],
+  "name": "entrances",
+  "schema_version": "mecoffe.gis.v1",
+  "source": {
+    "attribution": "© OpenStreetMap contributors",
+    "bbox": [
+      117.1194,
+      31.818,
+      117.1283,
+      31.827
+    ],
+    "downloaded_at_utc": "2026-11-03T05:01:24.973987+00:00",
+    "license": "ODbL-1.0",
+    "license_url": "https://www.openstreetmap.org/copyright",
+    "osm_generator": "openstreetmap-cgimap 2.1.0 (2089598 spike-07.openstreetmap.org)",
+    "relation_id": "14093671",
+    "sha256": "663062802ab35914d085a7a97d2be29001d0d6bc786b69b688608bdd37ee6437",
+    "source_url": "https://api.openstreetmap.org/api/0.6/map?bbox=117.1194,31.8180,117.1283,31.8270"
+  },
+  "type": "FeatureCollection"
+}

@@ -1,0 +1,1829 @@
+{
+  "config_id": "synthetic-live-config",
+  "plan": {
+    "capability_version": "oasis-8607dba-v2",
+    "economy": {
+      "brands": [
+        {
+          "ad_audience_size": 2,
+          "ad_duration_steps": 1,
+          "brand_id": "brand_alpha",
+          "campaign_cost_fen": 100,
+          "marketing_budget_fen": 100000,
+          "owner_entity_id": "synthetic_person_03"
+        },
+        {
+          "ad_audience_size": 2,
+          "ad_duration_steps": 1,
+          "brand_id": "brand_beta",
+          "campaign_cost_fen": 100,
+          "marketing_budget_fen": 100000,
+          "owner_entity_id": "synthetic_person_04"
+        },
+        {
+          "ad_audience_size": 2,
+          "ad_duration_steps": 1,
+          "brand_id": "brand_gamma",
+          "campaign_cost_fen": 100,
+          "marketing_budget_fen": 100000,
+          "owner_entity_id": "synthetic_person_05"
+        }
+      ],
+      "currency": "CNY",
+      "products": [
+        {
+          "awareness_terms": [
+            "样例商品甲"
+          ],
+          "brand_id": "brand_alpha",
+          "inventory_units": null,
+          "max_price_fen": 3000,
+          "min_price_fen": 100,
+          "price_fen": 990,
+          "product_name": "样例商品甲",
+          "product_ref": "synthetic_product_1",
+          "public_from_step": 0,
+          "unit_cost_fen": null
+        },
+        {
+          "awareness_terms": [
+            "样例商品乙"
+          ],
+          "brand_id": "brand_beta",
+          "inventory_units": null,
+          "max_price_fen": 3000,
+          "min_price_fen": 100,
+          "price_fen": 1200,
+          "product_name": "样例商品乙",
+          "product_ref": "synthetic_product_2",
+          "public_from_step": 0,
+          "unit_cost_fen": null
+        },
+        {
+          "awareness_terms": [
+            "样例商品丙"
+          ],
+          "brand_id": "brand_gamma",
+          "inventory_units": null,
+          "max_price_fen": 3000,
+          "min_price_fen": 100,
+          "price_fen": 1600,
+          "product_name": "样例商品丙",
+          "product_ref": "synthetic_product_3",
+          "public_from_step": 0,
+          "unit_cost_fen": null
+        }
+      ],
+      "rules": {
+        "allow_self_purchase": false,
+        "max_quantity_per_purchase": 1,
+        "max_units_per_consumer_per_step": 1
+      },
+      "wallets": [
+        {
+          "balance_fen": 20000,
+          "entity_id": "synthetic_person_01",
+          "known_product_refs": [
+            "synthetic_product_1",
+            "synthetic_product_2",
+            "synthetic_product_3"
+          ]
+        },
+        {
+          "balance_fen": 20000,
+          "entity_id": "synthetic_person_02",
+          "known_product_refs": [
+            "synthetic_product_1",
+            "synthetic_product_2",
+            "synthetic_product_3"
+          ]
+        },
+        {
+          "balance_fen": 20000,
+          "entity_id": "synthetic_person_06",
+          "known_product_refs": [
+            "synthetic_product_1",
+            "synthetic_product_2",
+            "synthetic_product_3"
+          ]
+        },
+        {
+          "balance_fen": 20000,
+          "entity_id": "synthetic_person_07",
+          "known_product_refs": [
+            "synthetic_product_1",
+            "synthetic_product_2",
+            "synthetic_product_3"
+          ]
+        }
+      ]
+    },
+    "events": [],
+    "initial_state": {
+      "seed_posts": []
+    },
+    "observation": {
+      "interval_steps": 1,
+      "metrics": [
+        "post_count",
+        "follow_count"
+      ],
+      "report_format": "markdown"
+    },
+    "plan_id": "plan_synthetic_replay",
+    "plan_revision": 1,
+    "platform": {
+      "allow_self_rating": false,
+      "following_post_count": 5,
+      "max_rec_post_len": 10,
+      "recsys_type": "random",
+      "refresh_rec_post_count": 5,
+      "show_score": true,
+      "type": "twitter",
+      "use_openai_embedding": false
+    },
+    "policy_registry_version": "registry_synthetic_replay_v1",
+    "population": {
+      "expected_agent_count": 7,
+      "snapshot_id": "snapshot_synthetic_replay",
+      "snapshot_revision": 2
+    },
+    "role_policies": [
+      {
+        "policy_id": "policy_visitor",
+        "role_id": "visitor"
+      },
+      {
+        "policy_id": "policy_operator",
+        "role_id": "operator"
+      },
+      {
+        "policy_id": "policy_research",
+        "role_id": "research"
+      }
+    ],
+    "runtime": {
+      "action_timeout_seconds": 60,
+      "activation": {
+        "mode": "per_role_probability",
+        "probability_by_role": {
+          "operator": 1,
+          "research": 1,
+          "visitor": 1
+        }
+      },
+      "num_steps": 2,
+      "on_action_error": "fail_run",
+      "run_timeout_seconds": 600,
+      "seed": 2026,
+      "semaphore": 2,
+      "time": {
+        "mode": "step_index",
+        "unit": "day"
+      }
+    },
+    "scenario": {
+      "background": "合成场景中的人物可以交流和购买样例商品。",
+      "goal": "验证任意角色、三个独立品牌和被拒动作的展示。全部内容为合成样例。",
+      "source_asset_ids": [],
+      "title": "完全合成的通用校园实验"
+    },
+    "schema_version": "1.0"
+  },
+  "roles": {
+    "population_request": {
+      "operator": {
+        "count": 3,
+        "description": "合成角色 operator",
+        "generate": {}
+      },
+      "research": {
+        "count": 2,
+        "description": "合成角色 research",
+        "generate": {}
+      },
+      "visitor": {
+        "count": 2,
+        "description": "合成角色 visitor",
+        "generate": {}
+      }
+    },
+    "synthetic": true
+  },
+  "scene_result": {
+    "assignment_meta": {
+      "assignment_seed": 42,
+      "resolver_version": "1",
+      "rules_sha256": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+      "rules_version": "1"
+    },
+    "assignments": [],
+    "assumptions": [
+      "完全合成验收；所有安置和路线为示意，非真实住所或经营地点。"
+    ],
+    "illustrative": true,
+    "map_ref": null,
+    "mode": "none",
+    "reason": "本次为用户确认的合成纯网络实验",
+    "result_sha256": "5f837d8ed9d32d306a3b3ab061e1969f8ae11315b366ac4a08fe67f0cd56b9db",
+    "rules": {},
+    "scene_id": "scene_1ff5b7fa8d81050770108016",
+    "scene_revision": 1,
+    "schema_version": "scene.result.v1",
+    "service_points": [],
+    "source_refs": {
+      "config_id": "synthetic-live-config",
+      "plan_id": "plan_synthetic_replay",
+      "plan_revision": 1,
+      "snapshot_id": "snapshot_synthetic_replay",
+      "snapshot_revision": 2
+    },
+    "warnings": []
+  },
+  "snapshot": {
+    "dataset_version": "synthetic-replay-only",
+    "edges": [
+      {
+        "relation": "follow",
+        "source": "synthetic_person_01",
+        "target": "synthetic_person_03"
+      },
+      {
+        "relation": "follow",
+        "source": "synthetic_person_02",
+        "target": "synthetic_person_04"
+      },
+      {
+        "relation": "follow",
+        "source": "synthetic_person_06",
+        "target": "synthetic_person_01"
+      },
+      {
+        "relation": "competition",
+        "source": "synthetic_person_03",
+        "target": "synthetic_person_04"
+      }
+    ],
+    "nodes": [
+      {
+        "bio": "完全合成的回放测试人物，用于验证通用角色、品牌与动作结果。",
+        "dynamic_attributes": {
+          "interest_topic": "合成数据与校园交流",
+          "spending_limit_yuan": 101
+        },
+        "entity_id": "synthetic_person_01",
+        "name": "样例人物 01",
+        "request_persona": true,
+        "role": "visitor",
+        "role_description": "样例访客",
+        "static_attributes": {
+          "age": 21,
+          "education_status": "student_bachelor",
+          "gender": "male"
+        }
+      },
+      {
+        "bio": "完全合成的回放测试人物，用于验证通用角色、品牌与动作结果。",
+        "dynamic_attributes": {
+          "interest_topic": "合成数据与校园交流",
+          "spending_limit_yuan": 102
+        },
+        "entity_id": "synthetic_person_02",
+        "name": "样例人物 02",
+        "request_persona": true,
+        "role": "visitor",
+        "role_description": "样例访客",
+        "static_attributes": {
+          "age": 22,
+          "education_status": "student_bachelor",
+          "gender": "female"
+        }
+      },
+      {
+        "bio": "完全合成的回放测试人物，用于验证通用角色、品牌与动作结果。",
+        "dynamic_attributes": {
+          "interest_topic": "合成数据与校园交流",
+          "spending_limit_yuan": 103
+        },
+        "entity_id": "synthetic_person_03",
+        "name": "样例人物 03",
+        "request_persona": true,
+        "role": "operator",
+        "role_description": "样例经营者",
+        "static_attributes": {
+          "age": 23,
+          "education_status": "graduate",
+          "gender": "male"
+        }
+      },
+      {
+        "bio": "完全合成的回放测试人物，用于验证通用角色、品牌与动作结果。",
+        "dynamic_attributes": {
+          "interest_topic": "合成数据与校园交流",
+          "spending_limit_yuan": 104
+        },
+        "entity_id": "synthetic_person_04",
+        "name": "样例人物 04",
+        "request_persona": true,
+        "role": "operator",
+        "role_description": "样例经营者",
+        "static_attributes": {
+          "age": 24,
+          "education_status": "graduate",
+          "gender": "female"
+        }
+      },
+      {
+        "bio": "完全合成的回放测试人物，用于验证通用角色、品牌与动作结果。",
+        "dynamic_attributes": {
+          "interest_topic": "合成数据与校园交流",
+          "spending_limit_yuan": 105
+        },
+        "entity_id": "synthetic_person_05",
+        "name": "样例人物 05",
+        "request_persona": true,
+        "role": "operator",
+        "role_description": "样例经营者",
+        "static_attributes": {
+          "age": 25,
+          "education_status": "graduate",
+          "gender": "male"
+        }
+      },
+      {
+        "bio": "完全合成的回放测试人物，用于验证通用角色、品牌与动作结果。",
+        "dynamic_attributes": {
+          "interest_topic": "合成数据与校园交流",
+          "spending_limit_yuan": 106
+        },
+        "entity_id": "synthetic_person_06",
+        "name": "样例人物 06",
+        "request_persona": true,
+        "role": "research",
+        "role_description": "样例研究人员",
+        "static_attributes": {
+          "age": 26,
+          "education_status": "graduate",
+          "gender": "female"
+        }
+      },
+      {
+        "bio": "完全合成的回放测试人物，用于验证通用角色、品牌与动作结果。",
+        "dynamic_attributes": {
+          "interest_topic": "合成数据与校园交流",
+          "spending_limit_yuan": 107
+        },
+        "entity_id": "synthetic_person_07",
+        "name": "样例人物 07",
+        "request_persona": true,
+        "role": "research",
+        "role_description": "样例研究人员",
+        "static_attributes": {
+          "age": 27,
+          "education_status": "graduate",
+          "gender": "male"
+        }
+      }
+    ],
+    "schema_version": "1.0",
+    "seed": 2026,
+    "selection_request_id": "selection_synthetic_replay",
+    "snapshot_id": "snapshot_synthetic_replay",
+    "snapshot_revision": 2
+  },
+  "synthetic": true,
+  "trajectory": {
+    "actions": [
+      {
+        "action": "create_post",
+        "actor": {
+          "entity_id": "synthetic_person_03",
+          "name": "样例人物 03",
+          "role": "operator"
+        },
+        "args": {
+          "content": "[合成]样例经营者介绍商品。"
+        },
+        "audit_line": 1,
+        "category": "social_interaction",
+        "created_objects": [],
+        "event_id": null,
+        "id": "synthetic_action_001",
+        "origin": "initialization",
+        "outcome": "executed",
+        "phase": "after_actions",
+        "result": {
+          "post_id": 1,
+          "success": true
+        },
+        "sequence": 1,
+        "source": {
+          "audit_line": 1,
+          "kind": "initialization",
+          "tool_call_index": 0
+        },
+        "stage": "synthetic_stage",
+        "step": 0,
+        "targets": [],
+        "timestamp": "2026-01-01T00:00:01+00:00"
+      },
+      {
+        "action": "purchase_product",
+        "actor": {
+          "entity_id": "synthetic_person_01",
+          "name": "样例人物 01",
+          "role": "visitor"
+        },
+        "args": {
+          "product_name": "样例商品甲",
+          "purchase_num": 1
+        },
+        "audit_line": 2,
+        "category": "economic",
+        "created_objects": [],
+        "event_id": null,
+        "id": "synthetic_action_002",
+        "origin": "autonomous",
+        "outcome": "executed",
+        "phase": "after_actions",
+        "result": {
+          "accepted": true,
+          "amount_fen": 990,
+          "order_id": "synthetic_order_01",
+          "product_name": "样例商品甲",
+          "quantity": 1
+        },
+        "sequence": 2,
+        "source": {
+          "audit_line": 2,
+          "kind": "llm_action",
+          "tool_call_index": 0
+        },
+        "stage": "synthetic_stage",
+        "step": 1,
+        "targets": [
+          {
+            "brand_id": "brand_alpha",
+            "owner_entity_id": "synthetic_person_03",
+            "product_name": "样例商品甲",
+            "product_ref": "synthetic_product_1",
+            "type": "product"
+          }
+        ],
+        "timestamp": "2026-01-01T00:00:02+00:00"
+      },
+      {
+        "action": "purchase_product",
+        "actor": {
+          "entity_id": "synthetic_person_02",
+          "name": "样例人物 02",
+          "role": "visitor"
+        },
+        "args": {
+          "product_name": "样例商品乙",
+          "purchase_num": 1
+        },
+        "audit_line": 3,
+        "category": "economic",
+        "created_objects": [],
+        "event_id": null,
+        "id": "synthetic_action_003",
+        "origin": "autonomous",
+        "outcome": "declined",
+        "phase": "after_actions",
+        "result": {
+          "accepted": false,
+          "reason": "合成样例中的购买条件未满足"
+        },
+        "sequence": 3,
+        "source": {
+          "audit_line": 3,
+          "kind": "llm_action",
+          "tool_call_index": 0
+        },
+        "stage": "synthetic_stage",
+        "step": 1,
+        "targets": [
+          {
+            "brand_id": "brand_beta",
+            "owner_entity_id": "synthetic_person_04",
+            "product_name": "样例商品乙",
+            "product_ref": "synthetic_product_2",
+            "type": "product"
+          }
+        ],
+        "timestamp": "2026-01-01T00:00:03+00:00"
+      },
+      {
+        "action": "create_post",
+        "actor": {
+          "entity_id": "synthetic_person_06",
+          "name": "样例人物 06",
+          "role": "research"
+        },
+        "args": {
+          "content": "[合成]尚无明确成功回执的帖子。"
+        },
+        "audit_line": 4,
+        "category": "social_interaction",
+        "created_objects": [],
+        "event_id": null,
+        "id": "synthetic_action_004",
+        "origin": "autonomous",
+        "outcome": "unknown",
+        "phase": "after_actions",
+        "result": {
+          "message": "合成样例未确认写入状态"
+        },
+        "sequence": 4,
+        "source": {
+          "audit_line": 4,
+          "kind": "llm_action",
+          "tool_call_index": 0
+        },
+        "stage": "synthetic_stage",
+        "step": 1,
+        "targets": [],
+        "timestamp": "2026-01-01T00:00:04+00:00"
+      },
+      {
+        "action": "publish_ad",
+        "actor": {
+          "entity_id": "synthetic_person_04",
+          "name": "样例人物 04",
+          "role": "operator"
+        },
+        "args": {
+          "content": "[合成]样例商品乙宣传。"
+        },
+        "audit_line": 5,
+        "category": "economic",
+        "created_objects": [],
+        "event_id": null,
+        "id": "synthetic_action_005",
+        "origin": "autonomous",
+        "outcome": "executed",
+        "phase": "after_actions",
+        "result": {
+          "accepted": true,
+          "cost_fen": 100,
+          "post_id": 2
+        },
+        "sequence": 5,
+        "source": {
+          "audit_line": 5,
+          "kind": "llm_action",
+          "tool_call_index": 0
+        },
+        "stage": "synthetic_stage",
+        "step": 1,
+        "targets": [],
+        "timestamp": "2026-01-01T00:00:05+00:00"
+      },
+      {
+        "action": "set_product_price",
+        "actor": {
+          "entity_id": "synthetic_person_05",
+          "name": "样例人物 05",
+          "role": "operator"
+        },
+        "args": {
+          "price_fen": 1500,
+          "product_name": "样例商品丙"
+        },
+        "audit_line": 6,
+        "category": "economic",
+        "created_objects": [],
+        "event_id": null,
+        "id": "synthetic_action_006",
+        "origin": "autonomous",
+        "outcome": "executed",
+        "phase": "after_actions",
+        "result": {
+          "accepted": true,
+          "price": 1500
+        },
+        "sequence": 6,
+        "source": {
+          "audit_line": 6,
+          "kind": "llm_action",
+          "tool_call_index": 0
+        },
+        "stage": "synthetic_stage",
+        "step": 1,
+        "targets": [
+          {
+            "brand_id": "brand_gamma",
+            "owner_entity_id": "synthetic_person_05",
+            "product_name": "样例商品丙",
+            "product_ref": "synthetic_product_3",
+            "type": "product"
+          }
+        ],
+        "timestamp": "2026-01-01T00:00:06+00:00"
+      },
+      {
+        "action": "purchase_product",
+        "actor": {
+          "entity_id": "synthetic_person_07",
+          "name": "样例人物 07",
+          "role": "research"
+        },
+        "args": {
+          "product_name": "样例商品乙",
+          "purchase_num": 1
+        },
+        "audit_line": 7,
+        "category": "economic",
+        "created_objects": [],
+        "event_id": null,
+        "id": "synthetic_action_007",
+        "origin": "autonomous",
+        "outcome": "executed",
+        "phase": "after_actions",
+        "result": {
+          "accepted": true,
+          "amount_fen": 1200,
+          "order_id": "synthetic_order_02",
+          "product_name": "样例商品乙",
+          "quantity": 1
+        },
+        "sequence": 7,
+        "source": {
+          "audit_line": 7,
+          "kind": "llm_action",
+          "tool_call_index": 0
+        },
+        "stage": "synthetic_stage",
+        "step": 2,
+        "targets": [
+          {
+            "brand_id": "brand_beta",
+            "owner_entity_id": "synthetic_person_04",
+            "product_name": "样例商品乙",
+            "product_ref": "synthetic_product_2",
+            "type": "product"
+          }
+        ],
+        "timestamp": "2026-01-01T00:00:07+00:00"
+      },
+      {
+        "action": "follow",
+        "actor": {
+          "entity_id": "synthetic_person_01",
+          "name": "样例人物 01",
+          "role": "visitor"
+        },
+        "args": {
+          "followee_id": 5
+        },
+        "audit_line": 8,
+        "category": "social_interaction",
+        "created_objects": [],
+        "event_id": null,
+        "id": "synthetic_action_008",
+        "origin": "autonomous",
+        "outcome": "executed",
+        "phase": "after_actions",
+        "result": {
+          "success": true
+        },
+        "sequence": 8,
+        "source": {
+          "audit_line": 8,
+          "kind": "llm_action",
+          "tool_call_index": 0
+        },
+        "stage": "synthetic_stage",
+        "step": 2,
+        "targets": [
+          {
+            "entity_id": "synthetic_person_06",
+            "id": 5,
+            "type": "agent"
+          }
+        ],
+        "timestamp": "2026-01-01T00:00:08+00:00"
+      },
+      {
+        "action": "do_nothing",
+        "actor": {
+          "entity_id": "synthetic_person_06",
+          "name": "样例人物 06",
+          "role": "research"
+        },
+        "args": {},
+        "audit_line": 9,
+        "category": "social_interaction",
+        "created_objects": [],
+        "event_id": null,
+        "id": "synthetic_action_009",
+        "origin": "autonomous",
+        "outcome": "noop",
+        "phase": "after_actions",
+        "result": {
+          "noop": true
+        },
+        "sequence": 9,
+        "source": {
+          "audit_line": 9,
+          "kind": "llm_action",
+          "tool_call_index": 0
+        },
+        "stage": "synthetic_stage",
+        "step": 2,
+        "targets": [],
+        "timestamp": "2026-01-01T00:00:09+00:00"
+      },
+      {
+        "action": "create_comment",
+        "actor": {
+          "entity_id": "synthetic_person_02",
+          "name": "样例人物 02",
+          "role": "visitor"
+        },
+        "args": {
+          "content": "[合成]失败评论。",
+          "post_id": 1
+        },
+        "audit_line": 10,
+        "category": "social_interaction",
+        "created_objects": [],
+        "event_id": null,
+        "id": "synthetic_action_010",
+        "origin": "autonomous",
+        "outcome": "failed",
+        "phase": "after_actions",
+        "result": {
+          "message": "合成失败回执",
+          "success": false
+        },
+        "sequence": 10,
+        "source": {
+          "audit_line": 10,
+          "kind": "llm_action",
+          "tool_call_index": 0
+        },
+        "stage": "synthetic_stage",
+        "step": 2,
+        "targets": [],
+        "timestamp": "2026-01-01T00:00:10+00:00"
+      }
+    ],
+    "agents": [
+      {
+        "agent_id": 0,
+        "entity_id": "synthetic_person_01",
+        "name": "样例人物 01",
+        "policy_id": "policy_visitor",
+        "role": "visitor",
+        "user_id": 0
+      },
+      {
+        "agent_id": 1,
+        "entity_id": "synthetic_person_02",
+        "name": "样例人物 02",
+        "policy_id": "policy_visitor",
+        "role": "visitor",
+        "user_id": 1
+      },
+      {
+        "agent_id": 2,
+        "entity_id": "synthetic_person_03",
+        "name": "样例人物 03",
+        "policy_id": "policy_operator",
+        "role": "operator",
+        "user_id": 2
+      },
+      {
+        "agent_id": 3,
+        "entity_id": "synthetic_person_04",
+        "name": "样例人物 04",
+        "policy_id": "policy_operator",
+        "role": "operator",
+        "user_id": 3
+      },
+      {
+        "agent_id": 4,
+        "entity_id": "synthetic_person_05",
+        "name": "样例人物 05",
+        "policy_id": "policy_operator",
+        "role": "operator",
+        "user_id": 4
+      },
+      {
+        "agent_id": 5,
+        "entity_id": "synthetic_person_06",
+        "name": "样例人物 06",
+        "policy_id": "policy_research",
+        "role": "research",
+        "user_id": 5
+      },
+      {
+        "agent_id": 6,
+        "entity_id": "synthetic_person_07",
+        "name": "样例人物 07",
+        "policy_id": "policy_research",
+        "role": "research",
+        "user_id": 6
+      }
+    ],
+    "counts": {
+      "actions": 10,
+      "agents": 7,
+      "diagnostics": 0,
+      "native_traces": 0,
+      "observations": 0,
+      "receipts": 0
+    },
+    "diagnostics": [],
+    "initial_relationships": [
+      {
+        "relation": "follow",
+        "source": "synthetic_person_01",
+        "target": "synthetic_person_03"
+      },
+      {
+        "relation": "follow",
+        "source": "synthetic_person_02",
+        "target": "synthetic_person_04"
+      },
+      {
+        "relation": "follow",
+        "source": "synthetic_person_06",
+        "target": "synthetic_person_01"
+      },
+      {
+        "relation": "competition",
+        "source": "synthetic_person_03",
+        "target": "synthetic_person_04"
+      }
+    ],
+    "kind": "oasis.interaction_trajectory",
+    "metadata": {
+      "bundle_sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+      "completed_steps": 2,
+      "exported_at": "2026-01-03T00:00:00Z",
+      "limitations": [
+        "全部记录为合成测试样例。动作按审计完成顺序排列。"
+      ],
+      "ordering": "audit_completion_order",
+      "plan_id": "plan_synthetic_replay",
+      "plan_revision": 1,
+      "platform": "twitter",
+      "snapshot_id": "snapshot_synthetic_replay",
+      "snapshot_revision": 2,
+      "source_event_count": 10,
+      "step_unit": "day",
+      "synthetic": true,
+      "time_mode": "step_index",
+      "total_steps": 2,
+      "warnings": []
+    },
+    "native_traces": [],
+    "object_refs": {},
+    "objects": {
+      "ads": [
+        {
+          "brand_id": "brand_beta",
+          "cost_fen": 100,
+          "post_id": 2,
+          "target_entity_ids": [
+            "synthetic_person_01",
+            "synthetic_person_02"
+          ]
+        }
+      ],
+      "comments": [],
+      "final_follows": [],
+      "orders": [
+        {
+          "action_id": "synthetic_purchase_1",
+          "amount": 990,
+          "amount_fen": 990,
+          "brand_id": "brand_alpha",
+          "entity_id": "synthetic_person_01",
+          "order_id": "synthetic_order_01",
+          "product_name": "样例商品甲",
+          "quantity": 1,
+          "step": 1,
+          "unit_price": 990,
+          "unit_price_fen": 990,
+          "user_id": 0
+        },
+        {
+          "action_id": "synthetic_purchase_2",
+          "amount": 1200,
+          "amount_fen": 1200,
+          "brand_id": "brand_beta",
+          "entity_id": "synthetic_person_07",
+          "order_id": "synthetic_order_02",
+          "product_name": "样例商品乙",
+          "quantity": 1,
+          "step": 2,
+          "unit_price": 1200,
+          "unit_price_fen": 1200,
+          "user_id": 6
+        }
+      ],
+      "posts": [
+        {
+          "author_entity_id": "synthetic_person_03",
+          "content": "[合成]样例经营者介绍商品。",
+          "post_id": 1,
+          "user_id": 2
+        },
+        {
+          "author_entity_id": "synthetic_person_04",
+          "content": "[合成]样例商品乙宣传。",
+          "post_id": 2,
+          "user_id": 3
+        }
+      ],
+      "price_changes": [],
+      "products": [
+        {
+          "brand_id": "brand_alpha",
+          "name": "样例商品甲",
+          "price": 990
+        },
+        {
+          "brand_id": "brand_beta",
+          "name": "样例商品乙",
+          "price": 1200
+        },
+        {
+          "brand_id": "brand_gamma",
+          "name": "样例商品丙",
+          "price": 1600
+        }
+      ]
+    },
+    "observations": [],
+    "partial": false,
+    "receipts": [],
+    "run_id": "engine_synthetic_replay",
+    "schema_version": "1.0",
+    "status": "completed"
+  },
+  "live": {
+    "bootstrap": {
+      "schema_version": "scene.live.v1",
+      "run_id": "synthetic-live-run",
+      "engine_run_id": "engine_synthetic_replay",
+      "config_id": "synthetic-live-config",
+      "status": "running",
+      "phase": "steps",
+      "snapshot": {
+        "schema_version": "1.0",
+        "snapshot_id": "snapshot_synthetic_replay",
+        "snapshot_revision": 2,
+        "selection_request_id": "selection_synthetic_replay",
+        "dataset_version": "synthetic-replay-only",
+        "seed": 2026,
+        "nodes": [
+          {
+            "entity_id": "synthetic_person_01",
+            "role": "visitor",
+            "request_persona": true,
+            "name": "样例人物 01",
+            "bio": "完全合成的回放测试人物，用于验证通用角色、品牌与动作结果。",
+            "static_attributes": {
+              "gender": "male",
+              "age": 21,
+              "education_status": "student_bachelor"
+            },
+            "dynamic_attributes": {
+              "interest_topic": "合成数据与校园交流",
+              "spending_limit_yuan": 101
+            },
+            "role_description": "样例访客"
+          },
+          {
+            "entity_id": "synthetic_person_02",
+            "role": "visitor",
+            "request_persona": true,
+            "name": "样例人物 02",
+            "bio": "完全合成的回放测试人物，用于验证通用角色、品牌与动作结果。",
+            "static_attributes": {
+              "gender": "female",
+              "age": 22,
+              "education_status": "student_bachelor"
+            },
+            "dynamic_attributes": {
+              "interest_topic": "合成数据与校园交流",
+              "spending_limit_yuan": 102
+            },
+            "role_description": "样例访客"
+          },
+          {
+            "entity_id": "synthetic_person_03",
+            "role": "operator",
+            "request_persona": true,
+            "name": "样例人物 03",
+            "bio": "完全合成的回放测试人物，用于验证通用角色、品牌与动作结果。",
+            "static_attributes": {
+              "gender": "male",
+              "age": 23,
+              "education_status": "graduate"
+            },
+            "dynamic_attributes": {
+              "interest_topic": "合成数据与校园交流",
+              "spending_limit_yuan": 103
+            },
+            "role_description": "样例经营者"
+          },
+          {
+            "entity_id": "synthetic_person_04",
+            "role": "operator",
+            "request_persona": true,
+            "name": "样例人物 04",
+            "bio": "完全合成的回放测试人物，用于验证通用角色、品牌与动作结果。",
+            "static_attributes": {
+              "gender": "female",
+              "age": 24,
+              "education_status": "graduate"
+            },
+            "dynamic_attributes": {
+              "interest_topic": "合成数据与校园交流",
+              "spending_limit_yuan": 104
+            },
+            "role_description": "样例经营者"
+          },
+          {
+            "entity_id": "synthetic_person_05",
+            "role": "operator",
+            "request_persona": true,
+            "name": "样例人物 05",
+            "bio": "完全合成的回放测试人物，用于验证通用角色、品牌与动作结果。",
+            "static_attributes": {
+              "gender": "male",
+              "age": 25,
+              "education_status": "graduate"
+            },
+            "dynamic_attributes": {
+              "interest_topic": "合成数据与校园交流",
+              "spending_limit_yuan": 105
+            },
+            "role_description": "样例经营者"
+          },
+          {
+            "entity_id": "synthetic_person_06",
+            "role": "research",
+            "request_persona": true,
+            "name": "样例人物 06",
+            "bio": "完全合成的回放测试人物，用于验证通用角色、品牌与动作结果。",
+            "static_attributes": {
+              "gender": "female",
+              "age": 26,
+              "education_status": "graduate"
+            },
+            "dynamic_attributes": {
+              "interest_topic": "合成数据与校园交流",
+              "spending_limit_yuan": 106
+            },
+            "role_description": "样例研究人员"
+          },
+          {
+            "entity_id": "synthetic_person_07",
+            "role": "research",
+            "request_persona": true,
+            "name": "样例人物 07",
+            "bio": "完全合成的回放测试人物，用于验证通用角色、品牌与动作结果。",
+            "static_attributes": {
+              "gender": "male",
+              "age": 27,
+              "education_status": "graduate"
+            },
+            "dynamic_attributes": {
+              "interest_topic": "合成数据与校园交流",
+              "spending_limit_yuan": 107
+            },
+            "role_description": "样例研究人员"
+          }
+        ],
+        "edges": [
+          {
+            "source": "synthetic_person_01",
+            "target": "synthetic_person_03",
+            "relation": "follow"
+          },
+          {
+            "source": "synthetic_person_02",
+            "target": "synthetic_person_04",
+            "relation": "follow"
+          },
+          {
+            "source": "synthetic_person_06",
+            "target": "synthetic_person_01",
+            "relation": "follow"
+          },
+          {
+            "source": "synthetic_person_03",
+            "target": "synthetic_person_04",
+            "relation": "competition"
+          }
+        ]
+      },
+      "plan": {
+        "schema_version": "1.0",
+        "plan_id": "plan_synthetic_replay",
+        "plan_revision": 1,
+        "capability_version": "oasis-8607dba-v2",
+        "scenario": {
+          "title": "完全合成的通用校园实验",
+          "goal": "验证任意角色、三个独立品牌和被拒动作的展示。全部内容为合成样例。",
+          "background": "合成场景中的人物可以交流和购买样例商品。",
+          "source_asset_ids": []
+        },
+        "population": {
+          "snapshot_id": "snapshot_synthetic_replay",
+          "snapshot_revision": 2,
+          "expected_agent_count": 7
+        },
+        "policy_registry_version": "registry_synthetic_replay_v1",
+        "role_policies": [
+          {
+            "role_id": "visitor",
+            "policy_id": "policy_visitor"
+          },
+          {
+            "role_id": "operator",
+            "policy_id": "policy_operator"
+          },
+          {
+            "role_id": "research",
+            "policy_id": "policy_research"
+          }
+        ],
+        "platform": {
+          "type": "twitter",
+          "recsys_type": "random",
+          "max_rec_post_len": 10,
+          "refresh_rec_post_count": 5,
+          "following_post_count": 5,
+          "show_score": true,
+          "allow_self_rating": false,
+          "use_openai_embedding": false
+        },
+        "runtime": {
+          "num_steps": 2,
+          "semaphore": 2,
+          "seed": 2026,
+          "time": {
+            "mode": "step_index",
+            "unit": "day"
+          },
+          "activation": {
+            "mode": "per_role_probability",
+            "probability_by_role": {
+              "visitor": 1,
+              "operator": 1,
+              "research": 1
+            }
+          },
+          "action_timeout_seconds": 60,
+          "run_timeout_seconds": 600,
+          "on_action_error": "fail_run"
+        },
+        "initial_state": {
+          "seed_posts": []
+        },
+        "events": [],
+        "observation": {
+          "interval_steps": 1,
+          "metrics": [
+            "post_count",
+            "follow_count"
+          ],
+          "report_format": "markdown"
+        },
+        "economy": {
+          "currency": "CNY",
+          "brands": [
+            {
+              "brand_id": "brand_alpha",
+              "owner_entity_id": "synthetic_person_03",
+              "marketing_budget_fen": 100000,
+              "campaign_cost_fen": 100,
+              "ad_audience_size": 2,
+              "ad_duration_steps": 1
+            },
+            {
+              "brand_id": "brand_beta",
+              "owner_entity_id": "synthetic_person_04",
+              "marketing_budget_fen": 100000,
+              "campaign_cost_fen": 100,
+              "ad_audience_size": 2,
+              "ad_duration_steps": 1
+            },
+            {
+              "brand_id": "brand_gamma",
+              "owner_entity_id": "synthetic_person_05",
+              "marketing_budget_fen": 100000,
+              "campaign_cost_fen": 100,
+              "ad_audience_size": 2,
+              "ad_duration_steps": 1
+            }
+          ],
+          "products": [
+            {
+              "product_ref": "synthetic_product_1",
+              "product_name": "样例商品甲",
+              "brand_id": "brand_alpha",
+              "price_fen": 990,
+              "min_price_fen": 100,
+              "max_price_fen": 3000,
+              "unit_cost_fen": null,
+              "inventory_units": null,
+              "public_from_step": 0,
+              "awareness_terms": [
+                "样例商品甲"
+              ]
+            },
+            {
+              "product_ref": "synthetic_product_2",
+              "product_name": "样例商品乙",
+              "brand_id": "brand_beta",
+              "price_fen": 1200,
+              "min_price_fen": 100,
+              "max_price_fen": 3000,
+              "unit_cost_fen": null,
+              "inventory_units": null,
+              "public_from_step": 0,
+              "awareness_terms": [
+                "样例商品乙"
+              ]
+            },
+            {
+              "product_ref": "synthetic_product_3",
+              "product_name": "样例商品丙",
+              "brand_id": "brand_gamma",
+              "price_fen": 1600,
+              "min_price_fen": 100,
+              "max_price_fen": 3000,
+              "unit_cost_fen": null,
+              "inventory_units": null,
+              "public_from_step": 0,
+              "awareness_terms": [
+                "样例商品丙"
+              ]
+            }
+          ],
+          "wallets": [
+            {
+              "entity_id": "synthetic_person_01",
+              "balance_fen": 20000,
+              "known_product_refs": [
+                "synthetic_product_1",
+                "synthetic_product_2",
+                "synthetic_product_3"
+              ]
+            },
+            {
+              "entity_id": "synthetic_person_02",
+              "balance_fen": 20000,
+              "known_product_refs": [
+                "synthetic_product_1",
+                "synthetic_product_2",
+                "synthetic_product_3"
+              ]
+            },
+            {
+              "entity_id": "synthetic_person_06",
+              "balance_fen": 20000,
+              "known_product_refs": [
+                "synthetic_product_1",
+                "synthetic_product_2",
+                "synthetic_product_3"
+              ]
+            },
+            {
+              "entity_id": "synthetic_person_07",
+              "balance_fen": 20000,
+              "known_product_refs": [
+                "synthetic_product_1",
+                "synthetic_product_2",
+                "synthetic_product_3"
+              ]
+            }
+          ],
+          "rules": {
+            "max_quantity_per_purchase": 1,
+            "max_units_per_consumer_per_step": 1,
+            "allow_self_purchase": false
+          }
+        }
+      },
+      "metadata": {
+        "snapshot_id": "snapshot_synthetic_replay",
+        "snapshot_revision": 2,
+        "plan_id": "plan_synthetic_replay",
+        "plan_revision": 1
+      },
+      "synthetic": true,
+      "roles": {
+        "population_request": {
+          "visitor": {
+            "description": "合成校园访客",
+            "count": 2,
+            "generate": {}
+          },
+          "operator": {
+            "description": "合成门店经营者",
+            "count": 3,
+            "generate": {}
+          },
+          "research": {
+            "description": "合成科研人员",
+            "count": 2,
+            "generate": {}
+          }
+        },
+        "synthetic": true
+      }
+    },
+    "pages": [
+      {
+        "status": "running",
+        "completed_step": 0,
+        "active_step": 1,
+        "events": [
+          {
+            "source": {
+              "run_id": "engine_synthetic_replay",
+              "audit_line": 1,
+              "tool_call_index": 0
+            },
+            "step": 0,
+            "agent": {
+              "entity_id": "synthetic_person_03"
+            },
+            "action": "create_post",
+            "outcome": "executed",
+            "stage": "synthetic_stage",
+            "text": "[合成]样例经营者介绍商品。",
+            "message": "",
+            "brand_id": "brand_alpha",
+            "post_id": 1
+          },
+          {
+            "source": {
+              "run_id": "engine_synthetic_replay",
+              "audit_line": 2,
+              "tool_call_index": 0
+            },
+            "step": 1,
+            "agent": {
+              "entity_id": "synthetic_person_01"
+            },
+            "action": "purchase_product",
+            "outcome": "executed",
+            "stage": "synthetic_stage",
+            "text": "",
+            "message": "",
+            "brand_id": "brand_alpha",
+            "product_name": "样例商品甲",
+            "order_id": "synthetic_order_01",
+            "quantity": 1,
+            "amount_fen": 990
+          },
+          {
+            "source": {
+              "run_id": "engine_synthetic_replay",
+              "audit_line": 11,
+              "tool_call_index": 0
+            },
+            "step": 1,
+            "agent": {
+              "entity_id": "synthetic_person_02"
+            },
+            "action": "purchase_product",
+            "outcome": "executed",
+            "stage": "synthetic_stage",
+            "text": "",
+            "message": "",
+            "brand_id": "brand_alpha",
+            "product_name": "样例商品甲",
+            "order_id": "synthetic_missing_order",
+            "quantity": 1,
+            "amount_fen": 990
+          }
+        ],
+        "day_summaries": [],
+        "next_cursor": "synthetic-cursor-pending",
+        "done": false
+      },
+      {
+        "status": "running",
+        "completed_step": 1,
+        "active_step": 1,
+        "events": [
+          {
+            "source": {
+              "run_id": "engine_synthetic_replay",
+              "audit_line": 1,
+              "tool_call_index": 0
+            },
+            "step": 0,
+            "agent": {
+              "entity_id": "synthetic_person_03"
+            },
+            "action": "create_post",
+            "outcome": "executed",
+            "stage": "synthetic_stage",
+            "text": "[合成]样例经营者介绍商品。",
+            "message": "",
+            "brand_id": "brand_alpha",
+            "post_id": 1
+          },
+          {
+            "source": {
+              "run_id": "engine_synthetic_replay",
+              "audit_line": 2,
+              "tool_call_index": 0
+            },
+            "step": 1,
+            "agent": {
+              "entity_id": "synthetic_person_01"
+            },
+            "action": "purchase_product",
+            "outcome": "executed",
+            "stage": "synthetic_stage",
+            "text": "",
+            "message": "",
+            "brand_id": "brand_alpha",
+            "product_name": "样例商品甲",
+            "order_id": "synthetic_order_01",
+            "quantity": 1,
+            "amount_fen": 990
+          },
+          {
+            "source": {
+              "run_id": "engine_synthetic_replay",
+              "audit_line": 3,
+              "tool_call_index": 0
+            },
+            "step": 1,
+            "agent": {
+              "entity_id": "synthetic_person_02"
+            },
+            "action": "purchase_product",
+            "outcome": "declined",
+            "stage": "synthetic_stage",
+            "text": "",
+            "message": "合成样例中的购买条件未满足",
+            "brand_id": "brand_beta",
+            "product_name": "样例商品乙"
+          },
+          {
+            "source": {
+              "run_id": "engine_synthetic_replay",
+              "audit_line": 4,
+              "tool_call_index": 0
+            },
+            "step": 1,
+            "agent": {
+              "entity_id": "synthetic_person_06"
+            },
+            "action": "create_post",
+            "outcome": "unknown",
+            "stage": "synthetic_stage",
+            "text": "[合成]尚无明确成功回执的帖子。",
+            "message": "合成样例未确认写入状态"
+          },
+          {
+            "source": {
+              "run_id": "engine_synthetic_replay",
+              "audit_line": 5,
+              "tool_call_index": 0
+            },
+            "step": 1,
+            "agent": {
+              "entity_id": "synthetic_person_04"
+            },
+            "action": "publish_ad",
+            "outcome": "executed",
+            "stage": "synthetic_stage",
+            "text": "[合成]样例商品乙宣传。",
+            "message": "",
+            "brand_id": "brand_beta",
+            "post_id": 2,
+            "cost_fen": 100
+          },
+          {
+            "source": {
+              "run_id": "engine_synthetic_replay",
+              "audit_line": 6,
+              "tool_call_index": 0
+            },
+            "step": 1,
+            "agent": {
+              "entity_id": "synthetic_person_05"
+            },
+            "action": "set_product_price",
+            "outcome": "executed",
+            "stage": "synthetic_stage",
+            "text": "",
+            "message": "",
+            "brand_id": "brand_gamma",
+            "product_name": "样例商品丙",
+            "price_fen": 1500
+          },
+          {
+            "source": {
+              "run_id": "engine_synthetic_replay",
+              "audit_line": 11,
+              "tool_call_index": 0
+            },
+            "step": 1,
+            "agent": {
+              "entity_id": "synthetic_person_02"
+            },
+            "action": "purchase_product",
+            "outcome": "executed",
+            "stage": "synthetic_stage",
+            "text": "",
+            "message": "",
+            "brand_id": "brand_alpha",
+            "product_name": "样例商品甲",
+            "order_id": "synthetic_missing_order",
+            "quantity": 1,
+            "amount_fen": 990
+          }
+        ],
+        "day_summaries": [
+          {
+            "step": 1,
+            "orders": 1,
+            "quantity": 1,
+            "revenue_fen": 990,
+            "posts": 1,
+            "comments": 0,
+            "verified_orders": [
+              {
+                "order_id": "synthetic_order_01",
+                "entity_id": "synthetic_person_01",
+                "brand_id": "brand_alpha",
+                "product_name": "样例商品甲",
+                "quantity": 1,
+                "amount_fen": 990
+              }
+            ]
+          }
+        ],
+        "next_cursor": "synthetic-cursor-1",
+        "done": false
+      },
+      {
+        "status": "running",
+        "completed_step": 2,
+        "active_step": 2,
+        "events": [
+          {
+            "source": {
+              "run_id": "engine_synthetic_replay",
+              "audit_line": 1,
+              "tool_call_index": 0
+            },
+            "step": 0,
+            "agent": {
+              "entity_id": "synthetic_person_03"
+            },
+            "action": "create_post",
+            "outcome": "executed",
+            "stage": "synthetic_stage",
+            "text": "[合成]样例经营者介绍商品。",
+            "message": "",
+            "brand_id": "brand_alpha",
+            "post_id": 1
+          },
+          {
+            "source": {
+              "run_id": "engine_synthetic_replay",
+              "audit_line": 2,
+              "tool_call_index": 0
+            },
+            "step": 1,
+            "agent": {
+              "entity_id": "synthetic_person_01"
+            },
+            "action": "purchase_product",
+            "outcome": "executed",
+            "stage": "synthetic_stage",
+            "text": "",
+            "message": "",
+            "brand_id": "brand_alpha",
+            "product_name": "样例商品甲",
+            "order_id": "synthetic_order_01",
+            "quantity": 1,
+            "amount_fen": 990
+          },
+          {
+            "source": {
+              "run_id": "engine_synthetic_replay",
+              "audit_line": 3,
+              "tool_call_index": 0
+            },
+            "step": 1,
+            "agent": {
+              "entity_id": "synthetic_person_02"
+            },
+            "action": "purchase_product",
+            "outcome": "declined",
+            "stage": "synthetic_stage",
+            "text": "",
+            "message": "合成样例中的购买条件未满足",
+            "brand_id": "brand_beta",
+            "product_name": "样例商品乙"
+          },
+          {
+            "source": {
+              "run_id": "engine_synthetic_replay",
+              "audit_line": 4,
+              "tool_call_index": 0
+            },
+            "step": 1,
+            "agent": {
+              "entity_id": "synthetic_person_06"
+            },
+            "action": "create_post",
+            "outcome": "unknown",
+            "stage": "synthetic_stage",
+            "text": "[合成]尚无明确成功回执的帖子。",
+            "message": "合成样例未确认写入状态"
+          },
+          {
+            "source": {
+              "run_id": "engine_synthetic_replay",
+              "audit_line": 5,
+              "tool_call_index": 0
+            },
+            "step": 1,
+            "agent": {
+              "entity_id": "synthetic_person_04"
+            },
+            "action": "publish_ad",
+            "outcome": "executed",
+            "stage": "synthetic_stage",
+            "text": "[合成]样例商品乙宣传。",
+            "message": "",
+            "brand_id": "brand_beta",
+            "post_id": 2,
+            "cost_fen": 100
+          },
+          {
+            "source": {
+              "run_id": "engine_synthetic_replay",
+              "audit_line": 6,
+              "tool_call_index": 0
+            },
+            "step": 1,
+            "agent": {
+              "entity_id": "synthetic_person_05"
+            },
+            "action": "set_product_price",
+            "outcome": "executed",
+            "stage": "synthetic_stage",
+            "text": "",
+            "message": "",
+            "brand_id": "brand_gamma",
+            "product_name": "样例商品丙",
+            "price_fen": 1500
+          },
+          {
+            "source": {
+              "run_id": "engine_synthetic_replay",
+              "audit_line": 7,
+              "tool_call_index": 0
+            },
+            "step": 2,
+            "agent": {
+              "entity_id": "synthetic_person_07"
+            },
+            "action": "purchase_product",
+            "outcome": "executed",
+            "stage": "synthetic_stage",
+            "text": "",
+            "message": "",
+            "brand_id": "brand_beta",
+            "product_name": "样例商品乙",
+            "order_id": "synthetic_order_02",
+            "quantity": 1,
+            "amount_fen": 1200
+          },
+          {
+            "source": {
+              "run_id": "engine_synthetic_replay",
+              "audit_line": 8,
+              "tool_call_index": 0
+            },
+            "step": 2,
+            "agent": {
+              "entity_id": "synthetic_person_01"
+            },
+            "action": "follow",
+            "outcome": "executed",
+            "stage": "synthetic_stage",
+            "text": "",
+            "message": "",
+            "target": "synthetic_person_06"
+          },
+          {
+            "source": {
+              "run_id": "engine_synthetic_replay",
+              "audit_line": 9,
+              "tool_call_index": 0
+            },
+            "step": 2,
+            "agent": {
+              "entity_id": "synthetic_person_06"
+            },
+            "action": "do_nothing",
+            "outcome": "noop",
+            "stage": "synthetic_stage",
+            "text": "",
+            "message": ""
+          },
+          {
+            "source": {
+              "run_id": "engine_synthetic_replay",
+              "audit_line": 10,
+              "tool_call_index": 0
+            },
+            "step": 2,
+            "agent": {
+              "entity_id": "synthetic_person_02"
+            },
+            "action": "create_comment",
+            "outcome": "failed",
+            "stage": "synthetic_stage",
+            "text": "[合成]失败评论。",
+            "message": "合成失败回执"
+          },
+          {
+            "source": {
+              "run_id": "engine_synthetic_replay",
+              "audit_line": 11,
+              "tool_call_index": 0
+            },
+            "step": 1,
+            "agent": {
+              "entity_id": "synthetic_person_02"
+            },
+            "action": "purchase_product",
+            "outcome": "executed",
+            "stage": "synthetic_stage",
+            "text": "",
+            "message": "",
+            "brand_id": "brand_alpha",
+            "product_name": "样例商品甲",
+            "order_id": "synthetic_missing_order",
+            "quantity": 1,
+            "amount_fen": 990
+          }
+        ],
+        "day_summaries": [
+          {
+            "step": 1,
+            "orders": 1,
+            "quantity": 1,
+            "revenue_fen": 990,
+            "posts": 1,
+            "comments": 0,
+            "verified_orders": [
+              {
+                "order_id": "synthetic_order_01",
+                "entity_id": "synthetic_person_01",
+                "brand_id": "brand_alpha",
+                "product_name": "样例商品甲",
+                "quantity": 1,
+                "amount_fen": 990
+              }
+            ]
+          },
+          {
+            "step": 2,
+            "orders": 1,
+            "quantity": 1,
+            "revenue_fen": 1200,
+            "posts": 0,
+            "comments": 0,
+            "verified_orders": [
+              {
+                "order_id": "synthetic_order_02",
+                "entity_id": "synthetic_person_07",
+                "brand_id": "brand_beta",
+                "product_name": "样例商品乙",
+                "quantity": 1,
+                "amount_fen": 1200
+              }
+            ]
+          }
+        ],
+        "next_cursor": "synthetic-cursor-2",
+        "done": false
+      }
+    ]
+  }
+}

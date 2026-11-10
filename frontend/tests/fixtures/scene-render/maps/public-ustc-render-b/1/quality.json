@@ -1,0 +1,56 @@
+{
+  "buildings": 31,
+  "eligible_buildings": 29,
+  "entrances": 31,
+  "function_counts": {
+    "dining": 1,
+    "dormitory": 8,
+    "education": 21,
+    "library": 0,
+    "office": 0,
+    "residential": 0,
+    "retail": 0,
+    "unknown": 2
+  },
+  "main_component_entrances": 31,
+  "main_component_ratio": 1.0,
+  "no_entrance": 0,
+  "poi": {
+    "ambiguous": 0,
+    "associated": 0,
+    "invalid": 0,
+    "total": 0,
+    "unassociated": 0
+  },
+  "status": "ready",
+  "thresholds": {
+    "min_function_ratio": 0.0,
+    "min_main_ratio": 0.9
+  },
+  "unknown": 2,
+  "valid_buildings": 31,
+  "warnings": [
+    {
+      "code": "BUILDING_EXCLUDED",
+      "message": "Invalid geometry, outside scope, water conflict, or no safe reachable entrance",
+      "refs": [
+        "way/1435370291"
+      ]
+    },
+    {
+      "code": "BUILDING_EXCLUDED",
+      "message": "Invalid geometry, outside scope, water conflict, or no safe reachable entrance",
+      "refs": [
+        "way/1435377495"
+      ]
+    },
+    {
+      "code": "UNKNOWN_USE",
+      "message": "Unknown building functions do not participate in strict matching",
+      "refs": [
+        "way/1435368250",
+        "way/1501639766"
+      ]
+    }
+  ]
+}

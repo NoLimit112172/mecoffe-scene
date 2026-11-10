@@ -15,10 +15,11 @@ export function resolveHomeKey(person) {
 
 // Explicit run data binds each brand to its owner's mapped building. Legacy files keep their own IDs.
 export function brandLocationKey(index, brandId) {
+  if(index.brands?.get(brandId)?.out_of_scene)return null
   return index.brands?.get(brandId)?.location_id || `shop_${brandId}`
 }
 export function brandLocationKeys(index) {
-  return new Set(index.scene.brands.map(brand => brandLocationKey(index, brand.brand_id)))
+  return new Set(index.scene.brands.map(brand => brandLocationKey(index, brand.brand_id)).filter(Boolean))
 }
 
 export function polygonCenter(polygon) {

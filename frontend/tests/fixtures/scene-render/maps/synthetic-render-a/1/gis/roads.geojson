@@ -1,0 +1,63 @@
+{
+  "coordinate_system": "WGS84 longitude, latitude",
+  "features": [
+    {
+      "geometry": {
+        "coordinates": [
+          [
+            103.770199998,
+            1.293699996
+          ],
+          [
+            103.771200001,
+            1.293699996
+          ],
+          [
+            103.772200003,
+            1.293699996
+          ],
+          [
+            103.773199997,
+            1.293699996
+          ],
+          [
+            103.774199999,
+            1.293699996
+          ],
+          [
+            103.775200002,
+            1.293699996
+          ]
+        ],
+        "type": "LineString"
+      },
+      "id": "road/geojson/synthetic-walk/0",
+      "properties": {
+        "bridge": "",
+        "feature_id": "road/geojson/synthetic-walk/0",
+        "highway": "footway",
+        "layer": "0",
+        "name": "",
+        "surrounding": false,
+        "walkable": true
+      },
+      "type": "Feature"
+    }
+  ],
+  "name": "roads",
+  "notice": "人物所在楼栋与行走路线为展示层示意，OASIS 没有位置数据",
+  "schema_version": "mecoffe.gis.v1",
+  "source": {
+    "attribution": "Entirely synthetic test geometry",
+    "bbox": [
+      103.77,
+      1.2937,
+      103.77539999999999,
+      1.2943
+    ],
+    "license": "CC0-1.0",
+    "sha256": "6aace1356812cecb1f09f530dbac79b1c2327d1cbb337e644c76732e4a6be012",
+    "source_type": "caller_geojson"
+  },
+  "type": "FeatureCollection"
+}

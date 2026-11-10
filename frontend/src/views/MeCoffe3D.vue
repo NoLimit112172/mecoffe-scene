@@ -14,7 +14,8 @@
       </div>
     </header>
 
-    <div class="spatial-notice" role="note"><i aria-hidden="true" class="fa-solid fa-circle-info"></i><strong>建筑与道路来自 OpenStreetMap；人物所在楼栋与行走路线为展示层示意，OASIS 没有位置数据</strong></div>
+    <div class="spatial-notice" role="note"><i aria-hidden="true" class="fa-solid fa-circle-info"></i><strong>建筑与道路来自{{scenario?.files['trajectory.json']?.meta.scene_result?'当前地图包':' OpenStreetMap'}}；人物所在楼栋与行走路线为展示层示意，OASIS 没有位置数据</strong></div>
+    <ScenePlacementDetails v-if="scenario?.files['trajectory.json']?.meta.scene_result" :result="scenario.files['trajectory.json'].meta.scene_result" :people="scenario.files['trajectory.json'].people"/>
     <div v-if="loadError" class="error-panel" role="alert"><strong>三维场景未能加载</strong><p>{{ loadError }}</p><button @click="loadScene(requestedMode)">重新加载</button><RouterLink to="/mecoffe">打开原二维页面</RouterLink></div>
     <p v-if="styleError" role="alert" class="data-notice">{{styleError}}</p>
 
@@ -22,7 +23,7 @@
       <div v-if="!isConfigPreview&&!isLive" class="data-notice" data-testid="simulation-time">{{dayDisplay?.label || currentDay.label}} · 天内回放进度 {{dayDisplay?.progress || 0}}% · 昼夜变化为展示效果</div>
       <div class="data-notice" :class="requestedMode" data-testid="data-notice">{{ dataNotice }}</div>
       <p v-if="isGenericReplay" class="data-notice" data-testid="replay-outcomes">本记录含被拒 {{replayOutcomeCounts.declined}} 条 · 结果未知 {{replayOutcomeCounts.unknown}} 条；仅已执行的动作计入成功结果。</p>
-      <p v-if="indoorState.accounting" class="population-accounting" data-testid="person-accounting">人物去向：室外 {{indoorState.accounting.visible}} + 楼内 {{indoorState.accounting.inside}} = {{indoorState.accounting.total}} 人 · {{indoorState.accounting.valid?'全部可定位':'请重新加载场景'}}<span v-if="selectedId"> · <i aria-hidden="true" style="color:#4c8ba6">━</i> 关注他人 <i aria-hidden="true" style="color:#b49b61">━</i> 被关注（楼内连接屋顶）<template v-if="isIntegratedScene"> <i aria-hidden="true" style="color:#9366a6">━</i> 竞争关系</template></span></p>
+      <p v-if="indoorState.accounting" class="population-accounting" data-testid="person-accounting">人物去向：室外 {{indoorState.accounting.visible}} + 楼内 {{indoorState.accounting.inside}}<template v-if="indoorState.accounting.out_of_scene"> + 场景外 {{indoorState.accounting.out_of_scene}}</template> = {{indoorState.accounting.total}} 人 · {{indoorState.accounting.valid?'全部可定位':'请重新加载场景'}}<span v-if="selectedId"> · <i aria-hidden="true" style="color:#4c8ba6">━</i> 关注他人 <i aria-hidden="true" style="color:#b49b61">━</i> 被关注（楼内连接屋顶）<template v-if="isIntegratedScene"> <i aria-hidden="true" style="color:#9366a6">━</i> 竞争关系</template></span></p>
 
       <p v-if="qualityNotice" role="status" class="data-notice">{{ qualityNotice }}</p>
       <section class="kpis" aria-label="回放指标">
@@ -34,9 +35,9 @@
 
       <button v-if="isIntegratedScene" class="details-toggle" :aria-expanded="detailsOpen" aria-controls="three-scene-details" @click="detailsOpen=!detailsOpen">{{detailsOpen?'收起详情':'人物与场景详情'}}</button>
       <main class="main-layout">
-        <section class="map-panel" aria-label="中科大高新校区三维场景">
+        <section class="map-panel" :aria-label="scenario?.manifest.title || '中科大高新校区三维场景'">
           <div ref="mapEl" class="map-canvas"></div>
-          <div class="map-top"><div class="map-badge"><b>USTC · 高新校区</b><span>{{ campusData?.buildings.length || 0 }} 栋建筑 / {{ campusData?.roads.length || 0 }} 段道路</span></div><div class="map-camera-buttons"><button class="reset-camera" title="放大查看选中人物或当前行人" @click="focusPerson"><i aria-hidden="true" class="fa-solid fa-person-walking"></i> 人物特写</button><button class="reset-camera" title="恢复校园全景" @click="renderer?.resetCamera()"><i aria-hidden="true" class="fa-solid fa-expand"></i> 全景</button></div></div>
+          <div class="map-top"><div class="map-badge"><b>{{scenario?.files['trajectory.json']?.meta.scene_result ? scenario.manifest.title : 'USTC · 高新校区'}}</b><span>{{ campusData?.buildings.length || 0 }} 栋建筑 / {{ campusData?.roads.length || 0 }} 段道路</span></div><div class="map-camera-buttons"><button class="reset-camera" title="放大查看选中人物或当前行人" @click="focusPerson"><i aria-hidden="true" class="fa-solid fa-person-walking"></i> 人物特写</button><button class="reset-camera" title="恢复校园全景" @click="renderer?.resetCamera()"><i aria-hidden="true" class="fa-solid fa-expand"></i> 全景</button></div></div>
           <div v-if="hoverCard" class="hover-card" :style="hoverStyle">
             <b>{{ hoverCard.name }}</b>
             <template v-if="hoverCard.type === 'building'">
@@ -89,6 +90,7 @@
               </div>
               <code>{{ selected.id }}</code>
               <p class="person-placement"><i class="fa-solid fa-location-dot" aria-hidden="true"></i>{{ personPlacement(selected.id) }}</p>
+              <div v-if="selected.placement" class="mapping-note"><p>安置理由：{{selected.placement.reason}}</p><small v-for="(e,i) in selected.placement.evidence" :key="i">证据来源 {{e.source}} · {{e.key}}={{e.value}} · {{e.ref}}<br/></small></div>
               <p v-if="selected.bio" class="person-bio">{{ selected.bio }}</p><details v-if="selected.role_description" class="role-description"><summary>角色说明</summary><p>{{selected.role_description}}</p><small>角色标识：{{selected.role}}</small></details>
               <ConfigProfileFields v-if="isIntegratedScene" :person="selected"/>
               <details v-if="mappingEntry(selected)?.note" class="mapping-note">
@@ -186,6 +188,7 @@ import ConfigProfileFields from '../components/ConfigProfileFields.vue'
 import EventResultDetails from '../components/EventResultDetails.vue'
 import {shopEntries, shopsInBuilding} from '../mecoffe/shopPresentation.js'
 import {previewQuery} from '../mecoffe/configPreviewStore.js'
+import ScenePlacementDetails from '../components/ScenePlacementDetails.vue'
 import Campus3DVisualControls from '../components/Campus3DVisualControls.vue'
 import { Campus3DScene } from '../mecoffe/Campus3DScene.js'
 import { describeEvent, eventTypeLabel, indexScene, personHistory, stateAt } from '../mecoffe/replay.js'
@@ -216,7 +219,7 @@ const campusData = shallowRef(null)
 const indoorState=shallowRef({buildings:{},persons:{},inside:0}), selectedBuildingId=ref(null), sourceTime=shallowRef(null)
 const selectedBuilding=computed(()=>campusData.value?.buildings.find(b=>b.osm_id===selectedBuildingId.value))
 const buildingResidents=computed(()=>(indoorState.value.buildings[selectedBuildingId.value]||[]).map(id=>index.value?.people.get(id)).filter(Boolean))
-function personPlacement(id){const state=indoorState.value.persons[id],b=campusData.value?.buildings.find(b=>b.osm_id===state?.buildingId);return state?.buildingId?`在 ${b?.name || '楼栋'} 内（示意）`:'正在进出楼或沿步行路线移动（示意）'}
+function personPlacement(id){if(index.value?.people.get(id)?.out_of_scene)return '场景外（示意，不在地图落位）';const state=indoorState.value.persons[id],b=campusData.value?.buildings.find(b=>b.osm_id===state?.buildingId);return state?.buildingId?`在 ${b?.name || '楼栋'} 内（示意）`:'正在进出楼或沿步行路线移动（示意）'}
 const mappingData = shallowRef(null)
 const mapEl = ref(null)
 const loading = ref(true)
@@ -304,9 +307,11 @@ const legendRoles=computed(()=>isIntegratedScene.value?Object.fromEntries((scene
 function selectPerson(id) {
   selectedId.value = id
   activeTab.value = 'people'
-  renderer?.focusPerson(id)
+  if(index.value?.people.get(id)?.out_of_scene)renderer?.selectPerson(null)
+  else renderer?.focusPerson(id)
 }
 function focusPerson() {
+  if(index.value?.people.get(selectedId.value)?.out_of_scene)return
   const id = renderer?.focusPerson(selectedId.value)
   if (id) selectPerson(id)
 }

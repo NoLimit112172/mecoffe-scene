@@ -1,5 +1,6 @@
 // Configuration inputs are kept in memory. This adapter never creates activity.
 import {presentRole,snapshotRoleDescriptions} from './rolePresentation.js'
+import {buildScenePlacement} from './scenePlacement.js'
 const ENTITY_ID = /^[A-Za-z][A-Za-z0-9_.:-]{0,127}$/
 const CONTEXT_ID = /^[A-Za-z0-9][A-Za-z0-9_.:-]{0,127}$/
 const STAGE_STATES = new Set(['pending', 'running', 'completed', 'failed'])
@@ -179,7 +180,8 @@ function profileFields(node, request) {
 }
 
 /** 将已校验快照安置到地图，全部人物在楼内且不生成模拟行为。 */
-export function buildConfigPreviewScenario(input, mapScenario, placementRules = {}) {
+export function buildConfigPreviewScenario(input, mapScenario, placementRules = {}, sceneResult = null) {
+  if(sceneResult)return buildScenePlacement(input,mapScenario,sceneResult)
   const checked = normalizeConfigPreview({network: input?.snapshot, roles: {population_request: input?.populationRequest},
     session: input?.context?.session_id, config: input?.context?.config_id, seed: input?.context?.seed})
   const context = {...checked.context, source: input.context.source || checked.context.source}

@@ -222,8 +222,8 @@ export function takeLiveAnimations(previous,limit=4){
 }
 function liveSceneBase(state,map){
   const b=state.bootstrap,result=buildGenericReplayScenario({trajectory:baseTrajectory(b),snapshot:b.snapshot,plan:b.plan,roles:b.roles,
-    context:{session_id:b.session_id,run_id:b.run_id,config_id:b.config_id,engine_run_id:b.engine_run_id}},map)
-  result.manifest.preview_mode='live';result.manifest.title=b.synthetic?'合成样例 · 实时运行':'实时运行';result.manifest.simulation_data=true
+    context:{session_id:b.session_id,run_id:b.run_id,config_id:b.config_id,engine_run_id:b.engine_run_id},sceneResult:state.sceneResult},map)
+  result.manifest.preview_mode='live';result.manifest.title=state.sceneResult?map.manifest.title:b.synthetic?'合成样例 · 实时运行':'实时运行';result.manifest.simulation_data=true
   return result
 }
 /** Build geometry/population once. Later updates preserve all map identities. */

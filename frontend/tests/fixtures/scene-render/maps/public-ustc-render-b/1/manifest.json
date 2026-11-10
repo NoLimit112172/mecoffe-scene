@@ -1,0 +1,26 @@
+{
+  "asset_library_version": "bundled-v1",
+  "catalog_sha256": "a54f919d8c86764b2d3cb0166d29ee287f677947ffc1bdebaa71b57d29b069c7",
+  "files": {
+    "asset_assignments.json": "203e7aa6b75becfa74d6b6136f499524bec343edc5512a29571c16d92e5097b4",
+    "campus3d.json": "dabdb3386d0e9382f0343dd2fc2db4db94366209318e958a65c4136bacfa6b2a",
+    "entrances.json": "0904b33e42a4c886c7265b57ab11e5f92eab2a89313e93432ab0270dd5fad128",
+    "gis/boundary.geojson": "687576563478518afa62b229ba4fb2855f4bb8d350ac9e57dbdb16abeff8da5c",
+    "gis/buildings.geojson": "d204782017e77433c9890206260b582349a705f786ef309827b2de5dd4ae4eda",
+    "gis/entrances.geojson": "0e1de0e241bb430363b767dc07543608f354443e73cb4a4f7ec18c9f79377dc1",
+    "gis/landcover.geojson": "b568328c48f2668ffcadeef36f298e3641db1395e98f54beafe9163985413fc3",
+    "gis/pois.geojson": "12144be12fe9158aef3ee27cbe36d3a6023d1b445aa712ca325ffa26bbaea0c0",
+    "gis/roads.geojson": "05a31c2c021208e3eed1e54566d9f60411ca31c1773c1c1701c212cd5b5595e7",
+    "gis/water.geojson": "0927d3f59f0007d901fe956e0628063a93d4fffea4fa080daab6fdff704169a1",
+    "landcover.json": "9784af6ad61c5580648dd325e58e9147fc724d3e37587d0dfe7dd6be3ca7f52a",
+    "quality.json": "c2b773e1eec5ddf37fa613b460f756a2e30389dc91212820db9761ad6fcc7758"
+  },
+  "map_id": "public-ustc-render-b",
+  "map_version": "1",
+  "schema_version": "scene.map-manifest.v1",
+  "style": {
+    "buildings": "procedural",
+    "characters": "campus"
+  },
+  "title": "中科大公开几何测试副本 · 合成用途补注"
+}

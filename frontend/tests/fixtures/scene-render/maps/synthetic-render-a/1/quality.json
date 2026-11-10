@@ -1,0 +1,33 @@
+{
+  "buildings": 6,
+  "eligible_buildings": 6,
+  "entrances": 6,
+  "function_counts": {
+    "dining": 2,
+    "dormitory": 1,
+    "education": 1,
+    "library": 1,
+    "office": 0,
+    "residential": 1,
+    "retail": 0,
+    "unknown": 0
+  },
+  "main_component_entrances": 6,
+  "main_component_ratio": 1.0,
+  "no_entrance": 0,
+  "poi": {
+    "ambiguous": 0,
+    "associated": 0,
+    "invalid": 0,
+    "total": 0,
+    "unassociated": 0
+  },
+  "status": "ready",
+  "thresholds": {
+    "min_function_ratio": 0.0,
+    "min_main_ratio": 0.9
+  },
+  "unknown": 0,
+  "valid_buildings": 6,
+  "warnings": []
+}

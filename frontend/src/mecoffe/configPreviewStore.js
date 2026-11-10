@@ -6,6 +6,7 @@ export function hasConfigPreviewRoute(query) {
 export function rememberLocalPreview(value) { localPreview = value }
 export function localPreviewInput() { return localPreview }
 export function previewQuery(query) {
+  if(import.meta.env?.DEV&&query.scene==='local')return {scene:'local'}
   if (query.preview === 'local') return {preview:'local'}
   return query.run != null ? {session:query.session,run:query.run} : {session:query.session,config:query.config}
 }

@@ -203,11 +203,12 @@ function replayTime(plan,meta,mapTime){
 export function buildGenericReplayScenario(bundle,mapScenario){
   const {trajectory,snapshot,plan,context={},placementRules={}}=bundle
   const normalized=validateRunReplay(bundle)
-  const scenario=buildConfigPreviewScenario(normalized,mapScenario,placementRules)
+  if(bundle.sceneResult)Object.assign(normalized,{scenePlan:plan,sceneConfigId:context.config_id})
+  const scenario=buildConfigPreviewScenario(normalized,mapScenario,placementRules,bundle.sceneResult)
   const scene=scenario.files['trajectory.json'], people=new Map(scene.people.map(person=>[person.id,person]))
   const economy=economyIndex(plan,people),{events,noop}=buildEvents(trajectory,economy,people)
   const products=[...economy.products.values()]
-  scene.brands=[...economy.brands.values()].map(brand=>({brand_id:brand.brand_id,merchant_id:brand.owner_entity_id,
+  if(!bundle.sceneResult)scene.brands=[...economy.brands.values()].map(brand=>({brand_id:brand.brand_id,merchant_id:brand.owner_entity_id,
     owner_entity_id:brand.owner_entity_id,location_id:people.get(brand.owner_entity_id).location_key,
     product_name:products.filter(product=>product.brand_id===brand.brand_id).map(product=>product.product_name).join('、')||brand.brand_id}))
   scene.events=events;scene.relationships=clone(trajectory.initial_relationships)
@@ -225,7 +226,7 @@ export function buildGenericReplayScenario(bundle,mapScenario){
     status:trajectory.status,partial:trajectory.partial,plan_id:plan.plan_id,plan_revision:plan.plan_revision,
     completed_steps:trajectory.metadata.completed_steps,total_steps:trajectory.metadata.total_steps,step_unit:trajectory.metadata.step_unit,
     time_source:plan.runtime?.time?.start_time?'plan':'display_default',limitations:clone(trajectory.metadata.limitations||[])})
-  scenario.manifest={...scenario.manifest,id:'generic-replay',title:scene.meta.synthetic?'合成样例 · 通用运行回放':'通用模拟 · 运行回放',preview_mode:'replay',simulation_data:true,
+  scenario.manifest={...scenario.manifest,id:'generic-replay',title:bundle.sceneResult?mapScenario.manifest.title:scene.meta.synthetic?'合成样例 · 通用运行回放':'通用模拟 · 运行回放',preview_mode:'replay',simulation_data:true,
     context:clone(context),simulation_time:replayTime(plan,trajectory.metadata,mapScenario.manifest.simulation_time)}
   return scenario
 }

@@ -42,10 +42,11 @@ export class IndoorMotion {
     this.campus=campus;this.mapping=mapping;this.index=index;this.entrances=entrances;this.options={...INDOOR_DEFAULTS,...options}
     this.routing=createRouting(campus,mapping);this.byBuilding=new Map();this.routes=new Map();this.people=new Map();this.revision=0
     this.buildingIds=new Set(campus.buildings.map(b=>b.osm_id))
-    for(const e of entrances.entrances){if(this.byBuilding.has(e.building_id))throw new Error('每栋楼只能有一个推断入口');this.byBuilding.set(e.building_id,e)}
-    for(const [key,anchor]of this.routing.anchors){const door=this.byBuilding.get(anchor.building.osm_id);if(!door||!this.routing.nodes.has(door.road_node_id))throw new Error('楼栋入口与步行图不匹配');anchor.node=this.routing.nodes.get(door.road_node_id);anchor.door=door}
+    const byEntrance=new Map(entrances.entrances.map(e=>[e.id,e]))
+    for(const e of entrances.entrances){if(this.byBuilding.has(e.building_id)&&!index?.scene.meta?.scene_result)throw new Error('每栋楼只能有一个推断入口');if(!this.byBuilding.has(e.building_id))this.byBuilding.set(e.building_id,e)}
+    for(const [key,anchor]of this.routing.anchors){const entry=mapping.mappings[key],door=entry.entrance_id?byEntrance.get(entry.entrance_id):this.byBuilding.get(anchor.building.osm_id);if(!door||door.building_id!==anchor.building.osm_id||!this.routing.nodes.has(door.road_node_id))throw new Error('楼栋入口与步行图不匹配');anchor.node=this.routing.nodes.get(door.road_node_id);anchor.door=door}
     this.obstacles=buildSpatialEnvironment(campus,landcovers).obstacles
-    for(const person of index?.scene.people||[]){const key=resolveHomeKey(person),anchor=this.routing.anchors.get(key);if(!anchor)throw new Error('人物缺少楼栋映射');this.people.set(person.id,{id:person.id,person,key,homeBuilding:anchor.building.osm_id,home:point(anchor.door.point),...point(anchor.door.point),heading:0,queue:[],walker:null,hasCoffee:false,transitionScale:1})}
+    for(const person of index?.scene.people||[]){if(person.out_of_scene)continue;const key=resolveHomeKey(person),anchor=this.routing.anchors.get(key);if(!anchor)throw new Error('人物缺少楼栋映射');this.people.set(person.id,{id:person.id,person,key,homeBuilding:anchor.building.osm_id,homeDoor:anchor.door,home:point(anchor.door.point),...point(anchor.door.point),heading:0,queue:[],walker:null,hasCoffee:false,transitionScale:1})}
     this.purchases=(index?.scene.events||[]).flatMap((event,i)=>event.type==='purchase'&&(!event.outcome||event.outcome==='executed')?[{event,tick:Math.floor(positionAtCursor(index,i+1)*this.options.secondsPerDay*this.options.hz+1e-7)}]:[])
     this.reset()
   }
@@ -71,7 +72,7 @@ export class IndoorMotion {
         const points=[...a.connector.map(point),...core,...[...b.connector].reverse().map(point)]
         const clean=points.filter((q,i)=>!i||Math.hypot(q.x-points[i-1].x,q.y-points[i-1].y)>1e-6)
         const returning=[...b.connector.map(point),...back,...[...a.connector].reverse().map(point)]
-        this.routes.set(key,{route,points:clean,returning,shopBuilding:b.building_id})
+        this.routes.set(key,{route,points:clean,returning,shopBuilding:b.building_id,shopDoor:b})
       }
     }
     return this.routes.get(key)
@@ -96,7 +97,7 @@ export class IndoorMotion {
     if(w.phase==='waiting'){if(this.tick/this.options.hz<w.until)return;change('exit-home')}
     if(['exit-home','exit-shop','enter-shop','enter-home'].includes(w.phase)){
       w.elapsed+=delta;const f=Math.min(1,w.elapsed/this.options.doorSeconds);p.transitionScale=w.phase.startsWith('exit')?f:1-f
-      const door=this.byBuilding.get(w.phase.endsWith('home')?p.homeBuilding:w.shopBuilding)
+      const door=w.phase.endsWith('home')?p.homeDoor:w.shopDoor
       if(door.outward){const inward=w.phase.startsWith('enter')?f:1-f;p.x=door.point[0]-door.outward[0]*2*inward;p.y=door.point[1]-door.outward[1]*2*inward;p.heading=Math.atan2(door.outward[0],-door.outward[1])+(w.phase.startsWith('enter')?Math.PI:0)}
       if(f<1)return
       if(w.phase==='enter-home'){p.walker=null;Object.assign(p,p.home);p.transitionScale=1;this.revision++;return}
@@ -115,6 +116,6 @@ export class IndoorMotion {
   get pending(){return this.active+[...this.people.values()].reduce((n,p)=>n+p.queue.length,0)}
   get snapshot(){if(this.lastRevision!==this.revision){this.lastRevision=this.revision;this.lastSnapshot=indoorSnapshot(this.people.values())}return this.lastSnapshot}
   get outside(){return [...this.people.values()].filter(outsidePerson)}
-  get accounting(){return auditPeople(this.people.values(),this.buildingIds)}
-  personLocation(id){const p=this.people.get(id),insideId=p&&indoorBuilding(p),phase=p?.walker?.phase||'home',buildingId=insideId||(['enter-shop','exit-shop'].includes(phase)?p.walker.shopBuilding:['enter-home','exit-home'].includes(phase)?p.homeBuilding:null),building=this.campus.buildings.find(b=>b.osm_id===buildingId);return {buildingId,name:building?.name||'',inside:Boolean(insideId),phase}}
+  get accounting(){const value=auditPeople(this.people.values(),this.buildingIds);if(!this.index?.scene.meta?.scene_result)return value;const out=this.index.scene.people.filter(p=>p.out_of_scene).length;return {...value,total:value.total+out,accounted:value.accounted+out,out_of_scene:out}}
+  personLocation(id){if(this.index?.people.get(id)?.out_of_scene)return {buildingId:null,name:'场景外',inside:false,phase:'out_of_scene'};const p=this.people.get(id),insideId=p&&indoorBuilding(p),phase=p?.walker?.phase||'home',buildingId=insideId||(['enter-shop','exit-shop'].includes(phase)?p.walker.shopBuilding:['enter-home','exit-home'].includes(phase)?p.homeBuilding:null),building=this.campus.buildings.find(b=>b.osm_id===buildingId);return {buildingId,name:building?.name||'',inside:Boolean(insideId),phase}}
 }

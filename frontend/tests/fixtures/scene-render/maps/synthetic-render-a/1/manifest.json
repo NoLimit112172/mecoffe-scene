@@ -1,0 +1,26 @@
+{
+  "asset_library_version": "bundled-v1",
+  "catalog_sha256": "a54f919d8c86764b2d3cb0166d29ee287f677947ffc1bdebaa71b57d29b069c7",
+  "files": {
+    "asset_assignments.json": "e784c00e2db407f39cbc3a79abbd335af429a67ef88c8d93c91512dddfea61c8",
+    "campus3d.json": "3e921c1c85ec0a0b74377d7ee63565a24d10387f70dcd849963c63eea1b3983f",
+    "entrances.json": "ed114f0f1e8a292494fa9e8fc170f536872c5b1942e1d42fd1afd5eb056b0af9",
+    "gis/boundary.geojson": "c7e347e23f3114f949f380da1ee381dfd6bfc481787c4e14a0b27270ea112365",
+    "gis/buildings.geojson": "f92ec906929a5ea02f52a68d9a518268dd27973bbee6a1464894a30e0dfb985a",
+    "gis/entrances.geojson": "321b77444f8a811a7ffaed936f41e532a4380f0c518b26ae6db87474e27454d6",
+    "gis/landcover.geojson": "2c6cb32b3080051ab587a6fb45c21d075831cdb31316aa43544b93477b3ade46",
+    "gis/pois.geojson": "22e6a2ead977d8107e040fc034339356788cfdf20f66e94cea445425fb047d15",
+    "gis/roads.geojson": "d5956d75338698a2fb45b2ae047b27e1a4eebaf8a9769eb4ad1e845d8486f0d7",
+    "gis/water.geojson": "4620df86bd7ba28ef849a07e4ffbe2dafd493d7cbebd78741ad74af9eeaaa8fb",
+    "landcover.json": "b931f90c031b4efc60eb0bbadef42e8985b811716f1e494008cbf49d3994087b",
+    "quality.json": "4873d684ca6c08f1d85e599d238fe6e1ee0ef69586a5aa60c1ea184d53d2f0bb"
+  },
+  "map_id": "synthetic-render-a",
+  "map_version": "1",
+  "schema_version": "scene.map-manifest.v1",
+  "style": {
+    "buildings": "procedural",
+    "characters": "campus"
+  },
+  "title": "合成校园甲 · SceneResult 验收"
+}

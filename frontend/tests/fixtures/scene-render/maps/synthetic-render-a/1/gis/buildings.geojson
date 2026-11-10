@@ -1,0 +1,291 @@
+{
+  "coordinate_system": "WGS84 longitude, latitude",
+  "features": [
+    {
+      "geometry": {
+        "coordinates": [
+          [
+            [
+              103.770000001,
+              1.294
+            ],
+            [
+              103.770400004,
+              1.294
+            ],
+            [
+              103.770400004,
+              1.294300004
+            ],
+            [
+              103.770000001,
+              1.294300004
+            ],
+            [
+              103.770000001,
+              1.294
+            ]
+          ]
+        ],
+        "type": "Polygon"
+      },
+      "id": "geojson/synthetic-building-0",
+      "properties": {
+        "building_type": "school",
+        "category": "education",
+        "feature_id": "geojson/synthetic-building-0",
+        "height_m": 16.0,
+        "height_source": "default",
+        "levels": 5,
+        "levels_source": "default",
+        "location_ids": [],
+        "name": "合成楼栋 0",
+        "name_source": "input",
+        "prototype_id": "building.procedural.education",
+        "variant_id": "extended"
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          [
+            [
+              103.771000004,
+              1.294
+            ],
+            [
+              103.771399998,
+              1.294
+            ],
+            [
+              103.771399998,
+              1.294300004
+            ],
+            [
+              103.771000004,
+              1.294300004
+            ],
+            [
+              103.771000004,
+              1.294
+            ]
+          ]
+        ],
+        "type": "Polygon"
+      },
+      "id": "geojson/synthetic-building-1",
+      "properties": {
+        "building_type": "yes",
+        "category": "dining",
+        "feature_id": "geojson/synthetic-building-1",
+        "height_m": 9.6,
+        "height_source": "default",
+        "levels": 3,
+        "levels_source": "default",
+        "location_ids": [],
+        "name": "合成楼栋 1",
+        "name_source": "input",
+        "prototype_id": "building.procedural.dining",
+        "variant_id": "extended"
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          [
+            [
+              103.771999997,
+              1.294
+            ],
+            [
+              103.7724,
+              1.294
+            ],
+            [
+              103.7724,
+              1.294300004
+            ],
+            [
+              103.771999997,
+              1.294300004
+            ],
+            [
+              103.771999997,
+              1.294
+            ]
+          ]
+        ],
+        "type": "Polygon"
+      },
+      "id": "geojson/synthetic-building-2",
+      "properties": {
+        "building_type": "dormitory",
+        "category": "dormitory",
+        "feature_id": "geojson/synthetic-building-2",
+        "height_m": 19.2,
+        "height_source": "default",
+        "levels": 6,
+        "levels_source": "default",
+        "location_ids": [],
+        "name": "合成楼栋 2",
+        "name_source": "input",
+        "prototype_id": "building.procedural.dormitory",
+        "variant_id": "compact"
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          [
+            [
+              103.773,
+              1.294
+            ],
+            [
+              103.773400003,
+              1.294
+            ],
+            [
+              103.773400003,
+              1.294300004
+            ],
+            [
+              103.773,
+              1.294300004
+            ],
+            [
+              103.773,
+              1.294
+            ]
+          ]
+        ],
+        "type": "Polygon"
+      },
+      "id": "geojson/synthetic-building-3",
+      "properties": {
+        "building_type": "yes",
+        "category": "dining",
+        "feature_id": "geojson/synthetic-building-3",
+        "height_m": 9.6,
+        "height_source": "default",
+        "levels": 3,
+        "levels_source": "default",
+        "location_ids": [],
+        "name": "合成楼栋 3",
+        "name_source": "input",
+        "prototype_id": "building.procedural.dining",
+        "variant_id": "compact"
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          [
+            [
+              103.774000002,
+              1.294
+            ],
+            [
+              103.774399996,
+              1.294
+            ],
+            [
+              103.774399996,
+              1.294300004
+            ],
+            [
+              103.774000002,
+              1.294300004
+            ],
+            [
+              103.774000002,
+              1.294
+            ]
+          ]
+        ],
+        "type": "Polygon"
+      },
+      "id": "geojson/synthetic-building-4",
+      "properties": {
+        "building_type": "residential",
+        "category": "dormitory",
+        "feature_id": "geojson/synthetic-building-4",
+        "height_m": 9.6,
+        "height_source": "default",
+        "levels": 3,
+        "levels_source": "default",
+        "location_ids": [],
+        "name": "合成楼栋 4",
+        "name_source": "input",
+        "prototype_id": "building.procedural.other",
+        "variant_id": "extended"
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          [
+            [
+              103.774999996,
+              1.294
+            ],
+            [
+              103.775399999,
+              1.294
+            ],
+            [
+              103.775399999,
+              1.294300004
+            ],
+            [
+              103.774999996,
+              1.294300004
+            ],
+            [
+              103.774999996,
+              1.294
+            ]
+          ]
+        ],
+        "type": "Polygon"
+      },
+      "id": "geojson/synthetic-building-5",
+      "properties": {
+        "building_type": "yes",
+        "category": "library",
+        "feature_id": "geojson/synthetic-building-5",
+        "height_m": 16.0,
+        "height_source": "default",
+        "levels": 5,
+        "levels_source": "default",
+        "location_ids": [],
+        "name": "合成楼栋 5",
+        "name_source": "input",
+        "prototype_id": "building.procedural.library",
+        "variant_id": "extended"
+      },
+      "type": "Feature"
+    }
+  ],
+  "name": "buildings",
+  "notice": "人物所在楼栋与行走路线为展示层示意，OASIS 没有位置数据",
+  "schema_version": "mecoffe.gis.v1",
+  "source": {
+    "attribution": "Entirely synthetic test geometry",
+    "bbox": [
+      103.77,
+      1.2937,
+      103.77539999999999,
+      1.2943
+    ],
+    "license": "CC0-1.0",
+    "sha256": "6aace1356812cecb1f09f530dbac79b1c2327d1cbb337e644c76732e4a6be012",
+    "source_type": "caller_geojson"
+  },
+  "type": "FeatureCollection"
+}

@@ -8,7 +8,7 @@ export function shopLetter(ordinal) {
 }
 export function shopEntries(index) {
   return [...(index?.scene?.brands||[])].sort((a,b)=>a.brand_id<b.brand_id?-1:a.brand_id>b.brand_id?1:0)
-    .map((brand,ordinal)=>({brandId:brand.brand_id,ordinal,letter:shopLetter(ordinal),name:`门店 ${shopLetter(ordinal)}（示意）`,
+    .map((brand,ordinal)=>({brandId:brand.brand_id,ordinal,letter:shopLetter(ordinal),name:brand.brand_name?`${brand.brand_name}（示意）`:`门店 ${shopLetter(ordinal)}（示意）`,
       productName:brand.product_name||brand.brand_id,ownerId:brand.owner_entity_id||brand.merchant_id,
       locationId:brand.location_id||brandLocationKey(index,brand.brand_id)}))
 }
@@ -22,6 +22,7 @@ export function buildingShopLabel(index,mapping,buildingId,buildingName='未命�
   const shops=shopsInBuilding(index,mapping,buildingId)
   if(!shops.length)return buildingName
   if(shops.length===1)return `${shops[0].name}· ${buildingName}`
+  if(index.scene.meta?.scene_result)return `${buildingName} · ${shops.map(shop=>shop.name).join(' / ')}`
   return `${buildingName} · 门店 ${shops.map(shop=>shop.letter).join(' / ')}（示意）`
 }
 // Keep original GIS bytes/objects intact; only the renderer's source gets extra text.

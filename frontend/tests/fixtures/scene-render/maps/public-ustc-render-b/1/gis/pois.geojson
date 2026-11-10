@@ -1,0 +1,24 @@
+{
+  "coordinate_system": "WGS84 longitude, latitude",
+  "features": [],
+  "name": "pois",
+  "notice": "人物所在楼栋与行走路线为展示层示意，OASIS 没有位置数据",
+  "schema_version": "mecoffe.gis.v1",
+  "source": {
+    "attribution": "© OpenStreetMap contributors",
+    "bbox": [
+      117.1194,
+      31.818,
+      117.1283,
+      31.827
+    ],
+    "downloaded_at_utc": "2026-11-03T05:01:24.973987+00:00",
+    "license": "ODbL-1.0",
+    "license_url": "https://www.openstreetmap.org/copyright",
+    "osm_generator": "openstreetmap-cgimap 2.1.0 (2089598 spike-07.openstreetmap.org)",
+    "relation_id": "14093671",
+    "sha256": "663062802ab35914d085a7a97d2be29001d0d6bc786b69b688608bdd37ee6437",
+    "source_url": "https://api.openstreetmap.org/api/0.6/map?bbox=117.1194,31.8180,117.1283,31.8270"
+  },
+  "type": "FeatureCollection"
+}
