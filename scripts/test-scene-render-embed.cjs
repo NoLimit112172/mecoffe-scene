@@ -1,11 +1,64 @@
 // Real dist-embed catalog + strict static hosting. All simulation inputs are synthetic.
 const fs=require('node:fs'),path=require('node:path'),assert=require('node:assert/strict'),crypto=require('node:crypto');
 const {pathToFileURL}=require('node:url'),{servePages}=require('./serve-pages.cjs');
+const cp=require('node:child_process');
 const {chromium}=require(process.env.PLAYWRIGHT_MODULE||path.join(process.env.USERPROFILE,'.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules/playwright'));
 const root=path.resolve(__dirname,'..'),fixtures=path.join(root,'frontend/tests/fixtures/scene-render'),out=path.join(root,'logs/milestone15-batch3');fs.mkdirSync(out,{recursive:true});
 const origin='http://127.0.0.1:5207',base=origin+'/scene',report={checks:[],screenshots:[],errors:[],externalRequests:[],apiRequests:[],heights:[]};
+const defaultProbe=process.argv.includes('--default-probe'),enabledProbe=process.argv.includes('--enabled-probe');
+const reportName=defaultProbe?(process.argv.includes('--restored')?'restored-default-qa.json':'default-qa.json'):'embed-qa.json';
 const read=p=>JSON.parse(fs.readFileSync(p,'utf8')),sha=b=>crypto.createHash('sha256').update(b).digest('hex');
 let server,browser;
+function runLogged(args,options,name){
+  const fd=fs.openSync(path.join(out,name),'w');
+  try{cp.execFileSync(process.execPath,args,{...options,windowsHide:true,stdio:['ignore',fd,fd]})}finally{fs.closeSync(fd)}
+}
+function buildMatrix(){
+  const matrix={checks:[],defaultRestored:false};let failure=null;
+  function build(enabled,name){
+    const env={...process.env};
+    if(enabled===null)delete env.MECOFFE_PUBLIC_SCENE_LOCAL_IMPORT;
+    else env.MECOFFE_PUBLIC_SCENE_LOCAL_IMPORT=enabled?'true':'false';
+    runLogged([path.join(root,'frontend/node_modules/vite/bin/vite.js'),'build','--mode','embed'],
+      {cwd:path.join(root,'frontend'),env},name);
+  }
+  function probe(args,name){runLogged([__filename,...args],{cwd:root},name)}
+  try{
+    build(null,'build-default.log');probe(['--default-probe'],'probe-default.log');matrix.checks.push('default closed (flag unset)');console.log('PASS default closed');
+    build(true,'build-enabled.log');probe(['--enabled-probe'],'probe-enabled.log');matrix.checks.push('enabled catalog/scene checks');console.log('PASS enabled catalog/scene checks');
+  }catch(error){failure=error;matrix.failure=error.message}
+  finally{
+    // The test build never becomes the final distributable, including on failure.
+    try{build(false,'build-restored.log');probe(['--default-probe','--restored'],'probe-restored.log');matrix.defaultRestored=true;console.log('PASS restored default closed')}
+    catch(error){failure=failure||error;matrix.restoreFailure=error.message}
+    matrix.ok=!failure;fs.writeFileSync(path.join(out,'embed-matrix-qa.json'),JSON.stringify(matrix,null,2));
+  }
+  if(failure){console.error('Embed build matrix failed; inspect logs/milestone15-batch3/build-*.log and probe-*.log');process.exitCode=1}
+}
+async function checkClosedBuild(){
+  server=await servePages({root:path.join(root,'frontend/dist-embed'),prefix:'/scene/',port:5207});
+  browser=await chromium.launch({channel:'chrome',headless:true});report.requestChecks=[];
+  for(const view of ['mecoffe3d','mecoffe-gis']){
+    const counts=[];
+    for(const query of ['','?scene=local']){
+      const context=await browser.newContext({viewport:{width:1600,height:1050}}),requests={};
+      await context.route('**/*',route=>{const u=new URL(route.request().url());if(/^https?:$/.test(u.protocol)&&u.origin!==origin){report.externalRequests.push(u.href);return route.abort()}if(u.pathname.startsWith('/api/')){report.apiRequests.push(u.pathname);return route.abort()}return route.continue()});
+      const page=await context.newPage();page.on('pageerror',e=>report.errors.push(e.message));
+      page.on('request',request=>{const u=new URL(request.url());if(u.origin===origin){const key=request.method()+' '+u.pathname;requests[key]=(requests[key]||0)+1}});
+      await page.goto(`${base}/${view}/${query}`);await page.getByTestId('embed-welcome').waitFor();await page.waitForLoadState('networkidle');
+      assert.match(await page.locator('h1').innerText(),/请从团队网站打开场景/);
+      assert.equal(await page.getByTestId('scene-result-entry').count(),0);assert.equal(await page.getByLabel('SceneResult 与模拟输入',{exact:true}).count(),0);
+      assert.equal(await page.getByLabel('地图库根目录',{exact:true}).count(),0);assert.equal(await page.locator('canvas').count(),0);
+      assert(Object.keys(requests).every(key=>!key.includes('SceneResultEntry')),'closed entry chunk was requested');
+      counts.push(Object.fromEntries(Object.entries(requests).sort()));if(query)await shot(page,`${process.argv.includes('--restored')?'restored-':''}default-${view}`);
+      await context.close();
+    }
+    assert.deepEqual(counts[1],counts[0],`${view}: scene=local caused extra requests`);report.requestChecks.push({view,counts:counts[1]});
+  }
+  report.sceneResultEntryChunks=fs.readdirSync(path.join(root,'frontend/dist-embed/assets')).filter(name=>name.startsWith('SceneResultEntry-'));
+  assert.deepEqual(report.errors,[]);assert.deepEqual(report.externalRequests,[]);assert.deepEqual(report.apiRequests,[]);
+  report.checks.push('default scene=local returns original welcome in both views, no import/canvas/API/entry-chunk/extra resource requests');report.ok=true;
+}
 async function shot(page,name){const file=path.join(out,name+'.png');await page.screenshot({path:file});report.screenshots.push(path.relative(root,file));}
 async function importInput(frame,name){await frame.getByLabel('SceneResult 与模拟输入',{exact:true}).setInputFiles(path.join(fixtures,'input-'+name+'.json'));}
 async function ready(frame,gis=false){
@@ -30,7 +83,8 @@ async function panelHeight(frame,label,gis=false){
   assert.match(await panel.innerText(),/建筑标签/);assert.match(await panel.innerText(),/人工补注/);assert.match(await panel.innerText(),/安置理由：.*[\u4e00-\u9fff]/);
   report.heights.push({label,batch2Reference:previous,closed,opened:(await map.boundingBox()).height});await panel.locator('summary').click();
 }
-(async()=>{
+async function browserProbe(){
+  if(defaultProbe){await checkClosedBuild();return}
   const descriptor=read(path.join(root,'adapter/scene_builder/resources/mecoffe-embed-v1/asset-library.json'));
   const actual=fs.readFileSync(path.join(root,'frontend/dist-embed/mecoffe/assets3d/catalog.json'));
   assert.equal(sha(actual),descriptor.catalog_sha256);assert(actual.equals(fs.readFileSync(path.join(root,'adapter/scene_builder/resources/mecoffe-embed-v1/catalog.json'))));
@@ -66,4 +120,6 @@ async function panelHeight(frame,label,gis=false){
   await importInput(frame,'none');await frame.getByTestId('scene-none').waitFor();assert.equal(await frame.locator('canvas').count(),0);await shot(framePage,'none-narrow-iframe');
   report.checks.push('Chinese names/roles in none mode; closed one-line details, open overlay, full iframe and narrow map heights meet batch-2 reference');
   await context.close();assert.deepEqual(report.errors,[]);assert.deepEqual(report.externalRequests,[]);assert.deepEqual(report.apiRequests,[]);report.ok=true;
-})().catch(error=>{report.ok=false;report.failure=error.stack;process.exitCode=1}).finally(async()=>{await browser?.close();if(server)await new Promise(resolve=>server.close(resolve));fs.writeFileSync(path.join(out,'embed-qa.json'),JSON.stringify(report,null,2));console.log(JSON.stringify(report,null,2))});
+}
+if(!defaultProbe&&!enabledProbe)buildMatrix();
+else browserProbe().catch(error=>{report.ok=false;report.failure=error.stack;process.exitCode=1}).finally(async()=>{await browser?.close();if(server)await new Promise(resolve=>server.close(resolve));fs.writeFileSync(path.join(out,reportName),JSON.stringify(report,null,2));console.log(JSON.stringify(report,null,2))});

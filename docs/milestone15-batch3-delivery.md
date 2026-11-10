@@ -27,13 +27,39 @@ npm --prefix frontend run build:embed
 node scripts/prepare-scene-assets.mjs --dist
 ```
 
+`node scripts/prepare-scene-assets.mjs --dist` 是**发布前必过项**，当前按此命令验收；后续由 shaoyunhui 接入正式构建或 CI 自动检查。本批不修改他负责的两份打包文件。白名单或发布字节改变后，应登记新版本并同步消费者和地图版本，不通过覆盖 v1 来消除错误。
+
 登记脚本直接复用当前发布器的 `embedCatalog`，没有复制一套过滤算法。首次登记用 `--write`；已存在版本内容不符会拒绝覆盖。未来发布内容改变须新建版本目录，并明确更新描述、消费者和地图版本，不覆盖 v1。
 
 Python 新生产建图可通过 `published_asset_library()` 取得已校验的描述和 catalog，传给现有 builder 的 `catalog=`，或给现有 CLI 的 `--catalog` 指向该资源文件。旧 builder 默认路径为历史兼容保留；不能把它的源码默认 catalog 当成生产发布版。完整 Python/Linux 独立打包及其他依赖整理仍属于拆分打包工作，不能只复制一个目录就宣称已完成独立部署。
 
-默认 DEV 页面仍取到源码 catalog 时，明确提示“当前为源码素材，与发布版不同”，停止绘图。DEV 功能浏览器测试先验证这个真实错误，再显式提供发布 catalog 作为测试响应；这不代替发布验证。新增 `test-scene-render-embed.cjs` 则在真正的 dist-embed、严格静态 `/scene/` 目录下，使用未经拦截替换的实际 catalog：发布版登记地图能加载，源码版登记地图被拒，且不回退中科大。
+默认 DEV 页面仍取到源码 catalog 时，明确提示“当前为源码素材，与发布版不同”，停止绘图。DEV 功能浏览器测试先验证这个真实错误，再显式提供发布 catalog 作为测试响应；这不代替发布验证。`test-scene-render-embed.cjs` 在真正的 dist-embed、严格静态 `/scene/` 目录下分别检查默认关闭与显式开启，开启时使用未经替换的实际发布 catalog：发布版登记地图能加载，源码版登记地图被拒，且不回退中科大。
 
-没有修改 `frontend/embed/build-tools.mjs` 或 `frontend/embed/embed-plugin.mjs`。新增界面模块由现有 Vite 流程正常编译，不往 embed 塞地图包或模拟输入。显式本地文件入口现在也可在 embed 使用：`/scene/mecoffe3d/?scene=local`、`/scene/mecoffe-gis/?scene=local`；默认团队入口和请求路径不变，不等于正式远程 scene 已接入。第二批文档中的 bundled-v1 和 DEV-only 是当时的快照，以本批规则为准。
+没有修改 `frontend/embed/build-tools.mjs` 或 `frontend/embed/embed-plugin.mjs`，不往 embed 塞地图包或模拟输入。第二批文档中的 bundled-v1 和最初第三批的常开本地入口是当时快照，现以以下收口规则为准。
+
+## 本地导入入口：正式构建默认关闭
+
+开关名称为 **`MECOFFE_PUBLIC_SCENE_LOCAL_IMPORT`**，只有字面值 `true` 才开启 embed 的 SceneResult 本地导入。未设置或设为 false 时关闭；DEV 模式保持可用，Pages 不因此开启。`EmbeddedSceneEntry.vue` 与 `previewQuery` 共同读取 `sceneImportGate.js`，不能仅靠 URL 参数启用关闭的构建，也不会因无效参数丢掉团队 run/config 引用。
+
+本项目 `frontend/vite.config.js` 已为 embed/Pages **显式配置** `envPrefix: 'MECOFFE_PUBLIC_'`，所以这个前缀确实会暴露给客户端；这里没有假定 Vite 的默认 VITE_ 前缀能读取其他变量，也没有扩大环境变量暴露范围。实际开启/关闭构建已分别经浏览器验证。
+
+正式默认命令仍为 `npm --prefix frontend run build:embed`。关闭时，`/scene/mecoffe3d/?scene=local` 和 `/scene/mecoffe-gis/?scene=local` 都回到原有“请从团队网站打开场景”欢迎页，无新导入界面、地图画布或团队 API 请求；与无参数欢迎页的资源请求逐项一致。本次默认产物实测仍为 242 文件，**未产出 SceneResultEntry 的 JS/CSS 分块**，也未请求该分块。原来欢迎页已有的开发者调试区保持原样。
+
+临时开启供本地测试的 PowerShell 用法：
+
+```powershell
+$env:MECOFFE_PUBLIC_SCENE_LOCAL_IMPORT = 'true'
+npm --prefix frontend run build:embed
+# 检查结束后恢复关闭的正式产物，不保留测试构建。
+$env:MECOFFE_PUBLIC_SCENE_LOCAL_IMPORT = 'false'
+npm --prefix frontend run build:embed
+node scripts/prepare-scene-assets.mjs --dist
+Remove-Item Env:\MECOFFE_PUBLIC_SCENE_LOCAL_IMPORT
+```
+
+也可直接执行 `node scripts/test-scene-render-embed.cjs`：它先构建未设置开关的默认包并验证关闭，再构建显式开启的测试包运行完整发布素材/错配拒绝/none/iframe 测试，最后在 finally 中重建关闭包并再次验证。子测试失败也会尝试恢复，恢复失败则明确退出失败，不能拿测试包发布。输出仍使用现有 dist-embed，未改打包插件的目录规则。
+
+开启构建中的本地地址才是 `/scene/mecoffe3d/?scene=local`、`/scene/mecoffe-gis/?scene=local`；它们不读取正式远程 scene。这个开关只控制入口发布，**不放宽 catalog、SceneResult、source_refs、地图哈希或入口可达性校验**。
 
 ## 正式中科大地图与可复现生成
 
@@ -44,6 +70,8 @@ python scripts/generate-ustc-map.py
 ```
 
 输出在 `data/maps/ustc-gaoxin/1/`，用于今后的独立地图库打包，不在 public、Pages 或 embed 中。manifest 为 `scene.map-manifest.v1`，map_id=`ustc-gaoxin`，map_version=`"1"`，title=`中国科学技术大学 · 高新校区`，素材版本和摘要按上节登记。
+
+打包时须将**完整版本目录按原字节复制**到 `<mapsBase>/ustc-gaoxin/1/`，保持 manifest 与全部引用文件，不重序列化 JSON、不改换行、不换成 latest。mapsBase 的同源挂载前缀由团队确认；目录迁移不应改动文件字节。
 
 地图含 campus3d、entrances、landcover、asset_assignments、quality、surroundings，以及七个 GIS 图层。所有文件写成固定 UTF-8/LF，清单保存原始字节 SHA-256；manifest 自身摘要写入外部 map_ref，不自存哈希。生成器先比较现有版本的全部输出内容，有差异便拒绝覆盖；应改用新版本。
 
@@ -102,13 +130,13 @@ python scripts/generate-ustc-map.py --version 2 --annotations <已审核文件�
 | 命令 | 结果 |
 | --- | --- |
 | `python -m unittest discover -s adapter -p "test_*.py"` | 111 通过 |
-| `npm --prefix frontend test` | 378 通过 |
+| `npm --prefix frontend test` | 379 通过，含关闭时保留团队 run/config 引用 |
 | `npm --prefix frontend run build:embed` | 通过 |
 | `npm --prefix frontend run build:pages` | 通过，静态页面回归使用新产物 |
 | `node scripts/prepare-scene-assets.mjs --dist` | 发布、登记及 Python catalog 字节一致 |
 | `python scripts/generate-ustc-map.py`（两次） | manifest 与所有输出文件一致 |
 | `node scripts/test-scene-render.cjs` | 通过，含 DEV 源码素材明确拒绝、发布素材测试响应与原功能回归 |
-| `node scripts/test-scene-render-embed.cjs` | 通过，真实发布素材、错配拒绝、中文 none、窄屏和 iframe |
+| `node scripts/test-scene-render-embed.cjs` | 通过：默认关闭、显式开启验证、最终恢复关闭；开启时完整素材/场景校验不变 |
 | `node scripts/test-run-replay.cjs --embed` | 通过 |
 | `node scripts/test-live-run.cjs` | 通过 |
 | `node scripts/test-config-preview.cjs` | 通过 |
@@ -125,17 +153,19 @@ python scripts/generate-ustc-map.py --version 2 --annotations <已审核文件�
 | 发布素材描述与核对 | `adapter/scene_builder/asset_library.py`、同目录 `resources/mecoffe-embed-v1/`、`scripts/prepare-scene-assets.mjs`、`frontend/src/mecoffe/sceneMap.js` |
 | 地图生成与读取 | `adapter/scene_service/map_package.py`、`maps.py`、`scripts/generate-ustc-map.py`、`data/maps/ustc-gaoxin/` |
 | 中文理由与证据 | `adapter/scene_service/resolver.py`、`frontend/src/mecoffe/sceneLabels.js`、`ScenePlacementDetails.vue`、`MeCoffe3D.vue` |
-| 无地图与显式嵌入入口 | `SceneResultEntry.vue`、`EmbeddedSceneEntry.vue`、`configPreviewStore.js` |
+| 无地图与显式嵌入入口 | `SceneResultEntry.vue`、`EmbeddedSceneEntry.vue`、`configPreviewStore.js`、`sceneImportGate.js` |
 | 测试和夹具 | `adapter/test_scene_map_package.py`、`test_scene_service.py`、`frontend/tests/sceneBatch3.test.js`、两组重生成的合成夹具、`scripts/test-scene-render*.cjs`、`scripts/lib/m15-render-fixtures.py` |
 | 原始字节保留与交付记录 | `.gitattributes`、本文件；私有对接文档另存于下一节路径 |
 
 本批截图与 embed 报告在 `logs/milestone15-batch3/`：published-catalog-three.png、published-catalog-gis.png、source-catalog-map-rejected.png、none-desktop.png、iframe-three.png、narrow-iframe-three.png、none-narrow-iframe.png、embed-qa.json。DEV 原功能截图在 `logs/milestone15-render/`，含 dev-source-catalog-rejected.png。命令日志为 `logs/m15-batch3-*.log`。全部测试只用合成数据和既有公开几何，外部请求与团队 API 请求为零。
 
+入口收口复测日志为 `logs/m15-gate-*.log`；同一截图目录另存 default-qa.json、restored-default-qa.json、embed-matrix-qa.json，以及默认/开启/恢复三份构建日志和默认欢迎页截图。最终以 restored-default-qa.json 和默认正式产物验收，不以开启测试包作为交付物。
+
 ## 私有对接文档与后续确认
 
 新版另存于 `D:/Documents/ChatGPT/social-sim/独立场景Agent_与褚凌宇对接方案_2026-11-10_M15第三批.md`，正文不进入此公开仓库。只在该目录新建这份方案，没有修改 social-sim 代码；旧版保留。
 
-- shaoyunhui：素材库和地图库拆分产物采用本批版本描述、原始字节及 manifest；完整 Linux 包依赖、版本目录、资源许可和测试环境挂载仍由后续拆分确认。
+- shaoyunhui：素材库和地图库拆分产物采用本批版本描述、原始字节及 manifest；将 `prepare-scene-assets.mjs --dist` 纳入发布构建检查；正式构建不启用本地 SceneResult 导入开关。ustc-gaoxin/1 原字节复制到上述目录。完整 Linux 包依赖、资源许可和测试环境挂载仍由后续拆分确认。
 - 褚凌宇/后端负责人：scene_intent 名称映射、scene 注册/附属产物、正式读取权限和包装、地图任务队列、运行绑定与不可变正文保存都未接入。当前前端严格核对计划修订号；模型换绑造成修订变化的后端证明及消费适配需明确，不由前端猜。
 - 吴贤或地图审核者：三栋食堂候选仍待人工核实；审核后才生成 v2。v1 不能严格安排餐饮门店。
-- 当前显式文件入口用于本地核对，不自动读取远程 stages/scene，不代表地图库服务或管理员工具已获批准。默认无 SceneResult 的团队流程继续 legacy。
+- 当前显式文件入口用于 DEV 或主动开启的测试构建，正式默认关闭；不自动读取远程 stages/scene，不代表地图库服务或管理员工具已获批准。默认无 SceneResult 的团队流程继续 legacy。

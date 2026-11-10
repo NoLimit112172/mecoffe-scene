@@ -4,9 +4,14 @@ import fs from 'node:fs'
 import {loadBundledSceneAssets,loadSceneMap,PUBLISHED_SCENE_ASSETS} from '../src/mecoffe/sceneMap.js'
 import {createHash} from 'node:crypto'
 import {sceneEvidenceLabel,scenePeopleLabels,sceneOutcomeLabel} from '../src/mecoffe/sceneLabels.js'
+import {previewQuery} from '../src/mecoffe/configPreviewStore.js'
 const released=new URL('../../adapter/scene_builder/resources/mecoffe-embed-v1/catalog.json',import.meta.url)
 const source=new URL('../public/mecoffe/assets3d/catalog.json',import.meta.url)
 const fetchBytes=file=>async()=>({ok:true,arrayBuffer:async()=>fs.readFileSync(file)})
+test('closed scene-local import does not discard selected team run/config references',()=>{
+  assert.deepEqual(previewQuery({scene:'local',session:'synthetic-session',run:'synthetic-run'}),{session:'synthetic-session',run:'synthetic-run'})
+  assert.deepEqual(previewQuery({scene:'local',session:'synthetic-session',config:'synthetic-config'}),{session:'synthetic-session',config:'synthetic-config'})
+})
 test('named published catalog is verified, not guessed from current page bytes',async()=>{
   assert.deepEqual(await loadBundledSceneAssets({fetcher:fetchBytes(released)}),{version:PUBLISHED_SCENE_ASSETS.version,catalog_sha256:PUBLISHED_SCENE_ASSETS.catalog_sha256})
   await assert.rejects(()=>loadBundledSceneAssets({fetcher:fetchBytes(source),development:true}),e=>e.code==='ASSET_VERSION_MISMATCH'&&/当前为源码素材，与发布版不同/.test(e.message))
