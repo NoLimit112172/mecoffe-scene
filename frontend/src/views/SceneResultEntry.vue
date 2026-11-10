@@ -8,7 +8,12 @@
       <RouterLink :to="{path:view==='gis'?'/mecoffe3d':'/mecoffe-gis',query:{scene:'local'}}">{{view==='gis'?'三维沙盘':'GIS 地图'}} ↗</RouterLink>
       <button v-if="mode==='live'&&liveState" :disabled="livePage>=(bundle.live?.pages?.length||0)" @click="advanceLive">应用下一批合成实时事件</button>
     </header>
-    <p v-if="error" role="alert" data-testid="scene-result-error">{{error}}</p>
+    <section v-if="error" role="alert" class="scene-error" data-testid="scene-result-error">
+      <strong>{{error.user_message}}</strong>
+      <p>可选处理：{{error.actions.join('；')}}</p>
+      <small data-testid="scene-error-code">错误码：{{error.code}}</small>
+      <details><summary>管理员查看</summary><p>{{error.admin_message}}</p><p>重跑范围：{{error.rerun_scope}}</p><pre>{{error.details}}</pre></details>
+    </section>
     <p v-else-if="loading" role="status">正在校验场景结果与地图…</p>
     <p v-else-if="!bundle">请选择本地输入文件；地图库根目录中应包含 map_id/map_version/manifest.json。</p>
     <section v-else-if="none" class="none-scene" data-testid="scene-none">
@@ -37,6 +42,7 @@ import {checkScenePlacement} from '../mecoffe/scenePlacement.js'
 import {loadSceneMap,loadBundledSceneAssets} from '../mecoffe/sceneMap.js'
 import {localSceneInput,rememberLocalScene,localMapFetcher} from '../mecoffe/sceneRenderStore.js'
 import {scenePeopleLabels,sceneRelationLabel,sceneActionLabel,sceneOutcomeLabel} from '../mecoffe/sceneLabels.js'
+import {describeSceneIssue} from '../mecoffe/sceneIssues.js'
 const MeCoffe3D=defineAsyncComponent(()=>import('./MeCoffe3D.vue')),MeCoffeGis=defineAsyncComponent(()=>import('./MeCoffeGis.vue'))
 defineProps({view:{type:String,default:'three'}})
 const saved=localSceneInput(),bundle=shallowRef(saved.bundle),files=shallowRef(saved.files),mode=ref(saved.mode)
@@ -52,7 +58,7 @@ async function importInput(event){
   const token=++generation;controller?.abort();bundle.value=null;scene.value=null;none.value=false;error.value='';liveState.value=null;loading.value=true
   rememberLocalScene({bundle:null,files:files.value,mode:mode.value,livePage:0})
   try{const value=JSON.parse(await file.text());if(token!==generation)return;bundle.value=value;await load()}
-  catch(e){if(token===generation){error.value=e.message;loading.value=false}}
+  catch(e){if(token===generation){error.value=describeSceneIssue(e);loading.value=false}}
 }
 async function importMaps(event){files.value=Array.from(event.target.files);await load()}
 async function load(){
@@ -88,12 +94,13 @@ async function load(){
       scene.value=buildLiveScenario(state,map)
     }
     revision.value++;rememberLocalScene({bundle:b,files:files.value,mode:mode.value,livePage:livePage.value})
-  }catch(e){if(token===generation&&e.name!=='AbortError'){error.value=`${e.code||'SCENE_LOAD_ERROR'}：${e.message}`;scene.value=null;none.value=false}}
+  }catch(e){if(token===generation&&e.name!=='AbortError'){error.value=describeSceneIssue(e);scene.value=null;none.value=false}}
   finally{if(token===generation)loading.value=false}
 }
-function advanceLive(){try{const next=applyLivePage(liveState.value,bundle.value.live.pages[livePage.value]);if(scene.value)syncLiveScenario(next,scene.value);liveState.value=next;livePage.value++;rememberLocalScene({livePage:livePage.value})}catch(e){error.value=`${e.code||'SCENE_LIVE_ERROR'}：${e.message}`;scene.value=null}}
+function advanceLive(){try{const next=applyLivePage(liveState.value,bundle.value.live.pages[livePage.value]);if(scene.value)syncLiveScenario(next,scene.value);liveState.value=next;livePage.value++;rememberLocalScene({livePage:livePage.value})}catch(e){error.value=describeSceneIssue(e);scene.value=null}}
 if(bundle.value)void load()
 onBeforeUnmount(()=>{generation++;controller?.abort()})
 </script>
+<style scoped>.scene-error{padding:20px;color:#8a3a27}.scene-error p{margin:8px 0}.scene-error small{display:block;font-size:12px;color:#79685b}.scene-error details{margin-top:10px;font-size:12px}.scene-error pre{white-space:pre-wrap;overflow-wrap:anywhere}</style>
 <style scoped>.scene-result-entry{height:100%;min-height:0;display:flex;flex-direction:column;overflow:auto;background:#f0f4ee;color:#244b3c}.scene-inputs{padding:8px 12px;display:flex;flex-wrap:wrap;gap:8px;align-items:center;background:#e3eee8;font:12px sans-serif;flex-shrink:0}.scene-inputs label{display:flex;align-items:center;gap:4px}.scene-inputs input{max-width:210px}.scene-inputs a{color:#176e58}.scene-result-entry>[role=alert]{padding:20px;color:#8a3a27}.scene-result-entry :deep(.campus3d-page),.scene-result-entry :deep(.gis-page){position:relative;inset:auto;flex:1;min-height:0}.none-scene{padding:20px;overflow:auto}:global(#app:has(>.scene-result-entry)){height:100%;min-height:0}</style>
 <style scoped>.none-scene{flex:1;min-height:0;box-sizing:border-box;padding:clamp(16px,3vw,32px);font:14px/1.7 'Microsoft YaHei',sans-serif}.none-heading{display:flex;align-items:center;gap:14px;margin-bottom:20px}.none-heading>span{font-size:32px;color:#267b67}.none-heading h1{font-size:24px;margin:0}.none-heading p{margin:0;color:#628072}.none-explanation{padding:16px 20px;border:1px solid #d2e2d8;border-radius:10px;background:#f8fbf8}.none-explanation p{margin:5px 0}.none-metrics{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:16px 0}.none-metrics>div,.none-card{border:1px solid #d6e1d8;border-radius:10px;background:#fff;padding:16px}.none-metrics span{display:block;color:#678070;font-size:12px}.none-metrics b{font-size:23px}.none-columns{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px}.none-card h2{font-size:16px;margin:0 0 10px}.none-card ul{list-style:none;margin:0;padding:0}.none-people li,.none-relations li,.none-event{border-bottom:1px solid #e9eee9;padding:10px 0}.none-people li>span{margin-left:10px;color:#648575}.none-card details{font-size:12px;color:#718579;overflow-wrap:anywhere}.none-relations li{display:flex;gap:10px;flex-wrap:wrap}.none-relations span{color:#718579}@media(max-width:650px){.none-columns{grid-template-columns:1fr}.none-heading h1{font-size:21px}.none-metrics{gap:6px}.none-metrics>div{padding:10px}.none-metrics b{font-size:19px}}</style>

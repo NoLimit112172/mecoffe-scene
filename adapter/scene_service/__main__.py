@@ -9,11 +9,46 @@ from .maps import load_map
 from .resolver import resolve
 from .request import adapt_request
 from .validation import validate_result
+from .compiler import compile_scene
+from .issues import compile_failure
+
+
+class CompileParser(argparse.ArgumentParser):
+    def error(self, message):
+        raise SceneError('INVALID_INPUT', message)
+
+
+def compile_main(argv):
+    parser=CompileParser(description='Compile a local scene intent (provisional fields)')
+    parser.add_argument('--intent',required=True)
+    parser.add_argument('--snapshot',required=True); parser.add_argument('--plan',required=True)
+    parser.add_argument('--map'); parser.add_argument('--assignment-seed',required=True)
+    parser.add_argument('--out')
+    try:
+        args=parser.parse_args(argv)
+        intent=read_json(args.intent)
+        # none must never read even an explicitly supplied missing/bad map path.
+        package=load_map(args.map) if isinstance(intent,dict) and intent.get('mode')=='map' and args.map else None
+        try:
+            seed=json.loads(args.assignment_seed)
+        except ValueError:
+            seed=args.assignment_seed
+        response=compile_scene(intent,read_json(args.snapshot),read_json(args.plan),package,assignment_seed=seed)
+        if args.out:
+            write_json(args.out,response)
+    except (SceneError, OSError, KeyError, TypeError, ValueError, AttributeError, IndexError) as error:
+        response=compile_failure(error)
+    print(json.dumps(response,ensure_ascii=False))
+    return 0 if response['ok'] else 2
 
 
 def main(argv=None):
+    argv=list(sys.argv[1:] if argv is None else argv)
+    if argv and argv[0]=='compile':
+        return compile_main(argv[1:])
     parser=argparse.ArgumentParser(description='Local display-only scene service')
     commands=parser.add_subparsers(dest='command',required=True)
+    commands.add_parser('compile',help='Compile local intent to a result or explained error')
     evidence=commands.add_parser('evidence')
     evidence.add_argument('--map',required=True); evidence.add_argument('--annotations')
     evidence.add_argument('--min-main-ratio',type=float,default=.9)

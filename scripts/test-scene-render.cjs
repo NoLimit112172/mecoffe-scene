@@ -77,5 +77,18 @@ async function open(context,input='a',gis=false){
   const bad=path.join(out,'synthetic-missing-map.json');fs.writeFileSync(bad,JSON.stringify(missing));await page.getByLabel('SceneResult 展示模式').selectOption('config');await page.getByLabel('SceneResult 与模拟输入',{exact:true}).setInputFiles(bad);
   await page.getByTestId('scene-result-error').waitFor();assert.match(await page.getByTestId('scene-result-error').textContent(),/MAP_FILE_MISSING/);assert.equal(await page.locator('canvas').count(),0);await shot(page,'missing-map-no-fallback');
   report.checks.push('missing map: explicit error, no USTC fallback and no canvas');
+  const issue=page.getByTestId('scene-result-error');
+  assert.match(await issue.locator('strong').innerText(),/地图文件缺失或不可读取/);
+  assert.match(await issue.innerText(),/可选处理：/);
+  assert.equal(await issue.locator('details').getAttribute('open'),null);
+  assert.match(await issue.getByTestId('scene-error-code').innerText(),/MAP_FILE_MISSING/);
+  assert((await issue.getByTestId('scene-error-code').evaluate(node=>parseFloat(getComputedStyle(node).fontSize)))<(await issue.locator('strong').evaluate(node=>parseFloat(getComputedStyle(node).fontSize))));
+  await issue.locator('summary').click();assert.match(await issue.innerText(),/重跑范围：/);
+  const originalCode=await issue.getByTestId('scene-error-code').innerText();assert.match(originalCode,/MAP_FILE_MISSING/);
+  await page.getByLabel('SceneResult 与模拟输入',{exact:true}).setInputFiles({name:'synthetic-invalid-json.json',mimeType:'application/json',buffer:Buffer.from('{invalid')});
+  await page.getByTestId('scene-error-code').filter({hasText:'INVALID_INPUT'}).waitFor();
+  assert.match(await page.getByTestId('scene-result-error').locator('strong').innerText(),/场景输入/);
+  assert.equal(await page.locator('canvas').count(),0);
+  await shot(page,'chinese-scene-error');report.checks.push('Chinese reason/actions, small original code, collapsed admin diagnostics and invalid JSON explanation');
   await page.close();assert.deepEqual(report.errors,[]);assert.deepEqual(report.externalRequests,[]);assert.deepEqual(report.apiRequests,[]);report.ok=true;
 })().catch(error=>{report.ok=false;report.failure=error.stack;process.exitCode=1}).finally(async()=>{await browser?.close();await server?.close();fs.writeFileSync(path.join(out,'qa.json'),JSON.stringify(report,null,2));console.log(JSON.stringify(report,null,2))});

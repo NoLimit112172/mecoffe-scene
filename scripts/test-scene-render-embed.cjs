@@ -106,7 +106,11 @@ async function browserProbe(){
   await page.locator('.scene-inputs').getByRole('link',{name:/^GIS 地图/}).click();await ready(page,true);await panelHeight(page,'desktop GIS',true);await shot(page,'published-catalog-gis');
   report.checks.push('actual dist-embed published catalog loads the same map in 3D/GIS; strict static missing route stays 404');
   await page.getByLabel('地图库根目录',{exact:true}).setInputFiles(badRoot);await page.getByLabel('SceneResult 与模拟输入',{exact:true}).setInputFiles(badInput);
-  await page.getByTestId('scene-result-error').filter({hasText:'ASSET_VERSION_MISMATCH'}).waitFor();assert.match(await page.getByTestId('scene-result-error').innerText(),/源码版 catalog/);assert.equal(await page.locator('canvas').count(),0);await shot(page,'source-catalog-map-rejected');
+  await page.getByTestId('scene-result-error').filter({hasText:'ASSET_VERSION_MISMATCH'}).waitFor();
+  const issue=page.getByTestId('scene-result-error');assert.match(await issue.locator('strong').innerText(),/素材版本\/catalog 与发布版不同/);
+  assert.match(await issue.innerText(),/可选处理：/);assert.equal(await issue.locator('details').getAttribute('open'),null);
+  await issue.locator('summary').click();assert.match(await issue.innerText(),/源码版 catalog/);
+  assert.equal(await page.locator('canvas').count(),0);await shot(page,'source-catalog-map-rejected');
   report.checks.push('source-catalog map has valid file/result hashes but is rejected explicitly, with no canvas or legacy fallback');
   await importInput(page,'none');await page.getByTestId('scene-none').waitFor();const text=await page.getByTestId('scene-none').innerText();
   assert.match(text,/本实验未启用地图/);assert.match(text,/样例人物 01/);assert.match(text,/合成校园访客/);assert(!/synthetic_person|visitor|operator|research/.test(text));assert.equal(await page.locator('canvas').count(),0);await shot(page,'none-desktop');

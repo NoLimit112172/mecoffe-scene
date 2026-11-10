@@ -15,3 +15,21 @@ def adapt_request(prefs, snapshot, plan, map_package=None):
         require(isinstance(map_package,dict),'INVALID_MAP','Expected a local map package')
         result['map']=copy.deepcopy(map_package)
     return result
+
+
+def adapt_intent(intent, snapshot, plan, map_package, assignment_seed):
+    """Provisional local intent = current prefs; no team field names are assumed.
+
+    The independently supplied seed must not silently replace a different intent
+    seed. Spatial payloads come from the explicit map argument, never the intent.
+    none deliberately does not inspect/copy the supplied map package.
+    """
+    require(isinstance(intent,dict),'INVALID_INPUT','Scene intent must be an object')
+    require(not any(key in intent for key in ('snapshot','plan','map')),
+            'INVALID_INPUT','Pass actual snapshot, plan and map separately from scene intent')
+    if 'assignment_seed' in intent:
+        require(type(intent['assignment_seed']) is type(assignment_seed) and intent['assignment_seed']==assignment_seed,
+                'INVALID_INPUT','Intent seed differs from the independent assignment_seed')
+    prefs=copy.deepcopy(intent)
+    prefs['assignment_seed']=assignment_seed
+    return adapt_request(prefs,snapshot,plan,None if prefs.get('mode')=='none' else map_package)
