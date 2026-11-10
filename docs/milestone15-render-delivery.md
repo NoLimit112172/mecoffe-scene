@@ -90,7 +90,8 @@ manifest 本身按**文件原始字节**求 SHA-256，并与 `map_ref.manifest_s
 | `npm --prefix frontend run build:pages` | 通过，为静态页面回归准备新产物 |
 | `node scripts/test-config-preview.cjs` | 通过 |
 | `node scripts/test-live-run.cjs` | 通过 |
-| `node scripts/test-run-replay.cjs` | 旧脚本与既有 M14 状态查询、running 行为的断言冲突，待确认处理方式 |
+| `node scripts/test-run-replay.cjs` | 通过；M14 起即过期的断言在本批同步，业务实现不变 |
+| `node scripts/test-run-replay.cjs --embed` | 通过；严格静态 `/scene/` 路径下执行相同检查 |
 | `node scripts/test-gis.cjs --pages` | 通过，离线模式，未启用在线底图测试 |
 | `node scripts/test-pages.cjs` | 通过，11 个路由及刷新、慢网可操作性、本地素材保留 |
 | `node scripts/audit-public.cjs` | 通过，发现 0；合成角色包明确标记 synthetic，没有放宽审计规则 |
@@ -98,6 +99,19 @@ manifest 本身按**文件原始字节**求 SHA-256，并与 `map_ref.manifest_s
 单元测试覆盖 manifest 真实摘要、缺文件、文件/清单哈希不符、地图版本、素材版本/catalog 不符、越界文件名、source_refs 不符、none、场景外人数、全部服务点、同楼多店完整品牌标签、三种模式共用安置、服务点路线和预留接口 404。新增浏览器测试阻止所有外部 HTTP 与团队 API 请求，实际外部请求、API 请求和页面异常均为零。
 
 另外直接读取 Git 暂存区字节，核对两份 manifest 和 24 个地图文件摘要，全部一致；不只检查当前工作目录副本。
+
+## 旧回放脚本在本批同步
+
+M14（`ab17838`）改为先轮询运行详情，再由 `loadRunReplay` 独立核对终态详情。旧脚本仍截取前六次请求，并把 running 当作不支持，断言从 M14 起即过期；验收方已在 D 之前的 `af7d267` 基线上独立复现。此批只同步测试脚本，业务实现不迁就旧断言。
+
+- 首次终态加载及页面刷新：比较该阶段的**全部** API 调用。run 详情恰好两次，trajectory、population-snapshot、artifacts/plan、stages/plan、stages/roles 各一次；全部 GET，不允许其他路径，scene/bootstrap 与 scene/events 均为零。第一条必须是 run 详情，三项产物请求在它之后，stages/plan 必须晚于 artifacts/plan 的实际 404 响应。
+- 三维/GIS 切换：M14 原有标签页内存会复用已核对的终态输入，所以分别精确检查**零**新请求；刷新重新按七次请求核对，不改成“至少包含某些接口”。
+- running 且旧后端的 scene/bootstrap 返回 404：显示明确的等待提示，不显示错误页、地图、人物或订单。只允许 run 详情与 bootstrap；出现等待提示后继续观察五秒，累计详情轮询限定 2–4 次，相邻请求至少间隔 1.5 秒，bootstrap 恰好一次。此轮本地和 embed 都观察到三次详情轮询。
+- 401、404、快照版本不符、引擎不符的原错误内容、无画布和无导入界面检查全部保留。提示定位适配 M14 已有的状态面板，401 仍检查清空页面后的登录错误。失败部分回放继续显示，核对 1/2 步的部分记录提示、两笔实际订单和无导入界面。
+
+三份自建合成输入的裸 `roles` 与 `live.bootstrap.roles` 均在 `population_request` **同级**放置 `synthetic: true`，未把它作为角色写入请求。解析继续使用现有校验器；预览、实时和公开审计一并复跑，不改审计规则、不加白名单。
+
+本地与 embed 回放的分阶段请求计数、响应状态及截图分别在 `logs/milestone11/remote-local-qa.json`、`remote-embed-qa.json` 和同目录 PNG；完整命令日志在 `logs/m15-render-run-replay*.log`。
 
 本机截图与报告放在 `logs/milestone15-render/`，不进入公开产物：
 
