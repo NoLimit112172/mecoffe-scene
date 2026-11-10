@@ -19,6 +19,12 @@ export const EVENT_LABELS = {
   other: '其他动作',
 }
 
+/** 事件角标：当日汇总已到却没有订单证据时，与正文一致显示“订单未核实”。 */
+export function eventTypeLabel(event) {
+  if (event?.type === 'purchase_pending' && event.evidence_status === 'unverified') return '订单未核实'
+  return EVENT_LABELS[event?.type] || event?.type
+}
+
 export const STAGE_LABELS = {
   initialization: '初始化',
   before_actions: '脚本事件',

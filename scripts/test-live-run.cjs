@@ -115,6 +115,10 @@ async function switchView(frame,gis){
   main.control.phase='confirmed';await stat(frame,'live-orders',1);await stat(frame,'live-quantity',1);
   await frame.waitForFunction(()=>document.querySelector('[data-testid="order-count"]')?.textContent.trim().startsWith('1'),null,{timeout:30000});
   await frame.locator('[data-evidence="verified"]').first().waitFor();await frame.locator('[data-evidence="unverified"]').first().waitFor();
+  const badges=await frame.locator('.event-entry').evaluateAll(entries=>entries.map(entry=>({kind:entry.querySelector('.event-kind')?.textContent.trim(),text:entry.textContent})));
+  const unverifiedBadges=badges.filter(entry=>/订单未核实/.test(entry.text));
+  assert(unverifiedBadges.length>0,'event list shows the unverified purchase');
+  assert(unverifiedBadges.every(entry=>entry.kind==='订单未核实'),'unverified purchase badge matches its description');
   assert.equal(await frame.getByTestId('live-day').innerText(),'第 2/2 天');
   assert.match(await frame.getByTestId('live-panel').innerText(),/当前第 2 步/);
   assert.equal(await frame.getByTestId('live-progress-message').innerText(),'第 2 天进行中，汇总尚未更新');await readableCards(frame);

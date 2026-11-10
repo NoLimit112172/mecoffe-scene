@@ -63,3 +63,12 @@ test('cards without extra evidence have no duplicate or invented body',()=>{
   assert.equal(liveEventCardBody({action:'create_post',outcome:'executed',text:'发帖'}),'')
   assert.equal(liveEventCardBody({action:'create_post',outcome:'executed',text:'确实存在的合成正文'}),'确实存在的合成正文')
 })
+
+test('event badge follows the order evidence status',async()=>{
+  const {eventTypeLabel}=await import('../src/mecoffe/replay.js')
+  assert.equal(eventTypeLabel({type:'purchase_pending',evidence_status:'pending'}),'订单待核对')
+  assert.equal(eventTypeLabel({type:'purchase_pending',evidence_status:'incomplete'}),'订单待核对')
+  assert.equal(eventTypeLabel({type:'purchase_pending',evidence_status:'unverified'}),'订单未核实')
+  assert.equal(eventTypeLabel({type:'purchase',evidence_status:'verified'}),'购买')
+  assert.equal(eventTypeLabel({type:'custom_action'}),'custom_action')
+})

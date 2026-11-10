@@ -196,7 +196,7 @@
               <li v-if="!recentEvents.length" class="mc-empty"><i class="fa-solid fa-play"></i>点击“播放”开始{{ isDemo ? '新版动态演示' : '回放' }}。</li>
               <li v-for="event in recentEvents" :key="event.key" :class="['t-' + event.type, 'clickable']" @click="selectPerson(event.actor, true)">
                 <i :class="['mc-feed-icon', typeIcon(event.type)]"></i>
-                <div><span class="mc-when">{{ dayLabel(event.step) }} · {{ stageLabel(event.stage) }} · {{ typeLabel(event.type) }}</span>
+                <div><span class="mc-when">{{ dayLabel(event.step) }} · {{ stageLabel(event.stage) }} · {{ typeLabel(event) }}</span>
                   <span class="mc-what">{{ describe(event) }}</span></div>
               </li>
             </ul>
@@ -266,7 +266,7 @@ import * as echarts from 'echarts'
 import { CampusScene, BRAND_COLORS } from '../mecoffe/CampusScene'
 import {
   indexScene, stateAt, dayIndexAt, dailySeries, personHistory, personPurchases, cupsByPersonAt,
-  describeEvent, EVENT_LABELS, STAGE_LABELS,
+  describeEvent, eventTypeLabel, STAGE_LABELS,
 } from '../mecoffe/replay'
 
 const SECONDS_PER_DAY = 4
@@ -434,7 +434,7 @@ const hoverStyle = computed(() => {
 
 const personOf = (id) => index.value.people.get(id)
 const describe = (event) => (isDemo.value ? '【演示】' : '') + describeEvent(index.value, event)
-const typeLabel = (type) => EVENT_LABELS[type] || type
+const typeLabel = (event) => eventTypeLabel(event)
 const typeIcon = (type) => TYPE_ICONS[type] || 'fa-solid fa-circle'
 const stageLabel = (stage) => STAGE_LABELS[stage] || stage
 const dayLabel = (step) => (step === 0 ? '初始化' : `第 ${step} 天`)

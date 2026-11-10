@@ -72,7 +72,7 @@
               <article v-for="event in recentEvents" :key="event.key" class="event-entry" :data-event-outcome="event.outcome || event.type"><button class="event-row" type="button" @click="selectPerson(event.actor)">
                 <span class="event-meta">
                   <span>{{ event.step === 0 ? '初始化' : `第 ${event.step} 天` }}</span>
-                  <span class="event-kind">{{ EVENT_LABELS[event.type] || event.type }}</span>
+                  <span class="event-kind">{{ eventTypeLabel(event) }}</span>
                 </span>
                 <span>{{ describeEvent(index, event) }}</span>
               </button><EventResultDetails :event="event"/></article>
@@ -188,7 +188,7 @@ import {shopEntries, shopsInBuilding} from '../mecoffe/shopPresentation.js'
 import {previewQuery} from '../mecoffe/configPreviewStore.js'
 import Campus3DVisualControls from '../components/Campus3DVisualControls.vue'
 import { Campus3DScene } from '../mecoffe/Campus3DScene.js'
-import { describeEvent, EVENT_LABELS, indexScene, personHistory, stateAt } from '../mecoffe/replay.js'
+import { describeEvent, eventTypeLabel, indexScene, personHistory, stateAt } from '../mecoffe/replay.js'
 import { advancePosition, clampPosition, cursorAtPosition, dataFileForMode, positionAtCursor, validateDataMode } from '../mecoffe/campus3dPlayback.js'
 import { resolveHomeKey } from '../mecoffe/campus3dRouting.js'
 import { CHARACTER_ROLE_COLORS, displayRoleColor } from '../mecoffe/characterDisplay.js'
