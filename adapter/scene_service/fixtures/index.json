@@ -1,0 +1,30 @@
+{
+  "synthetic": true,
+  "cases": [
+    "map-valid.json",
+    "none-valid.json",
+    "same-building-stores.json",
+    "out-of-scene.json",
+    "explicit-unknown-building.json",
+    "missing-field.json",
+    "hash-mismatch.json",
+    "unknown-building.json",
+    "wrong-entrance.json",
+    "duplicate-person.json",
+    "missing-person.json",
+    "wrong-brand-owner.json",
+    "wrong-plan.json",
+    "wrong-map.json",
+    "bad-status.json",
+    "false-illustrative.json",
+    "unknown-field.json",
+    "empty-reason.json",
+    "rules-hash.json",
+    "forged-evidence.json",
+    "undeclared-fallback.json",
+    "weak-only.json",
+    "unicode-blank-reason.json",
+    "out-of-scene-with-place.json",
+    "none-missing-reason.json"
+  ]
+}

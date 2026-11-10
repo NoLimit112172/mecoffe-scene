@@ -1,0 +1,537 @@
+{
+  "schema_version": "scene.map.v1",
+  "synthetic": true,
+  "campus": {
+    "campus_id": "synthetic-campus",
+    "synthetic": true,
+    "boundary": [
+      [
+        -10,
+        -10
+      ],
+      [
+        170,
+        -10
+      ],
+      [
+        170,
+        40
+      ],
+      [
+        -10,
+        40
+      ],
+      [
+        -10,
+        -10
+      ]
+    ],
+    "buildings": [
+      {
+        "osm_id": "synthetic/b0",
+        "name": "Synthetic building 0",
+        "kind": "legacy-appearance",
+        "building_type": "school",
+        "tags": {
+          "building": "school"
+        },
+        "polygon": [
+          [
+            0,
+            10
+          ],
+          [
+            10,
+            10
+          ],
+          [
+            10,
+            20
+          ],
+          [
+            0,
+            20
+          ],
+          [
+            0,
+            10
+          ]
+        ],
+        "holes": []
+      },
+      {
+        "osm_id": "synthetic/b1",
+        "name": "Synthetic building 1",
+        "kind": "legacy-appearance",
+        "building_type": "school",
+        "tags": {
+          "building": "school"
+        },
+        "polygon": [
+          [
+            20,
+            10
+          ],
+          [
+            30,
+            10
+          ],
+          [
+            30,
+            20
+          ],
+          [
+            20,
+            20
+          ],
+          [
+            20,
+            10
+          ]
+        ],
+        "holes": []
+      },
+      {
+        "osm_id": "synthetic/b2",
+        "name": "Synthetic building 2",
+        "kind": "legacy-appearance",
+        "building_type": "school",
+        "tags": {
+          "building": "school"
+        },
+        "polygon": [
+          [
+            40,
+            10
+          ],
+          [
+            50,
+            10
+          ],
+          [
+            50,
+            20
+          ],
+          [
+            40,
+            20
+          ],
+          [
+            40,
+            10
+          ]
+        ],
+        "holes": []
+      },
+      {
+        "osm_id": "synthetic/b3",
+        "name": "Synthetic building 3",
+        "kind": "legacy-appearance",
+        "building_type": "yes",
+        "tags": {
+          "building": "yes",
+          "amenity": "cafe"
+        },
+        "polygon": [
+          [
+            60,
+            10
+          ],
+          [
+            70,
+            10
+          ],
+          [
+            70,
+            20
+          ],
+          [
+            60,
+            20
+          ],
+          [
+            60,
+            10
+          ]
+        ],
+        "holes": []
+      },
+      {
+        "osm_id": "synthetic/b4",
+        "name": "Synthetic building 4",
+        "kind": "legacy-appearance",
+        "building_type": "yes",
+        "tags": {
+          "building": "yes",
+          "amenity": "cafe"
+        },
+        "polygon": [
+          [
+            80,
+            10
+          ],
+          [
+            90,
+            10
+          ],
+          [
+            90,
+            20
+          ],
+          [
+            80,
+            20
+          ],
+          [
+            80,
+            10
+          ]
+        ],
+        "holes": []
+      },
+      {
+        "osm_id": "synthetic/b5",
+        "name": "Synthetic building 5",
+        "kind": "legacy-appearance",
+        "building_type": "residential",
+        "tags": {
+          "building": "residential"
+        },
+        "polygon": [
+          [
+            100,
+            10
+          ],
+          [
+            110,
+            10
+          ],
+          [
+            110,
+            20
+          ],
+          [
+            100,
+            20
+          ],
+          [
+            100,
+            10
+          ]
+        ],
+        "holes": []
+      },
+      {
+        "osm_id": "synthetic/b6",
+        "name": "Synthetic building 6",
+        "kind": "legacy-appearance",
+        "building_type": "dormitory",
+        "tags": {
+          "building": "dormitory"
+        },
+        "polygon": [
+          [
+            120,
+            10
+          ],
+          [
+            130,
+            10
+          ],
+          [
+            130,
+            20
+          ],
+          [
+            120,
+            20
+          ],
+          [
+            120,
+            10
+          ]
+        ],
+        "holes": []
+      },
+      {
+        "osm_id": "synthetic/b7",
+        "name": "合成食堂（仅弱证据）",
+        "kind": "legacy-appearance",
+        "building_type": "yes",
+        "tags": {
+          "building": "yes"
+        },
+        "polygon": [
+          [
+            140,
+            10
+          ],
+          [
+            150,
+            10
+          ],
+          [
+            150,
+            20
+          ],
+          [
+            140,
+            20
+          ],
+          [
+            140,
+            10
+          ]
+        ],
+        "holes": []
+      }
+    ],
+    "pois": [],
+    "walk_graph": {
+      "nodes": [
+        {
+          "id": "synthetic/n0",
+          "x": 5,
+          "y": 0
+        },
+        {
+          "id": "synthetic/n1",
+          "x": 25,
+          "y": 0
+        },
+        {
+          "id": "synthetic/n2",
+          "x": 45,
+          "y": 0
+        },
+        {
+          "id": "synthetic/n3",
+          "x": 65,
+          "y": 0
+        },
+        {
+          "id": "synthetic/n4",
+          "x": 85,
+          "y": 0
+        },
+        {
+          "id": "synthetic/n5",
+          "x": 105,
+          "y": 0
+        },
+        {
+          "id": "synthetic/n6",
+          "x": 125,
+          "y": 0
+        },
+        {
+          "id": "synthetic/n7",
+          "x": 145,
+          "y": 0
+        }
+      ],
+      "edges": [
+        {
+          "source": "synthetic/n0",
+          "target": "synthetic/n1"
+        },
+        {
+          "source": "synthetic/n1",
+          "target": "synthetic/n2"
+        },
+        {
+          "source": "synthetic/n2",
+          "target": "synthetic/n3"
+        },
+        {
+          "source": "synthetic/n3",
+          "target": "synthetic/n4"
+        },
+        {
+          "source": "synthetic/n4",
+          "target": "synthetic/n5"
+        },
+        {
+          "source": "synthetic/n5",
+          "target": "synthetic/n6"
+        },
+        {
+          "source": "synthetic/n6",
+          "target": "synthetic/n7"
+        }
+      ]
+    }
+  },
+  "entrances": {
+    "entrances": [
+      {
+        "id": "synthetic/b0/entrance",
+        "building_id": "synthetic/b0",
+        "point": [
+          5,
+          10
+        ],
+        "road_node_id": "synthetic/n0",
+        "connector": [
+          [
+            5,
+            10
+          ],
+          [
+            5,
+            0
+          ]
+        ],
+        "connected": true
+      },
+      {
+        "id": "synthetic/b1/entrance",
+        "building_id": "synthetic/b1",
+        "point": [
+          25,
+          10
+        ],
+        "road_node_id": "synthetic/n1",
+        "connector": [
+          [
+            25,
+            10
+          ],
+          [
+            25,
+            0
+          ]
+        ],
+        "connected": true
+      },
+      {
+        "id": "synthetic/b2/entrance",
+        "building_id": "synthetic/b2",
+        "point": [
+          45,
+          10
+        ],
+        "road_node_id": "synthetic/n2",
+        "connector": [
+          [
+            45,
+            10
+          ],
+          [
+            45,
+            0
+          ]
+        ],
+        "connected": true
+      },
+      {
+        "id": "synthetic/b3/entrance",
+        "building_id": "synthetic/b3",
+        "point": [
+          65,
+          10
+        ],
+        "road_node_id": "synthetic/n3",
+        "connector": [
+          [
+            65,
+            10
+          ],
+          [
+            65,
+            0
+          ]
+        ],
+        "connected": true
+      },
+      {
+        "id": "synthetic/b4/entrance",
+        "building_id": "synthetic/b4",
+        "point": [
+          85,
+          10
+        ],
+        "road_node_id": "synthetic/n4",
+        "connector": [
+          [
+            85,
+            10
+          ],
+          [
+            85,
+            0
+          ]
+        ],
+        "connected": true
+      },
+      {
+        "id": "synthetic/b5/entrance",
+        "building_id": "synthetic/b5",
+        "point": [
+          105,
+          10
+        ],
+        "road_node_id": "synthetic/n5",
+        "connector": [
+          [
+            105,
+            10
+          ],
+          [
+            105,
+            0
+          ]
+        ],
+        "connected": true
+      },
+      {
+        "id": "synthetic/b6/entrance",
+        "building_id": "synthetic/b6",
+        "point": [
+          125,
+          10
+        ],
+        "road_node_id": "synthetic/n6",
+        "connector": [
+          [
+            125,
+            10
+          ],
+          [
+            125,
+            0
+          ]
+        ],
+        "connected": true
+      },
+      {
+        "id": "synthetic/b7/entrance",
+        "building_id": "synthetic/b7",
+        "point": [
+          145,
+          10
+        ],
+        "road_node_id": "synthetic/n7",
+        "connector": [
+          [
+            145,
+            10
+          ],
+          [
+            145,
+            0
+          ]
+        ],
+        "connected": true
+      }
+    ]
+  },
+  "landcover": {
+    "features": []
+  },
+  "map_ref": {
+    "map_id": "synthetic-campus",
+    "map_version": "1",
+    "manifest_sha256": "49869901d1fc88d7ba2151d616c30d91a4647606b099ec2103f1e157b58263da"
+  }
+}

@@ -1,0 +1,31 @@
+{
+  "synthetic": true,
+  "plan_id": "synthetic-plan",
+  "plan_revision": 1,
+  "population": {
+    "snapshot_id": "synthetic-snapshot",
+    "snapshot_revision": 1
+  },
+  "economy": {
+    "brands": [
+      {
+        "brand_id": "brand_1",
+        "owner_entity_id": "synthetic_operator_0"
+      },
+      {
+        "brand_id": "brand_2",
+        "owner_entity_id": "synthetic_operator_1"
+      }
+    ],
+    "products": [
+      {
+        "product_name": "合成品牌甲",
+        "brand_id": "brand_1"
+      },
+      {
+        "product_name": "合成品牌乙",
+        "brand_id": "brand_2"
+      }
+    ]
+  }
+}

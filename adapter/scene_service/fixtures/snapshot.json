@@ -1,0 +1,47 @@
+{
+  "snapshot_id": "synthetic-snapshot",
+  "snapshot_revision": 1,
+  "dataset_version": "synthetic-m15",
+  "nodes": [
+    {
+      "entity_id": "synthetic_student_000",
+      "role": "synthetic_student",
+      "name": "合成人物0"
+    },
+    {
+      "entity_id": "synthetic_student_001",
+      "role": "synthetic_student",
+      "name": "合成人物1"
+    },
+    {
+      "entity_id": "synthetic_student_002",
+      "role": "synthetic_student",
+      "name": "合成人物2"
+    },
+    {
+      "entity_id": "synthetic_student_003",
+      "role": "synthetic_student",
+      "name": "合成人物3"
+    },
+    {
+      "entity_id": "synthetic_student_004",
+      "role": "synthetic_student",
+      "name": "合成人物4"
+    },
+    {
+      "entity_id": "synthetic_student_005",
+      "role": "synthetic_student",
+      "name": "合成人物5"
+    },
+    {
+      "entity_id": "synthetic_operator_0",
+      "role": "synthetic_operator",
+      "name": "合成人物经营者0"
+    },
+    {
+      "entity_id": "synthetic_operator_1",
+      "role": "synthetic_operator",
+      "name": "合成人物经营者1"
+    }
+  ]
+}

@@ -1,0 +1,47 @@
+{
+  "synthetic": true,
+  "mode": "none",
+  "config_id": "synthetic-config",
+  "role_prefs": {
+    "synthetic_student": {
+      "functions": [
+        "education"
+      ],
+      "distribution": "balanced",
+      "fallback": "fail"
+    },
+    "synthetic_operator": {
+      "functions": [
+        "dormitory"
+      ],
+      "distribution": "clustered",
+      "fallback": "fail"
+    }
+  },
+  "brand_prefs": {
+    "合成品牌甲": {
+      "functions": [
+        "dining"
+      ],
+      "separate_when_possible": true,
+      "fallback": "fail"
+    },
+    "合成品牌乙": {
+      "functions": [
+        "dining"
+      ],
+      "separate_when_possible": true,
+      "fallback": "fail"
+    }
+  },
+  "assignment_seed": 42,
+  "assumptions": [
+    "完全合成测试；默认地点仅供展示，不代表住所。",
+    " 原样保留空格与换行\n🙂 "
+  ],
+  "overrides": {
+    "entities": {},
+    "brands": {}
+  },
+  "reason": "用户确认的纯网络合成实验"
+}

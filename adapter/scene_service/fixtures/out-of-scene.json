@@ -1,0 +1,265 @@
+{
+  "synthetic": true,
+  "description": "Entirely synthetic M15 contract fixture",
+  "name": "out-of-scene",
+  "valid": true,
+  "result": {
+    "schema_version": "scene.result.v1",
+    "scene_id": "scene_5a3a3a7e702bae2a716fa13f",
+    "scene_revision": 1,
+    "mode": "map",
+    "illustrative": true,
+    "map_ref": {
+      "map_id": "synthetic-campus",
+      "map_version": "1",
+      "manifest_sha256": "49869901d1fc88d7ba2151d616c30d91a4647606b099ec2103f1e157b58263da"
+    },
+    "source_refs": {
+      "config_id": "synthetic-config",
+      "snapshot_id": "synthetic-snapshot",
+      "snapshot_revision": 1,
+      "plan_id": "synthetic-plan",
+      "plan_revision": 1
+    },
+    "assignment_meta": {
+      "assignment_seed": 42,
+      "rules_version": "1",
+      "resolver_version": "1",
+      "rules_sha256": "8c1ffef7f7bcccdab9b7fb571dc77e900e56984f764ed5468f64e6e679d4b3dc"
+    },
+    "rules": {
+      "role_prefs": {
+        "synthetic_operator": {
+          "functions": [
+            "dormitory"
+          ],
+          "fallback": "fail",
+          "distribution": "clustered"
+        },
+        "synthetic_student": {
+          "functions": [
+            "retail"
+          ],
+          "fallback": "out_of_scene",
+          "distribution": "balanced"
+        }
+      },
+      "brand_prefs": {
+        "合成品牌乙": {
+          "functions": [
+            "dining"
+          ],
+          "fallback": "fail",
+          "separate_when_possible": true
+        },
+        "合成品牌甲": {
+          "functions": [
+            "retail"
+          ],
+          "fallback": "out_of_scene",
+          "separate_when_possible": true
+        }
+      },
+      "overrides": {
+        "entities": {},
+        "brands": {}
+      }
+    },
+    "assumptions": [
+      "完全合成测试；默认地点仅供展示，不代表住所。",
+      " 原样保留空格与换行\n🙂 "
+    ],
+    "assignments": [
+      {
+        "entity_id": "synthetic_operator_0",
+        "role": "synthetic_operator",
+        "status": "placed",
+        "building_id": "synthetic/b6",
+        "entrance_id": "synthetic/b6/entrance",
+        "reason": "Strict function evidence and safe reachable entrance; deterministic selection",
+        "evidence": [
+          {
+            "function": "dormitory",
+            "source": "building_tag",
+            "key": "building",
+            "value": "dormitory",
+            "ref": "synthetic/b6"
+          }
+        ],
+        "fallback_used": null
+      },
+      {
+        "entity_id": "synthetic_operator_1",
+        "role": "synthetic_operator",
+        "status": "placed",
+        "building_id": "synthetic/b6",
+        "entrance_id": "synthetic/b6/entrance",
+        "reason": "Strict function evidence and safe reachable entrance; deterministic selection",
+        "evidence": [
+          {
+            "function": "dormitory",
+            "source": "building_tag",
+            "key": "building",
+            "value": "dormitory",
+            "ref": "synthetic/b6"
+          }
+        ],
+        "fallback_used": null
+      },
+      {
+        "entity_id": "synthetic_student_000",
+        "role": "synthetic_student",
+        "status": "out_of_scene",
+        "building_id": null,
+        "entrance_id": null,
+        "reason": "Confirmed out_of_scene fallback; no valid function candidate",
+        "evidence": [],
+        "fallback_used": "out_of_scene"
+      },
+      {
+        "entity_id": "synthetic_student_001",
+        "role": "synthetic_student",
+        "status": "out_of_scene",
+        "building_id": null,
+        "entrance_id": null,
+        "reason": "Confirmed out_of_scene fallback; no valid function candidate",
+        "evidence": [],
+        "fallback_used": "out_of_scene"
+      },
+      {
+        "entity_id": "synthetic_student_002",
+        "role": "synthetic_student",
+        "status": "out_of_scene",
+        "building_id": null,
+        "entrance_id": null,
+        "reason": "Confirmed out_of_scene fallback; no valid function candidate",
+        "evidence": [],
+        "fallback_used": "out_of_scene"
+      },
+      {
+        "entity_id": "synthetic_student_003",
+        "role": "synthetic_student",
+        "status": "out_of_scene",
+        "building_id": null,
+        "entrance_id": null,
+        "reason": "Confirmed out_of_scene fallback; no valid function candidate",
+        "evidence": [],
+        "fallback_used": "out_of_scene"
+      },
+      {
+        "entity_id": "synthetic_student_004",
+        "role": "synthetic_student",
+        "status": "out_of_scene",
+        "building_id": null,
+        "entrance_id": null,
+        "reason": "Confirmed out_of_scene fallback; no valid function candidate",
+        "evidence": [],
+        "fallback_used": "out_of_scene"
+      },
+      {
+        "entity_id": "synthetic_student_005",
+        "role": "synthetic_student",
+        "status": "out_of_scene",
+        "building_id": null,
+        "entrance_id": null,
+        "reason": "Confirmed out_of_scene fallback; no valid function candidate",
+        "evidence": [],
+        "fallback_used": "out_of_scene"
+      }
+    ],
+    "service_points": [
+      {
+        "service_id": "service_4f5d7e7d72a0d956073220df",
+        "brand_name": "合成品牌乙",
+        "brand_id": "brand_2",
+        "owner_entity_id": "synthetic_operator_1",
+        "status": "placed",
+        "building_id": "synthetic/b3",
+        "entrance_id": "synthetic/b3/entrance",
+        "reason": "Strict function evidence and safe reachable entrance; deterministic selection",
+        "evidence": [
+          {
+            "function": "dining",
+            "source": "building_tag",
+            "key": "amenity",
+            "value": "cafe",
+            "ref": "synthetic/b3"
+          }
+        ],
+        "fallback_used": null
+      },
+      {
+        "service_id": "service_ffc692d38459626c94b50398",
+        "brand_name": "合成品牌甲",
+        "brand_id": "brand_1",
+        "owner_entity_id": "synthetic_operator_0",
+        "status": "out_of_scene",
+        "building_id": null,
+        "entrance_id": null,
+        "reason": "Confirmed out_of_scene fallback; no valid function candidate",
+        "evidence": [],
+        "fallback_used": "out_of_scene"
+      }
+    ],
+    "warnings": [
+      {
+        "code": "UNKNOWN_USE",
+        "message": "Unknown building functions do not participate in strict matching",
+        "refs": [
+          "synthetic/b7"
+        ]
+      },
+      {
+        "code": "FALLBACK_USED",
+        "message": "Confirmed fallback out_of_scene used",
+        "refs": [
+          "synthetic_student_000"
+        ]
+      },
+      {
+        "code": "FALLBACK_USED",
+        "message": "Confirmed fallback out_of_scene used",
+        "refs": [
+          "synthetic_student_001"
+        ]
+      },
+      {
+        "code": "FALLBACK_USED",
+        "message": "Confirmed fallback out_of_scene used",
+        "refs": [
+          "synthetic_student_002"
+        ]
+      },
+      {
+        "code": "FALLBACK_USED",
+        "message": "Confirmed fallback out_of_scene used",
+        "refs": [
+          "synthetic_student_003"
+        ]
+      },
+      {
+        "code": "FALLBACK_USED",
+        "message": "Confirmed fallback out_of_scene used",
+        "refs": [
+          "synthetic_student_004"
+        ]
+      },
+      {
+        "code": "FALLBACK_USED",
+        "message": "Confirmed fallback out_of_scene used",
+        "refs": [
+          "synthetic_student_005"
+        ]
+      },
+      {
+        "code": "FALLBACK_USED",
+        "message": "Confirmed fallback out_of_scene used",
+        "refs": [
+          "合成品牌甲"
+        ]
+      }
+    ],
+    "result_sha256": "62cb11ff073f41c5e1af2eb96c15dcd48f1ea9cbd0bf6e22c0a902f8f4cc2843"
+  },
+  "context_ref": "context.json"
+}

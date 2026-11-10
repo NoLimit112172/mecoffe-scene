@@ -1,0 +1,64 @@
+{
+  "source": "Existing public USTC geometry only; no people or runtime data",
+  "map_ref": {
+    "map_id": "ustc-history",
+    "map_version": "1",
+    "manifest_sha256": "24e233c377be3e7dd0b80cb43767c7ddac7afc9a97a787c94b4fc0d0e6479213"
+  },
+  "quality": {
+    "status": "ready",
+    "buildings": 31,
+    "valid_buildings": 31,
+    "function_counts": {
+      "dining": 0,
+      "retail": 0,
+      "dormitory": 8,
+      "residential": 0,
+      "education": 21,
+      "office": 0,
+      "library": 0,
+      "unknown": 2
+    },
+    "unknown": 2,
+    "no_entrance": 0,
+    "entrances": 31,
+    "main_component_entrances": 31,
+    "main_component_ratio": 1.0,
+    "eligible_buildings": 29,
+    "poi": {
+      "total": 0,
+      "associated": 0,
+      "ambiguous": 0,
+      "unassociated": 0,
+      "invalid": 0
+    },
+    "thresholds": {
+      "min_main_ratio": 0.9,
+      "min_function_ratio": 0.0
+    },
+    "warnings": [
+      {
+        "code": "BUILDING_EXCLUDED",
+        "message": "Invalid geometry, outside scope, water conflict, or no safe reachable entrance",
+        "refs": [
+          "way/1435370291"
+        ]
+      },
+      {
+        "code": "BUILDING_EXCLUDED",
+        "message": "Invalid geometry, outside scope, water conflict, or no safe reachable entrance",
+        "refs": [
+          "way/1435377495"
+        ]
+      },
+      {
+        "code": "UNKNOWN_USE",
+        "message": "Unknown building functions do not participate in strict matching",
+        "refs": [
+          "way/1435368250",
+          "way/1501639766"
+        ]
+      }
+    ]
+  }
+}
