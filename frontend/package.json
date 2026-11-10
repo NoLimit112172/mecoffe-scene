@@ -10,7 +10,8 @@
     "preview": "vite preview",
     "build:pages": "vite build --mode pages",
     "check:pages": "node pages/check-dist.mjs",
-    "build:embed": "vite build --mode embed"
+    "build:embed": "vite build --mode embed",
+    "build:split": "python3 ../scripts/build_scene_split.py"
   },
   "dependencies": {
     "@antv/g6": "^5.0.44",

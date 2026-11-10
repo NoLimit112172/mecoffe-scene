@@ -39,7 +39,7 @@
 | `schema_version` | `scene.map-manifest.v1` |
 | `map_id`、`map_version` | 与 SceneResult 的 `map_ref` 完全一致 |
 | `title` | 非空中文或其他文字标题，三维与 GIS 均显示它 |
-| `asset_library_version` | 当前支持 `bundled-v1`，即现有随显示程序提供的素材库 |
+| `asset_library_version` | 使用已登记的发布素材库 `mecoffe-embed-v1` |
 | `catalog_sha256` | 建图所用 catalog 的原始文件 SHA-256，与当前素材 catalog 字节摘要完全一致 |
 | `files` | 对象，键为下面允许的相对文件名，值为该文件原始字节的 64 位小写 SHA-256 |
 | `style` | 可选；沿用现有显示样式字段，不另立素材加载规则；缺省为 procedural/campus |

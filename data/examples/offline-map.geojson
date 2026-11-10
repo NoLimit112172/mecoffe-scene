@@ -1,0 +1,24 @@
+{
+  "type": "FeatureCollection",
+  "source": {
+    "license": "LicenseRef-MeCoffe-Project",
+    "attribution": "MeCoffe 合成建图示例，地物坐标和用途均为测试数据"
+  },
+  "features": [
+    {
+      "type": "Feature",
+      "id": "test-building",
+      "properties": {"building": "university", "name": "合成教学楼", "levels": 2},
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[[10.0001, 20.0001], [10.0003, 20.0001], [10.0003, 20.0003], [10.0001, 20.0003], [10.0001, 20.0001]]]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "test-footway",
+      "properties": {"highway": "footway", "name": "合成步道"},
+      "geometry": {"type": "LineString", "coordinates": [[10.0000, 20.0000], [10.0004, 20.0000]]}
+    }
+  ]
+}
