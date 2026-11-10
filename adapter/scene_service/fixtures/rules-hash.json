@@ -5,7 +5,7 @@
   "valid": false,
   "result": {
     "schema_version": "scene.result.v1",
-    "scene_id": "scene_43910534189363cd4ac29474",
+    "scene_id": "scene_73eefaa597e6ebb5918bf852",
     "scene_revision": 1,
     "mode": "map",
     "illustrative": true,
@@ -24,7 +24,7 @@
     "assignment_meta": {
       "assignment_seed": 42,
       "rules_version": "1",
-      "resolver_version": "1",
+      "resolver_version": "1.1",
       "rules_sha256": "0000000000000000000000000000000000000000000000000000000000000000"
     },
     "rules": {
@@ -76,7 +76,7 @@
         "status": "placed",
         "building_id": "synthetic/b6",
         "entrance_id": "synthetic/b6/entrance",
-        "reason": "Strict function evidence and safe reachable entrance; deterministic selection",
+        "reason": "有宿舍用途证据且入口可达，按确定性规则选定",
         "evidence": [
           {
             "function": "dormitory",
@@ -94,7 +94,7 @@
         "status": "placed",
         "building_id": "synthetic/b6",
         "entrance_id": "synthetic/b6/entrance",
-        "reason": "Strict function evidence and safe reachable entrance; deterministic selection",
+        "reason": "有宿舍用途证据且入口可达，按确定性规则选定",
         "evidence": [
           {
             "function": "dormitory",
@@ -112,7 +112,7 @@
         "status": "placed",
         "building_id": "synthetic/b2",
         "entrance_id": "synthetic/b2/entrance",
-        "reason": "Strict function evidence and safe reachable entrance; deterministic selection",
+        "reason": "有教学用途证据且入口可达，按确定性规则选定",
         "evidence": [
           {
             "function": "education",
@@ -130,7 +130,7 @@
         "status": "placed",
         "building_id": "synthetic/b2",
         "entrance_id": "synthetic/b2/entrance",
-        "reason": "Strict function evidence and safe reachable entrance; deterministic selection",
+        "reason": "有教学用途证据且入口可达，按确定性规则选定",
         "evidence": [
           {
             "function": "education",
@@ -148,7 +148,7 @@
         "status": "placed",
         "building_id": "synthetic/b2",
         "entrance_id": "synthetic/b2/entrance",
-        "reason": "Strict function evidence and safe reachable entrance; deterministic selection",
+        "reason": "有教学用途证据且入口可达，按确定性规则选定",
         "evidence": [
           {
             "function": "education",
@@ -166,7 +166,7 @@
         "status": "placed",
         "building_id": "synthetic/b2",
         "entrance_id": "synthetic/b2/entrance",
-        "reason": "Strict function evidence and safe reachable entrance; deterministic selection",
+        "reason": "有教学用途证据且入口可达，按确定性规则选定",
         "evidence": [
           {
             "function": "education",
@@ -184,7 +184,7 @@
         "status": "placed",
         "building_id": "synthetic/b1",
         "entrance_id": "synthetic/b1/entrance",
-        "reason": "Strict function evidence and safe reachable entrance; deterministic selection",
+        "reason": "有教学用途证据且入口可达，按确定性规则选定",
         "evidence": [
           {
             "function": "education",
@@ -202,7 +202,7 @@
         "status": "placed",
         "building_id": "synthetic/b2",
         "entrance_id": "synthetic/b2/entrance",
-        "reason": "Strict function evidence and safe reachable entrance; deterministic selection",
+        "reason": "有教学用途证据且入口可达，按确定性规则选定",
         "evidence": [
           {
             "function": "education",
@@ -224,7 +224,7 @@
         "status": "placed",
         "building_id": "synthetic/b3",
         "entrance_id": "synthetic/b3/entrance",
-        "reason": "Strict function evidence and safe reachable entrance; deterministic selection",
+        "reason": "有餐饮用途证据且入口可达，按确定性规则选定",
         "evidence": [
           {
             "function": "dining",
@@ -244,7 +244,7 @@
         "status": "placed",
         "building_id": "synthetic/b4",
         "entrance_id": "synthetic/b4/entrance",
-        "reason": "Strict function evidence and safe reachable entrance; deterministic selection",
+        "reason": "有餐饮用途证据且入口可达，按确定性规则选定",
         "evidence": [
           {
             "function": "dining",
@@ -266,7 +266,7 @@
         ]
       }
     ],
-    "result_sha256": "949dabaa12a7cabe4d16f8db5ba50c1d559ad1328e758a6e42c5e81c7305b201"
+    "result_sha256": "acd14bc28587b4bf4f3b22890d6f7302c714e49c05dfb528c2acc1f0afa3e669"
   },
   "context_ref": "context.json",
   "code": "HASH_MISMATCH"

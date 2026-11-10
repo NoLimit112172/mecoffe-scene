@@ -5,7 +5,7 @@
   "valid": true,
   "result": {
     "schema_version": "scene.result.v1",
-    "scene_id": "scene_2132964e559040776e5b41e6",
+    "scene_id": "scene_bd2bbe646b052b55dd23a556",
     "scene_revision": 1,
     "mode": "none",
     "illustrative": true,
@@ -20,7 +20,7 @@
     "assignment_meta": {
       "assignment_seed": 42,
       "rules_version": "1",
-      "resolver_version": "1",
+      "resolver_version": "1.1",
       "rules_sha256": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a"
     },
     "rules": {},
@@ -32,7 +32,7 @@
     "service_points": [],
     "warnings": [],
     "reason": "用户确认的纯网络合成实验",
-    "result_sha256": "9c8bed3fbec7d85d07f6e7dc17d9dfd56949dc403e5d7e7c60477dae16b61857"
+    "result_sha256": "5382a1d2d03f686174039c6123e589d67820ed21ee0cc345e9f3225895393437"
   },
   "context_ref": "context.json"
 }

@@ -194,17 +194,17 @@
     "population_request": {
       "operator": {
         "count": 3,
-        "description": "合成角色 operator",
+        "description": "合成门店经营者",
         "generate": {}
       },
       "research": {
         "count": 2,
-        "description": "合成角色 research",
+        "description": "合成科研人员",
         "generate": {}
       },
       "visitor": {
         "count": 2,
-        "description": "合成角色 visitor",
+        "description": "合成校园访客",
         "generate": {}
       }
     },
@@ -213,7 +213,7 @@
   "scene_result": {
     "assignment_meta": {
       "assignment_seed": 42,
-      "resolver_version": "1",
+      "resolver_version": "1.1",
       "rules_sha256": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
       "rules_version": "1"
     },
@@ -225,9 +225,9 @@
     "map_ref": null,
     "mode": "none",
     "reason": "本次为用户确认的合成纯网络实验",
-    "result_sha256": "5f837d8ed9d32d306a3b3ab061e1969f8ae11315b366ac4a08fe67f0cd56b9db",
+    "result_sha256": "969eea7214391f9bac9ccab11db50c77e7b9648651365d9eec94994bf0a04ab4",
     "rules": {},
-    "scene_id": "scene_1ff5b7fa8d81050770108016",
+    "scene_id": "scene_0d1fdd53f5aaeb7f2831a1b9",
     "scene_revision": 1,
     "schema_version": "scene.result.v1",
     "service_points": [],

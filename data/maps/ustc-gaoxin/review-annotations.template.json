@@ -1,0 +1,31 @@
+{
+  "buildings": {
+    "way/1435377504": {
+      "functions": [],
+      "name": "教工食堂",
+      "note": "",
+      "reviewer": "",
+      "source": ""
+    },
+    "way/1435377505": {
+      "functions": [],
+      "name": "学生食堂A区",
+      "note": "",
+      "reviewer": "",
+      "source": ""
+    },
+    "way/1435377506": {
+      "functions": [],
+      "name": "学生食堂B区",
+      "note": "",
+      "reviewer": "",
+      "source": ""
+    }
+  },
+  "map_ref": {
+    "manifest_sha256": "101a660efd370e807d4d3e579ca2c5732b69c79ce8fb43a0a6d864e9a41bf1ad",
+    "map_id": "ustc-gaoxin",
+    "map_version": "1"
+  },
+  "schema_version": "scene.annotations.template.v1"
+}

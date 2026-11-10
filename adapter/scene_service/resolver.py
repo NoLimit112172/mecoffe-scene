@@ -5,6 +5,8 @@ from .common import digest, portable, require
 from .evidence import FUNCTIONS, enrich_map
 from .validation import brand_catalog, indexed, validate_result
 
+FUNCTION_LABELS={'dining':'餐饮','retail':'零售','dormitory':'宿舍','residential':'住宅','education':'教学','office':'办公','library':'图书服务','unknown':'未知'}
+
 
 def normalize_prefs(request, roles, brands):
     role_prefs=request.get('role_prefs',{}); brand_prefs=request.get('brand_prefs',{})
@@ -60,7 +62,7 @@ def resolve(request):
     result={'schema_version':'scene.result.v1','scene_id':'pending','scene_revision':request.get('scene_revision',1),
             'mode':request['mode'],'illustrative':True,'map_ref':None,'source_refs':source,
             'assignment_meta':{'assignment_seed':seed,'rules_version':request.get('rules_version','1'),
-                               'resolver_version':'1','rules_sha256':''},
+                               'resolver_version':'1.1','rules_sha256':''},
             'rules':{},'assumptions':copy.deepcopy(assumptions),'assignments':[],'service_points':[],'warnings':[]}
     context={'snapshot':snapshot,'plan':plan}
     if request['mode']=='none':
@@ -98,7 +100,7 @@ def resolve(request):
                 require(fallback!='fail','SCENE_NO_CANDIDATE',f'No usable function candidate for {name}')
                 result['warnings'].append({'code':'FALLBACK_USED','message':f'Confirmed fallback {fallback} used','refs':[name]})
                 if fallback=='out_of_scene':
-                    return {'status':'out_of_scene','building_id':None,'entrance_id':None,'reason':'Confirmed out_of_scene fallback; no valid function candidate',
+                    return {'status':'out_of_scene','building_id':None,'entrance_id':None,'reason':'按已确认的场外兜底处理，未找到符合用途的楼',
                             'evidence':[],'fallback_used':fallback}
                 candidates=eligible
                 require(bool(candidates),'SCENE_NO_CANDIDATE','No safe reachable building even for confirmed fallback')
@@ -108,9 +110,10 @@ def resolve(request):
             chosen=max(candidates,key=lambda b:(digest([seed,name,b['osm_id']]),b['osm_id']))
             evidence=[copy.deepcopy(e) for e in chosen['function_evidence'] if e['source']!='name_keyword' and
                       (explicit or fallback is not None or e['function'] in pref['functions'])]
+            uses='、'.join(FUNCTION_LABELS[f] for f in sorted({e['function'] for e in evidence}))
             return {'status':'placed','building_id':chosen['osm_id'],'entrance_id':chosen['usable_entrance_ids'][0],
-                    'reason':('User-confirmed explicit override' if explicit else 'Confirmed unrestricted-building fallback' if fallback else
-                              'Strict function evidence and safe reachable entrance; deterministic selection'),
+                    'reason':('按已确认的指定楼栋安置，入口可达' if explicit else '按已确认的范围内任意楼栋兜底安置，入口可达' if fallback else
+                              f'有{uses}用途证据且入口可达，按确定性规则选定'),
                     'evidence':evidence,'fallback_used':fallback}
         for identifier, person in sorted(people.items()):
             pref=rules['role_prefs'][person['role']]

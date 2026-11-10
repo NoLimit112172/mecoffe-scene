@@ -194,17 +194,17 @@
     "population_request": {
       "operator": {
         "count": 3,
-        "description": "合成角色 operator",
+        "description": "合成门店经营者",
         "generate": {}
       },
       "research": {
         "count": 2,
-        "description": "合成角色 research",
+        "description": "合成科研人员",
         "generate": {}
       },
       "visitor": {
         "count": 2,
-        "description": "合成角色 visitor",
+        "description": "合成校园访客",
         "generate": {}
       }
     },
@@ -213,7 +213,7 @@
   "scene_result": {
     "assignment_meta": {
       "assignment_seed": 42,
-      "resolver_version": "1",
+      "resolver_version": "1.1",
       "rules_sha256": "347ce21af882bedfbbd7404dfe61cca46efe66d63f0f90ba72b72a369189641d",
       "rules_version": "1"
     },
@@ -232,7 +232,7 @@
           }
         ],
         "fallback_used": null,
-        "reason": "Strict function evidence and safe reachable entrance; deterministic selection",
+        "reason": "有教学用途证据且入口可达，按确定性规则选定",
         "role": "visitor",
         "status": "placed"
       },
@@ -250,7 +250,7 @@
           }
         ],
         "fallback_used": null,
-        "reason": "Strict function evidence and safe reachable entrance; deterministic selection",
+        "reason": "有教学用途证据且入口可达，按确定性规则选定",
         "role": "visitor",
         "status": "placed"
       },
@@ -268,7 +268,7 @@
           }
         ],
         "fallback_used": null,
-        "reason": "Strict function evidence and safe reachable entrance; deterministic selection",
+        "reason": "有宿舍用途证据且入口可达，按确定性规则选定",
         "role": "operator",
         "status": "placed"
       },
@@ -286,7 +286,7 @@
           }
         ],
         "fallback_used": null,
-        "reason": "Strict function evidence and safe reachable entrance; deterministic selection",
+        "reason": "有宿舍用途证据且入口可达，按确定性规则选定",
         "role": "operator",
         "status": "placed"
       },
@@ -304,7 +304,7 @@
           }
         ],
         "fallback_used": null,
-        "reason": "Strict function evidence and safe reachable entrance; deterministic selection",
+        "reason": "有宿舍用途证据且入口可达，按确定性规则选定",
         "role": "operator",
         "status": "placed"
       },
@@ -314,7 +314,7 @@
         "entrance_id": null,
         "evidence": [],
         "fallback_used": "out_of_scene",
-        "reason": "Confirmed out_of_scene fallback; no valid function candidate",
+        "reason": "按已确认的场外兜底处理，未找到符合用途的楼",
         "role": "research",
         "status": "out_of_scene"
       },
@@ -324,7 +324,7 @@
         "entrance_id": null,
         "evidence": [],
         "fallback_used": "out_of_scene",
-        "reason": "Confirmed out_of_scene fallback; no valid function candidate",
+        "reason": "按已确认的场外兜底处理，未找到符合用途的楼",
         "role": "research",
         "status": "out_of_scene"
       }
@@ -334,12 +334,12 @@
     ],
     "illustrative": true,
     "map_ref": {
-      "manifest_sha256": "b8ac2913f662e13bdfd77b6fd330c5df41d2683305a6e255f304c1d7e5a5dd03",
+      "manifest_sha256": "448d81cc1d0956a479664a9ed37991ec524fd7e02c696dac8374cd04fe260f69",
       "map_id": "public-ustc-render-b",
       "map_version": "1"
     },
     "mode": "map",
-    "result_sha256": "d9644e7f65e3dab57df2cfab2708164130e1a943628ae3e1af54aab168f50a76",
+    "result_sha256": "9fc8d8502de89b6302198bb0fca2fd41e04a00394523be7a3567a59bb53a9bcb",
     "rules": {
       "brand_prefs": {
         "样例商品丙": {
@@ -395,7 +395,7 @@
         }
       }
     },
-    "scene_id": "scene_c3f52713d96b00ad22d199c0",
+    "scene_id": "scene_8cfd658f99fec6cc749986b5",
     "scene_revision": 1,
     "schema_version": "scene.result.v1",
     "service_points": [
@@ -407,7 +407,7 @@
         "evidence": [],
         "fallback_used": "out_of_scene",
         "owner_entity_id": "synthetic_person_05",
-        "reason": "Confirmed out_of_scene fallback; no valid function candidate",
+        "reason": "按已确认的场外兜底处理，未找到符合用途的楼",
         "service_id": "service_05c7374af5b26dd59a2831d8",
         "status": "out_of_scene"
       },
@@ -434,7 +434,7 @@
         ],
         "fallback_used": null,
         "owner_entity_id": "synthetic_person_04",
-        "reason": "User-confirmed explicit override",
+        "reason": "按已确认的指定楼栋安置，入口可达",
         "service_id": "service_e74677be53dcc0deb2928efc",
         "status": "placed"
       },
@@ -461,7 +461,7 @@
         ],
         "fallback_used": null,
         "owner_entity_id": "synthetic_person_03",
-        "reason": "User-confirmed explicit override",
+        "reason": "按已确认的指定楼栋安置，入口可达",
         "service_id": "service_b5a59fc83b741bdc8f4abd98",
         "status": "placed"
       }

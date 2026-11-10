@@ -5,7 +5,7 @@
   "valid": false,
   "result": {
     "schema_version": "scene.result.v1",
-    "scene_id": "scene_2132964e559040776e5b41e6",
+    "scene_id": "scene_bd2bbe646b052b55dd23a556",
     "scene_revision": 1,
     "mode": "none",
     "illustrative": true,
@@ -20,7 +20,7 @@
     "assignment_meta": {
       "assignment_seed": 42,
       "rules_version": "1",
-      "resolver_version": "1",
+      "resolver_version": "1.1",
       "rules_sha256": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a"
     },
     "rules": {},
@@ -31,7 +31,7 @@
     "assignments": [],
     "service_points": [],
     "warnings": [],
-    "result_sha256": "b9a49ef62734eac88b2f9c9be1ae3d4442a8dcc7947e38a6e6ced90def96e8b6"
+    "result_sha256": "4ab660a94c30df11f0dbbf9944de38a9ada4a4b478daea305c9abcb0fe451d49"
   },
   "context_ref": "context.json",
   "code": "INVALID_SCENE"

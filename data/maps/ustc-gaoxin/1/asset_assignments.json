@@ -1,0 +1,2377 @@
+{
+  "assignments": [
+    {
+      "feature_id": "way/1242495998",
+      "feature_type": "road",
+      "license": {
+        "note": "项目程序生成，随仓库源码提供；未另行授予外部模型许可",
+        "path": "NOTICE.md",
+        "spdx": "LicenseRef-MeCoffe-Project"
+      },
+      "params": {
+        "asphalt": "#444c52",
+        "generator": "road",
+        "lane_width_m": 3.1,
+        "lanes": 2,
+        "preview_scale": 0.85,
+        "sidewalk_m": 2.3
+      },
+      "prototype_id": "road.residential",
+      "reason": [
+        "highway=residential matches ['residential', 'residential_link']"
+      ],
+      "source": {
+        "author": "MeCoffe contributors",
+        "path": "frontend/src/mecoffe/",
+        "title": "MeCoffe 程序生成",
+        "type": "procedural"
+      },
+      "variant_id": "compact"
+    },
+    {
+      "feature_id": "way/1242495999",
+      "feature_type": "road",
+      "license": {
+        "note": "项目程序生成，随仓库源码提供；未另行授予外部模型许可",
+        "path": "NOTICE.md",
+        "spdx": "LicenseRef-MeCoffe-Project"
+      },
+      "params": {
+        "asphalt": "#444c52",
+        "generator": "road",
+        "lane_width_m": 3.1,
+        "lanes": 2,
+        "preview_scale": 1.15,
+        "sidewalk_m": 2.3
+      },
+      "prototype_id": "road.residential",
+      "reason": [
+        "highway=residential matches ['residential', 'residential_link']"
+      ],
+      "source": {
+        "author": "MeCoffe contributors",
+        "path": "frontend/src/mecoffe/",
+        "title": "MeCoffe 程序生成",
+        "type": "procedural"
+      },
+      "variant_id": "extended"
+    },
+    {
+      "feature_id": "way/1242496000",
+      "feature_type": "road",
+      "license": {
+        "note": "项目程序生成，随仓库源码提供；未另行授予外部模型许可",
+        "path": "NOTICE.md",
+        "spdx": "LicenseRef-MeCoffe-Project"
+      },
+      "params": {
+        "color": "#6c7675",
+        "edge_width_m": 0.7,
+        "generator": "road",
+        "preview_scale": 0.85,
+        "width_m": 6
+      },
+      "prototype_id": "road.campus",
+      "reason": [
+        "highway=service matches service"
+      ],
+      "source": {
+        "author": "MeCoffe contributors",
+        "path": "frontend/src/mecoffe/",
+        "title": "MeCoffe 程序生成",
+        "type": "procedural"
+      },
+      "variant_id": "compact"
+    },
+    {
+      "feature_id": "way/1242496001",
+      "feature_type": "road",
+      "license": {
+        "note": "项目程序生成，随仓库源码提供；未另行授予外部模型许可",
+        "path": "NOTICE.md",
+        "spdx": "LicenseRef-MeCoffe-Project"
+      },
+      "params": {
+        "color": "#6c7675",
+        "edge_width_m": 0.7,
+        "generator": "road",
+        "preview_scale": 0.85,
+        "width_m": 6
+      },
+      "prototype_id": "road.campus",
+      "reason": [
+        "highway=service matches service"
+      ],
+      "source": {
+        "author": "MeCoffe contributors",
+        "path": "frontend/src/mecoffe/",
+        "title": "MeCoffe 程序生成",
+        "type": "procedural"
+      },
+      "variant_id": "compact"
+    },
+    {
+      "feature_id": "way/1242496002",
+      "feature_type": "road",
+      "license": {
+        "note": "项目程序生成，随仓库源码提供；未另行授予外部模型许可",
+        "path": "NOTICE.md",
+        "spdx": "LicenseRef-MeCoffe-Project"
+      },
+      "params": {
+        "asphalt": "#444c52",
+        "generator": "road",
+        "lane_width_m": 3.1,
+        "lanes": 2,
+        "preview_scale": 0.85,
+        "sidewalk_m": 2.3
+      },
+      "prototype_id": "road.residential",
+      "reason": [
+        "highway=residential matches ['residential', 'residential_link']"
+      ],
+      "source": {
+        "author": "MeCoffe contributors",
+        "path": "frontend/src/mecoffe/",
+        "title": "MeCoffe 程序生成",
+        "type": "procedural"
+      },
+      "variant_id": "compact"
+    },
+    {
+      "feature_id": "way/1242496003",
+      "feature_type": "road",
+      "license": {
+        "note": "项目程序生成，随仓库源码提供；未另行授予外部模型许可",
+        "path": "NOTICE.md",
+        "spdx": "LicenseRef-MeCoffe-Project"
+      },
+      "params": {
+        "asphalt": "#444c52",
+        "generator": "road",
+        "lane_width_m": 3.1,
+        "lanes": 2,
+        "sidewalk_m": 2.3
+      },
+      "prototype_id": "road.residential",
+      "reason": [
+        "highway=residential matches ['residential', 'residential_link']"
+      ],
+      "source": {
+        "author": "MeCoffe contributors",
+        "path": "frontend/src/mecoffe/",
+        "title": "MeCoffe 程序生成",
+        "type": "procedural"
+      },
+      "variant_id": "default"
+    },
+    {
+      "feature_id": "way/1242496004",
+      "feature_type": "road",
+      "license": {
+        "note": "项目程序生成，随仓库源码提供；未另行授予外部模型许可",
+        "path": "NOTICE.md",
+        "spdx": "LicenseRef-MeCoffe-Project"
+      },
+      "params": {
+        "asphalt": "#444c52",
+        "generator": "road",
+        "lane_width_m": 3.1,
+        "lanes": 2,
+        "sidewalk_m": 2.3
+      },
+      "prototype_id": "road.residential",
+      "reason": [
+        "highway=residential matches ['residential', 'residential_link']"
+      ],
+      "source": {
+        "author": "MeCoffe contributors",
+        "path": "frontend/src/mecoffe/",
+        "title": "MeCoffe 程序生成",
+        "type": "procedural"
+      },
+      "variant_id": "default"
+    },
+    {
+      "feature_id": "way/1242496005",
+      "feature_type": "road",
+      "license": {
+        "note": "项目程序生成，随仓库源码提供；未另行授予外部模型许可",
+        "path": "NOTICE.md",
+        "spdx": "LicenseRef-MeCoffe-Project"
+      },
+      "params": {
+        "asphalt": "#444c52",
+        "generator": "road",
+        "lane_width_m": 3.1,
+        "lanes": 2,
+        "preview_scale": 0.85,
+        "sidewalk_m": 2.3
+      },
+      "prototype_id": "road.residential",
+      "reason": [
+        "highway=residential matches ['residential', 'residential_link']"
+      ],
+      "source": {
+        "author": "MeCoffe contributors",
+        "path": "frontend/src/mecoffe/",
+        "title": "MeCoffe 程序生成",
+        "type": "procedural"
+      },
+      "variant_id": "compact"
+    },
+    {
+      "feature_id": "way/1242496006",
+      "feature_type": "road",
+      "license": {
+        "note": "项目程序生成，随仓库源码提供；未另行授予外部模型许可",
+        "path": "NOTICE.md",
+        "spdx": "LicenseRef-MeCoffe-Project"
+      },
+      "params": {
+        "asphalt": "#444c52",
+        "generator": "road",
+        "lane_width_m": 3.1,
+        "lanes": 2,
+        "preview_scale": 1.15,
+        "sidewalk_m": 2.3
+      },
+      "prototype_id": "road.residential",
+      "reason": [
+        "highway=residential matches ['residential', 'residential_link']"
+      ],
+      "source": {
+        "author": "MeCoffe contributors",
+        "path": "frontend/src/mecoffe/",
+        "title": "MeCoffe 程序生成",
+        "type": "procedural"
+      },
+      "variant_id": "extended"
+    },
+    {
+      "feature_id": "way/1242496007",
+      "feature_type": "road",
+      "license": {
+        "note": "项目程序生成，随仓库源码提供；未另行授予外部模型许可",
+        "path": "NOTICE.md",
+        "spdx": "LicenseRef-MeCoffe-Project"
+      },
+      "params": {
+        "color": "#6c7675",
+        "edge_width_m": 0.7,
+        "generator": "road",
+        "preview_scale": 0.85,
+        "width_m": 6
+      },
+      "prototype_id": "road.campus",
+      "reason": [
+        "highway=service matches service"
+      ],
+      "source": {
+        "author": "MeCoffe contributors",
+        "path": "frontend/src/mecoffe/",
+        "title": "MeCoffe 程序生成",
+        "type": "procedural"
+      },
+      "variant_id": "compact"
+    },
+    {
+      "feature_id": "way/1242496008",
+      "feature_type": "road",
+      "license": {
+        "note": "项目程序生成，随仓库源码提供；未另行授予外部模型许可",
+        "path": "NOTICE.md",
+        "spdx": "LicenseRef-MeCoffe-Project"
+      },
+      "params": {
+        "asphalt": "#444c52",
+        "generator": "road",
+        "lane_width_m": 3.1,
+        "lanes": 2,
+        "preview_scale": 1.15,
+        "sidewalk_m": 2.3
+      },
+      "prototype_id": "road.residential",
+      "reason": [
+        "highway=residential matches ['residential', 'residential_link']"
+      ],
+      "source": {
+        "author": "MeCoffe contributors",
+        "path": "frontend/src/mecoffe/",
+        "title": "MeCoffe 程序生成",
+        "type": "procedural"
+      },
+      "variant_id": "extended"
+    },
+    {
+      "feature_id": "way/1242496009",
+      "feature_type": "road",
+      "license": {
+        "note": "项目程序生成，随仓库源码提供；未另行授予外部模型许可",
+        "path": "NOTICE.md",
+        "spdx": "LicenseRef-MeCoffe-Project"
+      },
+      "params": {
+        "color": "#6c7675",
+        "edge_width_m": 0.7,
+        "generator": "road",
+        "preview_scale": 0.85,
+        "width_m": 6
+      },
+      "prototype_id": "road.campus",
+      "reason": [
+        "highway=service matches service"
+      ],
+      "source": {
+        "author": "MeCoffe contributors",
+        "path": "frontend/src/mecoffe/",
+        "title": "MeCoffe 程序生成",
+        "type": "procedural"
+      },
+      "variant_id": "compact"
+    },
+    {
+      "feature_id": "way/1242496010",
+      "feature_type": "road",
+      "license": {
+        "note": "项目程序生成，随仓库源码提供；未另行授予外部模型许可",
+        "path": "NOTICE.md",
+        "spdx": "LicenseRef-MeCoffe-Project"
+      },
+      "params": {
+        "color": "#d1c5a8",
+        "generator": "road",
+        "width_m": 2.5
+      },
+      "prototype_id": "road.footway",
+      "reason": [
+        "highway=footway matches ['footway', 'path', 'steps', 'pedestrian', 'cycleway']"
+      ],
+      "source": {
+        "author": "MeCoffe contributors",
+        "path": "frontend/src/mecoffe/",
+        "title": "MeCoffe 程序生成",
+        "type": "procedural"
+      },
+      "variant_id": "default"
+    },
+    {
+      "feature_id": "way/1242496011",
+      "feature_type": "road",
+      "license": {
+        "note": "项目程序生成，随仓库源码提供；未另行授予外部模型许可",
+        "path": "NOTICE.md",
+        "spdx": "LicenseRef-MeCoffe-Project"
+      },
+      "params": {
+        "color": "#d1c5a8",
+        "generator": "road",
+        "width_m": 2.5
+      },
+      "prototype_id": "road.footway",
+      "reason": [
+        "highway=footway matches ['footway', 'path', 'steps', 'pedestrian', 'cycleway']"
+      ],
+      "source": {
+        "author": "MeCoffe contributors",
+        "path": "frontend/src/mecoffe/",
+        "title": "MeCoffe 程序生成",
+        "type": "procedural"
+      },
+      "variant_id": "default"
+    },
+    {
+      "feature_id": "way/1242496012",
+      "feature_type": "road",
+      "license": {
+        "note": "项目程序生成，随仓库源码提供；未另行授予外部模型许可",
+        "path": "NOTICE.md",
+        "spdx": "LicenseRef-MeCoffe-Project"
+      },
+      "params": {
+        "color": "#d1c5a8",
+        "generator": "road",
+        "preview_scale": 0.85,
+        "width_m": 2.5
+      },
+      "prototype_id": "road.footway",
+      "reason": [
+        "highway=footway matches ['footway', 'path', 'steps', 'pedestrian', 'cycleway']"
+      ],
+      "source": {
+        "author": "MeCoffe contributors",
+        "path": "frontend/src/mecoffe/",
+        "title": "MeCoffe 程序生成",
+        "type": "procedural"
+      },
+      "variant_id": "compact"
+    },
+    {
+      "feature_id": "way/1242496013",
+      "feature_type": "road",
+      "license": {
+        "note": "项目程序生成，随仓库源码提供；未另行授予外部模型许可",
+        "path": "NOTICE.md",
+        "spdx": "LicenseRef-MeCoffe-Project"
+      },
+      "params": {
+        "color": "#6c7675",
+        "edge_width_m": 0.7,
+        "generator": "road",
+        "width_m": 6
+      },
+      "prototype_id": "road.campus",
+      "reason": [
+        "highway=service matches service"
+      ],
+      "source": {
+        "author": "MeCoffe contributors",
+        "path": "frontend/src/mecoffe/",
+        "title": "MeCoffe 程序生成",
+        "type": "procedural"
+      },
+      "variant_id": "default"
+    },
+    {
+      "feature_id": "way/1242496014",
+      "feature_type": "road",
+      "license": {
+        "note": "项目程序生成，随仓库源码提供；未另行授予外部模型许可",
+        "path": "NOTICE.md",
+        "spdx": "LicenseRef-MeCoffe-Project"
+      },
+      "params": {
+        "color": "#d1c5a8",
+        "generator": "road",
+        "preview_scale": 1.15,
+        "width_m": 2.5
+      },
+      "prototype_id": "road.footway",
+      "reason": [
+        "highway=footway matches ['footway', 'path', 'steps', 'pedestrian', 'cycleway']"
+      ],
+      "source": {
+        "author": "MeCoffe contributors",
+        "path": "frontend/src/mecoffe/",
+        "title": "MeCoffe 程序生成",
+        "type": "procedural"
+      },
+      "variant_id": "extended"
+    },
+    {
+      "feature_id": "way/1242496015",
+      "feature_type": "road",
+      "license": {
+        "note": "项目程序生成，随仓库源码提供；未另行授予外部模型许可",
+        "path": "NOTICE.md",
+        "spdx": "LicenseRef-MeCoffe-Project"
+      },
+      "params": {
+        "color": "#d1c5a8",
+        "generator": "road",
+        "width_m": 2.5
+      },
+      "prototype_id": "road.footway",
+      "reason": [
+        "highway=footway matches ['footway', 'path', 'steps', 'pedestrian', 'cycleway']"
+      ],
+      "source": {
+        "author": "MeCoffe contributors",
+        "path": "frontend/src/mecoffe/",
+        "title": "MeCoffe 程序生成",
+        "type": "procedural"
+      },
+      "variant_id": "default"
+    },
+    {
+      "feature_id": "way/1242496016",
+      "feature_type": "road",
+      "license": {
+        "note": "项目程序生成，随仓库源码提供；未另行授予外部模型许可",
+        "path": "NOTICE.md",
+        "spdx": "LicenseRef-MeCoffe-Project"
+      },
+      "params": {
+        "color": "#d1c5a8",
+        "generator": "road",
+        "preview_scale": 0.85,
+        "width_m": 2.5
+      },
+      "prototype_id": "road.footway",
+      "reason": [
+        "highway=footway matches ['footway', 'path', 'steps', 'pedestrian', 'cycleway']"
+      ],
+      "source": {
+        "author": "MeCoffe contributors",
+        "path": "frontend/src/mecoffe/",
+        "title": "MeCoffe 程序生成",
+        "type": "procedural"
+      },
+      "variant_id": "compact"
+    },
+    {
+      "feature_id": "way/1242496017",
+      "feature_type": "road",
+      "license": {
+        "note": "项目程序生成，随仓库源码提供；未另行授予外部模型许可",
+        "path": "NOTICE.md",
+        "spdx": "LicenseRef-MeCoffe-Project"
+      },
+      "params": {
+        "color": "#d1c5a8",
+        "generator": "road",
+        "preview_scale": 0.85,
+        "width_m": 2.5
+      },
+      "prototype_id": "road.footway",
+      "reason": [
+        "highway=footway matches ['footway', 'path', 'steps', 'pedestrian', 'cycleway']"
+      ],
+      "source": {
+        "author": "MeCoffe contributors",
+        "path": "frontend/src/mecoffe/",
+        "title": "MeCoffe 程序生成",
+        "type": "procedural"
+      },
+      "variant_id": "compact"
+    },
+    {
+      "feature_id": "way/1242496018",
+      "feature_type": "road",
+      "license": {
+        "note": "项目程序生成，随仓库源码提供；未另行授予外部模型许可",
+        "path": "NOTICE.md",
+        "spdx": "LicenseRef-MeCoffe-Project"
+      },
+      "params": {
+        "color": "#d1c5a8",
+        "generator": "road",
+        "width_m": 2.5
+      },
+      "prototype_id": "road.footway",
+      "reason": [
+        "highway=footway matches ['footway', 'path', 'steps', 'pedestrian', 'cycleway']"
+      ],
+      "source": {
+        "author": "MeCoffe contributors",
+        "path": "frontend/src/mecoffe/",
+        "title": "MeCoffe 程序生成",
+        "type": "procedural"
+      },
+      "variant_id": "default"
+    },
+    {
+      "feature_id": "way/1242496019",
+      "feature_type": "road",
+      "license": {
+        "note": "项目程序生成，随仓库源码提供；未另行授予外部模型许可",
+        "path": "NOTICE.md",
+        "spdx": "LicenseRef-MeCoffe-Project"
+      },
+      "params": {
+        "asphalt": "#444c52",
+        "generator": "road",
+        "lane_width_m": 3.1,
+        "lanes": 2,
+        "preview_scale": 1.15,
+        "sidewalk_m": 2.3
+      },
+      "prototype_id": "road.residential",
+      "reason": [
+        "highway=residential matches ['residential', 'residential_link']"
+      ],
+      "source": {
+        "author": "MeCoffe contributors",
+        "path": "frontend/src/mecoffe/",
+        "title": "MeCoffe 程序生成",
+        "type": "procedural"
+      },
+      "variant_id": "extended"
+    },
+    {
+      "feature_id": "way/1242496021",
+      "feature_type": "road",
+      "license": {
+        "note": "项目程序生成，随仓库源码提供；未另行授予外部模型许可",
+        "path": "NOTICE.md",
+        "spdx": "LicenseRef-MeCoffe-Project"
+      },
+      "params": {
+        "color": "#6c7675",
+        "edge_width_m": 0.7,
+        "generator": "road",
+        "width_m": 6
+      },
+      "prototype_id": "road.campus",
+      "reason": [
+        "highway=service matches service"
+      ],
+      "source": {
+        "author": "MeCoffe contributors",
+        "path": "frontend/src/mecoffe/",
+        "title": "MeCoffe 程序生成",
+        "type": "procedural"
+      },
+      "variant_id": "default"
+    },
+    {
+      "feature_id": "way/1242496022",
+      "feature_type": "road",
+      "license": {
+        "note": "项目程序生成，随仓库源码提供；未另行授予外部模型许可",
+        "path": "NOTICE.md",
+        "spdx": "LicenseRef-MeCoffe-Project"
+      },
+      "params": {
+        "color": "#6c7675",
+        "edge_width_m": 0.7,
+        "generator": "road",
+        "width_m": 6
+      },
+      "prototype_id": "road.campus",
+      "reason": [
+        "highway=service matches service"
+      ],
+      "source": {
+        "author": "MeCoffe contributors",
+        "path": "frontend/src/mecoffe/",
+        "title": "MeCoffe 程序生成",
+        "type": "procedural"
+      },
+      "variant_id": "default"
+    },
+    {
+      "feature_id": "way/1242496023",
+      "feature_type": "road",
+      "license": {
+        "note": "项目程序生成，随仓库源码提供；未另行授予外部模型许可",
+        "path": "NOTICE.md",
+        "spdx": "LicenseRef-MeCoffe-Project"
+      },
+      "params": {
+        "asphalt": "#444c52",
+        "generator": "road",
+        "lane_width_m": 3.1,
+        "lanes": 2,
+        "preview_scale": 1.15,
+        "sidewalk_m": 2.3
+      },
+      "prototype_id": "road.residential",
+      "reason": [
+        "highway=residential matches ['residential', 'residential_link']"
+      ],
+      "source": {
+        "author": "MeCoffe contributors",
+        "path": "frontend/src/mecoffe/",
+        "title": "MeCoffe 程序生成",
+        "type": "procedural"
+      },
+      "variant_id": "extended"
+    },
+    {
+      "feature_id": "way/1242496024",
+      "feature_type": "road",
+      "license": {
+        "note": "项目程序生成，随仓库源码提供；未另行授予外部模型许可",
+        "path": "NOTICE.md",
+        "spdx": "LicenseRef-MeCoffe-Project"
+      },
+      "params": {
+        "color": "#6c7675",
+        "edge_width_m": 0.7,
+        "generator": "road",
+        "width_m": 6
+      },
+      "prototype_id": "road.campus",
+      "reason": [
+        "highway=service matches service"
+      ],
+      "source": {
+        "author": "MeCoffe contributors",
+        "path": "frontend/src/mecoffe/",
+        "title": "MeCoffe 程序生成",
+        "type": "procedural"
+      },
+      "variant_id": "default"
+    },
+    {
+      "feature_id": "way/1242496025",
+      "feature_type": "road",
+      "license": {
+        "note": "项目程序生成，随仓库源码提供；未另行授予外部模型许可",
+        "path": "NOTICE.md",
+        "spdx": "LicenseRef-MeCoffe-Project"
+      },
+      "params": {
+        "color": "#6c7675",
+        "edge_width_m": 0.7,
+        "generator": "road",
+        "preview_scale": 1.15,
+        "width_m": 6
+      },
+      "prototype_id": "road.campus",
+      "reason": [
+        "highway=service matches service"
+      ],
+      "source": {
+        "author": "MeCoffe contributors",
+        "path": "frontend/src/mecoffe/",
+        "title": "MeCoffe 程序生成",
+        "type": "procedural"
+      },
+      "variant_id": "extended"
+    },
+    {
+      "feature_id": "way/1242496026",
+      "feature_type": "road",
+      "license": {
+        "note": "项目程序生成，随仓库源码提供；未另行授予外部模型许可",
+        "path": "NOTICE.md",
+        "spdx": "LicenseRef-MeCoffe-Project"
+      },
+      "params": {
+        "color": "#6c7675",
+        "edge_width_m": 0.7,
+        "generator": "road",
+        "width_m": 6
+      },
+      "prototype_id": "road.campus",
+      "reason": [
+        "highway=service matches service"
+      ],
+      "source": {
+        "author": "MeCoffe contributors",
+        "path": "frontend/src/mecoffe/",
+        "title": "MeCoffe 程序生成",
+        "type": "procedural"
+      },
+      "variant_id": "default"
+    },
+    {
+      "feature_id": "way/1242496027",
+      "feature_type": "road",
+      "license": {
+        "note": "项目程序生成，随仓库源码提供；未另行授予外部模型许可",
+        "path": "NOTICE.md",
+        "spdx": "LicenseRef-MeCoffe-Project"
+      },
+      "params": {
+        "color": "#6c7675",
+        "edge_width_m": 0.7,
+        "generator": "road",
+        "width_m": 6
+      },
+      "prototype_id": "road.campus",
+      "reason": [
+        "highway=service matches service"
+      ],
+      "source": {
+        "author": "MeCoffe contributors",
+        "path": "frontend/src/mecoffe/",
+        "title": "MeCoffe 程序生成",
+        "type": "procedural"
+      },
+      "variant_id": "default"
+    },
+    {
+      "feature_id": "way/1242496028",
+      "feature_type": "road",
+      "license": {
+        "note": "项目程序生成，随仓库源码提供；未另行授予外部模型许可",
+        "path": "NOTICE.md",
+        "spdx": "LicenseRef-MeCoffe-Project"
+      },
+      "params": {
+        "color": "#6c7675",
+        "edge_width_m": 0.7,
+        "generator": "road",
+        "preview_scale": 0.85,
+        "width_m": 6
+      },
+      "prototype_id": "road.campus",
+      "reason": [
+        "highway=service matches service"
+      ],
+      "source": {
+        "author": "MeCoffe contributors",
+        "path": "frontend/src/mecoffe/",
+        "title": "MeCoffe 程序生成",
+        "type": "procedural"
+      },
+      "variant_id": "compact"
+    },
+    {
+      "feature_id": "way/1242496029",
+      "feature_type": "road",
+      "license": {
+        "note": "项目程序生成，随仓库源码提供；未另行授予外部模型许可",
+        "path": "NOTICE.md",
+        "spdx": "LicenseRef-MeCoffe-Project"
+      },
+      "params": {
+        "color": "#6c7675",
+        "edge_width_m": 0.7,
+        "generator": "road",
+        "width_m": 6
+      },
+      "prototype_id": "road.campus",
+      "reason": [
+        "highway=service matches service"
+      ],
+      "source": {
+        "author": "MeCoffe contributors",
+        "path": "frontend/src/mecoffe/",
+        "title": "MeCoffe 程序生成",
+        "type": "procedural"
+      },
+      "variant_id": "default"
+    },
+    {
+      "feature_id": "way/1242496030",
+      "feature_type": "road",
+      "license": {
+        "note": "项目程序生成，随仓库源码提供；未另行授予外部模型许可",
+        "path": "NOTICE.md",
+        "spdx": "LicenseRef-MeCoffe-Project"
+      },
+      "params": {
+        "color": "#d1c5a8",
+        "generator": "road",
+        "width_m": 2.5
+      },
+      "prototype_id": "road.footway",
+      "reason": [
+        "highway=footway matches ['footway', 'path', 'steps', 'pedestrian', 'cycleway']"
+      ],
+      "source": {
+        "author": "MeCoffe contributors",
+        "path": "frontend/src/mecoffe/",
+        "title": "MeCoffe 程序生成",
+        "type": "procedural"
+      },
+      "variant_id": "default"
+    },
+    {
+      "feature_id": "way/1242496031",
+      "feature_type": "road",
+      "license": {
+        "note": "项目程序生成，随仓库源码提供；未另行授予外部模型许可",
+        "path": "NOTICE.md",
+        "spdx": "LicenseRef-MeCoffe-Project"
+      },
+      "params": {
+        "color": "#d1c5a8",
+        "generator": "road",
+        "width_m": 2.5
+      },
+      "prototype_id": "road.footway",
+      "reason": [
+        "highway=footway matches ['footway', 'path', 'steps', 'pedestrian', 'cycleway']"
+      ],
+      "source": {
+        "author": "MeCoffe contributors",
+        "path": "frontend/src/mecoffe/",
+        "title": "MeCoffe 程序生成",
+        "type": "procedural"
+      },
+      "variant_id": "default"
+    },
+    {
+      "feature_id": "way/1242496032",
+      "feature_type": "road",
+      "license": {
+        "note": "项目程序生成，随仓库源码提供；未另行授予外部模型许可",
+        "path": "NOTICE.md",
+        "spdx": "LicenseRef-MeCoffe-Project"
+      },
+      "params": {
+        "color": "#6c7675",
+        "edge_width_m": 0.7,
+        "generator": "road",
+        "preview_scale": 0.85,
+        "width_m": 6
+      },
+      "prototype_id": "road.campus",
+      "reason": [
+        "highway=service matches service"
+      ],
+      "source": {
+        "author": "MeCoffe contributors",
+        "path": "frontend/src/mecoffe/",
+        "title": "MeCoffe 程序生成",
+        "type": "procedural"
+      },
+      "variant_id": "compact"
+    },
+    {
+      "feature_id": "way/1242496033",
+      "feature_type": "road",
+      "license": {
+        "note": "项目程序生成，随仓库源码提供；未另行授予外部模型许可",
+        "path": "NOTICE.md",
+        "spdx": "LicenseRef-MeCoffe-Project"
+      },
+      "params": {
+        "color": "#6c7675",
+        "edge_width_m": 0.7,
+        "generator": "road",
+        "preview_scale": 0.85,
+        "width_m": 6
+      },
+      "prototype_id": "road.campus",
+      "reason": [
+        "highway=service matches service"
+      ],
+      "source": {
+        "author": "MeCoffe contributors",
+        "path": "frontend/src/mecoffe/",
+        "title": "MeCoffe 程序生成",
+        "type": "procedural"
+      },
+      "variant_id": "compact"
+    },
+    {
+      "feature_id": "way/1242496035",
+      "feature_type": "road",
+      "license": {
+        "note": "项目程序生成，随仓库源码提供；未另行授予外部模型许可",
+        "path": "NOTICE.md",
+        "spdx": "LicenseRef-MeCoffe-Project"
+      },
+      "params": {
+        "asphalt": "#444c52",
+        "generator": "road",
+        "lane_width_m": 3.1,
+        "lanes": 2,
+        "sidewalk_m": 2.3
+      },
+      "prototype_id": "road.residential",
+      "reason": [
+        "highway=residential matches ['residential', 'residential_link']"
+      ],
+      "source": {
+        "author": "MeCoffe contributors",
+        "path": "frontend/src/mecoffe/",
+        "title": "MeCoffe 程序生成",
+        "type": "procedural"
+      },
+      "variant_id": "default"
+    },
+    {
+      "feature_id": "way/1242496036",
+      "feature_type": "road",
+      "license": {
+        "note": "项目程序生成，随仓库源码提供；未另行授予外部模型许可",
+        "path": "NOTICE.md",
+        "spdx": "LicenseRef-MeCoffe-Project"
+      },
+      "params": {
+        "asphalt": "#444c52",
+        "generator": "road",
+        "lane_width_m": 3.1,
+        "lanes": 2,
+        "preview_scale": 1.15,
+        "sidewalk_m": 2.3
+      },
+      "prototype_id": "road.residential",
+      "reason": [
+        "highway=residential matches ['residential', 'residential_link']"
+      ],
+      "source": {
+        "author": "MeCoffe contributors",
+        "path": "frontend/src/mecoffe/",
+        "title": "MeCoffe 程序生成",
+        "type": "procedural"
+      },
+      "variant_id": "extended"
+    },
+    {
+      "feature_id": "way/1242498644",
+      "feature_type": "road",
+      "license": {
+        "note": "项目程序生成，随仓库源码提供；未另行授予外部模型许可",
+        "path": "NOTICE.md",
+        "spdx": "LicenseRef-MeCoffe-Project"
+      },
+      "params": {
+        "asphalt": "#444c52",
+        "generator": "road",
+        "lane_width_m": 3.1,
+        "lanes": 2,
+        "sidewalk_m": 2.3
+      },
+      "prototype_id": "road.tertiary",
+      "reason": [
+        "highway=tertiary_link matches ['tertiary', 'tertiary_link']"
+      ],
+      "source": {
+        "author": "MeCoffe contributors",
+        "path": "frontend/src/mecoffe/",
+        "title": "MeCoffe 程序生成",
+        "type": "procedural"
+      },
+      "variant_id": "default"
+    },
+    {
+      "feature_id": "way/1242498645",
+      "feature_type": "road",
+      "license": {
+        "note": "项目程序生成，随仓库源码提供；未另行授予外部模型许可",
+        "path": "NOTICE.md",
+        "spdx": "LicenseRef-MeCoffe-Project"
+      },
+      "params": {
+        "asphalt": "#444c52",
+        "generator": "road",
+        "lane_width_m": 3.1,
+        "lanes": 2,
+        "preview_scale": 1.15,
+        "sidewalk_m": 2.3
+      },
+      "prototype_id": "road.tertiary",
+      "reason": [
+        "highway=tertiary_link matches ['tertiary', 'tertiary_link']"
+      ],
+      "source": {
+        "author": "MeCoffe contributors",
+        "path": "frontend/src/mecoffe/",
+        "title": "MeCoffe 程序生成",
+        "type": "procedural"
+      },
+      "variant_id": "extended"
+    },
+    {
+      "feature_id": "way/1242498647",
+      "feature_type": "road",
+      "license": {
+        "note": "项目程序生成，随仓库源码提供；未另行授予外部模型许可",
+        "path": "NOTICE.md",
+        "spdx": "LicenseRef-MeCoffe-Project"
+      },
+      "params": {
+        "asphalt": "#444c52",
+        "generator": "road",
+        "lane_width_m": 3.4,
+        "lanes": 4,
+        "preview_scale": 0.85,
+        "sidewalk_m": 2.3
+      },
+      "prototype_id": "road.primary",
+      "reason": [
+        "highway=primary matches ['primary', 'primary_link']"
+      ],
+      "source": {
+        "author": "MeCoffe contributors",
+        "path": "frontend/src/mecoffe/",
+        "title": "MeCoffe 程序生成",
+        "type": "procedural"
+      },
+      "variant_id": "compact"
+    },
+    {
+      "feature_id": "way/1242498649",
+      "feature_type": "road",
+      "license": {
+        "note": "项目程序生成，随仓库源码提供；未另行授予外部模型许可",
+        "path": "NOTICE.md",
+        "spdx": "LicenseRef-MeCoffe-Project"
+      },
+      "params": {
+        "asphalt": "#444c52",
+        "generator": "road",
+        "lane_width_m": 3.4,
+        "lanes": 4,
+        "preview_scale": 0.85,
+        "sidewalk_m": 2.3
+      },
+      "prototype_id": "road.primary",
+      "reason": [
+        "highway=primary matches ['primary', 'primary_link']"
+      ],
+      "source": {
+        "author": "MeCoffe contributors",
+        "path": "frontend/src/mecoffe/",
+        "title": "MeCoffe 程序生成",
+        "type": "procedural"
+      },
+      "variant_id": "compact"
+    },
+    {
+      "feature_id": "way/1242498650",
+      "feature_type": "road",
+      "license": {
+        "note": "项目程序生成，随仓库源码提供；未另行授予外部模型许可",
+        "path": "NOTICE.md",
+        "spdx": "LicenseRef-MeCoffe-Project"
+      },
+      "params": {
+        "asphalt": "#444c52",
+        "generator": "road",
+        "lane_width_m": 3.1,
+        "lanes": 2,
+        "sidewalk_m": 2.3
+      },
+      "prototype_id": "road.tertiary",
+      "reason": [
+        "highway=tertiary_link matches ['tertiary', 'tertiary_link']"
+      ],
+      "source": {
+        "author": "MeCoffe contributors",
+        "path": "frontend/src/mecoffe/",
+        "title": "MeCoffe 程序生成",
+        "type": "procedural"
+      },
+      "variant_id": "default"
+    },
+    {
+      "feature_id": "way/1242498651",
+      "feature_type": "road",
+      "license": {
+        "note": "项目程序生成，随仓库源码提供；未另行授予外部模型许可",
+        "path": "NOTICE.md",
+        "spdx": "LicenseRef-MeCoffe-Project"
+      },
+      "params": {
+        "asphalt": "#444c52",
+        "generator": "road",
+        "lane_width_m": 3.1,
+        "lanes": 2,
+        "preview_scale": 0.85,
+        "sidewalk_m": 2.3
+      },
+      "prototype_id": "road.tertiary",
+      "reason": [
+        "highway=tertiary_link matches ['tertiary', 'tertiary_link']"
+      ],
+      "source": {
+        "author": "MeCoffe contributors",
+        "path": "frontend/src/mecoffe/",
+        "title": "MeCoffe 程序生成",
+        "type": "procedural"
+      },
+      "variant_id": "compact"
+    },
+    {
+      "feature_id": "way/1264703026",
+      "feature_type": "road",
+      "license": {
+        "note": "项目程序生成，随仓库源码提供；未另行授予外部模型许可",
+        "path": "NOTICE.md",
+        "spdx": "LicenseRef-MeCoffe-Project"
+      },
+      "params": {
+        "asphalt": "#444c52",
+        "generator": "road",
+        "lane_width_m": 3.4,
+        "lanes": 4,
+        "preview_scale": 0.85,
+        "sidewalk_m": 2.3
+      },
+      "prototype_id": "road.primary",
+      "reason": [
+        "highway=primary_link matches ['primary', 'primary_link']"
+      ],
+      "source": {
+        "author": "MeCoffe contributors",
+        "path": "frontend/src/mecoffe/",
+        "title": "MeCoffe 程序生成",
+        "type": "procedural"
+      },
+      "variant_id": "compact"
+    },
+    {
+      "feature_id": "way/1264703027",
+      "feature_type": "road",
+      "license": {
+        "note": "项目程序生成，随仓库源码提供；未另行授予外部模型许可",
+        "path": "NOTICE.md",
+        "spdx": "LicenseRef-MeCoffe-Project"
+      },
+      "params": {
+        "asphalt": "#444c52",
+        "generator": "road",
+        "lane_width_m": 3.4,
+        "lanes": 4,
+        "preview_scale": 1.15,
+        "sidewalk_m": 2.3
+      },
+      "prototype_id": "road.primary",
+      "reason": [
+        "highway=primary_link matches ['primary', 'primary_link']"
+      ],
+      "source": {
+        "author": "MeCoffe contributors",
+        "path": "frontend/src/mecoffe/",
+        "title": "MeCoffe 程序生成",
+        "type": "procedural"
+      },
+      "variant_id": "extended"
+    },
+    {
+      "feature_id": "way/1264703030",
+      "feature_type": "road",
+      "license": {
+        "note": "项目程序生成，随仓库源码提供；未另行授予外部模型许可",
+        "path": "NOTICE.md",
+        "spdx": "LicenseRef-MeCoffe-Project"
+      },
+      "params": {
+        "asphalt": "#444c52",
+        "generator": "road",
+        "lane_width_m": 3.4,
+        "lanes": 4,
+        "sidewalk_m": 2.3
+      },
+      "prototype_id": "road.primary",
+      "reason": [
+        "highway=primary matches ['primary', 'primary_link']"
+      ],
+      "source": {
+        "author": "MeCoffe contributors",
+        "path": "frontend/src/mecoffe/",
+        "title": "MeCoffe 程序生成",
+        "type": "procedural"
+      },
+      "variant_id": "default"
+    },
+    {
+      "feature_id": "way/1264703031",
+      "feature_type": "road",
+      "license": {
+        "note": "项目程序生成，随仓库源码提供；未另行授予外部模型许可",
+        "path": "NOTICE.md",
+        "spdx": "LicenseRef-MeCoffe-Project"
+      },
+      "params": {
+        "asphalt": "#444c52",
+        "generator": "road",
+        "lane_width_m": 3.4,
+        "lanes": 4,
+        "preview_scale": 0.85,
+        "sidewalk_m": 2.3
+      },
+      "prototype_id": "road.primary",
+      "reason": [
+        "highway=primary matches ['primary', 'primary_link']"
+      ],
+      "source": {
+        "author": "MeCoffe contributors",
+        "path": "frontend/src/mecoffe/",
+        "title": "MeCoffe 程序生成",
+        "type": "procedural"
+      },
+      "variant_id": "compact"
+    },
+    {
+      "feature_id": "way/1264703034",
+      "feature_type": "road",
+      "license": {
+        "note": "项目程序生成，随仓库源码提供；未另行授予外部模型许可",
+        "path": "NOTICE.md",
+        "spdx": "LicenseRef-MeCoffe-Project"
+      },
+      "params": {
+        "asphalt": "#444c52",
+        "generator": "road",
+        "lane_width_m": 3.1,
+        "lanes": 2,
+        "preview_scale": 0.85,
+        "sidewalk_m": 2.3
+      },
+      "prototype_id": "road.tertiary",
+      "reason": [
+        "highway=tertiary matches ['tertiary', 'tertiary_link']"
+      ],
+      "source": {
+        "author": "MeCoffe contributors",
+        "path": "frontend/src/mecoffe/",
+        "title": "MeCoffe 程序生成",
+        "type": "procedural"
+      },
+      "variant_id": "compact"
+    },
+    {
+      "feature_id": "way/1316321492",
+      "feature_type": "road",
+      "license": {
+        "note": "项目程序生成，随仓库源码提供；未另行授予外部模型许可",
+        "path": "NOTICE.md",
+        "spdx": "LicenseRef-MeCoffe-Project"
+      },
+      "params": {
+        "color": "#d1c5a8",
+        "generator": "road",
+        "preview_scale": 1.15,
+        "width_m": 2.5
+      },
+      "prototype_id": "road.footway",
+      "reason": [
+        "highway=path matches ['footway', 'path', 'steps', 'pedestrian', 'cycleway']"
+      ],
+      "source": {
+        "author": "MeCoffe contributors",
+        "path": "frontend/src/mecoffe/",
+        "title": "MeCoffe 程序生成",
+        "type": "procedural"
+      },
+      "variant_id": "extended"
+    },
+    {
+      "feature_id": "way/1435368245",
+      "feature_type": "building",
+      "license": {
+        "note": "项目程序生成，随仓库源码提供；未另行授予外部模型许可",
+        "path": "NOTICE.md",
+        "spdx": "LicenseRef-MeCoffe-Project"
+      },
+      "params": {
+        "accent": "#934f40",
+        "generator": "procedural-building",
+        "glass": "#487f94",
+        "height_m": 19.2,
+        "levels": 6,
+        "roof": "#e4d3bb",
+        "roof_style": "flat-parapet",
+        "storey_height_m": 3.2,
+        "wall": "#bc7859"
+      },
+      "prototype_id": "building.procedural.dormitory",
+      "reason": [
+        "building=dormitory matches ['dormitory', 'apartments']",
+        "scene/input dimensions take precedence over prototype display defaults"
+      ],
+      "source": {
+        "author": "MeCoffe contributors",
+        "path": "frontend/src/mecoffe/",
+        "title": "MeCoffe 程序生成",
+        "type": "procedural"
+      },
+      "variant_id": "default"
+    },
+    {
+      "feature_id": "way/1435368246",
+      "feature_type": "building",
+      "license": {
+        "note": "项目程序生成，随仓库源码提供；未另行授予外部模型许可",
+        "path": "NOTICE.md",
+        "spdx": "LicenseRef-MeCoffe-Project"
+      },
+      "params": {
+        "accent": "#934f40",
+        "generator": "procedural-building",
+        "glass": "#487f94",
+        "height_m": 19.2,
+        "levels": 6,
+        "preview_scale": 0.85,
+        "roof": "#e4d3bb",
+        "roof_style": "flat-parapet",
+        "storey_height_m": 3.2,
+        "wall": "#bc7859"
+      },
+      "prototype_id": "building.procedural.dormitory",
+      "reason": [
+        "building=dormitory matches ['dormitory', 'apartments']",
+        "scene/input dimensions take precedence over prototype display defaults"
+      ],
+      "source": {
+        "author": "MeCoffe contributors",
+        "path": "frontend/src/mecoffe/",
+        "title": "MeCoffe 程序生成",
+        "type": "procedural"
+      },
+      "variant_id": "compact"
+    },
+    {
+      "feature_id": "way/1435368247",
+      "feature_type": "building",
+      "license": {
+        "note": "项目程序生成，随仓库源码提供；未另行授予外部模型许可",
+        "path": "NOTICE.md",
+        "spdx": "LicenseRef-MeCoffe-Project"
+      },
+      "params": {
+        "accent": "#934f40",
+        "generator": "procedural-building",
+        "glass": "#487f94",
+        "height_m": 19.2,
+        "levels": 6,
+        "roof": "#e4d3bb",
+        "roof_style": "flat-parapet",
+        "storey_height_m": 3.2,
+        "wall": "#bc7859"
+      },
+      "prototype_id": "building.procedural.dormitory",
+      "reason": [
+        "building=dormitory matches ['dormitory', 'apartments']",
+        "scene/input dimensions take precedence over prototype display defaults"
+      ],
+      "source": {
+        "author": "MeCoffe contributors",
+        "path": "frontend/src/mecoffe/",
+        "title": "MeCoffe 程序生成",
+        "type": "procedural"
+      },
+      "variant_id": "default"
+    },
+    {
+      "feature_id": "way/1435368248",
+      "feature_type": "building",
+      "license": {
+        "note": "项目程序生成，随仓库源码提供；未另行授予外部模型许可",
+        "path": "NOTICE.md",
+        "spdx": "LicenseRef-MeCoffe-Project"
+      },
+      "params": {
+        "accent": "#934f40",
+        "generator": "procedural-building",
+        "glass": "#487f94",
+        "height_m": 19.2,
+        "levels": 6,
+        "roof": "#e4d3bb",
+        "roof_style": "flat-parapet",
+        "storey_height_m": 3.2,
+        "wall": "#bc7859"
+      },
+      "prototype_id": "building.procedural.dormitory",
+      "reason": [
+        "building=dormitory matches ['dormitory', 'apartments']",
+        "scene/input dimensions take precedence over prototype display defaults"
+      ],
+      "source": {
+        "author": "MeCoffe contributors",
+        "path": "frontend/src/mecoffe/",
+        "title": "MeCoffe 程序生成",
+        "type": "procedural"
+      },
+      "variant_id": "default"
+    },
+    {
+      "feature_id": "way/1435368249",
+      "feature_type": "building",
+      "license": {
+        "note": "项目程序生成，随仓库源码提供；未另行授予外部模型许可",
+        "path": "NOTICE.md",
+        "spdx": "LicenseRef-MeCoffe-Project"
+      },
+      "params": {
+        "accent": "#934f40",
+        "generator": "procedural-building",
+        "glass": "#487f94",
+        "height_m": 19.2,
+        "levels": 6,
+        "preview_scale": 1.15,
+        "roof": "#e4d3bb",
+        "roof_style": "flat-parapet",
+        "storey_height_m": 3.2,
+        "wall": "#bc7859"
+      },
+      "prototype_id": "building.procedural.dormitory",
+      "reason": [
+        "building=dormitory matches ['dormitory', 'apartments']",
+        "scene/input dimensions take precedence over prototype display defaults"
+      ],
+      "source": {
+        "author": "MeCoffe contributors",
+        "path": "frontend/src/mecoffe/",
+        "title": "MeCoffe 程序生成",
+        "type": "procedural"
+      },
+      "variant_id": "extended"
+    },
+    {
+      "feature_id": "way/1435368250",
+      "feature_type": "building",
+      "license": {
+        "note": "项目程序生成，随仓库源码提供；未另行授予外部模型许可",
+        "path": "NOTICE.md",
+        "spdx": "LicenseRef-MeCoffe-Project"
+      },
+      "params": {
+        "accent": "#377f75",
+        "generator": "procedural-building",
+        "glass": "#3c6677",
+        "height_m": 6.4,
+        "levels": 2,
+        "roof": "#c9e3d4",
+        "roof_style": "flat-parapet",
+        "storey_height_m": 3.2,
+        "wall": "#65a89b"
+      },
+      "prototype_id": "building.procedural.sports",
+      "reason": [
+        "leisure=sports_hall matches ['sports_centre', 'sports_hall']",
+        "scene/input dimensions take precedence over prototype display defaults"
+      ],
+      "source": {
+        "author": "MeCoffe contributors",
+        "path": "frontend/src/mecoffe/",
+        "title": "MeCoffe 程序生成",
+        "type": "procedural"
+      },
+      "variant_id": "default"
+    },
+    {
+      "feature_id": "way/1435368251",
+      "feature_type": "building",
+      "license": {
+        "note": "项目程序生成，随仓库源码提供；未另行授予外部模型许可",
+        "path": "NOTICE.md",
+        "spdx": "LicenseRef-MeCoffe-Project"
+      },
+      "params": {
+        "accent": "#934f40",
+        "generator": "procedural-building",
+        "glass": "#487f94",
+        "height_m": 19.2,
+        "levels": 6,
+        "roof": "#e4d3bb",
+        "roof_style": "flat-parapet",
+        "storey_height_m": 3.2,
+        "wall": "#bc7859"
+      },
+      "prototype_id": "building.procedural.dormitory",
+      "reason": [
+        "building=dormitory matches ['dormitory', 'apartments']",
+        "scene/input dimensions take precedence over prototype display defaults"
+      ],
+      "source": {
+        "author": "MeCoffe contributors",
+        "path": "frontend/src/mecoffe/",
+        "title": "MeCoffe 程序生成",
+        "type": "procedural"
+      },
+      "variant_id": "default"
+    },
+    {
+      "feature_id": "way/1435368252",
+      "feature_type": "building",
+      "license": {
+        "note": "项目程序生成，随仓库源码提供；未另行授予外部模型许可",
+        "path": "NOTICE.md",
+        "spdx": "LicenseRef-MeCoffe-Project"
+      },
+      "params": {
+        "accent": "#934f40",
+        "generator": "procedural-building",
+        "glass": "#487f94",
+        "height_m": 19.2,
+        "levels": 6,
+        "roof": "#e4d3bb",
+        "roof_style": "flat-parapet",
+        "storey_height_m": 3.2,
+        "wall": "#bc7859"
+      },
+      "prototype_id": "building.procedural.dormitory",
+      "reason": [
+        "building=dormitory matches ['dormitory', 'apartments']",
+        "scene/input dimensions take precedence over prototype display defaults"
+      ],
+      "source": {
+        "author": "MeCoffe contributors",
+        "path": "frontend/src/mecoffe/",
+        "title": "MeCoffe 程序生成",
+        "type": "procedural"
+      },
+      "variant_id": "default"
+    },
+    {
+      "feature_id": "way/1435368253",
+      "feature_type": "building",
+      "license": {
+        "note": "项目程序生成，随仓库源码提供；未另行授予外部模型许可",
+        "path": "NOTICE.md",
+        "spdx": "LicenseRef-MeCoffe-Project"
+      },
+      "params": {
+        "accent": "#934f40",
+        "generator": "procedural-building",
+        "glass": "#487f94",
+        "height_m": 19.2,
+        "levels": 6,
+        "roof": "#e4d3bb",
+        "roof_style": "flat-parapet",
+        "storey_height_m": 3.2,
+        "wall": "#bc7859"
+      },
+      "prototype_id": "building.procedural.dormitory",
+      "reason": [
+        "building=dormitory matches ['dormitory', 'apartments']",
+        "scene/input dimensions take precedence over prototype display defaults"
+      ],
+      "source": {
+        "author": "MeCoffe contributors",
+        "path": "frontend/src/mecoffe/",
+        "title": "MeCoffe 程序生成",
+        "type": "procedural"
+      },
+      "variant_id": "default"
+    },
+    {
+      "feature_id": "way/1435370291",
+      "feature_type": "building",
+      "license": {
+        "note": "项目程序生成，随仓库源码提供；未另行授予外部模型许可",
+        "path": "NOTICE.md",
+        "spdx": "LicenseRef-MeCoffe-Project"
+      },
+      "params": {
+        "accent": "#376578",
+        "generator": "procedural-building",
+        "glass": "#285a73",
+        "height_m": 16.0,
+        "levels": 5,
+        "roof": "#d8e4e2",
+        "roof_style": "flat-parapet",
+        "storey_height_m": 3.2,
+        "wall": "#7c9cab"
+      },
+      "prototype_id": "building.procedural.education",
+      "reason": [
+        "building=school matches ['university', 'school', 'college']",
+        "scene/input dimensions take precedence over prototype display defaults"
+      ],
+      "source": {
+        "author": "MeCoffe contributors",
+        "path": "frontend/src/mecoffe/",
+        "title": "MeCoffe 程序生成",
+        "type": "procedural"
+      },
+      "variant_id": "default"
+    },
+    {
+      "feature_id": "way/1435377492",
+      "feature_type": "road",
+      "license": {
+        "note": "项目程序生成，随仓库源码提供；未另行授予外部模型许可",
+        "path": "NOTICE.md",
+        "spdx": "LicenseRef-MeCoffe-Project"
+      },
+      "params": {
+        "asphalt": "#444c52",
+        "generator": "road",
+        "lane_width_m": 3.1,
+        "lanes": 2,
+        "preview_scale": 1.15,
+        "sidewalk_m": 2.3
+      },
+      "prototype_id": "road.residential",
+      "reason": [
+        "highway=residential matches ['residential', 'residential_link']"
+      ],
+      "source": {
+        "author": "MeCoffe contributors",
+        "path": "frontend/src/mecoffe/",
+        "title": "MeCoffe 程序生成",
+        "type": "procedural"
+      },
+      "variant_id": "extended"
+    },
+    {
+      "feature_id": "way/1435377493",
+      "feature_type": "building",
+      "license": {
+        "note": "项目程序生成，随仓库源码提供；未另行授予外部模型许可",
+        "path": "NOTICE.md",
+        "spdx": "LicenseRef-MeCoffe-Project"
+      },
+      "params": {
+        "accent": "#376578",
+        "generator": "procedural-building",
+        "glass": "#285a73",
+        "height_m": 16.0,
+        "levels": 5,
+        "roof": "#d8e4e2",
+        "roof_style": "flat-parapet",
+        "storey_height_m": 3.2,
+        "wall": "#7c9cab"
+      },
+      "prototype_id": "building.procedural.education",
+      "reason": [
+        "building=university matches ['university', 'school', 'college']",
+        "scene/input dimensions take precedence over prototype display defaults"
+      ],
+      "source": {
+        "author": "MeCoffe contributors",
+        "path": "frontend/src/mecoffe/",
+        "title": "MeCoffe 程序生成",
+        "type": "procedural"
+      },
+      "variant_id": "default"
+    },
+    {
+      "feature_id": "way/1435377494",
+      "feature_type": "building",
+      "license": {
+        "note": "项目程序生成，随仓库源码提供；未另行授予外部模型许可",
+        "path": "NOTICE.md",
+        "spdx": "LicenseRef-MeCoffe-Project"
+      },
+      "params": {
+        "accent": "#376578",
+        "generator": "procedural-building",
+        "glass": "#285a73",
+        "height_m": 16.0,
+        "levels": 5,
+        "preview_scale": 1.15,
+        "roof": "#d8e4e2",
+        "roof_style": "flat-parapet",
+        "storey_height_m": 3.2,
+        "wall": "#7c9cab"
+      },
+      "prototype_id": "building.procedural.education",
+      "reason": [
+        "building=university matches ['university', 'school', 'college']",
+        "scene/input dimensions take precedence over prototype display defaults"
+      ],
+      "source": {
+        "author": "MeCoffe contributors",
+        "path": "frontend/src/mecoffe/",
+        "title": "MeCoffe 程序生成",
+        "type": "procedural"
+      },
+      "variant_id": "extended"
+    },
+    {
+      "feature_id": "way/1435377495",
+      "feature_type": "building",
+      "license": {
+        "note": "项目程序生成，随仓库源码提供；未另行授予外部模型许可",
+        "path": "NOTICE.md",
+        "spdx": "LicenseRef-MeCoffe-Project"
+      },
+      "params": {
+        "accent": "#376578",
+        "generator": "procedural-building",
+        "glass": "#285a73",
+        "height_m": 16.0,
+        "levels": 5,
+        "preview_scale": 0.85,
+        "roof": "#d8e4e2",
+        "roof_style": "flat-parapet",
+        "storey_height_m": 3.2,
+        "wall": "#7c9cab"
+      },
+      "prototype_id": "building.procedural.education",
+      "reason": [
+        "building=university matches ['university', 'school', 'college']",
+        "scene/input dimensions take precedence over prototype display defaults"
+      ],
+      "source": {
+        "author": "MeCoffe contributors",
+        "path": "frontend/src/mecoffe/",
+        "title": "MeCoffe 程序生成",
+        "type": "procedural"
+      },
+      "variant_id": "compact"
+    },
+    {
+      "feature_id": "way/1435377496",
+      "feature_type": "building",
+      "license": {
+        "note": "项目程序生成，随仓库源码提供；未另行授予外部模型许可",
+        "path": "NOTICE.md",
+        "spdx": "LicenseRef-MeCoffe-Project"
+      },
+      "params": {
+        "accent": "#376578",
+        "generator": "procedural-building",
+        "glass": "#285a73",
+        "height_m": 16.0,
+        "levels": 5,
+        "preview_scale": 0.85,
+        "roof": "#d8e4e2",
+        "roof_style": "flat-parapet",
+        "storey_height_m": 3.2,
+        "wall": "#7c9cab"
+      },
+      "prototype_id": "building.procedural.education",
+      "reason": [
+        "building=university matches ['university', 'school', 'college']",
+        "scene/input dimensions take precedence over prototype display defaults"
+      ],
+      "source": {
+        "author": "MeCoffe contributors",
+        "path": "frontend/src/mecoffe/",
+        "title": "MeCoffe 程序生成",
+        "type": "procedural"
+      },
+      "variant_id": "compact"
+    },
+    {
+      "feature_id": "way/1435377497",
+      "feature_type": "building",
+      "license": {
+        "note": "项目程序生成，随仓库源码提供；未另行授予外部模型许可",
+        "path": "NOTICE.md",
+        "spdx": "LicenseRef-MeCoffe-Project"
+      },
+      "params": {
+        "accent": "#376578",
+        "generator": "procedural-building",
+        "glass": "#285a73",
+        "height_m": 16.0,
+        "levels": 5,
+        "roof": "#d8e4e2",
+        "roof_style": "flat-parapet",
+        "storey_height_m": 3.2,
+        "wall": "#7c9cab"
+      },
+      "prototype_id": "building.procedural.education",
+      "reason": [
+        "building=university matches ['university', 'school', 'college']",
+        "scene/input dimensions take precedence over prototype display defaults"
+      ],
+      "source": {
+        "author": "MeCoffe contributors",
+        "path": "frontend/src/mecoffe/",
+        "title": "MeCoffe 程序生成",
+        "type": "procedural"
+      },
+      "variant_id": "default"
+    },
+    {
+      "feature_id": "way/1435377498",
+      "feature_type": "building",
+      "license": {
+        "note": "项目程序生成，随仓库源码提供；未另行授予外部模型许可",
+        "path": "NOTICE.md",
+        "spdx": "LicenseRef-MeCoffe-Project"
+      },
+      "params": {
+        "accent": "#376578",
+        "generator": "procedural-building",
+        "glass": "#285a73",
+        "height_m": 16.0,
+        "levels": 5,
+        "preview_scale": 1.15,
+        "roof": "#d8e4e2",
+        "roof_style": "flat-parapet",
+        "storey_height_m": 3.2,
+        "wall": "#7c9cab"
+      },
+      "prototype_id": "building.procedural.education",
+      "reason": [
+        "building=university matches ['university', 'school', 'college']",
+        "scene/input dimensions take precedence over prototype display defaults"
+      ],
+      "source": {
+        "author": "MeCoffe contributors",
+        "path": "frontend/src/mecoffe/",
+        "title": "MeCoffe 程序生成",
+        "type": "procedural"
+      },
+      "variant_id": "extended"
+    },
+    {
+      "feature_id": "way/1435377499",
+      "feature_type": "building",
+      "license": {
+        "note": "项目程序生成，随仓库源码提供；未另行授予外部模型许可",
+        "path": "NOTICE.md",
+        "spdx": "LicenseRef-MeCoffe-Project"
+      },
+      "params": {
+        "accent": "#376578",
+        "generator": "procedural-building",
+        "glass": "#285a73",
+        "height_m": 16.0,
+        "levels": 5,
+        "preview_scale": 1.15,
+        "roof": "#d8e4e2",
+        "roof_style": "flat-parapet",
+        "storey_height_m": 3.2,
+        "wall": "#7c9cab"
+      },
+      "prototype_id": "building.procedural.education",
+      "reason": [
+        "building=university matches ['university', 'school', 'college']",
+        "scene/input dimensions take precedence over prototype display defaults"
+      ],
+      "source": {
+        "author": "MeCoffe contributors",
+        "path": "frontend/src/mecoffe/",
+        "title": "MeCoffe 程序生成",
+        "type": "procedural"
+      },
+      "variant_id": "extended"
+    },
+    {
+      "feature_id": "way/1435377500",
+      "feature_type": "building",
+      "license": {
+        "note": "项目程序生成，随仓库源码提供；未另行授予外部模型许可",
+        "path": "NOTICE.md",
+        "spdx": "LicenseRef-MeCoffe-Project"
+      },
+      "params": {
+        "accent": "#376578",
+        "generator": "procedural-building",
+        "glass": "#285a73",
+        "height_m": 16.0,
+        "levels": 5,
+        "preview_scale": 0.85,
+        "roof": "#d8e4e2",
+        "roof_style": "flat-parapet",
+        "storey_height_m": 3.2,
+        "wall": "#7c9cab"
+      },
+      "prototype_id": "building.procedural.education",
+      "reason": [
+        "building=university matches ['university', 'school', 'college']",
+        "scene/input dimensions take precedence over prototype display defaults"
+      ],
+      "source": {
+        "author": "MeCoffe contributors",
+        "path": "frontend/src/mecoffe/",
+        "title": "MeCoffe 程序生成",
+        "type": "procedural"
+      },
+      "variant_id": "compact"
+    },
+    {
+      "feature_id": "way/1435377501",
+      "feature_type": "building",
+      "license": {
+        "note": "项目程序生成，随仓库源码提供；未另行授予外部模型许可",
+        "path": "NOTICE.md",
+        "spdx": "LicenseRef-MeCoffe-Project"
+      },
+      "params": {
+        "accent": "#376578",
+        "generator": "procedural-building",
+        "glass": "#285a73",
+        "height_m": 16.0,
+        "levels": 5,
+        "roof": "#d8e4e2",
+        "roof_style": "flat-parapet",
+        "storey_height_m": 3.2,
+        "wall": "#7c9cab"
+      },
+      "prototype_id": "building.procedural.education",
+      "reason": [
+        "building=university matches ['university', 'school', 'college']",
+        "scene/input dimensions take precedence over prototype display defaults"
+      ],
+      "source": {
+        "author": "MeCoffe contributors",
+        "path": "frontend/src/mecoffe/",
+        "title": "MeCoffe 程序生成",
+        "type": "procedural"
+      },
+      "variant_id": "default"
+    },
+    {
+      "feature_id": "way/1435377502",
+      "feature_type": "building",
+      "license": {
+        "note": "项目程序生成，随仓库源码提供；未另行授予外部模型许可",
+        "path": "NOTICE.md",
+        "spdx": "LicenseRef-MeCoffe-Project"
+      },
+      "params": {
+        "accent": "#376578",
+        "generator": "procedural-building",
+        "glass": "#285a73",
+        "height_m": 16.0,
+        "levels": 5,
+        "preview_scale": 1.15,
+        "roof": "#d8e4e2",
+        "roof_style": "flat-parapet",
+        "storey_height_m": 3.2,
+        "wall": "#7c9cab"
+      },
+      "prototype_id": "building.procedural.education",
+      "reason": [
+        "building=university matches ['university', 'school', 'college']",
+        "scene/input dimensions take precedence over prototype display defaults"
+      ],
+      "source": {
+        "author": "MeCoffe contributors",
+        "path": "frontend/src/mecoffe/",
+        "title": "MeCoffe 程序生成",
+        "type": "procedural"
+      },
+      "variant_id": "extended"
+    },
+    {
+      "feature_id": "way/1435377503",
+      "feature_type": "building",
+      "license": {
+        "note": "项目程序生成，随仓库源码提供；未另行授予外部模型许可",
+        "path": "NOTICE.md",
+        "spdx": "LicenseRef-MeCoffe-Project"
+      },
+      "params": {
+        "accent": "#376578",
+        "generator": "procedural-building",
+        "glass": "#285a73",
+        "height_m": 16.0,
+        "levels": 5,
+        "roof": "#d8e4e2",
+        "roof_style": "flat-parapet",
+        "storey_height_m": 3.2,
+        "wall": "#7c9cab"
+      },
+      "prototype_id": "building.procedural.education",
+      "reason": [
+        "building=university matches ['university', 'school', 'college']",
+        "scene/input dimensions take precedence over prototype display defaults"
+      ],
+      "source": {
+        "author": "MeCoffe contributors",
+        "path": "frontend/src/mecoffe/",
+        "title": "MeCoffe 程序生成",
+        "type": "procedural"
+      },
+      "variant_id": "default"
+    },
+    {
+      "feature_id": "way/1435377504",
+      "feature_type": "building",
+      "license": {
+        "note": "项目程序生成，随仓库源码提供；未另行授予外部模型许可",
+        "path": "NOTICE.md",
+        "spdx": "LicenseRef-MeCoffe-Project"
+      },
+      "params": {
+        "accent": "#376578",
+        "generator": "procedural-building",
+        "glass": "#285a73",
+        "height_m": 9.6,
+        "levels": 3,
+        "roof": "#d8e4e2",
+        "roof_style": "flat-parapet",
+        "storey_height_m": 3.2,
+        "wall": "#7c9cab"
+      },
+      "prototype_id": "building.procedural.education",
+      "reason": [
+        "building=university matches ['university', 'school', 'college']",
+        "scene/input dimensions take precedence over prototype display defaults"
+      ],
+      "source": {
+        "author": "MeCoffe contributors",
+        "path": "frontend/src/mecoffe/",
+        "title": "MeCoffe 程序生成",
+        "type": "procedural"
+      },
+      "variant_id": "default"
+    },
+    {
+      "feature_id": "way/1435377505",
+      "feature_type": "building",
+      "license": {
+        "note": "项目程序生成，随仓库源码提供；未另行授予外部模型许可",
+        "path": "NOTICE.md",
+        "spdx": "LicenseRef-MeCoffe-Project"
+      },
+      "params": {
+        "accent": "#376578",
+        "generator": "procedural-building",
+        "glass": "#285a73",
+        "height_m": 9.6,
+        "levels": 3,
+        "preview_scale": 0.85,
+        "roof": "#d8e4e2",
+        "roof_style": "flat-parapet",
+        "storey_height_m": 3.2,
+        "wall": "#7c9cab"
+      },
+      "prototype_id": "building.procedural.education",
+      "reason": [
+        "building=university matches ['university', 'school', 'college']",
+        "scene/input dimensions take precedence over prototype display defaults"
+      ],
+      "source": {
+        "author": "MeCoffe contributors",
+        "path": "frontend/src/mecoffe/",
+        "title": "MeCoffe 程序生成",
+        "type": "procedural"
+      },
+      "variant_id": "compact"
+    },
+    {
+      "feature_id": "way/1435377506",
+      "feature_type": "building",
+      "license": {
+        "note": "项目程序生成，随仓库源码提供；未另行授予外部模型许可",
+        "path": "NOTICE.md",
+        "spdx": "LicenseRef-MeCoffe-Project"
+      },
+      "params": {
+        "accent": "#376578",
+        "generator": "procedural-building",
+        "glass": "#285a73",
+        "height_m": 9.6,
+        "levels": 3,
+        "roof": "#d8e4e2",
+        "roof_style": "flat-parapet",
+        "storey_height_m": 3.2,
+        "wall": "#7c9cab"
+      },
+      "prototype_id": "building.procedural.education",
+      "reason": [
+        "building=university matches ['university', 'school', 'college']",
+        "scene/input dimensions take precedence over prototype display defaults"
+      ],
+      "source": {
+        "author": "MeCoffe contributors",
+        "path": "frontend/src/mecoffe/",
+        "title": "MeCoffe 程序生成",
+        "type": "procedural"
+      },
+      "variant_id": "default"
+    },
+    {
+      "feature_id": "way/1435377507",
+      "feature_type": "building",
+      "license": {
+        "note": "项目程序生成，随仓库源码提供；未另行授予外部模型许可",
+        "path": "NOTICE.md",
+        "spdx": "LicenseRef-MeCoffe-Project"
+      },
+      "params": {
+        "accent": "#376578",
+        "generator": "procedural-building",
+        "glass": "#285a73",
+        "height_m": 16.0,
+        "levels": 5,
+        "preview_scale": 0.85,
+        "roof": "#d8e4e2",
+        "roof_style": "flat-parapet",
+        "storey_height_m": 3.2,
+        "wall": "#7c9cab"
+      },
+      "prototype_id": "building.procedural.education",
+      "reason": [
+        "building=university matches ['university', 'school', 'college']",
+        "scene/input dimensions take precedence over prototype display defaults"
+      ],
+      "source": {
+        "author": "MeCoffe contributors",
+        "path": "frontend/src/mecoffe/",
+        "title": "MeCoffe 程序生成",
+        "type": "procedural"
+      },
+      "variant_id": "compact"
+    },
+    {
+      "feature_id": "way/1435377508",
+      "feature_type": "building",
+      "license": {
+        "note": "项目程序生成，随仓库源码提供；未另行授予外部模型许可",
+        "path": "NOTICE.md",
+        "spdx": "LicenseRef-MeCoffe-Project"
+      },
+      "params": {
+        "accent": "#376578",
+        "generator": "procedural-building",
+        "glass": "#285a73",
+        "height_m": 19.2,
+        "levels": 6,
+        "roof": "#d8e4e2",
+        "roof_style": "flat-parapet",
+        "storey_height_m": 3.2,
+        "wall": "#7c9cab"
+      },
+      "prototype_id": "building.procedural.education",
+      "reason": [
+        "building=university matches ['university', 'school', 'college']",
+        "scene/input dimensions take precedence over prototype display defaults"
+      ],
+      "source": {
+        "author": "MeCoffe contributors",
+        "path": "frontend/src/mecoffe/",
+        "title": "MeCoffe 程序生成",
+        "type": "procedural"
+      },
+      "variant_id": "default"
+    },
+    {
+      "feature_id": "way/1435377509",
+      "feature_type": "building",
+      "license": {
+        "note": "项目程序生成，随仓库源码提供；未另行授予外部模型许可",
+        "path": "NOTICE.md",
+        "spdx": "LicenseRef-MeCoffe-Project"
+      },
+      "params": {
+        "accent": "#376578",
+        "generator": "procedural-building",
+        "glass": "#285a73",
+        "height_m": 16.0,
+        "levels": 5,
+        "preview_scale": 0.85,
+        "roof": "#d8e4e2",
+        "roof_style": "flat-parapet",
+        "storey_height_m": 3.2,
+        "wall": "#7c9cab"
+      },
+      "prototype_id": "building.procedural.education",
+      "reason": [
+        "building=university matches ['university', 'school', 'college']",
+        "scene/input dimensions take precedence over prototype display defaults"
+      ],
+      "source": {
+        "author": "MeCoffe contributors",
+        "path": "frontend/src/mecoffe/",
+        "title": "MeCoffe 程序生成",
+        "type": "procedural"
+      },
+      "variant_id": "compact"
+    },
+    {
+      "feature_id": "way/1435377510",
+      "feature_type": "building",
+      "license": {
+        "note": "项目程序生成，随仓库源码提供；未另行授予外部模型许可",
+        "path": "NOTICE.md",
+        "spdx": "LicenseRef-MeCoffe-Project"
+      },
+      "params": {
+        "accent": "#376578",
+        "generator": "procedural-building",
+        "glass": "#285a73",
+        "height_m": 16.0,
+        "levels": 5,
+        "preview_scale": 0.85,
+        "roof": "#d8e4e2",
+        "roof_style": "flat-parapet",
+        "storey_height_m": 3.2,
+        "wall": "#7c9cab"
+      },
+      "prototype_id": "building.procedural.education",
+      "reason": [
+        "building=university matches ['university', 'school', 'college']",
+        "scene/input dimensions take precedence over prototype display defaults"
+      ],
+      "source": {
+        "author": "MeCoffe contributors",
+        "path": "frontend/src/mecoffe/",
+        "title": "MeCoffe 程序生成",
+        "type": "procedural"
+      },
+      "variant_id": "compact"
+    },
+    {
+      "feature_id": "way/1435377511",
+      "feature_type": "building",
+      "license": {
+        "note": "项目程序生成，随仓库源码提供；未另行授予外部模型许可",
+        "path": "NOTICE.md",
+        "spdx": "LicenseRef-MeCoffe-Project"
+      },
+      "params": {
+        "accent": "#376578",
+        "generator": "procedural-building",
+        "glass": "#285a73",
+        "height_m": 16.0,
+        "levels": 5,
+        "preview_scale": 0.85,
+        "roof": "#d8e4e2",
+        "roof_style": "flat-parapet",
+        "storey_height_m": 3.2,
+        "wall": "#7c9cab"
+      },
+      "prototype_id": "building.procedural.education",
+      "reason": [
+        "building=university matches ['university', 'school', 'college']",
+        "scene/input dimensions take precedence over prototype display defaults"
+      ],
+      "source": {
+        "author": "MeCoffe contributors",
+        "path": "frontend/src/mecoffe/",
+        "title": "MeCoffe 程序生成",
+        "type": "procedural"
+      },
+      "variant_id": "compact"
+    },
+    {
+      "feature_id": "way/1435377512",
+      "feature_type": "building",
+      "license": {
+        "note": "项目程序生成，随仓库源码提供；未另行授予外部模型许可",
+        "path": "NOTICE.md",
+        "spdx": "LicenseRef-MeCoffe-Project"
+      },
+      "params": {
+        "accent": "#376578",
+        "generator": "procedural-building",
+        "glass": "#285a73",
+        "height_m": 12.8,
+        "levels": 4,
+        "preview_scale": 1.15,
+        "roof": "#d8e4e2",
+        "roof_style": "flat-parapet",
+        "storey_height_m": 3.2,
+        "wall": "#7c9cab"
+      },
+      "prototype_id": "building.procedural.education",
+      "reason": [
+        "building=university matches ['university', 'school', 'college']",
+        "scene/input dimensions take precedence over prototype display defaults"
+      ],
+      "source": {
+        "author": "MeCoffe contributors",
+        "path": "frontend/src/mecoffe/",
+        "title": "MeCoffe 程序生成",
+        "type": "procedural"
+      },
+      "variant_id": "extended"
+    },
+    {
+      "feature_id": "way/1501639766",
+      "feature_type": "building",
+      "license": {
+        "note": "项目程序生成，随仓库源码提供；未另行授予外部模型许可",
+        "path": "NOTICE.md",
+        "spdx": "LicenseRef-MeCoffe-Project"
+      },
+      "params": {
+        "accent": "#8a8963",
+        "generator": "procedural-building",
+        "glass": "#4d7885",
+        "height_m": 6.4,
+        "levels": 2,
+        "preview_scale": 0.85,
+        "roof": "#e5dfc5",
+        "roof_style": "flat-parapet",
+        "storey_height_m": 3.2,
+        "wall": "#c4b88e"
+      },
+      "prototype_id": "building.procedural.other",
+      "reason": [
+        "building=grandstand matches *",
+        "scene/input dimensions take precedence over prototype display defaults"
+      ],
+      "source": {
+        "author": "MeCoffe contributors",
+        "path": "frontend/src/mecoffe/",
+        "title": "MeCoffe 程序生成",
+        "type": "procedural"
+      },
+      "variant_id": "compact"
+    }
+  ],
+  "campus_id": "ustc_gaoxin_osm",
+  "catalog_schema": "mecoffe.asset-catalog.v1",
+  "geometry_source": {
+    "attribution": "© OpenStreetMap contributors",
+    "bbox": [
+      117.1194,
+      31.818,
+      117.1283,
+      31.827
+    ],
+    "downloaded_at_utc": "2026-11-03T05:01:24.973987+00:00",
+    "license": "ODbL-1.0",
+    "license_url": "https://www.openstreetmap.org/copyright",
+    "osm_generator": "openstreetmap-cgimap 2.1.0 (2089598 spike-07.openstreetmap.org)",
+    "relation_id": "14093671",
+    "sha256": "663062802ab35914d085a7a97d2be29001d0d6bc786b69b688608bdd37ee6437",
+    "source_url": "https://api.openstreetmap.org/api/0.6/map?bbox=117.1194,31.8180,117.1283,31.8270"
+  },
+  "schema_version": "mecoffe.asset-assignments.v1",
+  "seed": "2026",
+  "simulation_data": false
+}

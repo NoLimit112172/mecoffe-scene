@@ -1,0 +1,6509 @@
+{
+  "coordinate_system": "WGS84 longitude, latitude",
+  "features": [
+    {
+      "geometry": {
+        "coordinates": [
+          [
+            117.122672804,
+            31.822352698
+          ],
+          [
+            117.122089998,
+            31.8223533
+          ],
+          [
+            117.121123104,
+            31.822354299
+          ],
+          [
+            117.120118298,
+            31.822355396
+          ],
+          [
+            117.120051396,
+            31.822352698
+          ],
+          [
+            117.119958001,
+            31.8223249
+          ],
+          [
+            117.119855303,
+            31.822279997
+          ],
+          [
+            117.119787501,
+            31.822219904
+          ],
+          [
+            117.1197449,
+            31.822161502
+          ],
+          [
+            117.119729098,
+            31.822130997
+          ],
+          [
+            117.119715201,
+            31.822104099
+          ],
+          [
+            117.119696498,
+            31.822041902
+          ],
+          [
+            117.119691799,
+            31.821032702
+          ],
+          [
+            117.119726102,
+            31.820773401
+          ],
+          [
+            117.119726102,
+            31.820605399
+          ],
+          [
+            117.119703399,
+            31.820316502
+          ],
+          [
+            117.119707104,
+            31.8200765
+          ],
+          [
+            117.1197556,
+            31.8196941
+          ],
+          [
+            117.119901503,
+            31.818642102
+          ],
+          [
+            117.119943501,
+            31.818338797
+          ],
+          [
+            117.119959896,
+            31.818219601
+          ],
+          [
+            117.119990304,
+            31.818139004
+          ],
+          [
+            117.120038303,
+            31.8180842
+          ],
+          [
+            117.120129401,
+            31.818047696
+          ],
+          [
+            117.122741198,
+            31.818042804
+          ],
+          [
+            117.123572403,
+            31.818041203
+          ],
+          [
+            117.123850502,
+            31.818162602
+          ],
+          [
+            117.124012799,
+            31.818159904
+          ],
+          [
+            117.124162798,
+            31.818157296
+          ],
+          [
+            117.1244473,
+            31.818043397
+          ],
+          [
+            117.127737298,
+            31.818035897
+          ],
+          [
+            117.127842198,
+            31.818046599
+          ],
+          [
+            117.127925696,
+            31.818082104
+          ],
+          [
+            117.127978797,
+            31.8181444
+          ],
+          [
+            117.128001595,
+            31.818221697
+          ],
+          [
+            117.128002801,
+            31.8191586
+          ],
+          [
+            117.127983898,
+            31.819200499
+          ],
+          [
+            117.1277676,
+            31.819414303
+          ],
+          [
+            117.127771495,
+            31.820174004
+          ],
+          [
+            117.1277752,
+            31.820919496
+          ],
+          [
+            117.128002801,
+            31.821156898
+          ],
+          [
+            117.128001595,
+            31.822103397
+          ],
+          [
+            117.127966201,
+            31.822187196
+          ],
+          [
+            117.127894102,
+            31.822266804
+          ],
+          [
+            117.127806804,
+            31.822319396
+          ],
+          [
+            117.127703196,
+            31.8223441
+          ],
+          [
+            117.125107296,
+            31.822346304
+          ],
+          [
+            117.125034,
+            31.822360198
+          ],
+          [
+            117.124911605,
+            31.822404598
+          ],
+          [
+            117.124731802,
+            31.822469798
+          ],
+          [
+            117.124681199,
+            31.822479502
+          ],
+          [
+            117.123894299,
+            31.822480599
+          ],
+          [
+            117.123396103,
+            31.822481301
+          ],
+          [
+            117.123209505,
+            31.822481597
+          ],
+          [
+            117.1231248,
+            31.822466597
+          ],
+          [
+            117.122913604,
+            31.822367698
+          ],
+          [
+            117.122865499,
+            31.822351601
+          ],
+          [
+            117.122672804,
+            31.822352698
+          ]
+        ],
+        "type": "LineString"
+      },
+      "id": "road/way/1242495998/0",
+      "properties": {
+        "bridge": "",
+        "feature_id": "road/way/1242495998/0",
+        "highway": "residential",
+        "layer": "0",
+        "name": "",
+        "surrounding": false,
+        "walkable": true
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          [
+            117.119726102,
+            31.820605399
+          ],
+          [
+            117.121403404,
+            31.820603502
+          ],
+          [
+            117.121423705,
+            31.820603403
+          ],
+          [
+            117.121574698,
+            31.820600804
+          ],
+          [
+            117.122089903,
+            31.820865303
+          ],
+          [
+            117.122236197,
+            31.821022702
+          ],
+          [
+            117.123168703,
+            31.821014797
+          ],
+          [
+            117.1233946,
+            31.821015498
+          ],
+          [
+            117.123894299,
+            31.821017
+          ],
+          [
+            117.125022495,
+            31.821020597
+          ],
+          [
+            117.1254029,
+            31.821021803
+          ],
+          [
+            117.125529804,
+            31.821022099
+          ],
+          [
+            117.125715397,
+            31.821022702
+          ],
+          [
+            117.125810602,
+            31.821017396
+          ],
+          [
+            117.126169002,
+            31.820997602
+          ],
+          [
+            117.127384105,
+            31.820930099
+          ],
+          [
+            117.1277752,
+            31.820919496
+          ]
+        ],
+        "type": "LineString"
+      },
+      "id": "road/way/1242495999/0",
+      "properties": {
+        "bridge": "",
+        "feature_id": "road/way/1242495999/0",
+        "highway": "residential",
+        "layer": "-1",
+        "name": "",
+        "surrounding": false,
+        "walkable": true
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          [
+            117.122089998,
+            31.8223533
+          ],
+          [
+            117.122201301,
+            31.822109198
+          ],
+          [
+            117.122273305,
+            31.821883603
+          ],
+          [
+            117.122301205,
+            31.821730998
+          ],
+          [
+            117.1223062,
+            31.821545198
+          ],
+          [
+            117.122275898,
+            31.821327104
+          ],
+          [
+            117.122236197,
+            31.821022702
+          ]
+        ],
+        "type": "LineString"
+      },
+      "id": "road/way/1242496000/0",
+      "properties": {
+        "bridge": "",
+        "feature_id": "road/way/1242496000/0",
+        "highway": "service",
+        "layer": "0",
+        "name": "",
+        "surrounding": false,
+        "walkable": true
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          [
+            117.122089903,
+            31.820865303
+          ],
+          [
+            117.122135097,
+            31.820776297
+          ],
+          [
+            117.1222127,
+            31.820419096
+          ],
+          [
+            117.1222118,
+            31.820334002
+          ],
+          [
+            117.122151397,
+            31.820050698
+          ],
+          [
+            117.122080896,
+            31.8197301
+          ],
+          [
+            117.122095904,
+            31.819638603
+          ],
+          [
+            117.1225932,
+            31.819013503
+          ],
+          [
+            117.122637304,
+            31.818958204
+          ],
+          [
+            117.122755603,
+            31.818957197
+          ],
+          [
+            117.123861097,
+            31.818948204
+          ]
+        ],
+        "type": "LineString"
+      },
+      "id": "road/way/1242496001/0",
+      "properties": {
+        "bridge": "",
+        "feature_id": "road/way/1242496001/0",
+        "highway": "service",
+        "layer": "0",
+        "name": "",
+        "surrounding": false,
+        "walkable": true
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          [
+            117.124162798,
+            31.818157296
+          ],
+          [
+            117.124172504,
+            31.819321098
+          ],
+          [
+            117.124173996,
+            31.819500701
+          ],
+          [
+            117.124174303,
+            31.819530496
+          ]
+        ],
+        "type": "LineString"
+      },
+      "id": "road/way/1242496002/0",
+      "properties": {
+        "bridge": "",
+        "feature_id": "road/way/1242496002/0",
+        "highway": "residential",
+        "layer": "0",
+        "name": "",
+        "surrounding": false,
+        "walkable": true
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          [
+            117.123850502,
+            31.818162602
+          ],
+          [
+            117.123861097,
+            31.818948204
+          ],
+          [
+            117.123871903,
+            31.819503498
+          ]
+        ],
+        "type": "LineString"
+      },
+      "id": "road/way/1242496003/0",
+      "properties": {
+        "bridge": "",
+        "feature_id": "road/way/1242496003/0",
+        "highway": "residential",
+        "layer": "0",
+        "name": "",
+        "surrounding": false,
+        "walkable": true
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          [
+            117.123396103,
+            31.822481301
+          ],
+          [
+            117.1233946,
+            31.821015498
+          ]
+        ],
+        "type": "LineString"
+      },
+      "id": "road/way/1242496004/0",
+      "properties": {
+        "bridge": "",
+        "feature_id": "road/way/1242496004/0",
+        "highway": "residential",
+        "layer": "0",
+        "name": "",
+        "surrounding": false,
+        "walkable": true
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          [
+            117.123894299,
+            31.822480599
+          ],
+          [
+            117.123894299,
+            31.821017
+          ]
+        ],
+        "type": "LineString"
+      },
+      "id": "road/way/1242496005/0",
+      "properties": {
+        "bridge": "",
+        "feature_id": "road/way/1242496005/0",
+        "highway": "residential",
+        "layer": "0",
+        "name": "",
+        "surrounding": false,
+        "walkable": true
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          [
+            117.123168703,
+            31.821014797
+          ],
+          [
+            117.123170195,
+            31.8207961
+          ],
+          [
+            117.123175604,
+            31.8200079
+          ],
+          [
+            117.123527802,
+            31.820009698
+          ],
+          [
+            117.123526701,
+            31.819509703
+          ],
+          [
+            117.123871903,
+            31.819503498
+          ],
+          [
+            117.124173996,
+            31.819500701
+          ]
+        ],
+        "type": "LineString"
+      },
+      "id": "road/way/1242496006/0",
+      "properties": {
+        "bridge": "",
+        "feature_id": "road/way/1242496006/0",
+        "highway": "residential",
+        "layer": "0",
+        "name": "",
+        "surrounding": false,
+        "walkable": true
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          [
+            117.124174303,
+            31.819530496
+          ],
+          [
+            117.125128697,
+            31.819532798
+          ]
+        ],
+        "type": "LineString"
+      },
+      "id": "road/way/1242496007/0",
+      "properties": {
+        "bridge": "",
+        "feature_id": "road/way/1242496007/0",
+        "highway": "service",
+        "layer": "0",
+        "name": "",
+        "surrounding": false,
+        "walkable": true
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          [
+            117.124172504,
+            31.819321098
+          ],
+          [
+            117.125150299,
+            31.819313301
+          ],
+          [
+            117.125216799,
+            31.819312698
+          ],
+          [
+            117.1253797,
+            31.819311403
+          ],
+          [
+            117.125873101,
+            31.8193075
+          ],
+          [
+            117.125918804,
+            31.819307104
+          ],
+          [
+            117.127386698,
+            31.819404897
+          ],
+          [
+            117.1277676,
+            31.819414303
+          ]
+        ],
+        "type": "LineString"
+      },
+      "id": "road/way/1242496008/0",
+      "properties": {
+        "bridge": "",
+        "feature_id": "road/way/1242496008/0",
+        "highway": "residential",
+        "layer": "0",
+        "name": "",
+        "surrounding": false,
+        "walkable": true
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          [
+            117.125150299,
+            31.819313301
+          ],
+          [
+            117.125128697,
+            31.819532798
+          ],
+          [
+            117.125084201,
+            31.819999896
+          ],
+          [
+            117.125078602,
+            31.820268802
+          ],
+          [
+            117.125076697,
+            31.820360002
+          ],
+          [
+            117.125239502,
+            31.820690304
+          ],
+          [
+            117.1254029,
+            31.821021803
+          ]
+        ],
+        "type": "LineString"
+      },
+      "id": "road/way/1242496009/0",
+      "properties": {
+        "bridge": "",
+        "feature_id": "road/way/1242496009/0",
+        "highway": "service",
+        "layer": "0",
+        "name": "",
+        "surrounding": false,
+        "walkable": true
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          [
+            117.125022495,
+            31.821020597
+          ],
+          [
+            117.125151696,
+            31.820823898
+          ],
+          [
+            117.125239502,
+            31.820690304
+          ],
+          [
+            117.125347101,
+            31.820528004
+          ],
+          [
+            117.125560699,
+            31.820206002
+          ],
+          [
+            117.125612297,
+            31.820128202
+          ],
+          [
+            117.125478397,
+            31.8198522
+          ],
+          [
+            117.125216799,
+            31.819312698
+          ]
+        ],
+        "type": "LineString"
+      },
+      "id": "road/way/1242496010/0",
+      "properties": {
+        "bridge": "",
+        "feature_id": "road/way/1242496010/0",
+        "highway": "footway",
+        "layer": "0",
+        "name": "",
+        "surrounding": false,
+        "walkable": true
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          [
+            117.125084201,
+            31.819999896
+          ],
+          [
+            117.125227997,
+            31.819946
+          ],
+          [
+            117.125478397,
+            31.8198522
+          ],
+          [
+            117.125859998,
+            31.819753302
+          ]
+        ],
+        "type": "LineString"
+      },
+      "id": "road/way/1242496011/0",
+      "properties": {
+        "bridge": "",
+        "feature_id": "road/way/1242496011/0",
+        "highway": "footway",
+        "layer": "0",
+        "name": "",
+        "surrounding": false,
+        "walkable": true
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          [
+            117.125859998,
+            31.819753302
+          ],
+          [
+            117.1253797,
+            31.819311403
+          ]
+        ],
+        "type": "LineString"
+      },
+      "id": "road/way/1242496012/0",
+      "properties": {
+        "bridge": "",
+        "feature_id": "road/way/1242496012/0",
+        "highway": "footway",
+        "layer": "0",
+        "name": "",
+        "surrounding": false,
+        "walkable": true
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          [
+            117.125918804,
+            31.819307104
+          ],
+          [
+            117.1259162,
+            31.819844997
+          ],
+          [
+            117.126089801,
+            31.820039601
+          ],
+          [
+            117.126112398,
+            31.820133796
+          ],
+          [
+            117.126100004,
+            31.8202062
+          ],
+          [
+            117.125952503,
+            31.820475501
+          ],
+          [
+            117.1258903,
+            31.820589301
+          ],
+          [
+            117.126169002,
+            31.820997602
+          ]
+        ],
+        "type": "LineString"
+      },
+      "id": "road/way/1242496013/0",
+      "properties": {
+        "bridge": "",
+        "feature_id": "road/way/1242496013/0",
+        "highway": "service",
+        "layer": "0",
+        "name": "",
+        "surrounding": false,
+        "walkable": true
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          [
+            117.125529804,
+            31.821022099
+          ],
+          [
+            117.125630703,
+            31.820827504
+          ],
+          [
+            117.125784501,
+            31.820530801
+          ]
+        ],
+        "type": "LineString"
+      },
+      "id": "road/way/1242496014/0",
+      "properties": {
+        "bridge": "",
+        "feature_id": "road/way/1242496014/0",
+        "highway": "footway",
+        "layer": "0",
+        "name": "",
+        "surrounding": false,
+        "walkable": true
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          [
+            117.125784501,
+            31.820530801
+          ],
+          [
+            117.125719197,
+            31.820436003
+          ],
+          [
+            117.125560699,
+            31.820206002
+          ]
+        ],
+        "type": "LineString"
+      },
+      "id": "road/way/1242496015/0",
+      "properties": {
+        "bridge": "",
+        "feature_id": "road/way/1242496015/0",
+        "highway": "footway",
+        "layer": "0",
+        "name": "",
+        "surrounding": false,
+        "walkable": true
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          [
+            117.125859998,
+            31.819753302
+          ],
+          [
+            117.1259162,
+            31.819844997
+          ]
+        ],
+        "type": "LineString"
+      },
+      "id": "road/way/1242496016/0",
+      "properties": {
+        "bridge": "",
+        "feature_id": "road/way/1242496016/0",
+        "highway": "footway",
+        "layer": "0",
+        "name": "",
+        "surrounding": false,
+        "walkable": true
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          [
+            117.125784501,
+            31.820530801
+          ],
+          [
+            117.125952503,
+            31.820475501
+          ]
+        ],
+        "type": "LineString"
+      },
+      "id": "road/way/1242496017/0",
+      "properties": {
+        "bridge": "",
+        "feature_id": "road/way/1242496017/0",
+        "highway": "footway",
+        "layer": "0",
+        "name": "",
+        "surrounding": false,
+        "walkable": true
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          [
+            117.125810602,
+            31.821017396
+          ],
+          [
+            117.125630703,
+            31.820827504
+          ],
+          [
+            117.125347101,
+            31.820528004
+          ],
+          [
+            117.125078602,
+            31.820268802
+          ]
+        ],
+        "type": "LineString"
+      },
+      "id": "road/way/1242496018/0",
+      "properties": {
+        "bridge": "",
+        "feature_id": "road/way/1242496018/0",
+        "highway": "footway",
+        "layer": "0",
+        "name": "",
+        "surrounding": false,
+        "walkable": true
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          [
+            117.127384105,
+            31.820930099
+          ],
+          [
+            117.127386698,
+            31.819404897
+          ]
+        ],
+        "type": "LineString"
+      },
+      "id": "road/way/1242496019/0",
+      "properties": {
+        "bridge": "",
+        "feature_id": "road/way/1242496019/0",
+        "highway": "residential",
+        "layer": "0",
+        "name": "",
+        "surrounding": false,
+        "walkable": true
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          [
+            117.123170195,
+            31.8207961
+          ],
+          [
+            117.124011699,
+            31.820798196
+          ],
+          [
+            117.124075098,
+            31.8208195
+          ],
+          [
+            117.125151696,
+            31.820823898
+          ]
+        ],
+        "type": "LineString"
+      },
+      "id": "road/way/1242496021/0",
+      "properties": {
+        "bridge": "",
+        "feature_id": "road/way/1242496021/0",
+        "highway": "service",
+        "layer": "0",
+        "name": "",
+        "surrounding": false,
+        "walkable": true
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          [
+            117.121123104,
+            31.822354299
+          ],
+          [
+            117.121224299,
+            31.822087299
+          ],
+          [
+            117.121222796,
+            31.820839996
+          ],
+          [
+            117.121403404,
+            31.820603502
+          ],
+          [
+            117.121607297,
+            31.820363797
+          ],
+          [
+            117.121610504,
+            31.819933598
+          ],
+          [
+            117.1216463,
+            31.819567898
+          ],
+          [
+            117.122018301,
+            31.819047803
+          ],
+          [
+            117.122048402,
+            31.819005796
+          ],
+          [
+            117.122387,
+            31.818549796
+          ]
+        ],
+        "type": "LineString"
+      },
+      "id": "road/way/1242496022/0",
+      "properties": {
+        "bridge": "",
+        "feature_id": "road/way/1242496022/0",
+        "highway": "service",
+        "layer": "0",
+        "name": "",
+        "surrounding": false,
+        "walkable": true
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          [
+            117.122741198,
+            31.818042804
+          ],
+          [
+            117.1227472,
+            31.818543797
+          ],
+          [
+            117.122755603,
+            31.818957197
+          ]
+        ],
+        "type": "LineString"
+      },
+      "id": "road/way/1242496023/0",
+      "properties": {
+        "bridge": "",
+        "feature_id": "road/way/1242496023/0",
+        "highway": "residential",
+        "layer": "-2",
+        "name": "",
+        "surrounding": false,
+        "walkable": true
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          [
+            117.1227472,
+            31.818543797
+          ],
+          [
+            117.122387,
+            31.818549796
+          ]
+        ],
+        "type": "LineString"
+      },
+      "id": "road/way/1242496024/0",
+      "properties": {
+        "bridge": "",
+        "feature_id": "road/way/1242496024/0",
+        "highway": "service",
+        "layer": "0",
+        "name": "",
+        "surrounding": false,
+        "walkable": true
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          [
+            117.123175604,
+            31.8200079
+          ],
+          [
+            117.123137702,
+            31.819955299
+          ],
+          [
+            117.122508802,
+            31.819759103
+          ],
+          [
+            117.122465704,
+            31.819745604
+          ],
+          [
+            117.122311101,
+            31.8196974
+          ],
+          [
+            117.122095904,
+            31.819638603
+          ]
+        ],
+        "type": "LineString"
+      },
+      "id": "road/way/1242496025/0",
+      "properties": {
+        "bridge": "",
+        "feature_id": "road/way/1242496025/0",
+        "highway": "service",
+        "layer": "0",
+        "name": "",
+        "surrounding": false,
+        "walkable": true
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          [
+            117.1197556,
+            31.8196941
+          ],
+          [
+            117.120421502,
+            31.819690602
+          ]
+        ],
+        "type": "LineString"
+      },
+      "id": "road/way/1242496026/0",
+      "properties": {
+        "bridge": "",
+        "feature_id": "road/way/1242496026/0",
+        "highway": "service",
+        "layer": "0",
+        "name": "",
+        "surrounding": false,
+        "walkable": true
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          [
+            117.121610504,
+            31.819933598
+          ],
+          [
+            117.120434902,
+            31.819936701
+          ],
+          [
+            117.120421502,
+            31.819690602
+          ],
+          [
+            117.120412304,
+            31.819060502
+          ],
+          [
+            117.120807697,
+            31.819047399
+          ],
+          [
+            117.120793302,
+            31.818638999
+          ],
+          [
+            117.120822102,
+            31.818585796
+          ],
+          [
+            117.120882696,
+            31.818555201
+          ],
+          [
+            117.121589198,
+            31.818549103
+          ],
+          [
+            117.122387,
+            31.818549796
+          ]
+        ],
+        "type": "LineString"
+      },
+      "id": "road/way/1242496027/0",
+      "properties": {
+        "bridge": "",
+        "feature_id": "road/way/1242496027/0",
+        "highway": "service",
+        "layer": "0",
+        "name": "",
+        "surrounding": false,
+        "walkable": true
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          [
+            117.120807697,
+            31.819047399
+          ],
+          [
+            117.121197003,
+            31.819047498
+          ],
+          [
+            117.122018301,
+            31.819047803
+          ]
+        ],
+        "type": "LineString"
+      },
+      "id": "road/way/1242496028/0",
+      "properties": {
+        "bridge": "",
+        "feature_id": "road/way/1242496028/0",
+        "highway": "service",
+        "layer": "0",
+        "name": "",
+        "surrounding": false,
+        "walkable": true
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          [
+            117.119901503,
+            31.818642102
+          ],
+          [
+            117.120793302,
+            31.818638999
+          ]
+        ],
+        "type": "LineString"
+      },
+      "id": "road/way/1242496029/0",
+      "properties": {
+        "bridge": "",
+        "feature_id": "road/way/1242496029/0",
+        "highway": "service",
+        "layer": "0",
+        "name": "",
+        "surrounding": false,
+        "walkable": true
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          [
+            117.121197003,
+            31.819047498
+          ],
+          [
+            117.121209503,
+            31.819573303
+          ],
+          [
+            117.1216463,
+            31.819567898
+          ]
+        ],
+        "type": "LineString"
+      },
+      "id": "road/way/1242496030/0",
+      "properties": {
+        "bridge": "",
+        "feature_id": "road/way/1242496030/0",
+        "highway": "footway",
+        "layer": "0",
+        "name": "",
+        "surrounding": false,
+        "walkable": true
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          [
+            117.1216463,
+            31.819567898
+          ],
+          [
+            117.122095904,
+            31.819638603
+          ]
+        ],
+        "type": "LineString"
+      },
+      "id": "road/way/1242496031/0",
+      "properties": {
+        "bridge": "",
+        "feature_id": "road/way/1242496031/0",
+        "highway": "footway",
+        "layer": "0",
+        "name": "",
+        "surrounding": false,
+        "walkable": true
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          [
+            117.122151397,
+            31.820050698
+          ],
+          [
+            117.122424595,
+            31.8198472
+          ],
+          [
+            117.122465704,
+            31.819745604
+          ]
+        ],
+        "type": "LineString"
+      },
+      "id": "road/way/1242496032/0",
+      "properties": {
+        "bridge": "",
+        "feature_id": "road/way/1242496032/0",
+        "highway": "service",
+        "layer": "0",
+        "name": "",
+        "surrounding": false,
+        "walkable": true
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          [
+            117.122508802,
+            31.819759103
+          ],
+          [
+            117.1225932,
+            31.819013503
+          ]
+        ],
+        "type": "LineString"
+      },
+      "id": "road/way/1242496033/0",
+      "properties": {
+        "bridge": "",
+        "feature_id": "road/way/1242496033/0",
+        "highway": "service",
+        "layer": "0",
+        "name": "",
+        "surrounding": false,
+        "walkable": true
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          [
+            117.122672804,
+            31.822352698
+          ],
+          [
+            117.122674899,
+            31.822648799
+          ],
+          [
+            117.122677905,
+            31.823076696
+          ]
+        ],
+        "type": "LineString"
+      },
+      "id": "road/way/1242496035/0",
+      "properties": {
+        "bridge": "",
+        "feature_id": "road/way/1242496035/0",
+        "highway": "residential",
+        "layer": "0",
+        "name": "",
+        "surrounding": false,
+        "walkable": true
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          [
+            117.124911605,
+            31.822404598
+          ],
+          [
+            117.124911097,
+            31.822633097
+          ],
+          [
+            117.124910303,
+            31.823069204
+          ]
+        ],
+        "type": "LineString"
+      },
+      "id": "road/way/1242496036/0",
+      "properties": {
+        "bridge": "",
+        "feature_id": "road/way/1242496036/0",
+        "highway": "residential",
+        "layer": "0",
+        "name": "",
+        "surrounding": false,
+        "walkable": true
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          [
+            117.122286196,
+            31.822651002
+          ],
+          [
+            117.122674899,
+            31.822648799
+          ],
+          [
+            117.122969403,
+            31.822632198
+          ],
+          [
+            117.1231768,
+            31.822571098
+          ],
+          [
+            117.124252096,
+            31.8225642
+          ],
+          [
+            117.124469802,
+            31.822633996
+          ],
+          [
+            117.124911097,
+            31.822633097
+          ],
+          [
+            117.125042298,
+            31.822593599
+          ],
+          [
+            117.125316195,
+            31.822593599
+          ],
+          [
+            117.127457898,
+            31.822597304
+          ]
+        ],
+        "type": "LineString"
+      },
+      "id": "road/way/1242498644/0",
+      "properties": {
+        "bridge": "",
+        "feature_id": "road/way/1242498644/0",
+        "highway": "tertiary_link",
+        "layer": "0",
+        "name": "",
+        "surrounding": false,
+        "walkable": true
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          [
+            117.125297302,
+            31.823103504
+          ],
+          [
+            117.1250782,
+            31.823103298
+          ],
+          [
+            117.125011498,
+            31.823070203
+          ],
+          [
+            117.124910303,
+            31.823069204
+          ],
+          [
+            117.124479497,
+            31.823064897
+          ],
+          [
+            117.124012196,
+            31.823194102
+          ],
+          [
+            117.123572001,
+            31.823198697
+          ],
+          [
+            117.123338504,
+            31.823201099
+          ],
+          [
+            117.1231721,
+            31.82316
+          ],
+          [
+            117.122975902,
+            31.823079996
+          ],
+          [
+            117.122677905,
+            31.823076696
+          ],
+          [
+            117.122288895,
+            31.823072999
+          ],
+          [
+            117.119809601,
+            31.823049203
+          ]
+        ],
+        "type": "LineString"
+      },
+      "id": "road/way/1242498645/0",
+      "properties": {
+        "bridge": "",
+        "feature_id": "road/way/1242498645/0",
+        "highway": "tertiary_link",
+        "layer": "0",
+        "name": "",
+        "surrounding": false,
+        "walkable": true
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          [
+            117.122151905,
+            31.822761996
+          ],
+          [
+            117.122221697,
+            31.822761799
+          ],
+          [
+            117.123792099,
+            31.822759496
+          ],
+          [
+            117.125396201,
+            31.822760099
+          ]
+        ],
+        "type": "LineString"
+      },
+      "id": "road/way/1242498647/0",
+      "properties": {
+        "bridge": "",
+        "feature_id": "road/way/1242498647/0",
+        "highway": "primary",
+        "layer": "-1",
+        "name": "习友路",
+        "surrounding": false,
+        "walkable": true
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          [
+            117.125392104,
+            31.822960602
+          ],
+          [
+            117.1237894,
+            31.822961502
+          ],
+          [
+            117.122456104,
+            31.822962203
+          ],
+          [
+            117.122151905,
+            31.822962401
+          ]
+        ],
+        "type": "LineString"
+      },
+      "id": "road/way/1242498649/0",
+      "properties": {
+        "bridge": "",
+        "feature_id": "road/way/1242498649/0",
+        "highway": "primary",
+        "layer": "-1",
+        "name": "习友路",
+        "surrounding": false,
+        "walkable": true
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          [
+            117.125297302,
+            31.823103504
+          ],
+          [
+            117.125217995,
+            31.823008896
+          ],
+          [
+            117.125217297,
+            31.8226847
+          ],
+          [
+            117.125316195,
+            31.822593599
+          ]
+        ],
+        "type": "LineString"
+      },
+      "id": "road/way/1242498650/0",
+      "properties": {
+        "bridge": "",
+        "feature_id": "road/way/1242498650/0",
+        "highway": "tertiary_link",
+        "layer": "0",
+        "name": "",
+        "surrounding": false,
+        "walkable": true
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          [
+            117.122286196,
+            31.822651002
+          ],
+          [
+            117.122288895,
+            31.823072999
+          ]
+        ],
+        "type": "LineString"
+      },
+      "id": "road/way/1242498651/0",
+      "properties": {
+        "bridge": "",
+        "feature_id": "road/way/1242498651/0",
+        "highway": "tertiary_link",
+        "layer": "0",
+        "name": "",
+        "surrounding": false,
+        "walkable": true
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          [
+            117.128012401,
+            31.823020101
+          ],
+          [
+            117.126524302,
+            31.823027899
+          ],
+          [
+            117.126077502,
+            31.823025299
+          ],
+          [
+            117.125392104,
+            31.822960602
+          ]
+        ],
+        "type": "LineString"
+      },
+      "id": "road/way/1264703026/0",
+      "properties": {
+        "bridge": "",
+        "feature_id": "road/way/1264703026/0",
+        "highway": "primary_link",
+        "layer": "0",
+        "name": "",
+        "surrounding": false,
+        "walkable": true
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          [
+            117.125396201,
+            31.822760099
+          ],
+          [
+            117.126040595,
+            31.822674502
+          ],
+          [
+            117.127562596,
+            31.822682299
+          ],
+          [
+            117.127691998,
+            31.8226813
+          ]
+        ],
+        "type": "LineString"
+      },
+      "id": "road/way/1264703027/0",
+      "properties": {
+        "bridge": "",
+        "feature_id": "road/way/1264703027/0",
+        "highway": "primary_link",
+        "layer": "0",
+        "name": "",
+        "surrounding": false,
+        "walkable": true
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          [
+            117.127995996,
+            31.822959298
+          ],
+          [
+            117.125392104,
+            31.822960602
+          ]
+        ],
+        "type": "LineString"
+      },
+      "id": "road/way/1264703030/0",
+      "properties": {
+        "bridge": "",
+        "feature_id": "road/way/1264703030/0",
+        "highway": "primary",
+        "layer": "0",
+        "name": "习友路",
+        "surrounding": false,
+        "walkable": true
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          [
+            117.125396201,
+            31.822760099
+          ],
+          [
+            117.128003098,
+            31.822761196
+          ]
+        ],
+        "type": "LineString"
+      },
+      "id": "road/way/1264703031/0",
+      "properties": {
+        "bridge": "",
+        "feature_id": "road/way/1264703031/0",
+        "highway": "primary",
+        "layer": "0",
+        "name": "习友路",
+        "surrounding": false,
+        "walkable": true
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          [
+            117.127457898,
+            31.822597304
+          ],
+          [
+            117.127691998,
+            31.8226813
+          ]
+        ],
+        "type": "LineString"
+      },
+      "id": "road/way/1264703034/0",
+      "properties": {
+        "bridge": "",
+        "feature_id": "road/way/1264703034/0",
+        "highway": "tertiary",
+        "layer": "0",
+        "name": "",
+        "surrounding": false,
+        "walkable": true
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          [
+            117.123567503,
+            31.8269572
+          ],
+          [
+            117.123458296,
+            31.826547497
+          ],
+          [
+            117.123220597,
+            31.825922496
+          ],
+          [
+            117.123130505,
+            31.825625801
+          ],
+          [
+            117.123091005,
+            31.825144404
+          ],
+          [
+            117.1235709,
+            31.824965403
+          ],
+          [
+            117.123572001,
+            31.823198697
+          ]
+        ],
+        "type": "LineString"
+      },
+      "id": "road/way/1316321492/0",
+      "properties": {
+        "bridge": "",
+        "feature_id": "road/way/1316321492/0",
+        "highway": "path",
+        "layer": "0",
+        "name": "",
+        "surrounding": false,
+        "walkable": true
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          [
+            117.125859998,
+            31.819753302
+          ],
+          [
+            117.125873101,
+            31.8193075
+          ]
+        ],
+        "type": "LineString"
+      },
+      "id": "road/way/1435377492/0",
+      "properties": {
+        "bridge": "",
+        "feature_id": "road/way/1435377492/0",
+        "highway": "residential",
+        "layer": "0",
+        "name": "",
+        "surrounding": false,
+        "walkable": true
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          [
+            117.122672804,
+            31.822352698
+          ],
+          [
+            117.122089998,
+            31.8223533
+          ],
+          [
+            117.121123104,
+            31.822354299
+          ],
+          [
+            117.120118298,
+            31.822355396
+          ],
+          [
+            117.120051396,
+            31.822352698
+          ],
+          [
+            117.119958001,
+            31.8223249
+          ],
+          [
+            117.119855303,
+            31.822279997
+          ],
+          [
+            117.119787501,
+            31.822219904
+          ],
+          [
+            117.1197449,
+            31.822161502
+          ],
+          [
+            117.119729098,
+            31.822130997
+          ],
+          [
+            117.119715201,
+            31.822104099
+          ],
+          [
+            117.119696498,
+            31.822041902
+          ],
+          [
+            117.119691799,
+            31.821032702
+          ],
+          [
+            117.119726102,
+            31.820773401
+          ],
+          [
+            117.119726102,
+            31.820605399
+          ],
+          [
+            117.119703399,
+            31.820316502
+          ],
+          [
+            117.119707104,
+            31.8200765
+          ],
+          [
+            117.1197556,
+            31.8196941
+          ],
+          [
+            117.119901503,
+            31.818642102
+          ],
+          [
+            117.119943501,
+            31.818338797
+          ],
+          [
+            117.119959896,
+            31.818219601
+          ],
+          [
+            117.119990304,
+            31.818139004
+          ],
+          [
+            117.120038303,
+            31.8180842
+          ],
+          [
+            117.120129401,
+            31.818047696
+          ],
+          [
+            117.122741198,
+            31.818042804
+          ],
+          [
+            117.123572403,
+            31.818041203
+          ],
+          [
+            117.123850502,
+            31.818162602
+          ],
+          [
+            117.124012799,
+            31.818159904
+          ],
+          [
+            117.124162798,
+            31.818157296
+          ],
+          [
+            117.1244473,
+            31.818043397
+          ],
+          [
+            117.127737298,
+            31.818035897
+          ],
+          [
+            117.127842198,
+            31.818046599
+          ],
+          [
+            117.127925696,
+            31.818082104
+          ],
+          [
+            117.127978797,
+            31.8181444
+          ],
+          [
+            117.128001595,
+            31.818221697
+          ],
+          [
+            117.128002801,
+            31.8191586
+          ],
+          [
+            117.127983898,
+            31.819200499
+          ],
+          [
+            117.1277676,
+            31.819414303
+          ],
+          [
+            117.127771495,
+            31.820174004
+          ],
+          [
+            117.1277752,
+            31.820919496
+          ],
+          [
+            117.128002801,
+            31.821156898
+          ],
+          [
+            117.128001595,
+            31.822103397
+          ],
+          [
+            117.127966201,
+            31.822187196
+          ],
+          [
+            117.127894102,
+            31.822266804
+          ],
+          [
+            117.127806804,
+            31.822319396
+          ],
+          [
+            117.127703196,
+            31.8223441
+          ],
+          [
+            117.125107296,
+            31.822346304
+          ],
+          [
+            117.125034,
+            31.822360198
+          ],
+          [
+            117.124911605,
+            31.822404598
+          ],
+          [
+            117.124731802,
+            31.822469798
+          ],
+          [
+            117.124681199,
+            31.822479502
+          ],
+          [
+            117.123894299,
+            31.822480599
+          ],
+          [
+            117.123396103,
+            31.822481301
+          ],
+          [
+            117.123209505,
+            31.822481597
+          ],
+          [
+            117.1231248,
+            31.822466597
+          ],
+          [
+            117.122913604,
+            31.822367698
+          ],
+          [
+            117.122865499,
+            31.822351601
+          ],
+          [
+            117.122672804,
+            31.822352698
+          ]
+        ],
+        "type": "LineString"
+      },
+      "id": "surrounding/way/1242495998/0",
+      "properties": {
+        "bridge": "",
+        "feature_id": "surrounding/way/1242495998/0",
+        "highway": "residential",
+        "layer": "",
+        "name": "",
+        "surrounding": true,
+        "walkable": false
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          [
+            117.119200197,
+            31.820613898
+          ],
+          [
+            117.119726102,
+            31.820605399
+          ],
+          [
+            117.121403404,
+            31.820603502
+          ],
+          [
+            117.121423705,
+            31.820603403
+          ],
+          [
+            117.121574698,
+            31.820600804
+          ],
+          [
+            117.122089903,
+            31.820865303
+          ],
+          [
+            117.122236197,
+            31.821022702
+          ],
+          [
+            117.123168703,
+            31.821014797
+          ],
+          [
+            117.1233946,
+            31.821015498
+          ],
+          [
+            117.123894299,
+            31.821017
+          ],
+          [
+            117.125022495,
+            31.821020597
+          ],
+          [
+            117.1254029,
+            31.821021803
+          ],
+          [
+            117.125529804,
+            31.821022099
+          ],
+          [
+            117.125715397,
+            31.821022702
+          ],
+          [
+            117.125810602,
+            31.821017396
+          ],
+          [
+            117.126169002,
+            31.820997602
+          ],
+          [
+            117.127384105,
+            31.820930099
+          ],
+          [
+            117.1277752,
+            31.820919496
+          ]
+        ],
+        "type": "LineString"
+      },
+      "id": "surrounding/way/1242495999/0",
+      "properties": {
+        "bridge": "",
+        "feature_id": "surrounding/way/1242495999/0",
+        "highway": "residential",
+        "layer": "-1",
+        "name": "",
+        "surrounding": true,
+        "walkable": false
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          [
+            117.122089998,
+            31.8223533
+          ],
+          [
+            117.122201301,
+            31.822109198
+          ],
+          [
+            117.122273305,
+            31.821883603
+          ],
+          [
+            117.122301205,
+            31.821730998
+          ],
+          [
+            117.1223062,
+            31.821545198
+          ],
+          [
+            117.122275898,
+            31.821327104
+          ],
+          [
+            117.122236197,
+            31.821022702
+          ]
+        ],
+        "type": "LineString"
+      },
+      "id": "surrounding/way/1242496000/0",
+      "properties": {
+        "bridge": "",
+        "feature_id": "surrounding/way/1242496000/0",
+        "highway": "service",
+        "layer": "",
+        "name": "",
+        "surrounding": true,
+        "walkable": false
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          [
+            117.122089903,
+            31.820865303
+          ],
+          [
+            117.122135097,
+            31.820776297
+          ],
+          [
+            117.1222127,
+            31.820419096
+          ],
+          [
+            117.1222118,
+            31.820334002
+          ],
+          [
+            117.122151397,
+            31.820050698
+          ],
+          [
+            117.122080896,
+            31.8197301
+          ],
+          [
+            117.122095904,
+            31.819638603
+          ],
+          [
+            117.1225932,
+            31.819013503
+          ],
+          [
+            117.122637304,
+            31.818958204
+          ],
+          [
+            117.122755603,
+            31.818957197
+          ],
+          [
+            117.123861097,
+            31.818948204
+          ]
+        ],
+        "type": "LineString"
+      },
+      "id": "surrounding/way/1242496001/0",
+      "properties": {
+        "bridge": "",
+        "feature_id": "surrounding/way/1242496001/0",
+        "highway": "service",
+        "layer": "",
+        "name": "",
+        "surrounding": true,
+        "walkable": false
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          [
+            117.124162798,
+            31.818157296
+          ],
+          [
+            117.124172504,
+            31.819321098
+          ],
+          [
+            117.124173996,
+            31.819500701
+          ],
+          [
+            117.124174303,
+            31.819530496
+          ]
+        ],
+        "type": "LineString"
+      },
+      "id": "surrounding/way/1242496002/0",
+      "properties": {
+        "bridge": "",
+        "feature_id": "surrounding/way/1242496002/0",
+        "highway": "residential",
+        "layer": "",
+        "name": "",
+        "surrounding": true,
+        "walkable": false
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          [
+            117.123850502,
+            31.818162602
+          ],
+          [
+            117.123861097,
+            31.818948204
+          ],
+          [
+            117.123871903,
+            31.819503498
+          ]
+        ],
+        "type": "LineString"
+      },
+      "id": "surrounding/way/1242496003/0",
+      "properties": {
+        "bridge": "",
+        "feature_id": "surrounding/way/1242496003/0",
+        "highway": "residential",
+        "layer": "",
+        "name": "",
+        "surrounding": true,
+        "walkable": false
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          [
+            117.123396103,
+            31.822481301
+          ],
+          [
+            117.1233946,
+            31.821015498
+          ]
+        ],
+        "type": "LineString"
+      },
+      "id": "surrounding/way/1242496004/0",
+      "properties": {
+        "bridge": "",
+        "feature_id": "surrounding/way/1242496004/0",
+        "highway": "residential",
+        "layer": "",
+        "name": "",
+        "surrounding": true,
+        "walkable": false
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          [
+            117.123894299,
+            31.822480599
+          ],
+          [
+            117.123894299,
+            31.821017
+          ]
+        ],
+        "type": "LineString"
+      },
+      "id": "surrounding/way/1242496005/0",
+      "properties": {
+        "bridge": "",
+        "feature_id": "surrounding/way/1242496005/0",
+        "highway": "residential",
+        "layer": "",
+        "name": "",
+        "surrounding": true,
+        "walkable": false
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          [
+            117.123168703,
+            31.821014797
+          ],
+          [
+            117.123170195,
+            31.8207961
+          ],
+          [
+            117.123175604,
+            31.8200079
+          ],
+          [
+            117.123527802,
+            31.820009698
+          ],
+          [
+            117.123526701,
+            31.819509703
+          ],
+          [
+            117.123871903,
+            31.819503498
+          ],
+          [
+            117.124173996,
+            31.819500701
+          ]
+        ],
+        "type": "LineString"
+      },
+      "id": "surrounding/way/1242496006/0",
+      "properties": {
+        "bridge": "",
+        "feature_id": "surrounding/way/1242496006/0",
+        "highway": "residential",
+        "layer": "",
+        "name": "",
+        "surrounding": true,
+        "walkable": false
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          [
+            117.124174303,
+            31.819530496
+          ],
+          [
+            117.125128697,
+            31.819532798
+          ]
+        ],
+        "type": "LineString"
+      },
+      "id": "surrounding/way/1242496007/0",
+      "properties": {
+        "bridge": "",
+        "feature_id": "surrounding/way/1242496007/0",
+        "highway": "service",
+        "layer": "",
+        "name": "",
+        "surrounding": true,
+        "walkable": false
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          [
+            117.124172504,
+            31.819321098
+          ],
+          [
+            117.125150299,
+            31.819313301
+          ],
+          [
+            117.125216799,
+            31.819312698
+          ],
+          [
+            117.1253797,
+            31.819311403
+          ],
+          [
+            117.125873101,
+            31.8193075
+          ],
+          [
+            117.125918804,
+            31.819307104
+          ],
+          [
+            117.127386698,
+            31.819404897
+          ],
+          [
+            117.1277676,
+            31.819414303
+          ]
+        ],
+        "type": "LineString"
+      },
+      "id": "surrounding/way/1242496008/0",
+      "properties": {
+        "bridge": "",
+        "feature_id": "surrounding/way/1242496008/0",
+        "highway": "residential",
+        "layer": "",
+        "name": "",
+        "surrounding": true,
+        "walkable": false
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          [
+            117.125150299,
+            31.819313301
+          ],
+          [
+            117.125128697,
+            31.819532798
+          ],
+          [
+            117.125084201,
+            31.819999896
+          ],
+          [
+            117.125078602,
+            31.820268802
+          ],
+          [
+            117.125076697,
+            31.820360002
+          ],
+          [
+            117.125239502,
+            31.820690304
+          ],
+          [
+            117.1254029,
+            31.821021803
+          ]
+        ],
+        "type": "LineString"
+      },
+      "id": "surrounding/way/1242496009/0",
+      "properties": {
+        "bridge": "",
+        "feature_id": "surrounding/way/1242496009/0",
+        "highway": "service",
+        "layer": "",
+        "name": "",
+        "surrounding": true,
+        "walkable": false
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          [
+            117.125022495,
+            31.821020597
+          ],
+          [
+            117.125151696,
+            31.820823898
+          ],
+          [
+            117.125239502,
+            31.820690304
+          ],
+          [
+            117.125347101,
+            31.820528004
+          ],
+          [
+            117.125560699,
+            31.820206002
+          ],
+          [
+            117.125612297,
+            31.820128202
+          ],
+          [
+            117.125478397,
+            31.8198522
+          ],
+          [
+            117.125216799,
+            31.819312698
+          ]
+        ],
+        "type": "LineString"
+      },
+      "id": "surrounding/way/1242496010/0",
+      "properties": {
+        "bridge": "",
+        "feature_id": "surrounding/way/1242496010/0",
+        "highway": "footway",
+        "layer": "",
+        "name": "",
+        "surrounding": true,
+        "walkable": false
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          [
+            117.125084201,
+            31.819999896
+          ],
+          [
+            117.125227997,
+            31.819946
+          ],
+          [
+            117.125478397,
+            31.8198522
+          ],
+          [
+            117.125859998,
+            31.819753302
+          ]
+        ],
+        "type": "LineString"
+      },
+      "id": "surrounding/way/1242496011/0",
+      "properties": {
+        "bridge": "",
+        "feature_id": "surrounding/way/1242496011/0",
+        "highway": "footway",
+        "layer": "",
+        "name": "",
+        "surrounding": true,
+        "walkable": false
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          [
+            117.125859998,
+            31.819753302
+          ],
+          [
+            117.1253797,
+            31.819311403
+          ]
+        ],
+        "type": "LineString"
+      },
+      "id": "surrounding/way/1242496012/0",
+      "properties": {
+        "bridge": "",
+        "feature_id": "surrounding/way/1242496012/0",
+        "highway": "footway",
+        "layer": "",
+        "name": "",
+        "surrounding": true,
+        "walkable": false
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          [
+            117.125918804,
+            31.819307104
+          ],
+          [
+            117.1259162,
+            31.819844997
+          ],
+          [
+            117.126089801,
+            31.820039601
+          ],
+          [
+            117.126112398,
+            31.820133796
+          ],
+          [
+            117.126100004,
+            31.8202062
+          ],
+          [
+            117.125952503,
+            31.820475501
+          ],
+          [
+            117.1258903,
+            31.820589301
+          ],
+          [
+            117.126169002,
+            31.820997602
+          ]
+        ],
+        "type": "LineString"
+      },
+      "id": "surrounding/way/1242496013/0",
+      "properties": {
+        "bridge": "",
+        "feature_id": "surrounding/way/1242496013/0",
+        "highway": "service",
+        "layer": "",
+        "name": "",
+        "surrounding": true,
+        "walkable": false
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          [
+            117.125529804,
+            31.821022099
+          ],
+          [
+            117.125630703,
+            31.820827504
+          ],
+          [
+            117.125784501,
+            31.820530801
+          ]
+        ],
+        "type": "LineString"
+      },
+      "id": "surrounding/way/1242496014/0",
+      "properties": {
+        "bridge": "",
+        "feature_id": "surrounding/way/1242496014/0",
+        "highway": "footway",
+        "layer": "",
+        "name": "",
+        "surrounding": true,
+        "walkable": false
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          [
+            117.125784501,
+            31.820530801
+          ],
+          [
+            117.125719197,
+            31.820436003
+          ],
+          [
+            117.125560699,
+            31.820206002
+          ]
+        ],
+        "type": "LineString"
+      },
+      "id": "surrounding/way/1242496015/0",
+      "properties": {
+        "bridge": "",
+        "feature_id": "surrounding/way/1242496015/0",
+        "highway": "footway",
+        "layer": "",
+        "name": "",
+        "surrounding": true,
+        "walkable": false
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          [
+            117.125859998,
+            31.819753302
+          ],
+          [
+            117.1259162,
+            31.819844997
+          ]
+        ],
+        "type": "LineString"
+      },
+      "id": "surrounding/way/1242496016/0",
+      "properties": {
+        "bridge": "",
+        "feature_id": "surrounding/way/1242496016/0",
+        "highway": "footway",
+        "layer": "",
+        "name": "",
+        "surrounding": true,
+        "walkable": false
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          [
+            117.125784501,
+            31.820530801
+          ],
+          [
+            117.125952503,
+            31.820475501
+          ]
+        ],
+        "type": "LineString"
+      },
+      "id": "surrounding/way/1242496017/0",
+      "properties": {
+        "bridge": "",
+        "feature_id": "surrounding/way/1242496017/0",
+        "highway": "footway",
+        "layer": "",
+        "name": "",
+        "surrounding": true,
+        "walkable": false
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          [
+            117.125810602,
+            31.821017396
+          ],
+          [
+            117.125630703,
+            31.820827504
+          ],
+          [
+            117.125347101,
+            31.820528004
+          ],
+          [
+            117.125078602,
+            31.820268802
+          ]
+        ],
+        "type": "LineString"
+      },
+      "id": "surrounding/way/1242496018/0",
+      "properties": {
+        "bridge": "",
+        "feature_id": "surrounding/way/1242496018/0",
+        "highway": "footway",
+        "layer": "",
+        "name": "",
+        "surrounding": true,
+        "walkable": false
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          [
+            117.127384105,
+            31.820930099
+          ],
+          [
+            117.127386698,
+            31.819404897
+          ]
+        ],
+        "type": "LineString"
+      },
+      "id": "surrounding/way/1242496019/0",
+      "properties": {
+        "bridge": "",
+        "feature_id": "surrounding/way/1242496019/0",
+        "highway": "residential",
+        "layer": "",
+        "name": "",
+        "surrounding": true,
+        "walkable": false
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          [
+            117.128487196,
+            31.820169804
+          ],
+          [
+            117.127771495,
+            31.820174004
+          ]
+        ],
+        "type": "LineString"
+      },
+      "id": "surrounding/way/1242496020/0",
+      "properties": {
+        "bridge": "",
+        "feature_id": "surrounding/way/1242496020/0",
+        "highway": "residential",
+        "layer": "",
+        "name": "",
+        "surrounding": true,
+        "walkable": false
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          [
+            117.123170195,
+            31.8207961
+          ],
+          [
+            117.124011699,
+            31.820798196
+          ],
+          [
+            117.124075098,
+            31.8208195
+          ],
+          [
+            117.125151696,
+            31.820823898
+          ]
+        ],
+        "type": "LineString"
+      },
+      "id": "surrounding/way/1242496021/0",
+      "properties": {
+        "bridge": "",
+        "feature_id": "surrounding/way/1242496021/0",
+        "highway": "service",
+        "layer": "",
+        "name": "",
+        "surrounding": true,
+        "walkable": false
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          [
+            117.121123104,
+            31.822354299
+          ],
+          [
+            117.121224299,
+            31.822087299
+          ],
+          [
+            117.121222796,
+            31.820839996
+          ],
+          [
+            117.121403404,
+            31.820603502
+          ],
+          [
+            117.121607297,
+            31.820363797
+          ],
+          [
+            117.121610504,
+            31.819933598
+          ],
+          [
+            117.1216463,
+            31.819567898
+          ],
+          [
+            117.122018301,
+            31.819047803
+          ],
+          [
+            117.122048402,
+            31.819005796
+          ],
+          [
+            117.122387,
+            31.818549796
+          ]
+        ],
+        "type": "LineString"
+      },
+      "id": "surrounding/way/1242496022/0",
+      "properties": {
+        "bridge": "",
+        "feature_id": "surrounding/way/1242496022/0",
+        "highway": "service",
+        "layer": "",
+        "name": "",
+        "surrounding": true,
+        "walkable": false
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          [
+            117.122741198,
+            31.818042804
+          ],
+          [
+            117.1227472,
+            31.818543797
+          ],
+          [
+            117.122755603,
+            31.818957197
+          ]
+        ],
+        "type": "LineString"
+      },
+      "id": "surrounding/way/1242496023/0",
+      "properties": {
+        "bridge": "",
+        "feature_id": "surrounding/way/1242496023/0",
+        "highway": "residential",
+        "layer": "-2",
+        "name": "",
+        "surrounding": true,
+        "walkable": false
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          [
+            117.1227472,
+            31.818543797
+          ],
+          [
+            117.122387,
+            31.818549796
+          ]
+        ],
+        "type": "LineString"
+      },
+      "id": "surrounding/way/1242496024/0",
+      "properties": {
+        "bridge": "",
+        "feature_id": "surrounding/way/1242496024/0",
+        "highway": "service",
+        "layer": "",
+        "name": "",
+        "surrounding": true,
+        "walkable": false
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          [
+            117.123175604,
+            31.8200079
+          ],
+          [
+            117.123137702,
+            31.819955299
+          ],
+          [
+            117.122508802,
+            31.819759103
+          ],
+          [
+            117.122465704,
+            31.819745604
+          ],
+          [
+            117.122311101,
+            31.8196974
+          ],
+          [
+            117.122095904,
+            31.819638603
+          ]
+        ],
+        "type": "LineString"
+      },
+      "id": "surrounding/way/1242496025/0",
+      "properties": {
+        "bridge": "",
+        "feature_id": "surrounding/way/1242496025/0",
+        "highway": "service",
+        "layer": "",
+        "name": "",
+        "surrounding": true,
+        "walkable": false
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          [
+            117.1197556,
+            31.8196941
+          ],
+          [
+            117.120421502,
+            31.819690602
+          ]
+        ],
+        "type": "LineString"
+      },
+      "id": "surrounding/way/1242496026/0",
+      "properties": {
+        "bridge": "",
+        "feature_id": "surrounding/way/1242496026/0",
+        "highway": "service",
+        "layer": "",
+        "name": "",
+        "surrounding": true,
+        "walkable": false
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          [
+            117.121610504,
+            31.819933598
+          ],
+          [
+            117.120434902,
+            31.819936701
+          ],
+          [
+            117.120421502,
+            31.819690602
+          ],
+          [
+            117.120412304,
+            31.819060502
+          ],
+          [
+            117.120807697,
+            31.819047399
+          ],
+          [
+            117.120793302,
+            31.818638999
+          ],
+          [
+            117.120822102,
+            31.818585796
+          ],
+          [
+            117.120882696,
+            31.818555201
+          ],
+          [
+            117.121589198,
+            31.818549103
+          ],
+          [
+            117.122387,
+            31.818549796
+          ]
+        ],
+        "type": "LineString"
+      },
+      "id": "surrounding/way/1242496027/0",
+      "properties": {
+        "bridge": "",
+        "feature_id": "surrounding/way/1242496027/0",
+        "highway": "service",
+        "layer": "",
+        "name": "",
+        "surrounding": true,
+        "walkable": false
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          [
+            117.120807697,
+            31.819047399
+          ],
+          [
+            117.121197003,
+            31.819047498
+          ],
+          [
+            117.122018301,
+            31.819047803
+          ]
+        ],
+        "type": "LineString"
+      },
+      "id": "surrounding/way/1242496028/0",
+      "properties": {
+        "bridge": "",
+        "feature_id": "surrounding/way/1242496028/0",
+        "highway": "service",
+        "layer": "",
+        "name": "",
+        "surrounding": true,
+        "walkable": false
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          [
+            117.119901503,
+            31.818642102
+          ],
+          [
+            117.120793302,
+            31.818638999
+          ]
+        ],
+        "type": "LineString"
+      },
+      "id": "surrounding/way/1242496029/0",
+      "properties": {
+        "bridge": "",
+        "feature_id": "surrounding/way/1242496029/0",
+        "highway": "service",
+        "layer": "",
+        "name": "",
+        "surrounding": true,
+        "walkable": false
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          [
+            117.121197003,
+            31.819047498
+          ],
+          [
+            117.121209503,
+            31.819573303
+          ],
+          [
+            117.1216463,
+            31.819567898
+          ]
+        ],
+        "type": "LineString"
+      },
+      "id": "surrounding/way/1242496030/0",
+      "properties": {
+        "bridge": "",
+        "feature_id": "surrounding/way/1242496030/0",
+        "highway": "footway",
+        "layer": "",
+        "name": "",
+        "surrounding": true,
+        "walkable": false
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          [
+            117.1216463,
+            31.819567898
+          ],
+          [
+            117.122095904,
+            31.819638603
+          ]
+        ],
+        "type": "LineString"
+      },
+      "id": "surrounding/way/1242496031/0",
+      "properties": {
+        "bridge": "",
+        "feature_id": "surrounding/way/1242496031/0",
+        "highway": "footway",
+        "layer": "",
+        "name": "",
+        "surrounding": true,
+        "walkable": false
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          [
+            117.122151397,
+            31.820050698
+          ],
+          [
+            117.122424595,
+            31.8198472
+          ],
+          [
+            117.122465704,
+            31.819745604
+          ]
+        ],
+        "type": "LineString"
+      },
+      "id": "surrounding/way/1242496032/0",
+      "properties": {
+        "bridge": "",
+        "feature_id": "surrounding/way/1242496032/0",
+        "highway": "service",
+        "layer": "",
+        "name": "",
+        "surrounding": true,
+        "walkable": false
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          [
+            117.122508802,
+            31.819759103
+          ],
+          [
+            117.1225932,
+            31.819013503
+          ]
+        ],
+        "type": "LineString"
+      },
+      "id": "surrounding/way/1242496033/0",
+      "properties": {
+        "bridge": "",
+        "feature_id": "surrounding/way/1242496033/0",
+        "highway": "service",
+        "layer": "",
+        "name": "",
+        "surrounding": true,
+        "walkable": false
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          [
+            117.124012799,
+            31.818159904
+          ],
+          [
+            117.124012799,
+            31.817812299
+          ]
+        ],
+        "type": "LineString"
+      },
+      "id": "surrounding/way/1242496034/0",
+      "properties": {
+        "bridge": "",
+        "feature_id": "surrounding/way/1242496034/0",
+        "highway": "residential",
+        "layer": "",
+        "name": "",
+        "surrounding": true,
+        "walkable": false
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          [
+            117.122672804,
+            31.822352698
+          ],
+          [
+            117.122674899,
+            31.822648799
+          ],
+          [
+            117.122677905,
+            31.823076696
+          ]
+        ],
+        "type": "LineString"
+      },
+      "id": "surrounding/way/1242496035/0",
+      "properties": {
+        "bridge": "",
+        "feature_id": "surrounding/way/1242496035/0",
+        "highway": "residential",
+        "layer": "",
+        "name": "",
+        "surrounding": true,
+        "walkable": false
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          [
+            117.124911605,
+            31.822404598
+          ],
+          [
+            117.124911097,
+            31.822633097
+          ],
+          [
+            117.124910303,
+            31.823069204
+          ]
+        ],
+        "type": "LineString"
+      },
+      "id": "surrounding/way/1242496036/0",
+      "properties": {
+        "bridge": "",
+        "feature_id": "surrounding/way/1242496036/0",
+        "highway": "residential",
+        "layer": "",
+        "name": "",
+        "surrounding": true,
+        "walkable": false
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          [
+            117.119239104,
+            31.822668098
+          ],
+          [
+            117.122286196,
+            31.822651002
+          ],
+          [
+            117.122674899,
+            31.822648799
+          ],
+          [
+            117.122969403,
+            31.822632198
+          ],
+          [
+            117.1231768,
+            31.822571098
+          ],
+          [
+            117.124252096,
+            31.8225642
+          ],
+          [
+            117.124469802,
+            31.822633996
+          ],
+          [
+            117.124911097,
+            31.822633097
+          ],
+          [
+            117.125042298,
+            31.822593599
+          ],
+          [
+            117.125316195,
+            31.822593599
+          ],
+          [
+            117.127457898,
+            31.822597304
+          ]
+        ],
+        "type": "LineString"
+      },
+      "id": "surrounding/way/1242498644/0",
+      "properties": {
+        "bridge": "",
+        "feature_id": "surrounding/way/1242498644/0",
+        "highway": "tertiary_link",
+        "layer": "",
+        "name": "",
+        "surrounding": true,
+        "walkable": false
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          [
+            117.128496404,
+            31.823107704
+          ],
+          [
+            117.125297302,
+            31.823103504
+          ],
+          [
+            117.1250782,
+            31.823103298
+          ],
+          [
+            117.125011498,
+            31.823070203
+          ],
+          [
+            117.124910303,
+            31.823069204
+          ],
+          [
+            117.124479497,
+            31.823064897
+          ],
+          [
+            117.124012196,
+            31.823194102
+          ],
+          [
+            117.123572001,
+            31.823198697
+          ],
+          [
+            117.123338504,
+            31.823201099
+          ],
+          [
+            117.1231721,
+            31.82316
+          ],
+          [
+            117.122975902,
+            31.823079996
+          ],
+          [
+            117.122677905,
+            31.823076696
+          ],
+          [
+            117.122288895,
+            31.823072999
+          ],
+          [
+            117.119809601,
+            31.823049203
+          ],
+          [
+            117.119249403,
+            31.823052702
+          ]
+        ],
+        "type": "LineString"
+      },
+      "id": "surrounding/way/1242498645/0",
+      "properties": {
+        "bridge": "",
+        "feature_id": "surrounding/way/1242498645/0",
+        "highway": "tertiary_link",
+        "layer": "",
+        "name": "",
+        "surrounding": true,
+        "walkable": false
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          [
+            117.116224749,
+            31.822755189
+          ],
+          [
+            117.116748897,
+            31.822758696
+          ],
+          [
+            117.116921895,
+            31.822759901
+          ],
+          [
+            117.119119503,
+            31.822774596
+          ],
+          [
+            117.119240999,
+            31.822766304
+          ],
+          [
+            117.122151905,
+            31.822761996
+          ]
+        ],
+        "type": "LineString"
+      },
+      "id": "surrounding/way/1242498646/0",
+      "properties": {
+        "bridge": "",
+        "feature_id": "surrounding/way/1242498646/0",
+        "highway": "primary",
+        "layer": "",
+        "name": "习友路",
+        "surrounding": true,
+        "walkable": false
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          [
+            117.122151905,
+            31.822761996
+          ],
+          [
+            117.122221697,
+            31.822761799
+          ],
+          [
+            117.123792099,
+            31.822759496
+          ],
+          [
+            117.125396201,
+            31.822760099
+          ]
+        ],
+        "type": "LineString"
+      },
+      "id": "surrounding/way/1242498647/0",
+      "properties": {
+        "bridge": "",
+        "feature_id": "surrounding/way/1242498647/0",
+        "highway": "primary",
+        "layer": "-1",
+        "name": "习友路",
+        "surrounding": true,
+        "walkable": false
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          [
+            117.122151905,
+            31.822962401
+          ],
+          [
+            117.119248704,
+            31.822964002
+          ],
+          [
+            117.119112804,
+            31.822963903
+          ],
+          [
+            117.117178201,
+            31.822951402
+          ],
+          [
+            117.116224749,
+            31.822945179
+          ]
+        ],
+        "type": "LineString"
+      },
+      "id": "surrounding/way/1242498648/0",
+      "properties": {
+        "bridge": "",
+        "feature_id": "surrounding/way/1242498648/0",
+        "highway": "primary",
+        "layer": "",
+        "name": "习友路",
+        "surrounding": true,
+        "walkable": false
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          [
+            117.125392104,
+            31.822960602
+          ],
+          [
+            117.1237894,
+            31.822961502
+          ],
+          [
+            117.122456104,
+            31.822962203
+          ],
+          [
+            117.122151905,
+            31.822962401
+          ]
+        ],
+        "type": "LineString"
+      },
+      "id": "surrounding/way/1242498649/0",
+      "properties": {
+        "bridge": "",
+        "feature_id": "surrounding/way/1242498649/0",
+        "highway": "primary",
+        "layer": "-1",
+        "name": "习友路",
+        "surrounding": true,
+        "walkable": false
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          [
+            117.125297302,
+            31.823103504
+          ],
+          [
+            117.125217995,
+            31.823008896
+          ],
+          [
+            117.125217297,
+            31.8226847
+          ],
+          [
+            117.125316195,
+            31.822593599
+          ]
+        ],
+        "type": "LineString"
+      },
+      "id": "surrounding/way/1242498650/0",
+      "properties": {
+        "bridge": "",
+        "feature_id": "surrounding/way/1242498650/0",
+        "highway": "tertiary_link",
+        "layer": "",
+        "name": "",
+        "surrounding": true,
+        "walkable": false
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          [
+            117.122286196,
+            31.822651002
+          ],
+          [
+            117.122288895,
+            31.823072999
+          ]
+        ],
+        "type": "LineString"
+      },
+      "id": "surrounding/way/1242498651/0",
+      "properties": {
+        "bridge": "",
+        "feature_id": "surrounding/way/1242498651/0",
+        "highway": "tertiary_link",
+        "layer": "",
+        "name": "",
+        "surrounding": true,
+        "walkable": false
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          [
+            117.128495303,
+            31.823017403
+          ],
+          [
+            117.128012401,
+            31.823020101
+          ],
+          [
+            117.126524302,
+            31.823027899
+          ],
+          [
+            117.126077502,
+            31.823025299
+          ],
+          [
+            117.125392104,
+            31.822960602
+          ]
+        ],
+        "type": "LineString"
+      },
+      "id": "surrounding/way/1264703026/0",
+      "properties": {
+        "bridge": "",
+        "feature_id": "surrounding/way/1264703026/0",
+        "highway": "primary_link",
+        "layer": "",
+        "name": "",
+        "surrounding": true,
+        "walkable": false
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          [
+            117.125396201,
+            31.822760099
+          ],
+          [
+            117.126040595,
+            31.822674502
+          ],
+          [
+            117.127562596,
+            31.822682299
+          ],
+          [
+            117.127691998,
+            31.8226813
+          ],
+          [
+            117.128494001,
+            31.822674502
+          ]
+        ],
+        "type": "LineString"
+      },
+      "id": "surrounding/way/1264703027/0",
+      "properties": {
+        "bridge": "",
+        "feature_id": "surrounding/way/1264703027/0",
+        "highway": "primary_link",
+        "layer": "",
+        "name": "",
+        "surrounding": true,
+        "walkable": false
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          [
+            117.128494001,
+            31.822674502
+          ],
+          [
+            117.128687395,
+            31.822674502
+          ],
+          [
+            117.129680495,
+            31.822674502
+          ],
+          [
+            117.130097997,
+            31.822674502
+          ],
+          [
+            117.131475249,
+            31.822674421
+          ]
+        ],
+        "type": "LineString"
+      },
+      "id": "surrounding/way/1264703028/0",
+      "properties": {
+        "bridge": "",
+        "feature_id": "surrounding/way/1264703028/0",
+        "highway": "primary_link",
+        "layer": "",
+        "name": "",
+        "surrounding": true,
+        "walkable": false
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          [
+            117.131475249,
+            31.822996377
+          ],
+          [
+            117.130098696,
+            31.8230052
+          ],
+          [
+            117.128693195,
+            31.823014202
+          ],
+          [
+            117.128495303,
+            31.823017403
+          ]
+        ],
+        "type": "LineString"
+      },
+      "id": "surrounding/way/1264703029/0",
+      "properties": {
+        "bridge": "",
+        "feature_id": "surrounding/way/1264703029/0",
+        "highway": "primary_link",
+        "layer": "",
+        "name": "",
+        "surrounding": true,
+        "walkable": false
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          [
+            117.127995996,
+            31.822959298
+          ],
+          [
+            117.125392104,
+            31.822960602
+          ]
+        ],
+        "type": "LineString"
+      },
+      "id": "surrounding/way/1264703030/0",
+      "properties": {
+        "bridge": "",
+        "feature_id": "surrounding/way/1264703030/0",
+        "highway": "primary",
+        "layer": "",
+        "name": "习友路",
+        "surrounding": true,
+        "walkable": false
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          [
+            117.125396201,
+            31.822760099
+          ],
+          [
+            117.128003098,
+            31.822761196
+          ]
+        ],
+        "type": "LineString"
+      },
+      "id": "surrounding/way/1264703031/0",
+      "properties": {
+        "bridge": "",
+        "feature_id": "surrounding/way/1264703031/0",
+        "highway": "primary",
+        "layer": "",
+        "name": "习友路",
+        "surrounding": true,
+        "walkable": false
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          [
+            117.129224096,
+            31.822949999
+          ],
+          [
+            117.127995996,
+            31.822959298
+          ]
+        ],
+        "type": "LineString"
+      },
+      "id": "surrounding/way/1264703032/0",
+      "properties": {
+        "bridge": "",
+        "feature_id": "surrounding/way/1264703032/0",
+        "highway": "primary",
+        "layer": "-1",
+        "name": "习友路",
+        "surrounding": true,
+        "walkable": false
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          [
+            117.128003098,
+            31.822761196
+          ],
+          [
+            117.129231198,
+            31.822747796
+          ]
+        ],
+        "type": "LineString"
+      },
+      "id": "surrounding/way/1264703033/0",
+      "properties": {
+        "bridge": "",
+        "feature_id": "surrounding/way/1264703033/0",
+        "highway": "primary",
+        "layer": "-1",
+        "name": "习友路",
+        "surrounding": true,
+        "walkable": false
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          [
+            117.127457898,
+            31.822597304
+          ],
+          [
+            117.127691998,
+            31.8226813
+          ]
+        ],
+        "type": "LineString"
+      },
+      "id": "surrounding/way/1264703034/0",
+      "properties": {
+        "bridge": "",
+        "feature_id": "surrounding/way/1264703034/0",
+        "highway": "tertiary",
+        "layer": "",
+        "name": "",
+        "surrounding": true,
+        "walkable": false
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          [
+            117.123553701,
+            31.827106397
+          ],
+          [
+            117.123567503,
+            31.8269572
+          ],
+          [
+            117.123458296,
+            31.826547497
+          ],
+          [
+            117.123220597,
+            31.825922496
+          ],
+          [
+            117.123130505,
+            31.825625801
+          ],
+          [
+            117.123091005,
+            31.825144404
+          ],
+          [
+            117.1235709,
+            31.824965403
+          ],
+          [
+            117.123572001,
+            31.823198697
+          ]
+        ],
+        "type": "LineString"
+      },
+      "id": "surrounding/way/1316321492/0",
+      "properties": {
+        "bridge": "",
+        "feature_id": "surrounding/way/1316321492/0",
+        "highway": "path",
+        "layer": "",
+        "name": "",
+        "surrounding": true,
+        "walkable": false
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          [
+            117.116224749,
+            31.824773569
+          ],
+          [
+            117.116695903,
+            31.825059499
+          ],
+          [
+            117.117011797,
+            31.825126202
+          ],
+          [
+            117.119144503,
+            31.825128504
+          ]
+        ],
+        "type": "LineString"
+      },
+      "id": "surrounding/way/1426386889/0",
+      "properties": {
+        "bridge": "",
+        "feature_id": "surrounding/way/1426386889/0",
+        "highway": "tertiary",
+        "layer": "",
+        "name": "",
+        "surrounding": true,
+        "walkable": false
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          [
+            117.125859998,
+            31.819753302
+          ],
+          [
+            117.125873101,
+            31.8193075
+          ]
+        ],
+        "type": "LineString"
+      },
+      "id": "surrounding/way/1435377492/0",
+      "properties": {
+        "bridge": "",
+        "feature_id": "surrounding/way/1435377492/0",
+        "highway": "residential",
+        "layer": "",
+        "name": "",
+        "surrounding": true,
+        "walkable": false
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          [
+            117.126546803,
+            31.829430799
+          ],
+          [
+            117.128548002,
+            31.829437499
+          ]
+        ],
+        "type": "LineString"
+      },
+      "id": "surrounding/way/1456242726/0",
+      "properties": {
+        "bridge": "",
+        "feature_id": "surrounding/way/1456242726/0",
+        "highway": "unclassified",
+        "layer": "",
+        "name": "",
+        "surrounding": true,
+        "walkable": false
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          [
+            117.116921895,
+            31.822759901
+          ],
+          [
+            117.116947604,
+            31.822336996
+          ],
+          [
+            117.117042004,
+            31.822315097
+          ],
+          [
+            117.117861704,
+            31.822315097
+          ],
+          [
+            117.118544096,
+            31.8223224
+          ],
+          [
+            117.118625605,
+            31.822234896
+          ],
+          [
+            117.118617,
+            31.821239402
+          ],
+          [
+            117.118595599,
+            31.820612198
+          ],
+          [
+            117.118637702,
+            31.820131296
+          ],
+          [
+            117.118715602,
+            31.819239898
+          ],
+          [
+            117.118829,
+            31.8190849
+          ],
+          [
+            117.118922702,
+            31.818272301
+          ],
+          [
+            117.118498701,
+            31.818272301
+          ],
+          [
+            117.118232499,
+            31.818339301
+          ],
+          [
+            117.117714902,
+            31.818795904
+          ],
+          [
+            117.117307497,
+            31.819202603
+          ],
+          [
+            117.116418397,
+            31.820090296
+          ],
+          [
+            117.116395704,
+            31.820112698
+          ],
+          [
+            117.116249802,
+            31.820256697
+          ],
+          [
+            117.116224749,
+            31.820281428
+          ]
+        ],
+        "type": "LineString"
+      },
+      "id": "surrounding/way/1456242727/0",
+      "properties": {
+        "bridge": "",
+        "feature_id": "surrounding/way/1456242727/0",
+        "highway": "living_street",
+        "layer": "",
+        "name": "",
+        "surrounding": true,
+        "walkable": false
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          [
+            117.116224749,
+            31.822332022
+          ],
+          [
+            117.116616701,
+            31.822330404
+          ],
+          [
+            117.116707905,
+            31.822329999
+          ],
+          [
+            117.116767695,
+            31.822418897
+          ],
+          [
+            117.116748897,
+            31.822758696
+          ]
+        ],
+        "type": "LineString"
+      },
+      "id": "surrounding/way/1456242727/1",
+      "properties": {
+        "bridge": "",
+        "feature_id": "surrounding/way/1456242727/1",
+        "highway": "living_street",
+        "layer": "",
+        "name": "",
+        "surrounding": true,
+        "walkable": false
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          [
+            117.117042004,
+            31.822315097
+          ],
+          [
+            117.117054303,
+            31.821502696
+          ],
+          [
+            117.117080097,
+            31.821458899
+          ],
+          [
+            117.117286096,
+            31.821444303
+          ],
+          [
+            117.117462004,
+            31.8213969
+          ],
+          [
+            117.117496297,
+            31.821251102
+          ],
+          [
+            117.117706604,
+            31.821232801
+          ],
+          [
+            117.118617,
+            31.821239402
+          ],
+          [
+            117.119116201,
+            31.821240104
+          ]
+        ],
+        "type": "LineString"
+      },
+      "id": "surrounding/way/1456242728/0",
+      "properties": {
+        "bridge": "",
+        "feature_id": "surrounding/way/1456242728/0",
+        "highway": "unclassified",
+        "layer": "",
+        "name": "",
+        "surrounding": true,
+        "walkable": false
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          [
+            117.116616701,
+            31.822330404
+          ],
+          [
+            117.1166252,
+            31.821462497
+          ],
+          [
+            117.1163891,
+            31.821433404
+          ],
+          [
+            117.116273299,
+            31.821367699
+          ],
+          [
+            117.116224749,
+            31.821340225
+          ]
+        ],
+        "type": "LineString"
+      },
+      "id": "surrounding/way/1456242729/0",
+      "properties": {
+        "bridge": "",
+        "feature_id": "surrounding/way/1456242729/0",
+        "highway": "unclassified",
+        "layer": "",
+        "name": "",
+        "surrounding": true,
+        "walkable": false
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          [
+            117.1166252,
+            31.821462497
+          ],
+          [
+            117.117080097,
+            31.821458899
+          ]
+        ],
+        "type": "LineString"
+      },
+      "id": "surrounding/way/1456242730/0",
+      "properties": {
+        "bridge": "",
+        "feature_id": "surrounding/way/1456242730/0",
+        "highway": "unclassified",
+        "layer": "",
+        "name": "",
+        "surrounding": true,
+        "walkable": false
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          [
+            117.117496297,
+            31.821251102
+          ],
+          [
+            117.117494604,
+            31.821123803
+          ],
+          [
+            117.117487798,
+            31.820613502
+          ],
+          [
+            117.117486496,
+            31.820519604
+          ],
+          [
+            117.117481903,
+            31.820130999
+          ],
+          [
+            117.117479998,
+            31.819969697
+          ],
+          [
+            117.117473499,
+            31.819392099
+          ],
+          [
+            117.117473499,
+            31.8192054
+          ],
+          [
+            117.118147296,
+            31.819219996
+          ],
+          [
+            117.118715602,
+            31.819239898
+          ],
+          [
+            117.1192363,
+            31.819308202
+          ]
+        ],
+        "type": "LineString"
+      },
+      "id": "surrounding/way/1456242731/0",
+      "properties": {
+        "bridge": "",
+        "feature_id": "surrounding/way/1456242731/0",
+        "highway": "unclassified",
+        "layer": "",
+        "name": "",
+        "surrounding": true,
+        "walkable": false
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          [
+            117.117473499,
+            31.8192054
+          ],
+          [
+            117.117307497,
+            31.819202603
+          ]
+        ],
+        "type": "LineString"
+      },
+      "id": "surrounding/way/1456242732/0",
+      "properties": {
+        "bridge": "",
+        "feature_id": "surrounding/way/1456242732/0",
+        "highway": "unclassified",
+        "layer": "",
+        "name": "",
+        "surrounding": true,
+        "walkable": false
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          [
+            117.116273299,
+            31.821367699
+          ],
+          [
+            117.116267795,
+            31.821109199
+          ],
+          [
+            117.116249802,
+            31.820256697
+          ]
+        ],
+        "type": "LineString"
+      },
+      "id": "surrounding/way/1456242733/0",
+      "properties": {
+        "bridge": "",
+        "feature_id": "surrounding/way/1456242733/0",
+        "highway": "unclassified",
+        "layer": "",
+        "name": "",
+        "surrounding": true,
+        "walkable": false
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          [
+            117.116267795,
+            31.821109199
+          ],
+          [
+            117.117494604,
+            31.821123803
+          ]
+        ],
+        "type": "LineString"
+      },
+      "id": "surrounding/way/1456242734/0",
+      "properties": {
+        "bridge": "",
+        "feature_id": "surrounding/way/1456242734/0",
+        "highway": "unclassified",
+        "layer": "",
+        "name": "",
+        "surrounding": true,
+        "walkable": false
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          [
+            117.117487798,
+            31.820613502
+          ],
+          [
+            117.118595599,
+            31.820612198
+          ]
+        ],
+        "type": "LineString"
+      },
+      "id": "surrounding/way/1456242735/0",
+      "properties": {
+        "bridge": "",
+        "feature_id": "surrounding/way/1456242735/0",
+        "highway": "unclassified",
+        "layer": "",
+        "name": "",
+        "surrounding": true,
+        "walkable": false
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          [
+            117.129680495,
+            31.822674502
+          ],
+          [
+            117.129901301,
+            31.822515601
+          ],
+          [
+            117.129894898,
+            31.821701302
+          ],
+          [
+            117.1298645,
+            31.817789996
+          ]
+        ],
+        "type": "LineString"
+      },
+      "id": "surrounding/way/1456242737/0",
+      "properties": {
+        "bridge": "",
+        "feature_id": "surrounding/way/1456242737/0",
+        "highway": "unclassified",
+        "layer": "",
+        "name": "",
+        "surrounding": true,
+        "walkable": false
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          [
+            117.129901301,
+            31.822515601
+          ],
+          [
+            117.130097997,
+            31.822674502
+          ]
+        ],
+        "type": "LineString"
+      },
+      "id": "surrounding/way/1456242738/0",
+      "properties": {
+        "bridge": "",
+        "feature_id": "surrounding/way/1456242738/0",
+        "highway": "unclassified",
+        "layer": "",
+        "name": "",
+        "surrounding": true,
+        "walkable": false
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          [
+            117.129894898,
+            31.821701302
+          ],
+          [
+            117.131475249,
+            31.821696077
+          ]
+        ],
+        "type": "LineString"
+      },
+      "id": "surrounding/way/1456242739/0",
+      "properties": {
+        "bridge": "",
+        "feature_id": "surrounding/way/1456242739/0",
+        "highway": "unclassified",
+        "layer": "",
+        "name": "中颍南支路",
+        "surrounding": true,
+        "walkable": false
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          [
+            117.116395704,
+            31.820112698
+          ],
+          [
+            117.117481903,
+            31.820130999
+          ],
+          [
+            117.118637702,
+            31.820131296
+          ]
+        ],
+        "type": "LineString"
+      },
+      "id": "surrounding/way/1484466026/0",
+      "properties": {
+        "bridge": "",
+        "feature_id": "surrounding/way/1484466026/0",
+        "highway": "unclassified",
+        "layer": "",
+        "name": "",
+        "surrounding": true,
+        "walkable": false
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          [
+            117.131475249,
+            31.815723466
+          ],
+          [
+            117.1310761,
+            31.815725399
+          ],
+          [
+            117.1306543,
+            31.815727504
+          ],
+          [
+            117.130558101,
+            31.815789997
+          ],
+          [
+            117.130560197,
+            31.816307304
+          ],
+          [
+            117.130564398,
+            31.8173219
+          ],
+          [
+            117.131232195,
+            31.817319903
+          ],
+          [
+            117.131233105,
+            31.817521099
+          ],
+          [
+            117.131475249,
+            31.817520353
+          ]
+        ],
+        "type": "LineString"
+      },
+      "id": "surrounding/way/1539381705/0",
+      "properties": {
+        "bridge": "",
+        "feature_id": "surrounding/way/1539381705/0",
+        "highway": "service",
+        "layer": "",
+        "name": "",
+        "surrounding": true,
+        "walkable": false
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          [
+            117.130560197,
+            31.816307304
+          ],
+          [
+            117.131056403,
+            31.816309697
+          ],
+          [
+            117.131475249,
+            31.816311738
+          ]
+        ],
+        "type": "LineString"
+      },
+      "id": "surrounding/way/1539381706/0",
+      "properties": {
+        "bridge": "",
+        "feature_id": "surrounding/way/1539381706/0",
+        "highway": "service",
+        "layer": "",
+        "name": "",
+        "surrounding": true,
+        "walkable": false
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          [
+            117.131056403,
+            31.816309697
+          ],
+          [
+            117.1310761,
+            31.815725399
+          ]
+        ],
+        "type": "LineString"
+      },
+      "id": "surrounding/way/1539381708/0",
+      "properties": {
+        "bridge": "",
+        "feature_id": "surrounding/way/1539381708/0",
+        "highway": "service",
+        "layer": "",
+        "name": "",
+        "surrounding": true,
+        "walkable": false
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          [
+            117.130564398,
+            31.8173219
+          ],
+          [
+            117.129640699,
+            31.8173394
+          ],
+          [
+            117.129425502,
+            31.817272104
+          ],
+          [
+            117.129275397,
+            31.817134904
+          ],
+          [
+            117.129167905,
+            31.816968898
+          ],
+          [
+            117.128669402,
+            31.816966497
+          ]
+        ],
+        "type": "LineString"
+      },
+      "id": "surrounding/way/1539381710/0",
+      "properties": {
+        "bridge": "",
+        "feature_id": "surrounding/way/1539381710/0",
+        "highway": "service",
+        "layer": "",
+        "name": "",
+        "surrounding": true,
+        "walkable": false
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          [
+            117.13047384,
+            31.815302044
+          ],
+          [
+            117.1304731,
+            31.815568702
+          ],
+          [
+            117.129193296,
+            31.8155663
+          ],
+          [
+            117.129191116,
+            31.815302044
+          ]
+        ],
+        "type": "LineString"
+      },
+      "id": "surrounding/way/1539381711/0",
+      "properties": {
+        "bridge": "",
+        "feature_id": "surrounding/way/1539381711/0",
+        "highway": "service",
+        "layer": "",
+        "name": "",
+        "surrounding": true,
+        "walkable": false
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          [
+            117.131475249,
+            31.821603978
+          ],
+          [
+            117.130049702,
+            31.821612503
+          ],
+          [
+            117.130045405,
+            31.821176099
+          ],
+          [
+            117.130040801,
+            31.820711699
+          ],
+          [
+            117.130035995,
+            31.820219897
+          ],
+          [
+            117.130030703,
+            31.819683803
+          ],
+          [
+            117.130026099,
+            31.819219502
+          ],
+          [
+            117.130021802,
+            31.8187745
+          ],
+          [
+            117.130016997,
+            31.818292896
+          ],
+          [
+            117.131475249,
+            31.818274613
+          ]
+        ],
+        "type": "LineString"
+      },
+      "id": "surrounding/way/1539381719/0",
+      "properties": {
+        "bridge": "",
+        "feature_id": "surrounding/way/1539381719/0",
+        "highway": "service",
+        "layer": "",
+        "name": "",
+        "surrounding": true,
+        "walkable": false
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          [
+            117.130045405,
+            31.821176099
+          ],
+          [
+            117.131475249,
+            31.821177331
+          ]
+        ],
+        "type": "LineString"
+      },
+      "id": "surrounding/way/1539381720/0",
+      "properties": {
+        "bridge": "",
+        "feature_id": "surrounding/way/1539381720/0",
+        "highway": "service",
+        "layer": "",
+        "name": "",
+        "surrounding": true,
+        "walkable": false
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          [
+            117.130040801,
+            31.820711699
+          ],
+          [
+            117.131475249,
+            31.820714226
+          ]
+        ],
+        "type": "LineString"
+      },
+      "id": "surrounding/way/1539381721/0",
+      "properties": {
+        "bridge": "",
+        "feature_id": "surrounding/way/1539381721/0",
+        "highway": "service",
+        "layer": "",
+        "name": "",
+        "surrounding": true,
+        "walkable": false
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          [
+            117.130026099,
+            31.819219502
+          ],
+          [
+            117.131475249,
+            31.819213
+          ]
+        ],
+        "type": "LineString"
+      },
+      "id": "surrounding/way/1539381722/0",
+      "properties": {
+        "bridge": "",
+        "feature_id": "surrounding/way/1539381722/0",
+        "highway": "service",
+        "layer": "",
+        "name": "",
+        "surrounding": true,
+        "walkable": false
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          [
+            117.130021802,
+            31.8187745
+          ],
+          [
+            117.131475249,
+            31.818779347
+          ]
+        ],
+        "type": "LineString"
+      },
+      "id": "surrounding/way/1539381723/0",
+      "properties": {
+        "bridge": "",
+        "feature_id": "surrounding/way/1539381723/0",
+        "highway": "service",
+        "layer": "",
+        "name": "",
+        "surrounding": true,
+        "walkable": false
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          [
+            117.130035995,
+            31.820219897
+          ],
+          [
+            117.131475249,
+            31.820203511
+          ]
+        ],
+        "type": "LineString"
+      },
+      "id": "surrounding/way/1539381725/0",
+      "properties": {
+        "bridge": "",
+        "feature_id": "surrounding/way/1539381725/0",
+        "highway": "service",
+        "layer": "",
+        "name": "",
+        "surrounding": true,
+        "walkable": false
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          [
+            117.130030703,
+            31.819683803
+          ],
+          [
+            117.131475249,
+            31.819678803
+          ]
+        ],
+        "type": "LineString"
+      },
+      "id": "surrounding/way/1539381726/0",
+      "properties": {
+        "bridge": "",
+        "feature_id": "surrounding/way/1539381726/0",
+        "highway": "service",
+        "layer": "",
+        "name": "",
+        "surrounding": true,
+        "walkable": false
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          [
+            117.130088302,
+            31.827090201
+          ],
+          [
+            117.130098696,
+            31.8230052
+          ]
+        ],
+        "type": "LineString"
+      },
+      "id": "surrounding/way/1539381730/0",
+      "properties": {
+        "bridge": "",
+        "feature_id": "surrounding/way/1539381730/0",
+        "highway": "unclassified",
+        "layer": "",
+        "name": "",
+        "surrounding": true,
+        "walkable": false
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          [
+            117.131475249,
+            31.824864733
+          ],
+          [
+            117.131457097,
+            31.824864796
+          ],
+          [
+            117.130252103,
+            31.824869203
+          ],
+          [
+            117.130250197,
+            31.823386997
+          ],
+          [
+            117.1314528,
+            31.823373399
+          ],
+          [
+            117.131475249,
+            31.823373148
+          ]
+        ],
+        "type": "LineString"
+      },
+      "id": "surrounding/way/1539381747/0",
+      "properties": {
+        "bridge": "",
+        "feature_id": "surrounding/way/1539381747/0",
+        "highway": "service",
+        "layer": "",
+        "name": "",
+        "surrounding": true,
+        "walkable": false
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          [
+            117.131457097,
+            31.824864796
+          ],
+          [
+            117.1314528,
+            31.823373399
+          ]
+        ],
+        "type": "LineString"
+      },
+      "id": "surrounding/way/1539381748/0",
+      "properties": {
+        "bridge": "",
+        "feature_id": "surrounding/way/1539381748/0",
+        "highway": "service",
+        "layer": "",
+        "name": "",
+        "surrounding": true,
+        "walkable": false
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          [
+            117.128716596,
+            31.824972301
+          ],
+          [
+            117.129197403,
+            31.824970898
+          ],
+          [
+            117.129194196,
+            31.824582599
+          ],
+          [
+            117.129891797,
+            31.824578498
+          ],
+          [
+            117.129978005,
+            31.824644796
+          ],
+          [
+            117.129979603,
+            31.825410297
+          ],
+          [
+            117.129880398,
+            31.825488997
+          ],
+          [
+            117.129330805,
+            31.825487603
+          ],
+          [
+            117.129221799,
+            31.825388201
+          ],
+          [
+            117.129197403,
+            31.824970898
+          ]
+        ],
+        "type": "LineString"
+      },
+      "id": "surrounding/way/1539381760/0",
+      "properties": {
+        "bridge": "",
+        "feature_id": "surrounding/way/1539381760/0",
+        "highway": "service",
+        "layer": "",
+        "name": "",
+        "surrounding": true,
+        "walkable": false
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          [
+            117.128692549,
+            31.815302044
+          ],
+          [
+            117.128695703,
+            31.815718798
+          ],
+          [
+            117.128669402,
+            31.816966497
+          ],
+          [
+            117.128652001,
+            31.817791597
+          ],
+          [
+            117.128687395,
+            31.822674502
+          ],
+          [
+            117.128693195,
+            31.823014202
+          ],
+          [
+            117.128716596,
+            31.824972301
+          ],
+          [
+            117.128742104,
+            31.827100201
+          ],
+          [
+            117.128742803,
+            31.827155797
+          ],
+          [
+            117.128751101,
+            31.829427103
+          ],
+          [
+            117.128752085,
+            31.82969796
+          ]
+        ],
+        "type": "LineString"
+      },
+      "id": "surrounding/way/197112364/0",
+      "properties": {
+        "bridge": "",
+        "feature_id": "surrounding/way/197112364/0",
+        "highway": "primary",
+        "layer": "",
+        "name": "创新大道",
+        "surrounding": true,
+        "walkable": false
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          [
+            117.128548414,
+            31.82969796
+          ],
+          [
+            117.128548002,
+            31.829437499
+          ],
+          [
+            117.128544403,
+            31.827156103
+          ],
+          [
+            117.128543704,
+            31.827100201
+          ],
+          [
+            117.128496404,
+            31.823107704
+          ],
+          [
+            117.128495303,
+            31.823017403
+          ],
+          [
+            117.128494001,
+            31.822674502
+          ],
+          [
+            117.1284938,
+            31.8225943
+          ],
+          [
+            117.128487196,
+            31.820169804
+          ],
+          [
+            117.128480803,
+            31.817799897
+          ],
+          [
+            117.128490921,
+            31.815302044
+          ]
+        ],
+        "type": "LineString"
+      },
+      "id": "surrounding/way/303054091/0",
+      "properties": {
+        "bridge": "",
+        "feature_id": "surrounding/way/303054091/0",
+        "highway": "primary",
+        "layer": "",
+        "name": "创新大道",
+        "surrounding": true,
+        "walkable": false
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          [
+            117.131475249,
+            31.827140554
+          ],
+          [
+            117.130884601,
+            31.827143899
+          ],
+          [
+            117.128742803,
+            31.827155797
+          ],
+          [
+            117.128544403,
+            31.827156103
+          ],
+          [
+            117.123829196,
+            31.827164296
+          ],
+          [
+            117.123553796,
+            31.827164799
+          ],
+          [
+            117.121559499,
+            31.827168199
+          ],
+          [
+            117.1192816,
+            31.8271723
+          ],
+          [
+            117.119173705,
+            31.827167704
+          ],
+          [
+            117.116224749,
+            31.827150977
+          ]
+        ],
+        "type": "LineString"
+      },
+      "id": "surrounding/way/321575069/0",
+      "properties": {
+        "bridge": "",
+        "feature_id": "surrounding/way/321575069/0",
+        "highway": "tertiary",
+        "layer": "",
+        "name": "燕子河路",
+        "surrounding": true,
+        "walkable": false
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          [
+            117.130891396,
+            31.82969796
+          ],
+          [
+            117.130893502,
+            31.829423901
+          ],
+          [
+            117.1308873,
+            31.827838903
+          ],
+          [
+            117.130884601,
+            31.827143899
+          ]
+        ],
+        "type": "LineString"
+      },
+      "id": "surrounding/way/321575097/0",
+      "properties": {
+        "bridge": "",
+        "feature_id": "surrounding/way/321575097/0",
+        "highway": "residential",
+        "layer": "",
+        "name": "梅岭巷",
+        "surrounding": true,
+        "walkable": false
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          [
+            117.126201866,
+            31.82969796
+          ],
+          [
+            117.126456203,
+            31.829553898
+          ],
+          [
+            117.126546803,
+            31.829430799
+          ],
+          [
+            117.126620003,
+            31.829324499
+          ],
+          [
+            117.126588304,
+            31.828277097
+          ],
+          [
+            117.124030295,
+            31.828249101
+          ]
+        ],
+        "type": "LineString"
+      },
+      "id": "surrounding/way/358591749/0",
+      "properties": {
+        "bridge": "",
+        "feature_id": "surrounding/way/358591749/0",
+        "highway": "service",
+        "layer": "",
+        "name": "",
+        "surrounding": true,
+        "walkable": false
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          [
+            117.123472796,
+            31.828178099
+          ],
+          [
+            117.123487296,
+            31.828233498
+          ],
+          [
+            117.123521801,
+            31.828282097
+          ],
+          [
+            117.1235727,
+            31.828318897
+          ],
+          [
+            117.123638999,
+            31.828340697
+          ],
+          [
+            117.123710198,
+            31.828342198
+          ],
+          [
+            117.123777704,
+            31.828323196
+          ],
+          [
+            117.1238338,
+            31.828285901
+          ],
+          [
+            117.123871596,
+            31.828234703
+          ],
+          [
+            117.123886298,
+            31.828182596
+          ],
+          [
+            117.123881905,
+            31.828129203
+          ],
+          [
+            117.1238588,
+            31.8280793
+          ],
+          [
+            117.123819099,
+            31.828037698
+          ],
+          [
+            117.123766496,
+            31.828008101
+          ],
+          [
+            117.1237162,
+            31.827994701
+          ],
+          [
+            117.123663596,
+            31.827992498
+          ],
+          [
+            117.123611999,
+            31.828001599
+          ],
+          [
+            117.123553204,
+            31.828028596
+          ],
+          [
+            117.123507501,
+            31.828070001
+          ],
+          [
+            117.123479803,
+            31.828121604
+          ],
+          [
+            117.123472796,
+            31.828178099
+          ]
+        ],
+        "type": "LineString"
+      },
+      "id": "surrounding/way/358591750/0",
+      "properties": {
+        "bridge": "",
+        "feature_id": "surrounding/way/358591750/0",
+        "highway": "service",
+        "layer": "",
+        "name": "",
+        "surrounding": true,
+        "walkable": false
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          [
+            117.124030295,
+            31.828249101
+          ],
+          [
+            117.123871596,
+            31.828234703
+          ]
+        ],
+        "type": "LineString"
+      },
+      "id": "surrounding/way/358591751/0",
+      "properties": {
+        "bridge": "",
+        "feature_id": "surrounding/way/358591751/0",
+        "highway": "service",
+        "layer": "",
+        "name": "",
+        "surrounding": true,
+        "walkable": false
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          [
+            117.123766496,
+            31.828008101
+          ],
+          [
+            117.123801095,
+            31.827934896
+          ],
+          [
+            117.123829196,
+            31.827164296
+          ]
+        ],
+        "type": "LineString"
+      },
+      "id": "surrounding/way/358591752/0",
+      "properties": {
+        "bridge": "",
+        "feature_id": "surrounding/way/358591752/0",
+        "highway": "service",
+        "layer": "",
+        "name": "",
+        "surrounding": true,
+        "walkable": false
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          [
+            117.123611999,
+            31.828001599
+          ],
+          [
+            117.123553902,
+            31.827953998
+          ],
+          [
+            117.123553796,
+            31.827164799
+          ]
+        ],
+        "type": "LineString"
+      },
+      "id": "surrounding/way/358591753/0",
+      "properties": {
+        "bridge": "",
+        "feature_id": "surrounding/way/358591753/0",
+        "highway": "service",
+        "layer": "",
+        "name": "",
+        "surrounding": true,
+        "walkable": false
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          [
+            117.1235727,
+            31.828318897
+          ],
+          [
+            117.123452803,
+            31.828388396
+          ],
+          [
+            117.123126895,
+            31.828655701
+          ],
+          [
+            117.122963995,
+            31.8287989
+          ],
+          [
+            117.122767405,
+            31.828937297
+          ],
+          [
+            117.122655001,
+            31.828994601
+          ],
+          [
+            117.1224303,
+            31.829056601
+          ],
+          [
+            117.122188695,
+            31.829061403
+          ],
+          [
+            117.121924695,
+            31.829013703
+          ],
+          [
+            117.1215202,
+            31.828870504
+          ],
+          [
+            117.1214421,
+            31.828822103
+          ],
+          [
+            117.121042601,
+            31.828574502
+          ],
+          [
+            117.120604396,
+            31.828383603
+          ],
+          [
+            117.120424603,
+            31.828326298
+          ],
+          [
+            117.119277101,
+            31.828307197
+          ]
+        ],
+        "type": "LineString"
+      },
+      "id": "surrounding/way/358591754/0",
+      "properties": {
+        "bridge": "",
+        "feature_id": "surrounding/way/358591754/0",
+        "highway": "service",
+        "layer": "",
+        "name": "",
+        "surrounding": true,
+        "walkable": false
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          [
+            117.121559499,
+            31.827168199
+          ],
+          [
+            117.121570697,
+            31.827634199
+          ],
+          [
+            117.1215876,
+            31.828259497
+          ],
+          [
+            117.121514495,
+            31.8285889
+          ],
+          [
+            117.1214421,
+            31.828822103
+          ],
+          [
+            117.121289805,
+            31.829042301
+          ],
+          [
+            117.121205502,
+            31.829357396
+          ],
+          [
+            117.121147617,
+            31.82969796
+          ]
+        ],
+        "type": "LineString"
+      },
+      "id": "surrounding/way/358591755/0",
+      "properties": {
+        "bridge": "",
+        "feature_id": "surrounding/way/358591755/0",
+        "highway": "service",
+        "layer": "",
+        "name": "",
+        "surrounding": true,
+        "walkable": false
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          [
+            117.116224749,
+            31.817831913
+          ],
+          [
+            117.118572896,
+            31.817827803
+          ],
+          [
+            117.119010201,
+            31.817827003
+          ],
+          [
+            117.119380403,
+            31.8178214
+          ],
+          [
+            117.119503401,
+            31.817824899
+          ],
+          [
+            117.124012799,
+            31.817812299
+          ],
+          [
+            117.128480803,
+            31.817799897
+          ],
+          [
+            117.128652001,
+            31.817791597
+          ],
+          [
+            117.1298645,
+            31.817789996
+          ],
+          [
+            117.131475249,
+            31.817787883
+          ]
+        ],
+        "type": "LineString"
+      },
+      "id": "surrounding/way/376673589/0",
+      "properties": {
+        "bridge": "",
+        "feature_id": "surrounding/way/376673589/0",
+        "highway": "tertiary",
+        "layer": "",
+        "name": "复兴路",
+        "surrounding": true,
+        "walkable": false
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          [
+            117.116224749,
+            31.827080335
+          ],
+          [
+            117.119172805,
+            31.827085803
+          ],
+          [
+            117.119281303,
+            31.827091001
+          ],
+          [
+            117.121559404,
+            31.827109797
+          ],
+          [
+            117.123553701,
+            31.827106397
+          ],
+          [
+            117.123829101,
+            31.827105903
+          ],
+          [
+            117.128543704,
+            31.827100201
+          ],
+          [
+            117.128742104,
+            31.827100201
+          ],
+          [
+            117.130088302,
+            31.827090201
+          ],
+          [
+            117.130209904,
+            31.827089301
+          ],
+          [
+            117.130905399,
+            31.827085497
+          ],
+          [
+            117.131475249,
+            31.827073338
+          ]
+        ],
+        "type": "LineString"
+      },
+      "id": "surrounding/way/473675457/0",
+      "properties": {
+        "bridge": "",
+        "feature_id": "surrounding/way/473675457/0",
+        "highway": "tertiary",
+        "layer": "",
+        "name": "燕子河路",
+        "surrounding": true,
+        "walkable": false
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          [
+            117.119134385,
+            31.82969796
+          ],
+          [
+            117.119173705,
+            31.827167704
+          ],
+          [
+            117.119172805,
+            31.827085803
+          ],
+          [
+            117.119144503,
+            31.825128504
+          ],
+          [
+            117.119142598,
+            31.824997599
+          ],
+          [
+            117.119112804,
+            31.822963903
+          ],
+          [
+            117.119119503,
+            31.822774596
+          ],
+          [
+            117.119114603,
+            31.822532103
+          ],
+          [
+            117.119116201,
+            31.821240104
+          ],
+          [
+            117.119116699,
+            31.820824699
+          ],
+          [
+            117.119125896,
+            31.820278901
+          ],
+          [
+            117.119192502,
+            31.819659098
+          ],
+          [
+            117.1192363,
+            31.819308202
+          ],
+          [
+            117.119269904,
+            31.819038504
+          ],
+          [
+            117.119373301,
+            31.818039297
+          ],
+          [
+            117.119380403,
+            31.8178214
+          ],
+          [
+            117.119424899,
+            31.8167169
+          ],
+          [
+            117.119300799,
+            31.815530103
+          ],
+          [
+            117.119278435,
+            31.815302044
+          ]
+        ],
+        "type": "LineString"
+      },
+      "id": "surrounding/way/473675460/0",
+      "properties": {
+        "bridge": "",
+        "feature_id": "surrounding/way/473675460/0",
+        "highway": "tertiary",
+        "layer": "",
+        "name": "石莲南路",
+        "surrounding": true,
+        "walkable": false
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          [
+            117.131475249,
+            31.822935664
+          ],
+          [
+            117.131439496,
+            31.8229357
+          ],
+          [
+            117.131381495,
+            31.822936096
+          ],
+          [
+            117.129224096,
+            31.822949999
+          ]
+        ],
+        "type": "LineString"
+      },
+      "id": "surrounding/way/474872997/0",
+      "properties": {
+        "bridge": "",
+        "feature_id": "surrounding/way/474872997/0",
+        "highway": "primary",
+        "layer": "",
+        "name": "习友路",
+        "surrounding": true,
+        "walkable": false
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          [
+            117.129231198,
+            31.822747796
+          ],
+          [
+            117.131475249,
+            31.822740602
+          ]
+        ],
+        "type": "LineString"
+      },
+      "id": "surrounding/way/474872998/0",
+      "properties": {
+        "bridge": "",
+        "feature_id": "surrounding/way/474872998/0",
+        "highway": "primary",
+        "layer": "",
+        "name": "习友路",
+        "surrounding": true,
+        "walkable": false
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          [
+            117.119433281,
+            31.815302044
+          ],
+          [
+            117.119528105,
+            31.816073499
+          ],
+          [
+            117.1195697,
+            31.816762603
+          ],
+          [
+            117.119564599,
+            31.817239603
+          ],
+          [
+            117.119503401,
+            31.817824899
+          ],
+          [
+            117.119443103,
+            31.818459396
+          ],
+          [
+            117.119332499,
+            31.819221102
+          ],
+          [
+            117.119253996,
+            31.819784599
+          ],
+          [
+            117.119212898,
+            31.820221398
+          ],
+          [
+            117.119199403,
+            31.820571
+          ],
+          [
+            117.119200197,
+            31.820613898
+          ],
+          [
+            117.119239104,
+            31.822668098
+          ],
+          [
+            117.119240999,
+            31.822766304
+          ],
+          [
+            117.119248704,
+            31.822964002
+          ],
+          [
+            117.119249403,
+            31.823052702
+          ],
+          [
+            117.119281303,
+            31.827091001
+          ],
+          [
+            117.1192816,
+            31.8271723
+          ],
+          [
+            117.119277101,
+            31.828307197
+          ],
+          [
+            117.11927164,
+            31.82969796
+          ]
+        ],
+        "type": "LineString"
+      },
+      "id": "surrounding/way/512709478/0",
+      "properties": {
+        "bridge": "",
+        "feature_id": "surrounding/way/512709478/0",
+        "highway": "tertiary",
+        "layer": "",
+        "name": "石莲南路",
+        "surrounding": true,
+        "walkable": false
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          [
+            117.131475249,
+            31.829423029
+          ],
+          [
+            117.130893502,
+            31.829423901
+          ],
+          [
+            117.128751101,
+            31.829427103
+          ]
+        ],
+        "type": "LineString"
+      },
+      "id": "surrounding/way/858645962/0",
+      "properties": {
+        "bridge": "",
+        "feature_id": "surrounding/way/858645962/0",
+        "highway": "residential",
+        "layer": "",
+        "name": "华佗巷",
+        "surrounding": true,
+        "walkable": false
+      },
+      "type": "Feature"
+    }
+  ],
+  "name": "roads",
+  "notice": "人物所在楼栋与行走路线为展示层示意，OASIS 没有位置数据",
+  "schema_version": "mecoffe.gis.v1",
+  "source": {
+    "attribution": "© OpenStreetMap contributors",
+    "bbox": [
+      117.1194,
+      31.818,
+      117.1283,
+      31.827
+    ],
+    "downloaded_at_utc": "2026-11-03T05:01:24.973987+00:00",
+    "license": "ODbL-1.0",
+    "license_url": "https://www.openstreetmap.org/copyright",
+    "osm_generator": "openstreetmap-cgimap 2.1.0 (2089598 spike-07.openstreetmap.org)",
+    "relation_id": "14093671",
+    "sha256": "663062802ab35914d085a7a97d2be29001d0d6bc786b69b688608bdd37ee6437",
+    "source_url": "https://api.openstreetmap.org/api/0.6/map?bbox=117.1194,31.8180,117.1283,31.8270"
+  },
+  "type": "FeatureCollection"
+}

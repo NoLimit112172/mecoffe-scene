@@ -15,18 +15,31 @@ def load_map(path):
         if not manifest_path.is_file():
             manifest_path = path / 'manifest.json'
         manifest = read_json(manifest_path)
-        for name in ('campus3d.json', 'entrances.json', 'landcover.json'):
+        formal=manifest.get('schema_version')=='scene.map-manifest.v1'
+        if formal:
+            from adapter.scene_builder.asset_library import published_asset_library
+            descriptor,_=published_asset_library()
+            require(manifest.get('asset_library_version')==descriptor['version'] and manifest.get('catalog_sha256')==descriptor['catalog_sha256'],
+                    'ASSET_VERSION_MISMATCH','地图 catalog 与登记发布版不一致')
+            require(all(name in {'campus3d.json','entrances.json','landcover.json','asset_assignments.json','quality.json','surroundings.json',
+                                 *[f'gis/{layer}.geojson' for layer in ('buildings','roads','landcover','water','boundary','pois','entrances')]}
+                        for name in manifest.get('files',{})),'INVALID_MAP','地图文件清单包含无效路径')
+        for name in manifest.get('files',{}) if formal else ('campus3d.json', 'entrances.json', 'landcover.json'):
             expected = manifest.get('files', {}).get(name)
             if expected:
                 require(hashlib.sha256((path/name).read_bytes()).hexdigest() == expected,
                         'REF_MISMATCH', f'Archived file hash mismatch: {name}')
         package = {'schema_version':'scene.map.v1',
-                   'map_ref': {'map_id': manifest.get('id', manifest.get('campus_id')),
+                   'map_ref': {'map_id': manifest.get('map_id',manifest.get('id', manifest.get('campus_id'))),
                                'map_version': str(manifest.get('map_version', '1')),
                                'manifest_sha256': hashlib.sha256(manifest_path.read_bytes()).hexdigest()},
                    'campus':read_json(path/'campus3d.json'),
                    'entrances':read_json(path/'entrances.json'),
                    'landcover':read_json(path/'landcover.json')}
+        if formal:
+            package['quality']=read_json(path/'quality.json')
+            package['annotations']={'map_ref':copy.deepcopy(package['map_ref']),'buildings':{
+                b['osm_id']:copy.deepcopy(b['function_annotation']) for b in package['campus']['buildings'] if b.get('function_annotation')}}
     require(isinstance(package, dict) and isinstance(package.get('campus'), dict), 'INVALID_MAP', 'Expected a local scene.map.v1 package or prepared map directory')
     require(isinstance(package.get('map_ref'), dict), 'REF_MISMATCH', 'Map reference is required')
     return copy.deepcopy(package)

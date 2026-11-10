@@ -1,6 +1,6 @@
 {
-  "asset_library_version": "bundled-v1",
-  "catalog_sha256": "a54f919d8c86764b2d3cb0166d29ee287f677947ffc1bdebaa71b57d29b069c7",
+  "asset_library_version": "mecoffe-embed-v1",
+  "catalog_sha256": "a4444d42d820359ff180d4390c1b16a5a86249cfd008a0d2e5eafa1dfc55aa0c",
   "files": {
     "asset_assignments.json": "203e7aa6b75becfa74d6b6136f499524bec343edc5512a29571c16d92e5097b4",
     "campus3d.json": "dabdb3386d0e9382f0343dd2fc2db4db94366209318e958a65c4136bacfa6b2a",

@@ -1,5 +1,7 @@
 // Versioned map loading. No legacy fallback and no renderer/placement decisions.
 import {sha256Hex} from './sha256.js'
+import publishedLibrary from '../../../adapter/scene_builder/resources/mecoffe-embed-v1/asset-library.json' with {type:'json'}
+export const PUBLISHED_SCENE_ASSETS=Object.freeze(publishedLibrary)
 export class SceneMapError extends Error {constructor(code,message){super(message);this.code=code}}
 const check=(ok,code,message)=>{if(!ok)throw new SceneMapError(code,message)}
 const hash=value=>typeof value==='string'&&/^[a-f0-9]{64}$/.test(value)
@@ -22,7 +24,7 @@ export async function loadSceneMap(ref,{mapsBase='/scene-maps/',assets,fetcher=f
   const directory=sceneMapDirectory(ref,mapsBase)
   const manifest=await read(directory+'manifest.json',{fetcher,signal},ref.manifest_sha256)
   check(manifest.schema_version==='scene.map-manifest.v1'&&manifest.map_id===ref.map_id&&manifest.map_version===ref.map_version&&typeof manifest.title==='string'&&manifest.title.trim(),'MAP_VERSION_MISMATCH','地图清单身份或标题不匹配')
-  check(assets&&manifest.asset_library_version===assets.version&&hash(manifest.catalog_sha256)&&manifest.catalog_sha256===assets.catalog_sha256,'ASSET_VERSION_MISMATCH','地图所需素材库或 catalog 版本与显示程序不匹配')
+  check(assets&&manifest.asset_library_version===assets.version&&hash(manifest.catalog_sha256)&&manifest.catalog_sha256===assets.catalog_sha256,'ASSET_VERSION_MISMATCH',`地图登记的素材库或 catalog 与发布版不匹配；地图摘要 ${manifest.catalog_sha256}，需要 ${assets?.version||'已登记版本'} / ${assets?.catalog_sha256||'有效摘要'}；不能混用源码版 catalog`)
   check(manifest.files&&typeof manifest.files==='object'&&!Array.isArray(manifest.files)&&required.every(n=>Object.hasOwn(manifest.files,n)),'INVALID_MAP_MANIFEST','地图清单缺少必需文件')
   check(Object.entries(manifest.files).every(([name,sum])=>allowed(name)&&hash(sum)),'INVALID_MAP_MANIFEST','地图清单包含不允许的文件路径或摘要')
   const files=Object.fromEntries(await Promise.all(Object.entries(manifest.files).map(async([name,sum])=>[name,await read(directory+name,{fetcher,signal},sum)])))
@@ -35,9 +37,11 @@ export async function loadSceneMap(ref,{mapsBase='/scene-maps/',assets,fetcher=f
       style:manifest.style||{buildings:'procedural',characters:'campus'},simulation_data:false,
       simulation_time:{start,timezone:'Asia/Shanghai',step_unit:'day',steps:1,intervals:[{start,end:'2026-01-02T00:00:00+08:00'}]}},files}
 }
-/** This batch uses the existing bundled assets, not a new packaging/deployment rule. */
-export async function loadBundledSceneAssets({base=import.meta.env?.BASE_URL||'/',fetcher=fetch,signal}={}){
+/** Verify a named release; never infer a library version from whatever was fetched. */
+export async function loadBundledSceneAssets({base=import.meta.env?.BASE_URL||'/',fetcher=fetch,signal,development=import.meta.env?.DEV||false}={}){
   const response=await fetcher(`${base}mecoffe/assets3d/catalog.json`,{signal,cache:'no-store',credentials:'same-origin'})
   check(response.ok,'ASSET_VERSION_MISMATCH','无法读取当前显示程序的素材 catalog')
-  return {version:'bundled-v1',catalog_sha256:await sha256Hex(await response.arrayBuffer())}
+  const actual=await sha256Hex(await response.arrayBuffer())
+  check(actual===publishedLibrary.catalog_sha256,'ASSET_VERSION_MISMATCH',`${development?'当前为源码素材，与发布版不同':'当前素材 catalog 与已登记发布版不同'}；需要 ${publishedLibrary.version} / ${publishedLibrary.catalog_sha256}，实际 ${actual}`)
+  return {version:publishedLibrary.version,catalog_sha256:publishedLibrary.catalog_sha256}
 }

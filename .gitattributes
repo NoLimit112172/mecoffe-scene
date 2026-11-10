@@ -14,6 +14,9 @@ frontend/public/mecoffe/scenarios/index.json -text diff
 # M15 synthetic map manifests hash file bytes, including line endings.
 frontend/tests/fixtures/scene-render/maps/**/*.json -text diff
 frontend/tests/fixtures/scene-render/maps/**/*.geojson -text diff
+adapter/scene_builder/resources/**/*.json -text diff
+data/maps/**/*.json -text diff
+data/maps/**/*.geojson -text diff
 
 # Keep downloaded OSM bytes identical to the recorded SHA-256 on Windows.
 frontend/public/mecoffe/scenarios/**/gis/*.geojson -text diff

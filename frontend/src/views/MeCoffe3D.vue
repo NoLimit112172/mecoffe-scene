@@ -90,7 +90,7 @@
               </div>
               <code>{{ selected.id }}</code>
               <p class="person-placement"><i class="fa-solid fa-location-dot" aria-hidden="true"></i>{{ personPlacement(selected.id) }}</p>
-              <div v-if="selected.placement" class="mapping-note"><p>安置理由：{{selected.placement.reason}}</p><small v-for="(e,i) in selected.placement.evidence" :key="i">证据来源 {{e.source}} · {{e.key}}={{e.value}} · {{e.ref}}<br/></small></div>
+              <div v-if="selected.placement" class="mapping-note"><p>安置理由：{{selected.placement.reason}}</p><small v-for="(e,i) in selected.placement.evidence" :key="i">证据来源 {{sceneEvidenceLabel(e.source)}} · {{e.key}}={{e.value}} · {{e.ref}}<br/></small></div>
               <p v-if="selected.bio" class="person-bio">{{ selected.bio }}</p><details v-if="selected.role_description" class="role-description"><summary>角色说明</summary><p>{{selected.role_description}}</p><small>角色标识：{{selected.role}}</small></details>
               <ConfigProfileFields v-if="isIntegratedScene" :person="selected"/>
               <details v-if="mappingEntry(selected)?.note" class="mapping-note">
@@ -189,6 +189,7 @@ import EventResultDetails from '../components/EventResultDetails.vue'
 import {shopEntries, shopsInBuilding} from '../mecoffe/shopPresentation.js'
 import {previewQuery} from '../mecoffe/configPreviewStore.js'
 import ScenePlacementDetails from '../components/ScenePlacementDetails.vue'
+import {sceneEvidenceLabel} from '../mecoffe/sceneLabels.js'
 import Campus3DVisualControls from '../components/Campus3DVisualControls.vue'
 import { Campus3DScene } from '../mecoffe/Campus3DScene.js'
 import { describeEvent, eventTypeLabel, indexScene, personHistory, stateAt } from '../mecoffe/replay.js'

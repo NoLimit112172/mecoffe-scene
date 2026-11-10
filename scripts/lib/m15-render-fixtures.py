@@ -10,6 +10,7 @@ sys.path.insert(0,str(ROOT))
 from adapter.scene_builder.core import build_from_geojson
 from adapter.scene_builder.entrances import generate_entrances
 from adapter.scene_builder.gis import export_gis
+from adapter.scene_builder.asset_library import published_asset_library
 from adapter.scene_service import enrich_map,load_map,resolve
 
 OUT=ROOT/'frontend/tests/fixtures/scene-render'
@@ -30,7 +31,7 @@ def synthetic_map():
         if i==5:tags['amenity']='library'
         features.append({'type':'Feature','id':f'synthetic-building-{i}','properties':tags,'geometry':{'type':'Polygon','coordinates':[[[x,y],[x+.0004,y],[x+.0004,y+.0003],[x,y+.0003],[x,y]]]}})
     features.append({'type':'Feature','id':'synthetic-walk','properties':{'highway':'footway'},'geometry':{'type':'LineString','coordinates':[[103.7702+i*.001,1.2937] for i in range(6)]}})
-    bundle=build_from_geojson({'type':'FeatureCollection','source':{'license':'CC0-1.0','attribution':'Entirely synthetic test geometry'},'features':features},campus_id='synthetic-render-a',title='合成校园甲')
+    bundle=build_from_geojson({'type':'FeatureCollection','source':{'license':'CC0-1.0','attribution':'Entirely synthetic test geometry'},'features':features},catalog=published_asset_library()[1],campus_id='synthetic-render-a',title='合成校园甲')
     entrance,_=generate_entrances(bundle['campus'])
     return {'map_ref':{'map_id':'synthetic-render-a','map_version':'1','manifest_sha256':'0'*64},'campus':bundle['campus'],'entrances':entrance,'landcover':bundle['landcover']},bundle['assignments']
 
@@ -38,7 +39,9 @@ def synthetic_map():
 def main():
     old=ROOT/'frontend/tests/fixtures/generic-replay'
     snapshot=read(old/'snapshot.json');plan=read(old/'plan.json');trajectory=read(old/'trajectory.json')
-    roles={'synthetic':True,'population_request':{role:{'description':'合成角色 '+role,'count':sum(n['role']==role for n in snapshot['nodes']),'generate':{}} for role in sorted({n['role'] for n in snapshot['nodes']})}}
+    descriptor,_=published_asset_library()
+    role_names={'visitor':'合成校园访客','operator':'合成门店经营者','research':'合成科研人员'}
+    roles={'synthetic':True,'population_request':{role:{'description':role_names[role],'count':sum(n['role']==role for n in snapshot['nodes']),'generate':{}} for role in sorted({n['role'] for n in snapshot['nodes']})}}
     for kind in ('a','b'):
         if kind=='a':package,assets=synthetic_map();title='合成校园甲 · SceneResult 验收'
         else:
@@ -57,7 +60,7 @@ def main():
         directory=OUT/'maps'/package['map_ref']['map_id']/'1'
         for name,value in files.items():write_json(directory/name,value)
         manifest={'schema_version':'scene.map-manifest.v1','map_id':package['map_ref']['map_id'],'map_version':'1','title':title,
-                  'asset_library_version':'bundled-v1','catalog_sha256':sha((ROOT/'frontend/public/mecoffe/assets3d/catalog.json').read_bytes()),
+                  'asset_library_version':descriptor['version'],'catalog_sha256':descriptor['catalog_sha256'],
                   'style':{'buildings':'procedural','characters':'campus'},'files':{name:sha((directory/name).read_bytes()) for name in files}}
         write_json(directory/'manifest.json',manifest)
         package['map_ref']['manifest_sha256']=sha((directory/'manifest.json').read_bytes())

@@ -31,6 +31,7 @@ class SceneServiceCase(unittest.TestCase):
     def test_repeat_order_independence_seed_and_no_mutation(self):
         original=copy.deepcopy(self.request); first=resolve(self.request)
         self.assertEqual(resolve(self.request),first)
+        self.assertTrue(all('用途证据' in a['reason'] for a in first['assignments']))
         self.assertEqual(self.request,original)
         self.request['snapshot']['nodes'].reverse()
         self.request['map']['campus']['buildings'].reverse()
@@ -94,6 +95,7 @@ class SceneServiceCase(unittest.TestCase):
         result=resolve(self.request)
         self.assertEqual(len(result['assignments']),26)
         self.assertEqual(sum(x['status']=='out_of_scene' for x in result['assignments']),24)
+        self.assertTrue(all('按已确认的场外兜底处理' in a['reason'] for a in result['assignments'] if a['status']=='out_of_scene'))
         self.assertEqual(result['assumptions'],self.request['assumptions'])
         self.assertTrue(result['warnings'])
         self.request['role_prefs']['synthetic_student']['fallback']='any_building_in_scope'

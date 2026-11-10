@@ -1,4 +1,4 @@
-// DEV-only local uploads + offline map fixtures. No team API or remote network.
+// DEV: verify source mismatch, then use an explicit published-catalog test response.
 const fs=require('node:fs'),path=require('node:path'),assert=require('node:assert/strict');
 const {pathToFileURL}=require('node:url');
 const {chromium}=require(process.env.PLAYWRIGHT_MODULE||path.join(process.env.USERPROFILE,'.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules/playwright'));
@@ -27,13 +27,18 @@ async function open(context,input='a',gis=false){
 (async()=>{
   const {createServer}=await import(pathToFileURL(path.join(root,'frontend/node_modules/vite/dist/node/index.js')).href);
   server=await createServer({root:path.join(root,'frontend'),configFile:path.join(root,'frontend/vite.config.js'),server:{host:'127.0.0.1',port:5206,strictPort:true,open:false}});await server.listen();
-  browser=await chromium.launch({channel:'chrome',headless:true});const context=await browser.newContext({viewport:{width:1600,height:1050}});
-  await context.route('**/*',route=>{const u=new URL(route.request().url());if(/^https?:$/.test(u.protocol)&&u.origin!==origin){report.externalRequests.push(u.href);return route.abort()}if(u.pathname.startsWith('/api/')){report.apiRequests.push(u.pathname);return route.fulfill({status:404,json:{detail:'no API in local scene test'}})}return route.continue()});
+  browser=await chromium.launch({channel:'chrome',headless:true});
+  const sourceContext=await browser.newContext({viewport:{width:1600,height:1050}});
+  await sourceContext.route('**/*',route=>{const u=new URL(route.request().url());if(/^https?:$/.test(u.protocol)&&u.origin!==origin){report.externalRequests.push(u.href);return route.abort()}if(u.pathname.startsWith('/api/')){report.apiRequests.push(u.pathname);return route.abort()}return route.continue()});
+  const sourcePage=await open(sourceContext);await sourcePage.getByTestId('scene-result-error').filter({hasText:'当前为源码素材，与发布版不同'}).waitFor();assert.equal(await sourcePage.locator('canvas').count(),0);await shot(sourcePage,'dev-source-catalog-rejected');await sourceContext.close();
+  report.checks.push('DEV actual source catalog is explicitly rejected; subsequent geometry tests provide the pinned published catalog as an explicit fixture response');
+  const context=await browser.newContext({viewport:{width:1600,height:1050}});
+  await context.route('**/*',route=>{const u=new URL(route.request().url());if(/^https?:$/.test(u.protocol)&&u.origin!==origin){report.externalRequests.push(u.href);return route.abort()}if(u.pathname==='/mecoffe/assets3d/catalog.json')return route.fulfill({contentType:'application/json',body:fs.readFileSync(path.join(root,'adapter/scene_builder/resources/mecoffe-embed-v1/catalog.json'))});if(u.pathname.startsWith('/api/')){report.apiRequests.push(u.pathname);return route.fulfill({status:404,json:{detail:'no API in local scene test'}})}return route.continue()});
   const page=await open(context);await ready(page);assert.match(await page.locator('.page-header h1').textContent(),/合成校园甲/);
   const initial=await assignments(page),input=read('input-a');
   await page.locator('.scene-placement-details summary').click();
   for(const id of ['brand_alpha','brand_beta','brand_gamma'])assert.equal(await page.locator(`[data-service-brand="${id}"]`).count(),1);
-  assert.match(await page.locator('[data-service-brand="brand_gamma"]').innerText(),/场景外/);await shot(page,'a-three-config');
+  assert.match(await page.locator('[data-service-brand="brand_gamma"]').innerText(),/场景外/);assert.match(await page.getByTestId('scene-placement-details').innerText(),/建筑标签/);await shot(page,'a-three-config');await page.locator('.scene-placement-details summary').click();
   const draw=await page.evaluate(()=>[...window.__mecoffe3d.view.indoor.people.values()].map(p=>[p.id,p.homeBuilding]));
   assert.equal(draw.length,5);for(const [id,building]of draw)assert.equal(building,input.scene_result.assignments.find(a=>a.entity_id===id).building_id);
   await page.locator('.roster [data-person-id="synthetic_person_07"]').click();assert.match(await page.locator('.person-detail').innerText(),/场景外[\s\S]*安置理由/);

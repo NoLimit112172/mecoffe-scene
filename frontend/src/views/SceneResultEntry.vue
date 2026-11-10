@@ -12,10 +12,14 @@
     <p v-else-if="loading" role="status">正在校验场景结果与地图…</p>
     <p v-else-if="!bundle">请选择本地输入文件；地图库根目录中应包含 map_id/map_version/manifest.json。</p>
     <section v-else-if="none" class="none-scene" data-testid="scene-none">
-      <h1>本实验未启用地图</h1><p>{{bundle.scene_result.reason}}</p><p>模拟人物 {{bundle.snapshot.nodes.length}} 人 · 关系 {{bundle.snapshot.edges.length}} 条 · 事件 {{noneEvents.length}} 条</p>
-      <h2>人物与关系</h2><p v-for="person in bundle.snapshot.nodes" :key="person.entity_id">{{person.name||person.entity_id}} · {{person.role}}</p>
-      <ul><li v-for="(edge,i) in bundle.snapshot.edges" :key="i">{{edge.source}} → {{edge.target}} · {{edge.relation}}</li></ul>
-      <h2>事件记录</h2><p v-for="(event,i) in noneEvents" :key="event.key||event.id||i" data-testid="none-event">{{typeof event.actor==='string'?event.actor:event.actor.entity_id}} · {{event.action}} · {{event.outcome}}</p><p v-if="!noneEvents.length">{{mode==='config'?'配置预览，尚未运行模拟。':'暂未收到事件。'}}</p>
+      <header class="none-heading"><span aria-hidden="true">◈</span><div><p>人物网络与活动</p><h1>本实验未启用地图</h1></div></header>
+      <div class="none-explanation"><strong>纯网络模式</strong><p>{{bundle.scene_result.reason}}</p><p>保留人物、关系与事件，不生成地图位置或行走路线。</p></div>
+      <div class="none-metrics"><div><span>模拟人物</span><b>{{nonePeople.length}} 人</b></div><div><span>人物关系</span><b>{{bundle.snapshot.edges.length}} 条</b></div><div><span>活动记录</span><b>{{noneEvents.length}} 条</b></div></div>
+      <div class="none-columns">
+        <section class="none-card"><h2>人物与关系</h2><ul class="none-people"><li v-for="person in nonePeople" :key="person.id"><strong>{{person.name}}</strong><span>{{person.roleLabel}}</span><details><summary>人物标识与角色说明</summary><p>{{person.roleDescription||'暂无说明'}}</p><code>{{person.id}} · {{person.role}}</code></details></li></ul></section>
+        <section class="none-card"><h2>关系列表</h2><ul class="none-relations"><li v-for="(edge,i) in bundle.snapshot.edges" :key="i"><strong>{{nameOf(edge.source)}}</strong><span>{{sceneRelationLabel(edge.relation)}}</span><strong>{{nameOf(edge.target)}}</strong></li></ul><p v-if="!bundle.snapshot.edges.length">暂无人物关系。</p></section>
+      </div>
+      <section class="none-card"><h2>事件记录</h2><article v-for="(event,i) in noneEvents" :key="event.key||event.id||i" class="none-event" data-testid="none-event"><strong>{{nameOf(typeof event.actor==='string'?event.actor:event.actor.entity_id)}}</strong> · {{sceneActionLabel(event.action)}} · {{sceneOutcomeLabel(event.outcome,event.action==='purchase_product'?event.evidence_status:null)}}<details><summary>记录标识</summary><code>{{event.key||event.id||i}} · {{typeof event.actor==='string'?event.actor:event.actor.entity_id}} · {{event.action}}</code></details></article><p v-if="!noneEvents.length">{{mode==='config'?'配置预览，尚未运行模拟。':'暂未收到事件。'}}</p></section>
     </section>
     <template v-else-if="scene">
       <MeCoffeGis v-if="view==='gis'" :key="revision" :preview-scenario="scene" :live-state="liveState"/>
@@ -32,10 +36,15 @@ import {validateLiveBootstrap,createLiveState,applyLivePage,buildLiveScenario,sy
 import {checkScenePlacement} from '../mecoffe/scenePlacement.js'
 import {loadSceneMap,loadBundledSceneAssets} from '../mecoffe/sceneMap.js'
 import {localSceneInput,rememberLocalScene,localMapFetcher} from '../mecoffe/sceneRenderStore.js'
+import {scenePeopleLabels,sceneRelationLabel,sceneActionLabel,sceneOutcomeLabel} from '../mecoffe/sceneLabels.js'
 const MeCoffe3D=defineAsyncComponent(()=>import('./MeCoffe3D.vue')),MeCoffeGis=defineAsyncComponent(()=>import('./MeCoffeGis.vue'))
 defineProps({view:{type:String,default:'three'}})
 const saved=localSceneInput(),bundle=shallowRef(saved.bundle),files=shallowRef(saved.files),mode=ref(saved.mode)
 const scene=shallowRef(null),error=ref(''),loading=ref(false),none=ref(false),revision=ref(0),liveState=shallowRef(null),livePage=ref(0)
+const normalizedInput=shallowRef(null)
+const nonePeople=computed(()=>scenePeopleLabels(normalizedInput.value?.snapshot,normalizedInput.value?.populationRequest))
+const names=computed(()=>new Map(nonePeople.value.map(person=>[person.id,person.name])))
+const nameOf=id=>names.value.get(id)||'未知人物'
 const noneEvents=computed(()=>mode.value==='config'?[]:mode.value==='live'?liveState.value?.events||[]:bundle.value?.trajectory?.actions||[])
 let controller=null,generation=0
 async function importInput(event){
@@ -54,6 +63,7 @@ async function load(){
     const b=bundle.value,result=b.scene_result
     if(!result)throw new Error('本地输入缺少 SceneResult；此入口不会回退中科大')
     const normalized=normalizeConfigPreview({network:b.snapshot,roles:b.roles,seed:b.plan?.runtime?.seed})
+    normalizedInput.value=normalized
     checkScenePlacement(result,{snapshot:b.snapshot,plan:b.plan,config_id:b.config_id})
     if(mode.value==='replay')validateRunReplay({...b,context:{config_id:b.config_id}})
     if(mode.value==='live'){
@@ -86,3 +96,4 @@ if(bundle.value)void load()
 onBeforeUnmount(()=>{generation++;controller?.abort()})
 </script>
 <style scoped>.scene-result-entry{height:100%;min-height:0;display:flex;flex-direction:column;overflow:auto;background:#f0f4ee;color:#244b3c}.scene-inputs{padding:8px 12px;display:flex;flex-wrap:wrap;gap:8px;align-items:center;background:#e3eee8;font:12px sans-serif;flex-shrink:0}.scene-inputs label{display:flex;align-items:center;gap:4px}.scene-inputs input{max-width:210px}.scene-inputs a{color:#176e58}.scene-result-entry>[role=alert]{padding:20px;color:#8a3a27}.scene-result-entry :deep(.campus3d-page),.scene-result-entry :deep(.gis-page){position:relative;inset:auto;flex:1;min-height:0}.none-scene{padding:20px;overflow:auto}:global(#app:has(>.scene-result-entry)){height:100%;min-height:0}</style>
+<style scoped>.none-scene{flex:1;min-height:0;box-sizing:border-box;padding:clamp(16px,3vw,32px);font:14px/1.7 'Microsoft YaHei',sans-serif}.none-heading{display:flex;align-items:center;gap:14px;margin-bottom:20px}.none-heading>span{font-size:32px;color:#267b67}.none-heading h1{font-size:24px;margin:0}.none-heading p{margin:0;color:#628072}.none-explanation{padding:16px 20px;border:1px solid #d2e2d8;border-radius:10px;background:#f8fbf8}.none-explanation p{margin:5px 0}.none-metrics{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:16px 0}.none-metrics>div,.none-card{border:1px solid #d6e1d8;border-radius:10px;background:#fff;padding:16px}.none-metrics span{display:block;color:#678070;font-size:12px}.none-metrics b{font-size:23px}.none-columns{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px}.none-card h2{font-size:16px;margin:0 0 10px}.none-card ul{list-style:none;margin:0;padding:0}.none-people li,.none-relations li,.none-event{border-bottom:1px solid #e9eee9;padding:10px 0}.none-people li>span{margin-left:10px;color:#648575}.none-card details{font-size:12px;color:#718579;overflow-wrap:anywhere}.none-relations li{display:flex;gap:10px;flex-wrap:wrap}.none-relations span{color:#718579}@media(max-width:650px){.none-columns{grid-template-columns:1fr}.none-heading h1{font-size:21px}.none-metrics{gap:6px}.none-metrics>div{padding:10px}.none-metrics b{font-size:19px}}</style>

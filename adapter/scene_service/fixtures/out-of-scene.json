@@ -5,7 +5,7 @@
   "valid": true,
   "result": {
     "schema_version": "scene.result.v1",
-    "scene_id": "scene_5a3a3a7e702bae2a716fa13f",
+    "scene_id": "scene_da300b3ec1deece1b1870071",
     "scene_revision": 1,
     "mode": "map",
     "illustrative": true,
@@ -24,7 +24,7 @@
     "assignment_meta": {
       "assignment_seed": 42,
       "rules_version": "1",
-      "resolver_version": "1",
+      "resolver_version": "1.1",
       "rules_sha256": "8c1ffef7f7bcccdab9b7fb571dc77e900e56984f764ed5468f64e6e679d4b3dc"
     },
     "rules": {
@@ -76,7 +76,7 @@
         "status": "placed",
         "building_id": "synthetic/b6",
         "entrance_id": "synthetic/b6/entrance",
-        "reason": "Strict function evidence and safe reachable entrance; deterministic selection",
+        "reason": "有宿舍用途证据且入口可达，按确定性规则选定",
         "evidence": [
           {
             "function": "dormitory",
@@ -94,7 +94,7 @@
         "status": "placed",
         "building_id": "synthetic/b6",
         "entrance_id": "synthetic/b6/entrance",
-        "reason": "Strict function evidence and safe reachable entrance; deterministic selection",
+        "reason": "有宿舍用途证据且入口可达，按确定性规则选定",
         "evidence": [
           {
             "function": "dormitory",
@@ -112,7 +112,7 @@
         "status": "out_of_scene",
         "building_id": null,
         "entrance_id": null,
-        "reason": "Confirmed out_of_scene fallback; no valid function candidate",
+        "reason": "按已确认的场外兜底处理，未找到符合用途的楼",
         "evidence": [],
         "fallback_used": "out_of_scene"
       },
@@ -122,7 +122,7 @@
         "status": "out_of_scene",
         "building_id": null,
         "entrance_id": null,
-        "reason": "Confirmed out_of_scene fallback; no valid function candidate",
+        "reason": "按已确认的场外兜底处理，未找到符合用途的楼",
         "evidence": [],
         "fallback_used": "out_of_scene"
       },
@@ -132,7 +132,7 @@
         "status": "out_of_scene",
         "building_id": null,
         "entrance_id": null,
-        "reason": "Confirmed out_of_scene fallback; no valid function candidate",
+        "reason": "按已确认的场外兜底处理，未找到符合用途的楼",
         "evidence": [],
         "fallback_used": "out_of_scene"
       },
@@ -142,7 +142,7 @@
         "status": "out_of_scene",
         "building_id": null,
         "entrance_id": null,
-        "reason": "Confirmed out_of_scene fallback; no valid function candidate",
+        "reason": "按已确认的场外兜底处理，未找到符合用途的楼",
         "evidence": [],
         "fallback_used": "out_of_scene"
       },
@@ -152,7 +152,7 @@
         "status": "out_of_scene",
         "building_id": null,
         "entrance_id": null,
-        "reason": "Confirmed out_of_scene fallback; no valid function candidate",
+        "reason": "按已确认的场外兜底处理，未找到符合用途的楼",
         "evidence": [],
         "fallback_used": "out_of_scene"
       },
@@ -162,7 +162,7 @@
         "status": "out_of_scene",
         "building_id": null,
         "entrance_id": null,
-        "reason": "Confirmed out_of_scene fallback; no valid function candidate",
+        "reason": "按已确认的场外兜底处理，未找到符合用途的楼",
         "evidence": [],
         "fallback_used": "out_of_scene"
       }
@@ -176,7 +176,7 @@
         "status": "placed",
         "building_id": "synthetic/b3",
         "entrance_id": "synthetic/b3/entrance",
-        "reason": "Strict function evidence and safe reachable entrance; deterministic selection",
+        "reason": "有餐饮用途证据且入口可达，按确定性规则选定",
         "evidence": [
           {
             "function": "dining",
@@ -196,7 +196,7 @@
         "status": "out_of_scene",
         "building_id": null,
         "entrance_id": null,
-        "reason": "Confirmed out_of_scene fallback; no valid function candidate",
+        "reason": "按已确认的场外兜底处理，未找到符合用途的楼",
         "evidence": [],
         "fallback_used": "out_of_scene"
       }
@@ -259,7 +259,7 @@
         ]
       }
     ],
-    "result_sha256": "62cb11ff073f41c5e1af2eb96c15dcd48f1ea9cbd0bf6e22c0a902f8f4cc2843"
+    "result_sha256": "6c3188feef9ffa1f30e61acde524d61f3b52f059dab1bf201b106f3762ab327f"
   },
   "context_ref": "context.json"
 }
