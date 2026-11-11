@@ -44,11 +44,12 @@ class ReleaseLockTests(unittest.TestCase):
         self.package(self.maps, self.refs)
         write_release_lock(self.directory, self.commit, self.published)
         lock = json.loads((self.directory / "release-lock.json").read_bytes())
-        self.assertIsInstance(lock["map_ref"], list)
-        self.assertEqual(lock["map_ref"], self.refs)
+        self.assertNotIn("map_ref", lock)
+        self.assertIsInstance(lock["map_refs"], list)
+        self.assertEqual(lock["map_refs"], self.refs)
         self.assertTrue(
             {("ustc-gaoxin", "1"), ("ustc-gaoxin", "2")} <=
-            {(ref["map_id"], ref["map_version"]) for ref in lock["map_ref"]}
+            {(ref["map_id"], ref["map_version"]) for ref in lock["map_refs"]}
         )
 
     def test_missing_version_cannot_be_hidden_by_complete_metadata(self):

@@ -64,6 +64,7 @@ def package_builder(catalog, legacy_map_dir, output_dir, source_commit):
         "adapter/osm_surroundings.py",
         "scripts/generate-ustc-map.py",
         "data/examples/offline-map.geojson",
+        "data/maps/ustc-gaoxin/review-annotations.v2.json",
     )
     files = {name: ROOT / name for name in relative_files}
     files.update(service_files())

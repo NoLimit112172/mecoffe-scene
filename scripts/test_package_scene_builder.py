@@ -38,7 +38,7 @@ class PackageSceneBuilderTests(unittest.TestCase):
                 )
             })
 
-    def test_extracted_archive_imports_isolated_and_reproduces_official_v1(self):
+    def test_extracted_archive_imports_isolated_and_reproduces_official_versions(self):
         with TemporaryDirectory() as temporary:
             work = Path(temporary)
             legacy = work / "legacy-map"
@@ -72,7 +72,11 @@ class PackageSceneBuilderTests(unittest.TestCase):
                     "payload/adapter/scene_service/compiler.py",
                     "payload/adapter/scene_service/issues.py",
                     "payload/adapter/scene_service/issue_messages.json",
+                    "payload/data/maps/ustc-gaoxin/review-annotations.v2.json",
                 } <= names)
+                annotations = "data/maps/ustc-gaoxin/review-annotations.v2.json"
+                self.assertEqual(archive.read("payload/" + annotations), (ROOT / annotations).read_bytes())
+                self.assertNotIn("payload/data/maps/ustc-gaoxin/review-annotations.template.json", names)
                 self.assertFalse(any(
                     {"tests", "fixtures", "__pycache__"} & set(Path(name).parts) for name in names
                 ))
@@ -102,16 +106,22 @@ assert service.describe_issue('INVALID_INPUT')['user_message']
                 capture_output=True, text=True, timeout=60,
             )
             self.assertEqual(task.returncode, 0, task.stdout + task.stderr)
-            output = work / "regenerated-v1"
-            task = subprocess.run(
-                [sys.executable, "-I", str(payload / "scripts/generate-ustc-map.py"),
-                 "--no-template", "--out", str(output)],
-                cwd=work, capture_output=True, text=True, timeout=60,
+            cases = (
+                ("1", []),
+                ("2", ["--annotations", str(payload / annotations)]),
             )
-            self.assertEqual(task.returncode, 0, task.stdout + task.stderr)
-            official = ROOT / "data/maps/ustc-gaoxin/1"
-            expected = {path.relative_to(official).as_posix(): path.read_bytes()
-                        for path in official.rglob("*") if path.is_file()}
-            actual = {path.relative_to(output).as_posix(): path.read_bytes()
-                      for path in output.rglob("*") if path.is_file()}
-            self.assertEqual(actual, expected)
+            for version, options in cases:
+                with self.subTest(version=version):
+                    output = work / "regenerated/ustc-gaoxin" / version
+                    task = subprocess.run(
+                        [sys.executable, "-I", str(payload / "scripts/generate-ustc-map.py"),
+                         "--version", version, "--no-template", "--out", str(output), *options],
+                        cwd=work, capture_output=True, text=True, timeout=60,
+                    )
+                    self.assertEqual(task.returncode, 0, task.stdout + task.stderr)
+                    official = ROOT / "data/maps/ustc-gaoxin" / version
+                    expected = {path.relative_to(official).as_posix(): path.read_bytes()
+                                for path in official.rglob("*") if path.is_file()}
+                    actual = {path.relative_to(output).as_posix(): path.read_bytes()
+                              for path in output.rglob("*") if path.is_file()}
+                    self.assertEqual(actual, expected)

@@ -13,11 +13,16 @@ python3.11 -I -B scripts/generate-ustc-map.py --no-template \
   --out "$output/ustc-gaoxin/1"
 python3.11 -B -S -m adapter.scene_service evidence \
   --map "$output/ustc-gaoxin/1" --out "$output/evidence.json"
+python3.11 -I -B scripts/generate-ustc-map.py --no-template --version 2 \
+  --annotations data/maps/ustc-gaoxin/review-annotations.v2.json \
+  --out "$output/ustc-gaoxin/2"
 ```
 
-`$output/ustc-gaoxin/1/manifest.json` 的 SHA-256 应为 `101a660efd370e807d4d3e579ca2c5732b69c79ce8fb43a0a6d864e9a41bf1ad`，用于 `map_ref.manifest_sha256`。`catalog_sha256` 对应素材库真正发布的目录字节。同一地图编号与版本对应一份固定内容，审核补注或改动地图后以新版本发布。具体用途以地图证据和正式审核的补注为准。
+`$output/ustc-gaoxin/1/manifest.json` 的 SHA-256 应为 `101a660efd370e807d4d3e579ca2c5732b69c79ce8fb43a0a6d864e9a41bf1ad`，v2 为 `9d76db922491c6dacb42529a97c4e50ac3b13f864325a7ee392095bf9f3aa8d9`，分别用于各版本的 `map_ref.manifest_sha256`。`catalog_sha256` 对应素材库真正发布的目录字节。同一地图编号与版本始终对应一份固定内容。
 
-隔离模式 `-I` 下，生成脚本按自身文件位置定位解包根目录。打包回归测试还会显式加入这份解包目录来导入全部 `scene_service` 模块，确认依赖和 JSON 资源齐备。当前地图库同时携带主线的 v1、v2，以上命令复现基础 v1。
+v2 使用包内审核补注确认的 3 座食堂。补注的 `map_ref` 引用 v1，因此先生成同级 `1/`，再生成 `2/`。发布器会核对该 v1 清单的原字节摘要，补注文件在归档中保留源码字节和换行。
+
+隔离模式 `-I` 下，生成脚本按自身文件位置定位解包根目录。打包回归测试还会显式加入这份解包目录来导入全部 `scene_service` 模块，确认依赖和 JSON 资源齐备。以上命令只使用建图包自身的几何、素材目录和审核补注复现两版。
 
 ## 从原始数据独立建图
 
@@ -37,4 +42,4 @@ python3.11 -B -S -m adapter.scene_builder geojson \
 
 ## Linux 验收
 
-在禁止出网的测试环境将 `payload/` 只读挂载，把输出写到独立目录。将复现的 `ustc-gaoxin/1` 与地图库归档中 `payload/scene-maps/ustc-gaoxin/1/` 逐文件比对，检查七个 GIS 图层、`quality.json.status` 和 `catalog_sha256`。另取 OSM 元数据副本改动 `sha256`，确认输入被拒绝。
+在禁止出网的测试环境将 `payload/` 只读挂载，把输出写到独立目录。将复现的 v1、v2 与地图库归档中对应的 `payload/scene-maps/ustc-gaoxin/<version>/` 逐文件比对，检查七个 GIS 图层、`quality.json.status`、`catalog_sha256` 和 v2 的 3 座食堂。另取 OSM 元数据副本改动 `sha256`，确认输入被拒绝。

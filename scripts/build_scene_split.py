@@ -82,7 +82,7 @@ def write_release_lock(directory, source_commit, published):
         "artifacts": artifacts,
         "asset_library_version": published["version"],
         "catalog_sha256": published["catalog_sha256"],
-        "map_ref": map_refs,
+        "map_refs": map_refs,
     }
     (directory / "release-lock.json").write_bytes(json_bytes(lock))
 
