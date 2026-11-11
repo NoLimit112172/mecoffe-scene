@@ -1,0 +1,397 @@
+{
+  "AI_LOW_CONFIDENCE": {
+    "actions": [
+      "保留现状",
+      "补充可靠证据",
+      "可选人工确认"
+    ],
+    "admin_message": "无其他有效依据的楼保持 unknown，不替用户提高把握或自动确认。",
+    "rerun_scope": "接受现状无需重跑；更新证据后发布新版本",
+    "severity": "warning",
+    "user_message": "AI 把握低于本地图冻结的阈值，仅保留原判断、不用于安置。"
+  },
+  "ASSET_VERSION_MISMATCH": {
+    "actions": [
+      "恢复正确素材",
+      "配套登记新素材和地图版本",
+      "换图"
+    ],
+    "admin_message": "地图和素材不是配套版本，需要换成对应资源。",
+    "rerun_scope": "通常先修资源/重新读取；换 map_ref 后再编译 scene",
+    "severity": "error",
+    "user_message": "地图登记的素材版本/catalog 与发布版不同，或引用了发布版没有的模型"
+  },
+  "BRAND_NAME_MISMATCH": {
+    "actions": [
+      "改品牌偏好",
+      "修最终计划映射",
+      "品牌改名后重新确认"
+    ],
+    "admin_message": "品牌名称或对应关系变了，请按当前品牌重新确认，不能猜是哪一家。",
+    "rerun_scope": "偏好错误可只重跑；计划错误先修 plan",
+    "severity": "error",
+    "user_message": "品牌偏好与当前品牌名不一致，或商品名/brand_id 不是唯一一一对应"
+  },
+  "BUILDING_EXCLUDED": {
+    "actions": [
+      "接受排除",
+      "修图并升版",
+      "无候选时再由用户选偏好/换图/none"
+    ],
+    "admin_message": "这几栋不能参与安置，其余符合条件的楼仍可使用。",
+    "rerun_scope": "不一定需要；修图后按新版本编译",
+    "severity": "warning",
+    "user_message": "某栋楼因几何、范围、水域或安全入口条件被排除"
+  },
+  "EVIDENCE_CONFLICT": {
+    "actions": [
+      "查看冲突来源",
+      "可选人工补注",
+      "保留优先级结果"
+    ],
+    "admin_message": "低优先级推断不能覆盖高优先级依据；同级多用途保留并提示。",
+    "rerun_scope": "接受现状无需重跑；补注后发布新版本",
+    "severity": "warning",
+    "user_message": "用途证据存在冲突，已按优先级保留有效用途。"
+  },
+  "FALLBACK_USED": {
+    "actions": [
+      "接受",
+      "改偏好",
+      "换图",
+      "选不用地图"
+    ],
+    "admin_message": "这次按你已确认的兜底处理，下面列出受影响的人或门店。",
+    "rerun_scope": "接受不用；改偏好后只重跑 scene",
+    "severity": "warning",
+    "user_message": "已使用该偏好明确允许的兜底"
+  },
+  "GENERIC_USE_SUPERSEDED": {
+    "actions": [
+      "保留具体用途",
+      "可选人工核实"
+    ],
+    "admin_message": "原标签仍保留为被取代的依据；请查看具体名称规则、AI 或补注。",
+    "rerun_scope": "接受现状无需重跑；用途变更后发布新版本",
+    "severity": "warning",
+    "user_message": "校园通用教学标签被更具体用途取代，该楼不再参与教学匹配。"
+  },
+  "HASH_MISMATCH": {
+    "actions": [
+      "恢复正确不可变正文并重读",
+      "确认无正确副本后从有效输入重新编译"
+    ],
+    "admin_message": "场景结果完整性校验没通过，需要取回正确版本，不能继续显示。",
+    "rerun_scope": "优先恢复/重读；只有重新生成时才重跑 scene，不手改摘要",
+    "severity": "error",
+    "user_message": "SceneResult 正文或采用规则的摘要不一致"
+  },
+  "INVALID_AI_EVIDENCE": {
+    "actions": [
+      "修正离线 AI 文件后重试",
+      "不使用 AI 文件重新发布新地图"
+    ],
+    "admin_message": "请核对准备地图引用、楼栋、模型和时间信息；本流程不调用模型。",
+    "rerun_scope": "先修 AI 文件并发布地图版本，再重跑 scene",
+    "severity": "error",
+    "user_message": "AI 用途文件缺字段、引用无效或把握值不合法。"
+  },
+  "INVALID_ANNOTATION": {
+    "actions": [
+      "人工补齐并审核",
+      "删除未核实条目",
+      "发布新地图版本"
+    ],
+    "admin_message": "这份用途还没完成审核，暂时不能当成严格依据。",
+    "rerun_scope": "否，先审核并生成新地图",
+    "severity": "error",
+    "user_message": "审核补注未填写完整用途、来源、审核人、说明，或模式无效"
+  },
+  "INVALID_EVIDENCE_RULES": {
+    "actions": [
+      "恢复正确规则文件后重试",
+      "先更新上游地图版本"
+    ],
+    "admin_message": "请恢复配套规则文件，修改规则时另发版本，不改旧地图。",
+    "rerun_scope": "先修规则或地图，再重跑 scene",
+    "severity": "error",
+    "user_message": "自动用途规则的版本、摘要或内容无效。"
+  },
+  "INVALID_INPUT": {
+    "actions": [
+      "修正输入",
+      "确认 none 原因或种子",
+      "修复文件后重试"
+    ],
+    "admin_message": "这次场景信息没填全，我先核对输入，再请你补必要的一项。",
+    "rerun_scope": "场景输入问题可只重跑；上游文件坏了需先修上游",
+    "severity": "error",
+    "user_message": "场景输入缺少必填项或不能读取，例如模式、种子、none 原因不完整"
+  },
+  "INVALID_JSON": {
+    "actions": [
+      "修正产生数据的环节，再重试"
+    ],
+    "admin_message": "这份数据格式不符合当前版本，需要重新导出，不能直接改摘要绕过。",
+    "rerun_scope": "视来源；不一定要重生人物/计划",
+    "severity": "error",
+    "user_message": "数据含不支持的 JSON 值、非法字符或超出安全范围的数字"
+  },
+  "INVALID_MAP": {
+    "actions": [
+      "修复后发布新版本",
+      "换已就绪地图",
+      "明确选不用地图"
+    ],
+    "admin_message": "这张图目前不能安全安置，需要修图或换图。",
+    "rerun_scope": "否，先准备有效地图，再跑 scene",
+    "severity": "error",
+    "user_message": "地图包、几何、入口、路网或地图 ID/版本不符合要求"
+  },
+  "INVALID_MAP_BASE": {
+    "actions": [
+      "修站点挂载/加载配置后重读"
+    ],
+    "admin_message": "地图库加载地址配置有误，请管理员处理。",
+    "rerun_scope": "否，通常不用重跑 scene",
+    "severity": "error",
+    "user_message": "地图库目录不是受控同源绝对路径，或含不允许的路径段"
+  },
+  "INVALID_MAP_JSON": {
+    "actions": [
+      "修发布/传输",
+      "原字节恢复后重读",
+      "换图"
+    ],
+    "admin_message": "地图文件格式损坏，需要恢复或重新发布。",
+    "rerun_scope": "通常先修资源；新 map_ref 再跑 scene",
+    "severity": "error",
+    "user_message": "地图文件不是可解析的 UTF-8 JSON"
+  },
+  "INVALID_MAP_MANIFEST": {
+    "actions": [
+      "修建图/打包，发布有效版本",
+      "换图",
+      "选不用地图"
+    ],
+    "admin_message": "地图包不完整，需补齐配套文件后再用。",
+    "rerun_scope": "否，先修地图包；换引用或 none 后再跑 scene",
+    "severity": "error",
+    "user_message": "清单缺必需文件、含非法路径/摘要，或缺楼栋和有效入口格式"
+  },
+  "INVALID_MAP_REF": {
+    "actions": [
+      "核对来源",
+      "重新生成正确场景引用",
+      "不猜版本"
+    ],
+    "admin_message": "地图引用信息不完整，需要重新取得本次场景使用的版本。",
+    "rerun_scope": "引用输入修正后可只重跑；合法结果传输损坏则重读",
+    "severity": "error",
+    "user_message": "map_ref 的地图 ID、版本或摘要格式无效"
+  },
+  "INVALID_PREFERENCE": {
+    "actions": [
+      "改偏好，保留明确确认",
+      "重试"
+    ],
+    "admin_message": "这个安置选项当前不支持，请从已支持的选项里重新选。",
+    "rerun_scope": "是，输入有效后只重跑 scene",
+    "severity": "error",
+    "user_message": "分布、兜底、分楼选项或偏好字段格式不受支持"
+  },
+  "INVALID_SCENE": {
+    "actions": [
+      "修生成/适配逻辑",
+      "用有效输入重新生成",
+      "不放宽校验"
+    ],
+    "admin_message": "这份场景结果不符合当前格式，需要由生成程序修正。",
+    "rerun_scope": "有效上游不必重生；修场景生成后重跑",
+    "severity": "error",
+    "user_message": "SceneResult 缺字段、含未知字段或状态矛盾，如 none 带位置、严格安置没有依据"
+  },
+  "INVALID_THRESHOLD": {
+    "actions": [
+      "管理员修正参数并重新检查",
+      "不得为了通过而暗降门槛"
+    ],
+    "admin_message": "质量检查参数有误，我先按约定修正参数。",
+    "rerun_scope": "否，先修地图检查参数",
+    "severity": "error",
+    "user_message": "地图质量检查参数无效，比例应在 0～1"
+  },
+  "MAP_FILE_MISSING": {
+    "actions": [
+      "修复原版本挂载/权限并重读",
+      "确需换图时重新选择",
+      "不能默认换中科大"
+    ],
+    "admin_message": "这份地图暂时读不到，我先核对文件、挂载和访问权限。",
+    "rerun_scope": "通常不用；换 map_ref 才需重跑 scene",
+    "severity": "error",
+    "user_message": "地图文件缺失或不可读取；当前代码把所有非成功 HTTP 响应归到此码"
+  },
+  "MAP_HASH_MISMATCH": {
+    "actions": [
+      "原字节恢复并重读",
+      "有内容变化则发布新版本"
+    ],
+    "admin_message": "地图文件和登记版本不一致，先停止加载并恢复正确文件。",
+    "rerun_scope": "恢复原版不用；新版本需重新选择并跑 scene",
+    "severity": "error",
+    "user_message": "manifest 或清单文件的原始字节摘要不符"
+  },
+  "MAP_NOT_READY": {
+    "actions": [
+      "完成前置地图任务",
+      "换图",
+      "选不用地图"
+    ],
+    "admin_message": "这张图还没准备好，可以等修好、换一张，或明确不用地图。",
+    "rerun_scope": "否，先准备地图；选择 none 可只重跑 scene",
+    "severity": "error",
+    "user_message": "地图缺失或质量仅为 preview_only，暂不满足安置条件"
+  },
+  "MAP_VERSION_IMMUTABLE": {
+    "actions": [
+      "保留原字节",
+      "新建递增地图版本",
+      "另存审核文件"
+    ],
+    "admin_message": "这个版本已有内容，不能覆盖；请保留旧版，另发新版。",
+    "rerun_scope": "否，先解决地图版本发布",
+    "severity": "error",
+    "user_message": "正在覆盖已有地图版本，或覆盖已被改过的人工补注模板"
+  },
+  "MAP_VERSION_MISMATCH": {
+    "actions": [
+      "核对部署和引用",
+      "恢复配套版本",
+      "换图"
+    ],
+    "admin_message": "读到的地图清单和本次选择不一致，不能继续绘制。",
+    "rerun_scope": "正确挂载后可重读；选择新版本则重跑 scene",
+    "severity": "error",
+    "user_message": "manifest 的格式、地图身份/版本或标题不符合所选引用"
+  },
+  "NAME_RULE_CONFLICT": {
+    "actions": [
+      "补充 AI 文件",
+      "可选人工确认",
+      "保留 unknown"
+    ],
+    "admin_message": "请核对名称和规则；可选提供离线 AI 判断或人工补注。",
+    "rerun_scope": "更新证据后发布新地图，再编译 scene",
+    "severity": "warning",
+    "user_message": "多条名称规则指向不同用途，没有采用名称强证据。"
+  },
+  "NAME_RULE_EXCLUDED": {
+    "actions": [
+      "保留现状",
+      "补充有效用途依据"
+    ],
+    "admin_message": "保留原始标签和弱名称证据；可选 AI 判断或人工确认。",
+    "rerun_scope": "规则或地图改变后再编译 scene",
+    "severity": "warning",
+    "user_message": "名称命中排除词，没有把名称升级为强用途证据。"
+  },
+  "OVERRIDE_INVALID": {
+    "actions": [
+      "修改/移除明确指定",
+      "修复补注目标",
+      "换地图",
+      "明确选不用地图"
+    ],
+    "admin_message": "指定的位置现在不能用，请重新指定，或恢复用途规则选择。",
+    "rerun_scope": "安置指定问题可只重跑；地图/补注问题先修地图",
+    "severity": "error",
+    "user_message": "指定人物/楼栋或审核补注目标无效；楼可能不存在、不在范围或不可达"
+  },
+  "POI_AMBIGUOUS": {
+    "actions": [
+      "核实几何/归属并升版",
+      "保留独立点"
+    ],
+    "admin_message": "这个兴趣点不能确定属于哪栋楼，暂不拿来证明楼栋用途。",
+    "rerun_scope": "不必立即重跑；修图后新版本再编译",
+    "severity": "warning",
+    "user_message": "兴趣点落在重叠楼栋等不能唯一关联的范围"
+  },
+  "POI_INVALID": {
+    "actions": [
+      "修图",
+      "保留警告",
+      "必要时换图"
+    ],
+    "admin_message": "部分兴趣点坐标有问题，已忽略，先用其余可靠证据。",
+    "rerun_scope": "不必立即重跑；修图后再编译",
+    "severity": "warning",
+    "user_message": "兴趣点坐标无效，被忽略"
+  },
+  "REF_MISMATCH": {
+    "actions": [
+      "取正确冻结输入",
+      "完成上游更新后重跑",
+      "修复错误引用"
+    ],
+    "admin_message": "这份场景和当前配置对不上，我先查清是哪一份变了，不会混着画。",
+    "rerun_scope": "视原因；上游已有效时可只重跑 scene，不能篡改旧结果引用",
+    "severity": "error",
+    "user_message": "场景、人物、计划、地图、补注、楼栋/入口或证据不是同一套版本/引用"
+  },
+  "SCENE_NO_CANDIDATE": {
+    "actions": [
+      "改偏好",
+      "经确认选允许的兜底",
+      "换图",
+      "选不用地图"
+    ],
+    "admin_message": "没有符合条件的楼。你可以改用途、换图，或明确允许场外；我不会替你放宽。",
+    "rerun_scope": "偏好或 none 可只重跑；地图缺证据/不可达需先修图",
+    "severity": "error",
+    "user_message": "没有符合用途且安全可达的楼；已允许任意楼兜底时也可能无安全候选"
+  },
+  "UNKNOWN_BRAND": {
+    "actions": [
+      "修正 overrides.brands",
+      "必要时核对 plan"
+    ],
+    "admin_message": "指定位置里还有旧品牌，请改成当前品牌或删掉这条指定。",
+    "rerun_scope": "覆盖项错误可只重跑 scene",
+    "severity": "error",
+    "user_message": "指定楼栋的品牌覆盖项里出现了当前计划没有的品牌"
+  },
+  "UNKNOWN_FUNCTION": {
+    "actions": [
+      "改用途",
+      "如需新增词表须另走版本评审",
+      "选不用地图"
+    ],
+    "admin_message": "这个用途还没有对应规则，请重新选择支持的用途。",
+    "rerun_scope": "使用现有词表时只重跑 scene",
+    "severity": "error",
+    "user_message": "用途词缺失或不在当前词表"
+  },
+  "UNKNOWN_ROLE": {
+    "actions": [
+      "改角色偏好",
+      "若上游角色有误，先修角色及其后续阶段"
+    ],
+    "admin_message": "角色名单和当前人物不一致，请按实际角色重新确认。",
+    "rerun_scope": "仅偏好错误可只重跑；实际人物角色错误需先修上游",
+    "severity": "error",
+    "user_message": "偏好中的角色与实际人物角色不完整对应，或人物缺角色"
+  },
+  "UNKNOWN_USE": {
+    "actions": [
+      "人工审核补注",
+      "保留 unknown",
+      "换用途或换图"
+    ],
+    "admin_message": "这些楼的用途尚未核实，名称只能作提示，不能当成严格依据。",
+    "rerun_scope": "接受现状不用；补注后新地图再编译",
+    "severity": "warning",
+    "user_message": "某些楼没有严格用途证据，不能参加用途匹配"
+  }
+}
