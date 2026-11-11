@@ -1,0 +1,67 @@
+{
+  "synthetic": true,
+  "config_id": "synthetic-live-config",
+  "mode": "map",
+  "map_ref": {
+    "manifest_sha256": "505e695b4cbffb0bf6232fe2a18507a6885ceabd324afd3269a3e9ed5af5b26c",
+    "map_id": "synthetic-render-a",
+    "map_version": "1"
+  },
+  "assignment_seed": 42,
+  "assumptions": [
+    "完全合成验收；所有安置和路线为示意，非真实住所或经营地点。"
+  ],
+  "brand_prefs": {
+    "样例商品丙": {
+      "fallback": "out_of_scene",
+      "functions": [
+        "retail"
+      ],
+      "separate_when_possible": false
+    },
+    "样例商品乙": {
+      "fallback": "fail",
+      "functions": [
+        "dining"
+      ],
+      "separate_when_possible": false
+    },
+    "样例商品甲": {
+      "fallback": "fail",
+      "functions": [
+        "dining"
+      ],
+      "separate_when_possible": false
+    }
+  },
+  "overrides": {
+    "brands": {
+      "样例商品乙": "geojson/synthetic-building-1",
+      "样例商品甲": "geojson/synthetic-building-1"
+    },
+    "entities": {}
+  },
+  "role_prefs": {
+    "operator": {
+      "distribution": "balanced",
+      "fallback": "fail",
+      "functions": [
+        "dormitory"
+      ]
+    },
+    "research": {
+      "distribution": "balanced",
+      "fallback": "out_of_scene",
+      "functions": [
+        "retail"
+      ]
+    },
+    "visitor": {
+      "distribution": "balanced",
+      "fallback": "fail",
+      "functions": [
+        "education"
+      ]
+    }
+  }
+}

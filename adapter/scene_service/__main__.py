@@ -2,6 +2,7 @@
 import argparse
 import json
 import sys
+from pathlib import Path
 
 from .common import read_json, write_json, SceneError
 from .evidence import enrich_map
@@ -42,13 +43,43 @@ def compile_main(argv):
     return 0 if response['ok'] else 2
 
 
+def check_main(argv):
+    from .checker import check_scene, input_failure, local_path, render_report
+    parser=CompileParser(description='Local configuration checks; run binding remains unconfirmed')
+    parser.add_argument('--intent',required=True)
+    parser.add_argument('--snapshot',required=True); parser.add_argument('--plan',required=True)
+    parser.add_argument('--map'); parser.add_argument('--assignment-seed',required=True)
+    parser.add_argument('--out')
+    try:
+        args=parser.parse_args(argv)
+        intent=read_json(local_path(args.intent))
+        try:
+            seed=json.loads(args.assignment_seed)
+        except ValueError:
+            seed=args.assignment_seed
+        report=check_scene(intent,read_json(local_path(args.snapshot)),read_json(local_path(args.plan)),
+                           args.map,assignment_seed=seed)
+        if args.out:
+            target=local_path(args.out)
+            write_json(target,report)
+            Path(str(target)+'.txt').write_text(render_report(report),encoding='utf-8')
+    except (SceneError, OSError, KeyError, TypeError, ValueError, AttributeError, IndexError) as error:
+        report=input_failure(error)
+    print(json.dumps(report,ensure_ascii=False))
+    print(render_report(report),file=sys.stderr,end='')
+    return 0 if report['configuration_ok'] else 1
+
+
 def main(argv=None):
     argv=list(sys.argv[1:] if argv is None else argv)
     if argv and argv[0]=='compile':
         return compile_main(argv[1:])
+    if argv and argv[0]=='check':
+        return check_main(argv[1:])
     parser=argparse.ArgumentParser(description='Local display-only scene service')
     commands=parser.add_subparsers(dest='command',required=True)
     commands.add_parser('compile',help='Compile local intent to a result or explained error')
+    commands.add_parser('check',help='Check local configuration and list unconfirmed runtime facts')
     evidence=commands.add_parser('evidence')
     evidence.add_argument('--map',required=True); evidence.add_argument('--annotations')
     evidence.add_argument('--min-main-ratio',type=float,default=.9)
