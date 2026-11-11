@@ -1,0 +1,27 @@
+{
+  "asset_library_version": "mecoffe-embed-v1",
+  "catalog_sha256": "a4444d42d820359ff180d4390c1b16a5a86249cfd008a0d2e5eafa1dfc55aa0c",
+  "files": {
+    "asset_assignments.json": "203e7aa6b75becfa74d6b6136f499524bec343edc5512a29571c16d92e5097b4",
+    "campus3d.json": "849e1c341e244d9ac3f6b051fbac8984a93d349c564fd9b06e8fbf06a69ff233",
+    "entrances.json": "0904b33e42a4c886c7265b57ab11e5f92eab2a89313e93432ab0270dd5fad128",
+    "gis/boundary.geojson": "687576563478518afa62b229ba4fb2855f4bb8d350ac9e57dbdb16abeff8da5c",
+    "gis/buildings.geojson": "7c92d15ff6860e2c49dff5abeb103c9d43ddc826cd22c1e3150eee566c9ffb28",
+    "gis/entrances.geojson": "0e1de0e241bb430363b767dc07543608f354443e73cb4a4f7ec18c9f79377dc1",
+    "gis/landcover.geojson": "b568328c48f2668ffcadeef36f298e3641db1395e98f54beafe9163985413fc3",
+    "gis/pois.geojson": "12144be12fe9158aef3ee27cbe36d3a6023d1b445aa712ca325ffa26bbaea0c0",
+    "gis/roads.geojson": "6afbb5c9d0b4639fc3a29ee0b9aaaba6bf19b52a16bf40dca916a0624514c3ae",
+    "gis/water.geojson": "0927d3f59f0007d901fe956e0628063a93d4fffea4fa080daab6fdff704169a1",
+    "landcover.json": "9784af6ad61c5580648dd325e58e9147fc724d3e37587d0dfe7dd6be3ca7f52a",
+    "quality.json": "01d867d895584837ae936f82c244a3a1c7a25ce6a329ab164ab4ec3cb82b400c",
+    "surroundings.json": "0c11bd553f5adfa947a3e3cec83eb69e478248791216369cd31bb723ec9c6ec7"
+  },
+  "map_id": "ustc-gaoxin",
+  "map_version": "2",
+  "schema_version": "scene.map-manifest.v1",
+  "style": {
+    "buildings": "yulan",
+    "characters": "campus"
+  },
+  "title": "中国科学技术大学 · 高新校区"
+}

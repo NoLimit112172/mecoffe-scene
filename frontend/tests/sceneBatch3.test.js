@@ -34,3 +34,17 @@ test('formal USTC v1 map loads through the published catalog contract',async()=>
   assert.equal(map.files['quality.json'].function_counts.dining,0)
   assert.equal(map.manifest.asset_library_version,PUBLISHED_SCENE_ASSETS.version)
 })
+test('reviewed USTC v2 map loads with the three confirmed canteens as dining only',async()=>{
+  const directory=new URL('../../data/maps/ustc-gaoxin/2/',import.meta.url),raw=fs.readFileSync(new URL('manifest.json',directory))
+  const map=await loadSceneMap({map_id:'ustc-gaoxin',map_version:'2',manifest_sha256:createHash('sha256').update(raw).digest('hex')},{
+    mapsBase:'/maps/',assets:{version:PUBLISHED_SCENE_ASSETS.version,catalog_sha256:PUBLISHED_SCENE_ASSETS.catalog_sha256},
+    fetcher:async url=>({ok:true,arrayBuffer:async()=>fs.readFileSync(new URL(url.slice('/maps/ustc-gaoxin/2/'.length),directory))})})
+  assert.equal(map.files['quality.json'].function_counts.dining,3)
+  const canteens=map.files['campus3d.json'].buildings.filter(b=>['way/1435377504','way/1435377505','way/1435377506'].includes(b.osm_id))
+  assert.equal(canteens.length,3)
+  for(const building of canteens){
+    assert.deepEqual(building.functions,['dining'])
+    assert.equal(building.function_annotation.mode,'replace')
+    assert.ok(building.function_annotation.reviewer.trim())
+  }
+})

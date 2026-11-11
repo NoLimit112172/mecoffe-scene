@@ -1,0 +1,40 @@
+{
+  "buildings": {
+    "way/1435377504": {
+      "functions": [
+        "dining"
+      ],
+      "mode": "replace",
+      "name": "教工食堂",
+      "note": "人工确认该楼为食堂；OSM 的 building=university 只是校园通用标签，不代表教学用途",
+      "reviewer": "吴贤",
+      "source": "校内实际用途确认"
+    },
+    "way/1435377505": {
+      "functions": [
+        "dining"
+      ],
+      "mode": "replace",
+      "name": "学生食堂A区",
+      "note": "人工确认该楼为食堂；OSM 的 building=university 只是校园通用标签，不代表教学用途",
+      "reviewer": "吴贤",
+      "source": "校内实际用途确认"
+    },
+    "way/1435377506": {
+      "functions": [
+        "dining"
+      ],
+      "mode": "replace",
+      "name": "学生食堂B区",
+      "note": "人工确认该楼为食堂；OSM 的 building=university 只是校园通用标签，不代表教学用途",
+      "reviewer": "吴贤",
+      "source": "校内实际用途确认"
+    }
+  },
+  "map_ref": {
+    "manifest_sha256": "101a660efd370e807d4d3e579ca2c5732b69c79ce8fb43a0a6d864e9a41bf1ad",
+    "map_id": "ustc-gaoxin",
+    "map_version": "1"
+  },
+  "schema_version": "scene.annotations.template.v1"
+}
