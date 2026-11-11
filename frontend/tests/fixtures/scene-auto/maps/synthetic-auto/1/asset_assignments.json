@@ -1,0 +1,245 @@
+{
+  "assignments": [
+    {
+      "feature_id": "geojson/synthetic-building-0",
+      "feature_type": "building",
+      "license": {
+        "note": "项目程序生成，随仓库源码提供；未另行授予外部模型许可",
+        "path": "NOTICE.md",
+        "spdx": "LicenseRef-MeCoffe-Project"
+      },
+      "params": {
+        "accent": "#376578",
+        "generator": "procedural-building",
+        "glass": "#285a73",
+        "height_m": 16.0,
+        "levels": 5,
+        "preview_scale": 1.15,
+        "roof": "#d8e4e2",
+        "roof_style": "flat-parapet",
+        "storey_height_m": 3.2,
+        "wall": "#7c9cab"
+      },
+      "prototype_id": "building.procedural.education",
+      "reason": [
+        "building=school matches ['university', 'school', 'college']",
+        "scene/input dimensions take precedence over prototype display defaults"
+      ],
+      "source": {
+        "author": "MeCoffe contributors",
+        "path": "frontend/src/mecoffe/",
+        "title": "MeCoffe 程序生成",
+        "type": "procedural"
+      },
+      "variant_id": "extended"
+    },
+    {
+      "feature_id": "geojson/synthetic-building-1",
+      "feature_type": "building",
+      "license": {
+        "note": "项目程序生成，随仓库源码提供；未另行授予外部模型许可",
+        "path": "NOTICE.md",
+        "spdx": "LicenseRef-MeCoffe-Project"
+      },
+      "params": {
+        "accent": "#a46a40",
+        "generator": "procedural-building",
+        "glass": "#54818a",
+        "height_m": 9.6,
+        "levels": 3,
+        "preview_scale": 1.15,
+        "roof": "#f2e3c1",
+        "roof_style": "flat-parapet",
+        "storey_height_m": 3.2,
+        "wall": "#e3bd71"
+      },
+      "prototype_id": "building.procedural.dining",
+      "reason": [
+        "amenity=cafe matches ['restaurant', 'canteen', 'cafe']",
+        "scene/input dimensions take precedence over prototype display defaults"
+      ],
+      "source": {
+        "author": "MeCoffe contributors",
+        "path": "frontend/src/mecoffe/",
+        "title": "MeCoffe 程序生成",
+        "type": "procedural"
+      },
+      "variant_id": "extended"
+    },
+    {
+      "feature_id": "geojson/synthetic-building-2",
+      "feature_type": "building",
+      "license": {
+        "note": "项目程序生成，随仓库源码提供；未另行授予外部模型许可",
+        "path": "NOTICE.md",
+        "spdx": "LicenseRef-MeCoffe-Project"
+      },
+      "params": {
+        "accent": "#934f40",
+        "generator": "procedural-building",
+        "glass": "#487f94",
+        "height_m": 19.2,
+        "levels": 6,
+        "preview_scale": 0.85,
+        "roof": "#e4d3bb",
+        "roof_style": "flat-parapet",
+        "storey_height_m": 3.2,
+        "wall": "#bc7859"
+      },
+      "prototype_id": "building.procedural.dormitory",
+      "reason": [
+        "building=dormitory matches ['dormitory', 'apartments']",
+        "scene/input dimensions take precedence over prototype display defaults"
+      ],
+      "source": {
+        "author": "MeCoffe contributors",
+        "path": "frontend/src/mecoffe/",
+        "title": "MeCoffe 程序生成",
+        "type": "procedural"
+      },
+      "variant_id": "compact"
+    },
+    {
+      "feature_id": "geojson/synthetic-building-3",
+      "feature_type": "building",
+      "license": {
+        "note": "项目程序生成，随仓库源码提供；未另行授予外部模型许可",
+        "path": "NOTICE.md",
+        "spdx": "LicenseRef-MeCoffe-Project"
+      },
+      "params": {
+        "accent": "#a46a40",
+        "generator": "procedural-building",
+        "glass": "#54818a",
+        "height_m": 9.6,
+        "levels": 3,
+        "preview_scale": 0.85,
+        "roof": "#f2e3c1",
+        "roof_style": "flat-parapet",
+        "storey_height_m": 3.2,
+        "wall": "#e3bd71"
+      },
+      "prototype_id": "building.procedural.dining",
+      "reason": [
+        "amenity=cafe matches ['restaurant', 'canteen', 'cafe']",
+        "scene/input dimensions take precedence over prototype display defaults"
+      ],
+      "source": {
+        "author": "MeCoffe contributors",
+        "path": "frontend/src/mecoffe/",
+        "title": "MeCoffe 程序生成",
+        "type": "procedural"
+      },
+      "variant_id": "compact"
+    },
+    {
+      "feature_id": "geojson/synthetic-building-4",
+      "feature_type": "building",
+      "license": {
+        "note": "项目程序生成，随仓库源码提供；未另行授予外部模型许可",
+        "path": "NOTICE.md",
+        "spdx": "LicenseRef-MeCoffe-Project"
+      },
+      "params": {
+        "accent": "#8a8963",
+        "generator": "procedural-building",
+        "glass": "#4d7885",
+        "height_m": 9.6,
+        "levels": 3,
+        "preview_scale": 1.15,
+        "roof": "#e5dfc5",
+        "roof_style": "flat-parapet",
+        "storey_height_m": 3.2,
+        "wall": "#c4b88e"
+      },
+      "prototype_id": "building.procedural.other",
+      "reason": [
+        "building=residential matches *",
+        "scene/input dimensions take precedence over prototype display defaults"
+      ],
+      "source": {
+        "author": "MeCoffe contributors",
+        "path": "frontend/src/mecoffe/",
+        "title": "MeCoffe 程序生成",
+        "type": "procedural"
+      },
+      "variant_id": "extended"
+    },
+    {
+      "feature_id": "geojson/synthetic-building-5",
+      "feature_type": "building",
+      "license": {
+        "note": "项目程序生成，随仓库源码提供；未另行授予外部模型许可",
+        "path": "NOTICE.md",
+        "spdx": "LicenseRef-MeCoffe-Project"
+      },
+      "params": {
+        "accent": "#7673a6",
+        "generator": "procedural-building",
+        "glass": "#467c87",
+        "height_m": 16.0,
+        "levels": 5,
+        "preview_scale": 1.15,
+        "roof": "#d4c8ad",
+        "roof_style": "flat-parapet",
+        "storey_height_m": 3.2,
+        "wall": "#efe3ca"
+      },
+      "prototype_id": "building.procedural.library",
+      "reason": [
+        "amenity=library matches library",
+        "scene/input dimensions take precedence over prototype display defaults"
+      ],
+      "source": {
+        "author": "MeCoffe contributors",
+        "path": "frontend/src/mecoffe/",
+        "title": "MeCoffe 程序生成",
+        "type": "procedural"
+      },
+      "variant_id": "extended"
+    },
+    {
+      "feature_id": "geojson/synthetic-walk",
+      "feature_type": "road",
+      "license": {
+        "note": "项目程序生成，随仓库源码提供；未另行授予外部模型许可",
+        "path": "NOTICE.md",
+        "spdx": "LicenseRef-MeCoffe-Project"
+      },
+      "params": {
+        "color": "#d1c5a8",
+        "generator": "road",
+        "preview_scale": 1.15,
+        "width_m": 2.5
+      },
+      "prototype_id": "road.footway",
+      "reason": [
+        "highway=footway matches ['footway', 'path', 'steps', 'pedestrian', 'cycleway']"
+      ],
+      "source": {
+        "author": "MeCoffe contributors",
+        "path": "frontend/src/mecoffe/",
+        "title": "MeCoffe 程序生成",
+        "type": "procedural"
+      },
+      "variant_id": "extended"
+    }
+  ],
+  "campus_id": "synthetic-render-a",
+  "catalog_schema": "mecoffe.asset-catalog.v1",
+  "geometry_source": {
+    "attribution": "Entirely synthetic test geometry",
+    "bbox": [
+      103.77,
+      1.2937,
+      103.77539999999999,
+      1.2943
+    ],
+    "license": "CC0-1.0",
+    "sha256": "6aace1356812cecb1f09f530dbac79b1c2327d1cbb337e644c76732e4a6be012",
+    "source_type": "caller_geojson"
+  },
+  "schema_version": "mecoffe.asset-assignments.v1",
+  "seed": 0,
+  "simulation_data": false
+}

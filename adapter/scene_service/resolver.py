@@ -4,6 +4,7 @@ import copy
 from .common import digest, portable, require
 from .evidence import FUNCTIONS, enrich_map
 from .validation import brand_catalog, indexed, validate_result
+from .auto_evidence import STRONG_SOURCES
 
 FUNCTION_LABELS={'dining':'餐饮','retail':'零售','dormitory':'宿舍','residential':'住宅','education':'教学','office':'办公','library':'图书服务','unknown':'未知'}
 
@@ -59,10 +60,10 @@ def resolve(request):
     require(type(seed) in (str,int) and (not isinstance(seed,str) or seed.strip()),'INVALID_INPUT','assignment_seed must be a safe integer or nonblank string')
     assumptions=request.get('assumptions',[])
     require(isinstance(assumptions,list) and all(isinstance(a,str) for a in assumptions),'INVALID_INPUT','Assumptions must be confirmed strings')
-    result={'schema_version':'scene.result.v1','scene_id':'pending','scene_revision':request.get('scene_revision',1),
+    result={'schema_version':'scene.result.v2','scene_id':'pending','scene_revision':request.get('scene_revision',1),
             'mode':request['mode'],'illustrative':True,'map_ref':None,'source_refs':source,
             'assignment_meta':{'assignment_seed':seed,'rules_version':request.get('rules_version','1'),
-                               'resolver_version':'1.1','rules_sha256':''},
+                               'resolver_version':'2','rules_sha256':''},
             'rules':{},'assumptions':copy.deepcopy(assumptions),'assignments':[],'service_points':[],'warnings':[]}
     context={'snapshot':snapshot,'plan':plan}
     if request['mode']=='none':
@@ -108,12 +109,22 @@ def resolve(request):
                 candidates=[b for b in candidates if b['osm_id'] not in avoid] or candidates
             # Structured JSON avoids delimiter collisions; hex order equals integer order.
             chosen=max(candidates,key=lambda b:(digest([seed,name,b['osm_id']]),b['osm_id']))
-            evidence=[copy.deepcopy(e) for e in chosen['function_evidence'] if e['source']!='name_keyword' and
+            evidence=[copy.deepcopy(e) for e in chosen['function_evidence'] if e['source'] in STRONG_SOURCES and
                       (explicit or fallback is not None or e['function'] in pref['functions'])]
             uses='、'.join(FUNCTION_LABELS[f] for f in sorted({e['function'] for e in evidence}))
+            auto_sources=[]
+            if any(e['source']=='name_rule' for e in evidence):
+                auto_sources.append('名称规则')
+            ai_confidence=[e['confidence_pct'] for e in evidence if e['source']=='ai_inferred']
+            if ai_confidence:
+                auto_sources.append(f'AI 推断（把握 {min(ai_confidence)}%）')
+            standard_reason=(f"依据{'、'.join(auto_sources)}判定为{uses}，入口可达，按确定性规则选定" if auto_sources else
+                             f'有{uses}用途证据且入口可达，按确定性规则选定')
+            reason=('按已确认的指定楼栋安置，入口可达' if explicit else '按已确认的范围内任意楼栋兜底安置，入口可达' if fallback else standard_reason)
+            if auto_sources and (explicit or fallback):
+                reason+=f"；楼栋用途依据{'、'.join(auto_sources)}（{uses}）"
             return {'status':'placed','building_id':chosen['osm_id'],'entrance_id':chosen['usable_entrance_ids'][0],
-                    'reason':('按已确认的指定楼栋安置，入口可达' if explicit else '按已确认的范围内任意楼栋兜底安置，入口可达' if fallback else
-                              f'有{uses}用途证据且入口可达，按确定性规则选定'),
+                    'reason':reason,
                     'evidence':evidence,'fallback_used':fallback}
         for identifier, person in sorted(people.items()):
             pref=rules['role_prefs'][person['role']]

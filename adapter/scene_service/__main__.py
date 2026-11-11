@@ -85,6 +85,13 @@ def main(argv=None):
     evidence.add_argument('--min-main-ratio',type=float,default=.9)
     evidence.add_argument('--min-function-ratio',type=float,default=0.)
     evidence.add_argument('--out',required=True)
+    review=commands.add_parser('prepare-ai-review')
+    review.add_argument('--map',required=True);review.add_argument('--rules');review.add_argument('--out',required=True)
+    publication=commands.add_parser('publish')
+    publication.add_argument('--source',required=True);publication.add_argument('--out',required=True)
+    publication.add_argument('--map-id',required=True);publication.add_argument('--map-version',required=True)
+    publication.add_argument('--title',required=True);publication.add_argument('--rules')
+    publication.add_argument('--ai-evidence');publication.add_argument('--annotations')
     resolution=commands.add_parser('resolve')
     resolution.add_argument('--map'); resolution.add_argument('--snapshot',required=True)
     resolution.add_argument('--plan',required=True); resolution.add_argument('--prefs',required=True)
@@ -94,7 +101,16 @@ def main(argv=None):
     validation.add_argument('--map'); validation.add_argument('--snapshot'); validation.add_argument('--plan')
     args=parser.parse_args(argv)
     try:
-        if args.command=='evidence':
+        if args.command=='prepare-ai-review':
+            from .auto_evidence import prepare_ai_review
+            result=prepare_ai_review(load_map(args.map),read_json(args.rules) if args.rules else None)
+            write_json(args.out,result);print(json.dumps({'buildings':len(result['buildings']),'map_ref':result['map_ref']},ensure_ascii=False))
+        elif args.command=='publish':
+            from .map_package import publish_map
+            result=publish_map(args.source,args.out,args.map_id,args.map_version,args.title,args.annotations,
+                               evidence_mode='auto',ai_evidence=args.ai_evidence,rules_path=args.rules)
+            print(json.dumps(result,ensure_ascii=False))
+        elif args.command=='evidence':
             result=enrich_map(load_map(args.map),read_json(args.annotations) if args.annotations else None,
                               args.min_main_ratio,args.min_function_ratio)
             write_json(args.out,result)

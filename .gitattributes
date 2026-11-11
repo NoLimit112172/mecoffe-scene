@@ -31,3 +31,7 @@ frontend/public/mecoffe/assets3d/rocketbox/**/*.png binary
 frontend/public/mecoffe/assets3d/rocketbox/UPSTREAM_README.md -whitespace
 frontend/public/mecoffe/assets3d/rocketbox/derivatives/openomsi/*.md -text diff
 frontend/public/mecoffe/assets3d/rocketbox/derivatives/openomsi/CREDITS.md -whitespace
+
+# Frozen automatic-evidence rules and new v2 map fixtures use exact bytes.
+adapter/scene_service/evidence_rules.json -text
+frontend/tests/fixtures/scene-auto/** -text

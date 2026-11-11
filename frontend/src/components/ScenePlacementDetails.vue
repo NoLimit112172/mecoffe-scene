@@ -5,10 +5,10 @@
     <p data-testid="scene-outside">场景外 {{outside.length}} 人，仍计入总人数，不在地图生成位置。</p>
     <div class="placement-grid">
       <article v-for="a in result.assignments" :key="a.entity_id" :data-assignment-person="a.entity_id" :data-building="a.building_id||''" :data-entrance="a.entrance_id||''" :data-placement-status="a.status">
-        <b>{{names.get(a.entity_id)||a.entity_id}} · {{a.status==='out_of_scene'?'场景外':a.building_id}}（示意）</b><p>安置理由：{{a.reason}}</p><small v-for="(e,i) in a.evidence" :key="i">证据来源 {{sceneEvidenceLabel(e.source)}} · {{e.key}}={{e.value}} · {{e.ref}}</small>
+        <b>{{names.get(a.entity_id)||a.entity_id}} · {{a.status==='out_of_scene'?'场景外':a.building_id}}（示意）</b><p>安置理由：{{a.reason}}</p><small v-for="(e,i) in a.evidence" :key="i">证据来源 {{sceneEvidenceLabel(e.source,e)}} · {{e.key}}={{e.value}} · {{e.ref}}</small>
       </article>
       <article v-for="s in result.service_points" :key="s.service_id" :data-service-brand="s.brand_id" :data-building="s.building_id||''" :data-entrance="s.entrance_id||''" :data-placement-status="s.status">
-        <b>{{s.brand_name}} · {{s.status==='out_of_scene'?'服务点在场景外':s.building_id}}（示意）</b><p>安置理由：{{s.reason}}</p><small v-for="(e,i) in s.evidence" :key="i">证据来源 {{sceneEvidenceLabel(e.source)}} · {{e.key}}={{e.value}} · {{e.ref}}</small>
+        <b>{{s.brand_name}} · {{s.status==='out_of_scene'?'服务点在场景外':s.building_id}}（示意）</b><p>安置理由：{{s.reason}}</p><small v-for="(e,i) in s.evidence" :key="i">证据来源 {{sceneEvidenceLabel(e.source,e)}} · {{e.key}}={{e.value}} · {{e.ref}}</small>
       </article>
     </div>
     <p v-for="(a,i) in result.assumptions" :key="i" style="white-space:pre-wrap">{{a}}</p>

@@ -146,7 +146,7 @@ def _catalog(manifest):
 
 def _files(directory,manifest,ref):
     files=manifest.get('files')
-    require(isinstance(files,dict) and MAP_FILES<=set(files) and set(files)<=MAP_FILES|{'surroundings.json'} and
+    require(isinstance(files,dict) and MAP_FILES<=set(files) and set(files)<=MAP_FILES|{'surroundings.json','evidence-rules.json','ai-evidence.json'} and
             all(isinstance(value,str) and re.fullmatch(r'[a-f0-9]{64}',value) for value in files.values()),
             'INVALID_MAP_MANIFEST','Formal map file list or digest is incomplete/invalid')
     require(all((directory/name).is_file() for name in files),'MAP_FILE_MISSING','A listed map file is missing')
@@ -224,6 +224,14 @@ def check_scene(intent,snapshot,plan,map_directory=None,*,assignment_seed=None):
     _finish(report)
     if report['configuration_ok']:
         report['result']=result
+        from collections import Counter
+        placed=[entry for entry in result['assignments']+result['service_points'] if entry['status']=='placed']
+        counts=Counter(e['source'] for entry in placed for e in entry['evidence'])
+        total=sum(counts.values());ai=counts['ai_inferred']
+        report['evidence_usage']={'by_source':dict(sorted(counts.items())),'total':total,'ai_count':ai,
+                                  'ai_share_pct':round(ai*100/total) if total else 0,
+                                  'placements_with_ai':sum(any(e['source']=='ai_inferred' for e in entry['evidence']) for entry in placed),
+                                  'placed_count':len(placed),'illustrative':True}
     return report
 
 
@@ -239,6 +247,9 @@ def render_report(report):
     for warning,explanation in zip(report['warnings'],report['warning_explanations']):
         lines.append(f"【警告，不计失败】{warning['code']}：{explanation['user_message']}；引用：{','.join(warning['refs'])}")
     result=report.get('result',{})
+    usage=report.get('evidence_usage')
+    if usage is not None:
+        lines.append(f"【安置依据统计·示意】来源条数 {usage['by_source']}；AI {usage['ai_count']}/{usage['total']}，占 {usage['ai_share_pct']}%；使用 AI 依据的安置 {usage['placements_with_ai']}/{usage['placed_count']}。")
     for item in result.get('service_points',[]):
         place=item['building_id'] if item['status']=='placed' else '场景外'
         lines.append(f"【位置示意】服务点 {item['brand_name']}：{place}")

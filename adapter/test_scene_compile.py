@@ -37,7 +37,7 @@ class SceneCompileCase(unittest.TestCase):
         for name in ('sceneMap.js','sceneResult.js','scenePlacement.js'):
             codes.update(re.findall(r"""['"]([A-Z][A-Z0-9_]+)['"]""",(ROOT/'frontend/src/mecoffe'/name).read_text(encoding='utf-8')))
         self.assertEqual(set(ISSUE_MESSAGES),codes)
-        self.assertEqual(sum(x['severity']=='warning' for x in ISSUE_MESSAGES.values()),5)
+        self.assertEqual(sum(x['severity']=='warning' for x in ISSUE_MESSAGES.values()),10)
         for entry in ISSUE_MESSAGES.values():
             self.assertIn(entry['severity'],('error','warning'))
             for key in ('user_message','admin_message','rerun_scope'):

@@ -49,11 +49,13 @@ def main_component(graph):
     return min(components,key=lambda c:(-len(c),sorted(c))) if components else set()
 
 
-def enrich_map(package, annotations=None, min_main_ratio=.9, min_function_ratio=0.):
+def enrich_map(package, annotations=None, min_main_ratio=.9, min_function_ratio=0., *, auto_rules=None, ai_evidence=None):
     require(type(min_main_ratio) in (int,float) and 0 <= min_main_ratio <= 1 and
             type(min_function_ratio) in (int,float) and 0 <= min_function_ratio <= 1,
             'INVALID_THRESHOLD','Quality thresholds must be in [0,1]')
     result=copy.deepcopy(package); campus=result['campus']
+    auto_rules=auto_rules if auto_rules is not None else package.get('evidence_rules')
+    ai_evidence=ai_evidence if ai_evidence is not None else package.get('ai_evidence')
     buildings=campus.get('buildings', []); entrances=result.get('entrances', {}).get('entrances', [])
     require(isinstance(buildings,list) and isinstance(entrances,list), 'INVALID_MAP','Buildings and entrances must be arrays')
     ids=[b.get('osm_id') for b in buildings]
@@ -62,16 +64,29 @@ def enrich_map(package, annotations=None, min_main_ratio=.9, min_function_ratio=
     require(all(isinstance(i,str) and i for i in entrance_ids) and len(set(entrance_ids))==len(entrance_ids), 'INVALID_MAP','Entrance IDs must be unique')
     by_id={b['osm_id']:b for b in buildings}; valid={i for i,b in by_id.items() if valid_building(b)}
     require(all(isinstance(b.get('tags',{}),dict) and isinstance(b.get('name',''),str) for b in buildings),'INVALID_MAP','Building tags and names are malformed')
+    frozen=auto_rules is not None and package.get('evidence_frozen') is True
+    frozen_fields=None
+    if frozen:
+        from .auto_evidence import FROZEN_FIELDS
+        require(auto_rules==package.get('evidence_rules') and ai_evidence==package.get('ai_evidence'),
+                'MAP_VERSION_IMMUTABLE','Frozen evidence inputs cannot change; publish a new map version')
+        frozen_fields={b['osm_id']:{key:copy.deepcopy(b[key]) for key in FROZEN_FIELDS if key in b} for b in buildings}
     require(all(e.get('building_id') in by_id for e in entrances),'INVALID_MAP','Entrance references an unknown building')
     warnings=[]
     def warn(code,message,refs):
         warnings.append({'code':code,'message':message,'refs':sorted(refs)})
     annotations=annotations if annotations is not None else package.get('annotations', {'map_ref':package['map_ref'],'buildings':{}})
+    if frozen:
+        require(annotations==package.get('annotations',{'map_ref':package['map_ref'],'buildings':{}}),
+                'MAP_VERSION_IMMUTABLE','Frozen annotations cannot change; publish a new map version')
     require(annotations.get('map_ref') == package['map_ref'], 'REF_MISMATCH','Annotations must bind the exact map version and hash')
     entries=annotations.get('buildings', {})
     result['annotations']=copy.deepcopy(annotations)
     require(isinstance(entries,dict) and set(entries)<=set(ids), 'OVERRIDE_INVALID','Annotation references an unknown building')
     for b in buildings:
+        if auto_rules is not None:
+            for key in ('superseded_function_evidence','inactive_function_evidence','function_annotation','needs_ai_review'):
+                b.pop(key,None)
         tags=dict(b.get('tags', {}))
         if isinstance(b.get('building_type'),str):
             tags.setdefault('building',b['building_type'])
@@ -105,6 +120,17 @@ def enrich_map(package, annotations=None, min_main_ratio=.9, min_function_ratio=
             b['function_evidence']=[e for e in b['function_evidence'] if e['source']=='name_keyword']
         b['function_evidence'].extend({'function':f,'source':'annotation','key':'functions','value':f,'ref':identifier} for f in sorted(set(entry['functions'])))
         b['function_annotation']=copy.deepcopy(entry)
+    if auto_rules is not None:
+        from .auto_evidence import apply_auto_evidence, validate_rules, AUTO_WARNINGS
+        if frozen:
+            validate_rules(auto_rules)
+            for building in buildings:
+                building.update(frozen_fields[building['osm_id']])
+            for warning in package.get('quality',{}).get('warnings',[]):
+                if warning['code'] in AUTO_WARNINGS:
+                    warn(warning['code'],warning['message'],warning['refs'])
+        else:
+            apply_auto_evidence(result,auto_rules,ai_evidence,warn)
     graph=campus.get('walk_graph', {})
     require(isinstance(graph,dict) and graph.get('directed',False) is False,'INVALID_MAP','Expected an undirected walking graph')
     graph_nodes=graph.get('nodes',[]); graph_edges=graph.get('edges',[])
@@ -165,6 +191,9 @@ def enrich_map(package, annotations=None, min_main_ratio=.9, min_function_ratio=
                        'entrances':len(entrances),'main_component_entrances':main_count,'main_component_ratio':ratio,
                        'eligible_buildings':eligible,'poi':poi_stats,
                        'thresholds':{'min_main_ratio':min_main_ratio,'min_function_ratio':min_function_ratio},'warnings':warnings}
+    if auto_rules is not None:
+        result['quality']['evidence_policy']={'version':auto_rules['version'],'sha256':auto_rules['sha256'],
+                                            'ai_min_confidence_pct':auto_rules['ai_min_confidence_pct']}
     return result
 
 

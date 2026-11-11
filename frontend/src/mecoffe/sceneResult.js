@@ -1,5 +1,6 @@
 // M15 validation only. No rendering, fetching, placement or legacy-path changes.
 import contract from '../../../adapter/scene_service/contract.json' with {type:'json'}
+import contractV2 from '../../../adapter/scene_service/contract-v2.json' with {type:'json'}
 import {sha256HexJs} from './sha256.js'
 
 export class SceneResultError extends Error {
@@ -71,7 +72,9 @@ const sameKeys=(list,values)=>list.length===values.size&&list.every(k=>values.ha
 
 /** Optional context {map,snapshot,plan,source_refs} verifies external references. */
 export function validateSceneResult(value,context={}){
-  canonicalSceneJson(value);check(value,contract)
+  const v2=value?.schema_version==='scene.result.v2'
+  const strong=e=>v2?['building_tag','poi','annotation','name_rule','ai_inferred'].includes(e.source):e.source!=='name_keyword'
+  canonicalSceneJson(value);check(value,v2?contractV2:contract)
   const {result_sha256,...body}=value
   requireValue(result_sha256===sceneDigest(body),'HASH_MISMATCH','SceneResult hash mismatch')
   requireValue(value.assignment_meta.rules_sha256===sceneDigest(value.rules),'HASH_MISMATCH','Rules hash mismatch')
@@ -86,6 +89,7 @@ export function validateSceneResult(value,context={}){
     requireValue(value.service_points.every(x=>people.has(x.owner_entity_id)),'REF_MISMATCH','Service owner missing from assignments')
   }
   for(const item of [...value.assignments,...value.service_points]){
+    if(v2)requireValue(item.evidence.every(e=>(e.source==='ai_inferred')===Object.hasOwn(e,'confidence_pct')),'INVALID_SCENE','Only AI evidence requires integer confidence_pct')
     const group=Object.hasOwn(item,'entity_id')?'entities':'brands',name=item.entity_id??item.brand_name
     const pref=group==='entities'?value.rules.role_prefs[item.role]:value.rules.brand_prefs[name]
     requireValue(item.fallback_used===null||item.fallback_used===pref.fallback,'REF_MISMATCH','Undeclared fallback')
@@ -93,7 +97,7 @@ export function validateSceneResult(value,context={}){
     else requireValue(item.building_id&&item.entrance_id&&item.fallback_used!=='out_of_scene','INVALID_SCENE','Placed entry needs building and entrance')
     if(item.status==='placed'&&item.fallback_used===null){
       const group=Object.hasOwn(item,'entity_id')?'entities':'brands',name=item.entity_id??item.brand_name
-      requireValue(value.rules.overrides?.[group]?.[name]===item.building_id||item.evidence.some(e=>e.source!=='name_keyword'),'INVALID_SCENE','Strict placement needs evidence or explicit override')
+      requireValue(value.rules.overrides?.[group]?.[name]===item.building_id||item.evidence.some(strong),'INVALID_SCENE','Strict placement needs evidence or explicit override')
     }
   }
   if(context.source_refs)requireValue(equal(value.source_refs,context.source_refs),'REF_MISMATCH','Source references differ')
@@ -106,7 +110,7 @@ export function validateSceneResult(value,context={}){
       requireValue(item.evidence.every(e=>(b.function_evidence||[]).some(known=>equal(e,known))),'REF_MISMATCH','Evidence absent from map')
       const group=Object.hasOwn(item,'entity_id')?'entities':'brands',name=item.entity_id??item.brand_name
       const pref=group==='entities'?value.rules.role_prefs[item.role]:value.rules.brand_prefs[name]
-      requireValue(item.fallback_used!==null||value.rules.overrides[group][name]===item.building_id||item.evidence.some(e=>e.source!=='name_keyword'&&e.function!=='unknown'&&pref.functions.includes(e.function)),'REF_MISMATCH','Evidence does not satisfy preference')
+      requireValue(item.fallback_used!==null||value.rules.overrides[group][name]===item.building_id||item.evidence.some(e=>strong(e)&&e.function!=='unknown'&&pref.functions.includes(e.function)),'REF_MISMATCH','Evidence does not satisfy preference')
     }
   }
   if(context.snapshot){

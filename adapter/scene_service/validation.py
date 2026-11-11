@@ -6,6 +6,8 @@ import re
 from .common import canonical, digest, nonblank, portable, require, SceneError
 
 CONTRACT=json.loads(Path(__file__).with_name('contract.json').read_text(encoding='utf-8'))
+CONTRACT_V2=json.loads(Path(__file__).with_name('contract-v2.json').read_text(encoding='utf-8'))
+STRONG_V2=frozenset(('building_tag','poi','annotation','name_rule','ai_inferred'))
 
 
 def check_schema(value, schema, path='$'):
@@ -70,7 +72,10 @@ def brand_catalog(plan, people=None):
 
 
 def validate_result(result, context=None):
-    result=portable(result); check_schema(result,CONTRACT); context=context or {}
+    result=portable(result)
+    v2=isinstance(result,dict) and result.get('schema_version')=='scene.result.v2'
+    check_schema(result,CONTRACT_V2 if v2 else CONTRACT); context=context or {}
+    strong=lambda e:e['source'] in STRONG_V2 if v2 else e['source']!='name_keyword'
     require(result['result_sha256']==digest({k:v for k,v in result.items() if k!='result_sha256'}),'HASH_MISMATCH','SceneResult hash mismatch')
     require(result['assignment_meta']['rules_sha256']==digest(result['rules']),'HASH_MISMATCH','Rules hash mismatch')
     mode=result['mode']
@@ -91,6 +96,9 @@ def validate_result(result, context=None):
         require(all(x['owner_entity_id'] in {a['entity_id'] for a in result['assignments']} for x in result['service_points']),
                 'REF_MISMATCH','Service owner missing from assignments')
     for item in result['assignments']+result['service_points']:
+        if v2:
+            require(all((e['source']=='ai_inferred')==('confidence_pct' in e) for e in item['evidence']),
+                    'INVALID_SCENE','Only AI evidence requires integer confidence_pct')
         group='entities' if 'entity_id' in item else 'brands'
         name=item.get('entity_id',item.get('brand_name'))
         pref=result['rules']['role_prefs'][item['role']] if group=='entities' else result['rules']['brand_prefs'][name]
@@ -103,7 +111,7 @@ def validate_result(result, context=None):
             group='entities' if 'entity_id' in item else 'brands'
             name=item.get('entity_id',item.get('brand_name'))
             override=result['rules'].get('overrides',{}).get(group,{}).get(name)
-            require(override==item['building_id'] or any(e['source']!='name_keyword' for e in item['evidence']), 'INVALID_SCENE','Strict placement needs strong evidence or explicit override')
+            require(override==item['building_id'] or any(strong(e) for e in item['evidence']), 'INVALID_SCENE','Strict placement needs strong evidence or explicit override')
     if 'source_refs' in context:
         require(result['source_refs']==context['source_refs'],'REF_MISMATCH','Source references differ')
     if 'map' in context and mode=='map':
@@ -122,7 +130,7 @@ def validate_result(result, context=None):
                 override=result['rules']['overrides'][group].get(name)
                 pref=result['rules']['role_prefs'][item['role']] if group=='entities' else result['rules']['brand_prefs'][name]
                 require(item['fallback_used'] is not None or override==item['building_id'] or any(
-                    e['source']!='name_keyword' and e['function']!='unknown' and e['function'] in pref['functions'] for e in item['evidence']),
+                    strong(e) and e['function']!='unknown' and e['function'] in pref['functions'] for e in item['evidence']),
                     'REF_MISMATCH','Evidence does not satisfy adopted preference')
     if 'snapshot' in context:
         snapshot=context['snapshot']; people=indexed(snapshot['nodes'],'entity_id')

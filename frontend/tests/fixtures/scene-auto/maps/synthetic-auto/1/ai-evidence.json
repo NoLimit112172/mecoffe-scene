@@ -1,0 +1,31 @@
+{
+  "buildings": {
+    "geojson/synthetic-building-1": {
+      "confidence": 0.84,
+      "functions": [
+        "dining"
+      ],
+      "generated_at": "2026-11-11T00:00:00Z",
+      "model": "手写样例，未调用模型",
+      "prompt_version": "synthetic-1",
+      "rationale": "合成离线判断，仅验证展示和阈值。"
+    },
+    "geojson/synthetic-building-4": {
+      "confidence": 0.4,
+      "functions": [
+        "office"
+      ],
+      "generated_at": "2026-11-11T00:00:00Z",
+      "model": "手写样例，未调用模型",
+      "prompt_version": "synthetic-1",
+      "rationale": "合成离线判断，仅验证展示和阈值。"
+    }
+  },
+  "map_ref": {
+    "manifest_sha256": "b5de82dce91e107d99e4a69785f3640f78c77e5321d327c3f29978a70c1e2497",
+    "map_id": "synthetic-render-a",
+    "map_version": "1"
+  },
+  "schema_version": "scene.ai-evidence.v1",
+  "synthetic": true
+}

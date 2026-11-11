@@ -1,0 +1,235 @@
+{
+  "features": [
+    {
+      "geometry": {
+        "coordinates": [
+          103.770200003,
+          1.294
+        ],
+        "type": "Point"
+      },
+      "id": "geojson/synthetic-building-0/entrance/1",
+      "properties": {
+        "building_id": "geojson/synthetic-building-0",
+        "category": "entrance",
+        "connected": true,
+        "facade": [
+          [
+            -300.15,
+            0.0
+          ],
+          [
+            -255.683,
+            0.0
+          ]
+        ],
+        "feature_id": "geojson/synthetic-building-0/entrance/1",
+        "id": "geojson/synthetic-building-0/entrance/1",
+        "illustrative": true,
+        "outward": [
+          0.0,
+          -1.0
+        ],
+        "placement": "facade_midpoint",
+        "road_node_id": "vertex/103.7702000000/1.2937000000/layer/0",
+        "source": "inferred"
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          103.771200001,
+          1.294
+        ],
+        "type": "Point"
+      },
+      "id": "geojson/synthetic-building-1/entrance/1",
+      "properties": {
+        "building_id": "geojson/synthetic-building-1",
+        "category": "entrance",
+        "connected": true,
+        "facade": [
+          [
+            -188.983,
+            0.0
+          ],
+          [
+            -144.517,
+            0.0
+          ]
+        ],
+        "feature_id": "geojson/synthetic-building-1/entrance/1",
+        "id": "geojson/synthetic-building-1/entrance/1",
+        "illustrative": true,
+        "outward": [
+          0.0,
+          -1.0
+        ],
+        "placement": "facade_midpoint",
+        "road_node_id": "vertex/103.7712000000/1.2937000000/layer/0",
+        "source": "inferred"
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          103.772199999,
+          1.294
+        ],
+        "type": "Point"
+      },
+      "id": "geojson/synthetic-building-2/entrance/1",
+      "properties": {
+        "building_id": "geojson/synthetic-building-2",
+        "category": "entrance",
+        "connected": true,
+        "facade": [
+          [
+            -77.817,
+            0.0
+          ],
+          [
+            -33.35,
+            0.0
+          ]
+        ],
+        "feature_id": "geojson/synthetic-building-2/entrance/1",
+        "id": "geojson/synthetic-building-2/entrance/1",
+        "illustrative": true,
+        "outward": [
+          0.0,
+          -1.0
+        ],
+        "placement": "facade_midpoint",
+        "road_node_id": "vertex/103.7722000000/1.2937000000/layer/0",
+        "source": "inferred"
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          103.773200001,
+          1.294
+        ],
+        "type": "Point"
+      },
+      "id": "geojson/synthetic-building-3/entrance/1",
+      "properties": {
+        "building_id": "geojson/synthetic-building-3",
+        "category": "entrance",
+        "connected": true,
+        "facade": [
+          [
+            33.35,
+            0.0
+          ],
+          [
+            77.817,
+            0.0
+          ]
+        ],
+        "feature_id": "geojson/synthetic-building-3/entrance/1",
+        "id": "geojson/synthetic-building-3/entrance/1",
+        "illustrative": true,
+        "outward": [
+          0.0,
+          -1.0
+        ],
+        "placement": "facade_midpoint",
+        "road_node_id": "vertex/103.7732000000/1.2937000000/layer/0",
+        "source": "inferred"
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          103.774199999,
+          1.294
+        ],
+        "type": "Point"
+      },
+      "id": "geojson/synthetic-building-4/entrance/1",
+      "properties": {
+        "building_id": "geojson/synthetic-building-4",
+        "category": "entrance",
+        "connected": true,
+        "facade": [
+          [
+            144.517,
+            0.0
+          ],
+          [
+            188.983,
+            0.0
+          ]
+        ],
+        "feature_id": "geojson/synthetic-building-4/entrance/1",
+        "id": "geojson/synthetic-building-4/entrance/1",
+        "illustrative": true,
+        "outward": [
+          0.0,
+          -1.0
+        ],
+        "placement": "facade_midpoint",
+        "road_node_id": "vertex/103.7742000000/1.2937000000/layer/0",
+        "source": "inferred"
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          103.775199997,
+          1.294
+        ],
+        "type": "Point"
+      },
+      "id": "geojson/synthetic-building-5/entrance/1",
+      "properties": {
+        "building_id": "geojson/synthetic-building-5",
+        "category": "entrance",
+        "connected": true,
+        "facade": [
+          [
+            255.683,
+            0.0
+          ],
+          [
+            300.15,
+            0.0
+          ]
+        ],
+        "feature_id": "geojson/synthetic-building-5/entrance/1",
+        "id": "geojson/synthetic-building-5/entrance/1",
+        "illustrative": true,
+        "outward": [
+          0.0,
+          -1.0
+        ],
+        "placement": "facade_midpoint",
+        "road_node_id": "vertex/103.7752000000/1.2937000000/layer/0",
+        "source": "inferred"
+      },
+      "type": "Feature"
+    }
+  ],
+  "name": "entrances",
+  "schema_version": "mecoffe.gis.v1",
+  "source": {
+    "attribution": "Entirely synthetic test geometry",
+    "bbox": [
+      103.77,
+      1.2937,
+      103.77539999999999,
+      1.2943
+    ],
+    "license": "CC0-1.0",
+    "sha256": "6aace1356812cecb1f09f530dbac79b1c2327d1cbb337e644c76732e4a6be012",
+    "source_type": "caller_geojson"
+  },
+  "type": "FeatureCollection"
+}

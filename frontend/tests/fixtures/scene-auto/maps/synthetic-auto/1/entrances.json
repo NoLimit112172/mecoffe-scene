@@ -1,0 +1,284 @@
+{
+  "campus_id": "synthetic-render-a",
+  "entrances": [
+    {
+      "building_id": "geojson/synthetic-building-0",
+      "connected": true,
+      "connector": [
+        [
+          -277.9165,
+          0.0
+        ],
+        [
+          -277.9165,
+          -3.0
+        ],
+        [
+          -277.9165,
+          -33.359
+        ],
+        [
+          -277.917,
+          -33.359
+        ]
+      ],
+      "facade": [
+        [
+          -300.15,
+          0.0
+        ],
+        [
+          -255.683,
+          0.0
+        ]
+      ],
+      "id": "geojson/synthetic-building-0/entrance/1",
+      "illustrative": true,
+      "outward": [
+        0.0,
+        -1.0
+      ],
+      "placement": "facade_midpoint",
+      "point": [
+        -277.9165,
+        0.0
+      ],
+      "road_node_id": "vertex/103.7702000000/1.2937000000/layer/0",
+      "scene_reachable": true,
+      "source": "inferred"
+    },
+    {
+      "building_id": "geojson/synthetic-building-1",
+      "connected": true,
+      "connector": [
+        [
+          -166.75,
+          0.0
+        ],
+        [
+          -166.75,
+          -3.0
+        ],
+        [
+          -166.75,
+          -33.359
+        ]
+      ],
+      "facade": [
+        [
+          -188.983,
+          0.0
+        ],
+        [
+          -144.517,
+          0.0
+        ]
+      ],
+      "id": "geojson/synthetic-building-1/entrance/1",
+      "illustrative": true,
+      "outward": [
+        0.0,
+        -1.0
+      ],
+      "placement": "facade_midpoint",
+      "point": [
+        -166.75,
+        0.0
+      ],
+      "road_node_id": "vertex/103.7712000000/1.2937000000/layer/0",
+      "scene_reachable": true,
+      "source": "inferred"
+    },
+    {
+      "building_id": "geojson/synthetic-building-2",
+      "connected": true,
+      "connector": [
+        [
+          -55.5835,
+          0.0
+        ],
+        [
+          -55.5835,
+          -3.0
+        ],
+        [
+          -55.5835,
+          -33.359
+        ],
+        [
+          -55.583,
+          -33.359
+        ]
+      ],
+      "facade": [
+        [
+          -77.817,
+          0.0
+        ],
+        [
+          -33.35,
+          0.0
+        ]
+      ],
+      "id": "geojson/synthetic-building-2/entrance/1",
+      "illustrative": true,
+      "outward": [
+        0.0,
+        -1.0
+      ],
+      "placement": "facade_midpoint",
+      "point": [
+        -55.5835,
+        0.0
+      ],
+      "road_node_id": "vertex/103.7722000000/1.2937000000/layer/0",
+      "scene_reachable": true,
+      "source": "inferred"
+    },
+    {
+      "building_id": "geojson/synthetic-building-3",
+      "connected": true,
+      "connector": [
+        [
+          55.5835,
+          0.0
+        ],
+        [
+          55.5835,
+          -3.0
+        ],
+        [
+          55.583,
+          -33.359
+        ]
+      ],
+      "facade": [
+        [
+          33.35,
+          0.0
+        ],
+        [
+          77.817,
+          0.0
+        ]
+      ],
+      "id": "geojson/synthetic-building-3/entrance/1",
+      "illustrative": true,
+      "outward": [
+        0.0,
+        -1.0
+      ],
+      "placement": "facade_midpoint",
+      "point": [
+        55.5835,
+        0.0
+      ],
+      "road_node_id": "vertex/103.7732000000/1.2937000000/layer/0",
+      "scene_reachable": true,
+      "source": "inferred"
+    },
+    {
+      "building_id": "geojson/synthetic-building-4",
+      "connected": true,
+      "connector": [
+        [
+          166.75,
+          0.0
+        ],
+        [
+          166.75,
+          -3.0
+        ],
+        [
+          166.75,
+          -33.359
+        ]
+      ],
+      "facade": [
+        [
+          144.517,
+          0.0
+        ],
+        [
+          188.983,
+          0.0
+        ]
+      ],
+      "id": "geojson/synthetic-building-4/entrance/1",
+      "illustrative": true,
+      "outward": [
+        0.0,
+        -1.0
+      ],
+      "placement": "facade_midpoint",
+      "point": [
+        166.75,
+        0.0
+      ],
+      "road_node_id": "vertex/103.7742000000/1.2937000000/layer/0",
+      "scene_reachable": true,
+      "source": "inferred"
+    },
+    {
+      "building_id": "geojson/synthetic-building-5",
+      "connected": true,
+      "connector": [
+        [
+          277.9165,
+          0.0
+        ],
+        [
+          277.9165,
+          -3.0
+        ],
+        [
+          277.9165,
+          -33.359
+        ],
+        [
+          277.917,
+          -33.359
+        ]
+      ],
+      "facade": [
+        [
+          255.683,
+          0.0
+        ],
+        [
+          300.15,
+          0.0
+        ]
+      ],
+      "id": "geojson/synthetic-building-5/entrance/1",
+      "illustrative": true,
+      "outward": [
+        0.0,
+        -1.0
+      ],
+      "placement": "facade_midpoint",
+      "point": [
+        277.9165,
+        0.0
+      ],
+      "road_node_id": "vertex/103.7752000000/1.2937000000/layer/0",
+      "scene_reachable": true,
+      "source": "inferred"
+    }
+  ],
+  "geometry_source": {
+    "attribution": "Entirely synthetic test geometry",
+    "bbox": [
+      103.77,
+      1.2937,
+      103.77539999999999,
+      1.2943
+    ],
+    "license": "CC0-1.0",
+    "sha256": "6aace1356812cecb1f09f530dbac79b1c2327d1cbb337e644c76732e4a6be012",
+    "source_type": "caller_geojson"
+  },
+  "illustrative": true,
+  "note": "入口位于朝道路的外墙中段，与路线一致；为展示示意，非实测，不解析 OSM entrance 标注。",
+  "schema_version": "mecoffe.entrances.v1"
+}

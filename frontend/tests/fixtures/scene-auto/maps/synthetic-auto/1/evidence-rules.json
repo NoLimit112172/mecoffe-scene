@@ -1,0 +1,48 @@
+{
+  "schema_version": "scene.evidence-rules.v1",
+  "version": "auto-evidence.1",
+  "ai_min_confidence_pct": 80,
+  "nearby_poi_radius_m": 50,
+  "exclusion_patterns": [
+    "旧址|遗址|拆除|筹建|拟建|废弃|原址|^原",
+    "道路|路口|车站|公交|地铁|(?:路|站|门|广场|停车场)$"
+  ],
+  "name_rules": [
+    {
+      "id": "dining-suffix",
+      "function": "dining",
+      "pattern": "(?:食堂|餐厅|咖啡馆|咖啡厅)(?:[A-Za-z0-9一二三四五六七八九十]+区)?$"
+    },
+    {
+      "id": "dormitory-suffix",
+      "function": "dormitory",
+      "pattern": "(?:学生公寓|宿舍楼?)(?:[A-Za-z0-9一二三四五六七八九十]+(?:号楼|栋|区))?$"
+    },
+    {
+      "id": "education-suffix",
+      "function": "education",
+      "pattern": "教学楼$"
+    },
+    {
+      "id": "library-suffix",
+      "function": "library",
+      "pattern": "图书馆$"
+    },
+    {
+      "id": "office-suffix",
+      "function": "office",
+      "pattern": "办公楼$"
+    },
+    {
+      "id": "retail-suffix",
+      "function": "retail",
+      "pattern": "(?:超市|便利店)$"
+    },
+    {
+      "id": "residential-suffix",
+      "function": "residential",
+      "pattern": "(?:住宅楼|居民楼)$"
+    }
+  ],
+  "sha256": "aec557eaecfaf24158e4a21eafa9a6b5abd6a6f6489b65df0f2e356c58ca9e7d"
+}

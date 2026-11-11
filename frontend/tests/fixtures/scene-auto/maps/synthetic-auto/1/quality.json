@@ -1,0 +1,73 @@
+{
+  "buildings": 6,
+  "eligible_buildings": 6,
+  "entrances": 6,
+  "evidence_policy": {
+    "ai_evidence_sha256": "91467a069c2fc8d21c494c92da4779f28f233b01890318ed082cabd31dfa4408",
+    "ai_min_confidence_pct": 80,
+    "input_map_ref": {
+      "manifest_sha256": "b5de82dce91e107d99e4a69785f3640f78c77e5321d327c3f29978a70c1e2497",
+      "map_id": "synthetic-render-a",
+      "map_version": "1"
+    },
+    "sha256": "aec557eaecfaf24158e4a21eafa9a6b5abd6a6f6489b65df0f2e356c58ca9e7d",
+    "version": "auto-evidence.1"
+  },
+  "function_counts": {
+    "dining": 2,
+    "dormitory": 1,
+    "education": 1,
+    "library": 1,
+    "office": 0,
+    "residential": 0,
+    "retail": 0,
+    "unknown": 1
+  },
+  "main_component_entrances": 6,
+  "main_component_ratio": 1.0,
+  "no_entrance": 0,
+  "poi": {
+    "ambiguous": 0,
+    "associated": 0,
+    "invalid": 0,
+    "total": 0,
+    "unassociated": 0
+  },
+  "status": "ready",
+  "thresholds": {
+    "min_function_ratio": 0.0,
+    "min_main_ratio": 0.9
+  },
+  "unknown": 1,
+  "valid_buildings": 6,
+  "warnings": [
+    {
+      "code": "AI_LOW_CONFIDENCE",
+      "message": "AI prediction retained but below the frozen map policy threshold",
+      "refs": [
+        "geojson/synthetic-building-4"
+      ]
+    },
+    {
+      "code": "EVIDENCE_CONFLICT",
+      "message": "Lower-priority or same-tier function evidence conflicts; no automatic override",
+      "refs": [
+        "geojson/synthetic-building-3"
+      ]
+    },
+    {
+      "code": "GENERIC_USE_SUPERSEDED",
+      "message": "Generic education tag retained as superseded evidence, not a teaching candidate",
+      "refs": [
+        "geojson/synthetic-building-3"
+      ]
+    },
+    {
+      "code": "UNKNOWN_USE",
+      "message": "Unknown building functions do not participate in strict matching",
+      "refs": [
+        "geojson/synthetic-building-4"
+      ]
+    }
+  ]
+}

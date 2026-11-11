@@ -1,0 +1,39 @@
+{
+  "asset_library_version": "mecoffe-embed-v1",
+  "catalog_sha256": "a4444d42d820359ff180d4390c1b16a5a86249cfd008a0d2e5eafa1dfc55aa0c",
+  "evidence_policy": {
+    "ai_evidence_sha256": "91467a069c2fc8d21c494c92da4779f28f233b01890318ed082cabd31dfa4408",
+    "ai_min_confidence_pct": 80,
+    "input_map_ref": {
+      "manifest_sha256": "b5de82dce91e107d99e4a69785f3640f78c77e5321d327c3f29978a70c1e2497",
+      "map_id": "synthetic-render-a",
+      "map_version": "1"
+    },
+    "sha256": "aec557eaecfaf24158e4a21eafa9a6b5abd6a6f6489b65df0f2e356c58ca9e7d",
+    "version": "auto-evidence.1"
+  },
+  "files": {
+    "ai-evidence.json": "91467a069c2fc8d21c494c92da4779f28f233b01890318ed082cabd31dfa4408",
+    "asset_assignments.json": "e784c00e2db407f39cbc3a79abbd335af429a67ef88c8d93c91512dddfea61c8",
+    "campus3d.json": "2eb865249acd5fe3c3e48f3af96592cc67080f1a440bb19b18dac1833abdcfdf",
+    "entrances.json": "ed114f0f1e8a292494fa9e8fc170f536872c5b1942e1d42fd1afd5eb056b0af9",
+    "evidence-rules.json": "6c657dc8d43a1c118a70be22ed53891ea1f4fc8e422fe2539c0d4ee6f6e95d94",
+    "gis/boundary.geojson": "c7e347e23f3114f949f380da1ee381dfd6bfc481787c4e14a0b27270ea112365",
+    "gis/buildings.geojson": "4f68b631fea2dd370924fde20e9014d9ee5f431dfd313eb0d5ff8cd6bafed4ad",
+    "gis/entrances.geojson": "321b77444f8a811a7ffaed936f41e532a4380f0c518b26ae6db87474e27454d6",
+    "gis/landcover.geojson": "2c6cb32b3080051ab587a6fb45c21d075831cdb31316aa43544b93477b3ade46",
+    "gis/pois.geojson": "22e6a2ead977d8107e040fc034339356788cfdf20f66e94cea445425fb047d15",
+    "gis/roads.geojson": "d5956d75338698a2fb45b2ae047b27e1a4eebaf8a9769eb4ad1e845d8486f0d7",
+    "gis/water.geojson": "4620df86bd7ba28ef849a07e4ffbe2dafd493d7cbebd78741ad74af9eeaaa8fb",
+    "landcover.json": "b931f90c031b4efc60eb0bbadef42e8985b811716f1e494008cbf49d3994087b",
+    "quality.json": "cf9f74b7bbd8ec3992b73e2b22bcef5b2571eaf36a3a865ef70998803067a097"
+  },
+  "map_id": "synthetic-auto",
+  "map_version": "1",
+  "schema_version": "scene.map-manifest.v1",
+  "style": {
+    "buildings": "procedural",
+    "characters": "campus"
+  },
+  "title": "合成自动用途 · v2 展示"
+}

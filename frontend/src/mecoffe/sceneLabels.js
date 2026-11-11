@@ -1,6 +1,7 @@
 import {presentRole} from './rolePresentation.js'
-const evidenceNames={building_tag:'建筑标签',poi:'楼内兴趣点',annotation:'人工补注',name_keyword:'名称推断（弱）'}
-export const sceneEvidenceLabel=source=>evidenceNames[source]||'其他证据'
+const evidenceNames={building_tag:'建筑标签',poi:'楼内兴趣点',annotation:'人工补注',name_keyword:'名称推断（弱）',name_rule:'名称规则'}
+export const sceneEvidenceLabel=(source,evidence={})=>source==='ai_inferred'?
+  (Number.isInteger(evidence.confidence_pct)?'AI 推断（把握 '+evidence.confidence_pct+'%）':'AI 推断'):evidenceNames[source]||'其他证据'
 export function scenePeopleLabels(snapshot,populationRequest){
   return (snapshot?.nodes||[]).map(person=>{
     const description=populationRequest?.[person.role]?.description||person.role_description||''

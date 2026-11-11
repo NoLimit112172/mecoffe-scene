@@ -1,4 +1,15 @@
 {
+  "AI_LOW_CONFIDENCE": {
+    "actions": [
+      "保留现状",
+      "补充可靠证据",
+      "可选人工确认"
+    ],
+    "admin_message": "无其他有效依据的楼保持 unknown，不替用户提高把握或自动确认。",
+    "rerun_scope": "接受现状无需重跑；更新证据后发布新版本",
+    "severity": "warning",
+    "user_message": "AI 把握低于本地图冻结的阈值，仅保留原判断、不用于安置。"
+  },
   "ASSET_VERSION_MISMATCH": {
     "actions": [
       "恢复正确素材",
@@ -32,6 +43,17 @@
     "severity": "warning",
     "user_message": "某栋楼因几何、范围、水域或安全入口条件被排除"
   },
+  "EVIDENCE_CONFLICT": {
+    "actions": [
+      "查看冲突来源",
+      "可选人工补注",
+      "保留优先级结果"
+    ],
+    "admin_message": "低优先级推断不能覆盖高优先级依据；同级多用途保留并提示。",
+    "rerun_scope": "接受现状无需重跑；补注后发布新版本",
+    "severity": "warning",
+    "user_message": "用途证据存在冲突，已按优先级保留有效用途。"
+  },
   "FALLBACK_USED": {
     "actions": [
       "接受",
@@ -44,6 +66,16 @@
     "severity": "warning",
     "user_message": "已使用该偏好明确允许的兜底"
   },
+  "GENERIC_USE_SUPERSEDED": {
+    "actions": [
+      "保留具体用途",
+      "可选人工核实"
+    ],
+    "admin_message": "原标签仍保留为被取代的依据；请查看具体名称规则、AI 或补注。",
+    "rerun_scope": "接受现状无需重跑；用途变更后发布新版本",
+    "severity": "warning",
+    "user_message": "校园通用教学标签被更具体用途取代，该楼不再参与教学匹配。"
+  },
   "HASH_MISMATCH": {
     "actions": [
       "恢复正确不可变正文并重读",
@@ -53,6 +85,16 @@
     "rerun_scope": "优先恢复/重读；只有重新生成时才重跑 scene，不手改摘要",
     "severity": "error",
     "user_message": "SceneResult 正文或采用规则的摘要不一致"
+  },
+  "INVALID_AI_EVIDENCE": {
+    "actions": [
+      "修正离线 AI 文件后重试",
+      "不使用 AI 文件重新发布新地图"
+    ],
+    "admin_message": "请核对准备地图引用、楼栋、模型和时间信息；本流程不调用模型。",
+    "rerun_scope": "先修 AI 文件并发布地图版本，再重跑 scene",
+    "severity": "error",
+    "user_message": "AI 用途文件缺字段、引用无效或把握值不合法。"
   },
   "INVALID_ANNOTATION": {
     "actions": [
@@ -64,6 +106,16 @@
     "rerun_scope": "否，先审核并生成新地图",
     "severity": "error",
     "user_message": "审核补注未填写完整用途、来源、审核人、说明，或模式无效"
+  },
+  "INVALID_EVIDENCE_RULES": {
+    "actions": [
+      "恢复正确规则文件后重试",
+      "先更新上游地图版本"
+    ],
+    "admin_message": "请恢复配套规则文件，修改规则时另发版本，不改旧地图。",
+    "rerun_scope": "先修规则或地图，再重跑 scene",
+    "severity": "error",
+    "user_message": "自动用途规则的版本、摘要或内容无效。"
   },
   "INVALID_INPUT": {
     "actions": [
@@ -222,6 +274,27 @@
     "rerun_scope": "正确挂载后可重读；选择新版本则重跑 scene",
     "severity": "error",
     "user_message": "manifest 的格式、地图身份/版本或标题不符合所选引用"
+  },
+  "NAME_RULE_CONFLICT": {
+    "actions": [
+      "补充 AI 文件",
+      "可选人工确认",
+      "保留 unknown"
+    ],
+    "admin_message": "请核对名称和规则；可选提供离线 AI 判断或人工补注。",
+    "rerun_scope": "更新证据后发布新地图，再编译 scene",
+    "severity": "warning",
+    "user_message": "多条名称规则指向不同用途，没有采用名称强证据。"
+  },
+  "NAME_RULE_EXCLUDED": {
+    "actions": [
+      "保留现状",
+      "补充有效用途依据"
+    ],
+    "admin_message": "保留原始标签和弱名称证据；可选 AI 判断或人工确认。",
+    "rerun_scope": "规则或地图改变后再编译 scene",
+    "severity": "warning",
+    "user_message": "名称命中排除词，没有把名称升级为强用途证据。"
   },
   "OVERRIDE_INVALID": {
     "actions": [

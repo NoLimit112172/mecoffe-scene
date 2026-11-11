@@ -13,9 +13,13 @@ parser.add_argument('--version',default='1')
 parser.add_argument('--out',type=Path)
 parser.add_argument('--annotations',type=Path)
 parser.add_argument('--no-template',action='store_true')
+parser.add_argument('--auto-evidence',action='store_true')
+parser.add_argument('--ai-evidence',type=Path)
 args=parser.parse_args()
 directory=ROOT/'data/maps/ustc-gaoxin'
 result=publish_map(ROOT/'frontend/public/mecoffe/scenarios/ustc-history',args.out or directory/args.version,
                    'ustc-gaoxin',args.version,'中国科学技术大学 · 高新校区',args.annotations,
-                   directory/'review-annotations.template.json' if args.version=='1' and not args.no_template else None)
+                   directory/'review-annotations.template.json' if args.version=='1' and not args.no_template else None,
+                   evidence_mode='auto' if args.auto_evidence or args.version not in ('1','2') else 'legacy',
+                   ai_evidence=args.ai_evidence)
 print(json.dumps(result,ensure_ascii=False,sort_keys=True,indent=2))

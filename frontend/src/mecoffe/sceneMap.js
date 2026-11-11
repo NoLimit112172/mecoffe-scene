@@ -7,7 +7,7 @@ const check=(ok,code,message)=>{if(!ok)throw new SceneMapError(code,message)}
 const hash=value=>typeof value==='string'&&/^[a-f0-9]{64}$/.test(value)
 const id=value=>typeof value==='string'&&/^[A-Za-z0-9][A-Za-z0-9_.-]{0,63}$/.test(value)
 const required=['campus3d.json','entrances.json','landcover.json','asset_assignments.json','quality.json',...['buildings','roads','landcover','water','boundary','pois','entrances'].map(n=>`gis/${n}.geojson`)]
-const allowed=name=>required.includes(name)||name==='surroundings.json'
+const allowed=name=>required.includes(name)||['surroundings.json','evidence-rules.json','ai-evidence.json'].includes(name)
 export function sceneMapDirectory(ref,mapsBase='/scene-maps/'){
   check(ref&&id(ref.map_id)&&id(ref.map_version)&&hash(ref.manifest_sha256),'INVALID_MAP_REF','地图引用无效')
   check(typeof mapsBase==='string'&&/^\/(?!\/)[A-Za-z0-9_./-]*$/.test(mapsBase)&&!mapsBase.split('/').includes('..')&&!mapsBase.split('/').includes('.'),'INVALID_MAP_BASE','地图目录必须是受控的同源绝对路径')
