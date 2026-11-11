@@ -3,13 +3,14 @@
 import hashlib
 import json
 from pathlib import Path
+import shutil
 from tempfile import TemporaryDirectory
 import unittest
 from unittest.mock import patch
 from zipfile import ZipFile
 
 from package_scene_web import (ASSETS, ATLASES, CATALOG, CORE_MAP_FILES, DISPLAY_FILES,
-                               LEGACY_MAP, NEW_MAP, file_tree, package_web, partition_embed, validate_new_map)
+                               LEGACY_MAP, collect_versioned_maps, file_tree, package_web, partition_embed)
 from scene_split_manifest import ASSET_DIRECTORY, VERSION, require_published_catalog
 
 
@@ -25,7 +26,8 @@ class PackageSceneWebTests(unittest.TestCase):
         work = TemporaryDirectory()
         self.addCleanup(work.cleanup)
         self.embed = Path(work.name) / 'embed'
-        self.map = Path(work.name) / 'map'
+        self.maps = Path(work.name) / 'maps'
+        self.map = self.maps / 'ustc-gaoxin/1'
         self.output = Path(work.name) / 'release'
         for name in DISPLAY_FILES | ATLASES:
             write_file(self.embed, name, b'/scene/assets/index-1234abcd.js\r\n')
@@ -63,7 +65,7 @@ class PackageSceneWebTests(unittest.TestCase):
 
     def package_fixture(self):
         with patch('package_scene_web.require_published_catalog', return_value=self.published) as require:
-            artifacts = package_web(self.embed, self.map, self.output, 'a' * 40)
+            artifacts = package_web(self.embed, self.maps, self.output, 'a' * 40)
             require.assert_called_once_with(self.embed / CATALOG)
             return artifacts
 
@@ -94,8 +96,10 @@ class PackageSceneWebTests(unittest.TestCase):
                 elif descriptor['kind'] == 'map-library':
                     self.assertIn('notices/NOTICE.md', names)
                     self.assertEqual(descriptor['legacy_scenario_sha256'], self.legacy_sha)
-                    self.assertEqual(descriptor['map_ref']['manifest_sha256'], self.map_sha)
-                    self.assertEqual(mount_files[NEW_MAP + 'manifest.json'], (self.map / 'manifest.json').read_bytes())
+                    self.assertEqual(descriptor['map_refs'], [{'map_id': 'ustc-gaoxin', 'map_version': '1',
+                                                               'manifest_sha256': self.map_sha}])
+                    self.assertEqual(mount_files['scene-maps/ustc-gaoxin/1/manifest.json'],
+                                     (self.map / 'manifest.json').read_bytes())
         self.assertEqual(embed_bytes, {name: path.read_bytes() for name, path in file_tree(self.embed).items()})
 
     def test_unknown_embed_file_cannot_become_a_display_file(self):
@@ -121,11 +125,56 @@ class PackageSceneWebTests(unittest.TestCase):
             self.package_fixture()
         self.assertFalse(self.output.exists())
 
-    def test_accepts_official_map_with_registered_asset_library(self):
-        root = Path(__file__).resolve().parents[1] / 'data/maps/ustc-gaoxin/1'
+    def test_accepts_all_official_map_versions_with_registered_asset_library(self):
+        root = Path(__file__).resolve().parents[1] / 'data/maps'
         published = require_published_catalog(ASSET_DIRECTORY / 'catalog.json')
-        files, map_ref = validate_new_map(root, published)
-        expected = {NEW_MAP + name: path for name, path in file_tree(root).items()}
+        files, map_refs = collect_versioned_maps(root, published)
+        manifests = sorted(root.glob('*/*/manifest.json'))
+        expected = {f'scene-maps/{path.relative_to(root).as_posix()}': path
+                    for manifest in manifests for path in manifest.parent.rglob('*') if path.is_file()}
         self.assertEqual(files, expected)
-        self.assertEqual(map_ref, {'map_id': 'ustc-gaoxin', 'map_version': '1',
-                                   'manifest_sha256': hashlib.sha256((root / 'manifest.json').read_bytes()).hexdigest()})
+        self.assertEqual(map_refs, [{'map_id': manifest.parent.parent.name, 'map_version': manifest.parent.name,
+                                    'manifest_sha256': hashlib.sha256(manifest.read_bytes()).hexdigest()}
+                                   for manifest in manifests])
+        self.assertTrue({('ustc-gaoxin', '1'), ('ustc-gaoxin', '2')}
+                        <= {(item['map_id'], item['map_version']) for item in map_refs})
+
+    def test_packs_all_map_ids_and_versions_without_sidecar_files(self):
+        for map_id, version in [('ustc-gaoxin', '2'), ('synthetic-campus', 'release-3')]:
+            directory = self.maps / map_id / version
+            shutil.copytree(self.map, directory)
+            write_file(directory, 'manifest.json', {**self.manifest, 'map_id': map_id, 'map_version': version})
+        write_file(self.maps, 'ustc-gaoxin/review-annotations.v2.json', {'review': True})
+        write_file(self.maps, 'README.json', {'description': 'Map registry metadata'})
+        artifacts = self.package_fixture()
+        with ZipFile(artifacts[-1]) as archive:
+            descriptor = json.loads(archive.read('artifact.json'))
+            self.assertEqual([(ref['map_id'], ref['map_version']) for ref in descriptor['map_refs']],
+                             [('synthetic-campus', 'release-3'), ('ustc-gaoxin', '1'), ('ustc-gaoxin', '2')])
+            expected = {f'payload/scene-maps/{path.relative_to(self.maps).as_posix()}': path.read_bytes()
+                        for manifest in self.maps.glob('*/*/manifest.json')
+                        for path in manifest.parent.rglob('*') if path.is_file()}
+            actual = {name: archive.read(name) for name in archive.namelist()
+                      if name.startswith('payload/scene-maps/')}
+            self.assertEqual(actual, expected)
+
+    def test_rejects_directory_and_manifest_identity_mismatch(self):
+        write_file(self.map, 'manifest.json', {**self.manifest, 'map_version': '2'})
+        with self.assertRaisesRegex(ValueError, 'identity must match its directory'):
+            self.package_fixture()
+        self.assertFalse(self.output.exists())
+
+    def test_rejects_incomplete_version_before_writing_any_archive(self):
+        (self.maps / 'ustc-gaoxin/2').mkdir()
+        with self.assertRaisesRegex(ValueError, 'Versioned map is missing'):
+            self.package_fixture()
+        self.assertFalse(self.output.exists())
+
+    def test_rejects_tampered_later_version_before_writing_any_archive(self):
+        second = self.maps / 'ustc-gaoxin/2'
+        shutil.copytree(self.map, second)
+        write_file(second, 'manifest.json', {**self.manifest, 'map_version': '2'})
+        write_file(second, 'quality.json', {'status': 'changed'})
+        with self.assertRaisesRegex(ValueError, 'SHA-256 mismatch'):
+            self.package_fixture()
+        self.assertFalse(self.output.exists())

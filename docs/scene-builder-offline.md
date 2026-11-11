@@ -1,6 +1,6 @@
 # Python 离线建图包
 
-环境为 Linux、CPython 3.11 和系统 IANA `tzdata`。归档含 `adapter/scene_builder`、`adapter/scene_service`、OSM 转换脚本、正式地图生成入口、`mecoffe-embed-v1` 素材库描述和发布版 `catalog.json`，以及本地几何与原始地图输入。运行只用 Python 标准库。OSM 下载地址、归档时间、字节哈希与来源署名随 `data/osm` 中的元数据保存，分发说明见归档内的 `notices/NOTICE.md`。
+环境为 Linux、CPython 3.11 和系统 IANA `tzdata`。归档含 `adapter/scene_builder`、`adapter/scene_service`、OSM 转换脚本、正式地图生成入口、`mecoffe-embed-v1` 素材库描述和发布版 `catalog.json`，以及本地几何与原始地图输入。`scene_service` 的运行 `.py` 和 `.json` 递归打包，包含场景编译器、问题说明代码和中文说明资源，排除测试、夹具和缓存。运行只用 Python 标准库。OSM 下载地址、归档时间、字节哈希与来源署名随 `data/osm` 中的元数据保存，分发说明见归档内的 `notices/NOTICE.md`。
 
 ## 复现正式中科大地图
 
@@ -9,13 +9,15 @@
 ```sh
 python3.11 -B -S -c 'from zoneinfo import ZoneInfo; ZoneInfo("Asia/Shanghai")'
 output=$(mktemp -d)
-python3.11 -B -S scripts/generate-ustc-map.py --no-template \
+python3.11 -I -B scripts/generate-ustc-map.py --no-template \
   --out "$output/ustc-gaoxin/1"
 python3.11 -B -S -m adapter.scene_service evidence \
   --map "$output/ustc-gaoxin/1" --out "$output/evidence.json"
 ```
 
 `$output/ustc-gaoxin/1/manifest.json` 的 SHA-256 应为 `101a660efd370e807d4d3e579ca2c5732b69c79ce8fb43a0a6d864e9a41bf1ad`，用于 `map_ref.manifest_sha256`。`catalog_sha256` 对应素材库真正发布的目录字节。同一地图编号与版本对应一份固定内容，审核补注或改动地图后以新版本发布。具体用途以地图证据和正式审核的补注为准。
+
+隔离模式 `-I` 下，生成脚本按自身文件位置定位解包根目录。打包回归测试还会显式加入这份解包目录来导入全部 `scene_service` 模块，确认依赖和 JSON 资源齐备。当前地图库同时携带主线的 v1、v2，以上命令复现基础 v1。
 
 ## 从原始数据独立建图
 

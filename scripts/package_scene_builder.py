@@ -11,9 +11,6 @@ from scene_split_manifest import ASSET_DIRECTORY, json_bytes, require_published_
 ROOT = Path(__file__).resolve().parents[1]
 CATALOG = "frontend/public/mecoffe/assets3d/catalog.json"
 BUILDER_MODULES = ("__init__", "__main__", "asset_library", "core", "entrances", "gis", "io", "scenario")
-SERVICE_MODULES = (
-    "__init__", "__main__", "common", "evidence", "geometry", "map_package", "maps", "request", "resolver", "validation",
-)
 OSM_SOURCES = ("ustc_gaoxin", "ustc_gaoxin_surroundings", "nus")
 PREPARED_SOURCE = "frontend/public/mecoffe/scenarios/ustc-history"
 BUILDINGS_LAYER = "gis/buildings.geojson"
@@ -22,6 +19,23 @@ PREPARED_MAP_FILES = (
     "campus3d.json", "asset_assignments.json", "landcover.json", "surroundings.json", "entrances.json",
     *(f"gis/{name}.geojson" for name in ("buildings", "roads", "landcover", "water", "boundary", "pois", "entrances")),
 )
+
+
+def service_files():
+    directory = ROOT / "adapter/scene_service"
+    files = {}
+    for path in sorted(directory.rglob("*")):
+        relative = path.relative_to(directory)
+        if {"tests", "fixtures", "__pycache__"} & set(relative.parts):
+            continue
+        if path.is_symlink():
+            raise ValueError(f"scene_service contains a symlink: {relative}")
+        if (path.is_file() and path.suffix in {".py", ".json"}
+                and not path.name.startswith("test_")
+                and not path.name.endswith("_test.py")
+                and path.name not in {"tests.py", "conftest.py"}):
+            files[path.relative_to(ROOT).as_posix()] = path
+    return files
 
 
 def prepared_map_sources(legacy_map_dir, scenario_copy):
@@ -45,8 +59,6 @@ def package_builder(catalog, legacy_map_dir, output_dir, source_commit):
     descriptor = require_published_catalog(catalog)
     relative_files = (
         *(f"adapter/scene_builder/{name}.py" for name in BUILDER_MODULES),
-        *(f"adapter/scene_service/{name}.py" for name in SERVICE_MODULES),
-        "adapter/scene_service/contract.json",
         "adapter/osm_to_campus3d.py",
         "adapter/osm_landcover.py",
         "adapter/osm_surroundings.py",
@@ -54,6 +66,7 @@ def package_builder(catalog, legacy_map_dir, output_dir, source_commit):
         "data/examples/offline-map.geojson",
     )
     files = {name: ROOT / name for name in relative_files}
+    files.update(service_files())
     for source in OSM_SOURCES:
         osm, metadata = (f"data/osm/{source}.{suffix}" for suffix in ("osm", "metadata.json"))
         metadata_path = ROOT / metadata

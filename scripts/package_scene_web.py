@@ -1,4 +1,4 @@
-"""Split the canonical embed output and add a versioned M15 map."""
+"""Split the canonical embed output and include all published M15 maps."""
 
 import argparse
 import json
@@ -11,7 +11,7 @@ from scene_split_manifest import VERSION, require_published_catalog, sha256_file
 ASSETS = 'mecoffe/assets3d/'
 CATALOG = f'{ASSETS}catalog.json'
 LEGACY_MAP = 'mecoffe/config-map/'
-NEW_MAP = 'scene-maps/ustc-gaoxin/1/'
+MAP_ID = re.compile(r'[A-Za-z0-9][A-Za-z0-9_.-]{0,63}')
 ATLASES = {f'assets/bgrd-{index}.{ext}' for index in range(3) for ext in ('json', 'png')}
 DISPLAY_FILES = {
     'index.html', '404.html', 'favicon.svg', 'mecoffe3d/index.html',
@@ -134,16 +134,18 @@ def partition_embed(embed_dir):
     return {kind: {f'scene/{name}': files[name] for name in names} for kind, names in groups.items()}
 
 
-def validate_new_map(root, published):
+def validate_map(root, published):
     files = file_tree(root)
     required = CORE_MAP_FILES | {'quality.json'}
     require_files(files, required | {'manifest.json'}, 'Versioned map')
     manifest_path = files['manifest.json']
     manifest = read_object(manifest_path)
+    map_id, map_version = root.parent.name, root.name
     if (manifest.get('schema_version') != 'scene.map-manifest.v1'
-            or manifest.get('map_id') != 'ustc-gaoxin' or manifest.get('map_version') != '1'
+            or not MAP_ID.fullmatch(map_id) or not MAP_ID.fullmatch(map_version)
+            or manifest.get('map_id') != map_id or manifest.get('map_version') != map_version
             or not isinstance(manifest.get('title'), str) or not manifest['title'].strip()):
-        raise ValueError('Versioned map identity must be ustc-gaoxin / 1 with a title')
+        raise ValueError(f'Versioned map identity must match its directory: {map_id}/{map_version}')
     if (manifest.get('asset_library_version') != published['version']
             or manifest.get('catalog_sha256') != published['catalog_sha256']):
         raise ValueError('Versioned map must reference the exact published asset catalog')
@@ -159,17 +161,40 @@ def validate_new_map(root, published):
         raise ValueError('Versioned map must include buildings and a valid entrance list')
     map_ref = {'map_id': manifest['map_id'], 'map_version': manifest['map_version'],
                'manifest_sha256': sha256_file(manifest_path)}
-    return {NEW_MAP + name: path for name, path in files.items()}, map_ref
+    prefix = f'scene-maps/{map_id}/{map_version}/'
+    return {prefix + name: path for name, path in files.items()}, map_ref
 
 
-def package_web(embed_dir, new_map_dir, output_dir, source_commit):
-    if any(output_dir.resolve().is_relative_to(source.resolve()) for source in (embed_dir, new_map_dir)):
+def collect_versioned_maps(root, published):
+    if root.is_symlink() or not root.is_dir():
+        raise ValueError(f'Expected a real maps directory: {root}')
+    files, map_refs = {}, []
+    for map_dir in sorted(root.iterdir()):
+        if map_dir.is_symlink():
+            raise ValueError(f'Unsupported map path: {map_dir}')
+        if not map_dir.is_dir():
+            continue
+        for version_dir in sorted(map_dir.iterdir()):
+            if version_dir.is_symlink():
+                raise ValueError(f'Unsupported map path: {version_dir}')
+            if not version_dir.is_dir():
+                continue
+            version_files, map_ref = validate_map(version_dir, published)
+            files.update(version_files)
+            map_refs.append(map_ref)
+    if not map_refs:
+        raise ValueError(f'No published map versions found: {root}')
+    return files, map_refs
+
+
+def package_web(embed_dir, maps_dir, output_dir, source_commit):
+    if any(output_dir.resolve().is_relative_to(source.resolve()) for source in (embed_dir, maps_dir)):
         raise ValueError('Output directory must be outside embed and map input directories')
     groups = partition_embed(embed_dir)
     published = require_published_catalog(groups['model-library'][f'scene/{CATALOG}'])
-    versioned_map, map_ref = validate_new_map(new_map_dir, published)
+    versioned_maps, map_refs = collect_versioned_maps(maps_dir, published)
     legacy_sha256 = sha256_file(groups['map-library'][f'scene/{LEGACY_MAP}scenario.json'])
-    groups['map-library'].update(versioned_map)
+    groups['map-library'].update(versioned_maps)
     catalog_metadata = {'asset_library_version': published['version'], 'catalog_sha256': published['catalog_sha256']}
     model_dependency = {'model-library': {'version': VERSION, **catalog_metadata}}
     display, models, maps = (groups[kind] for kind in ('display', 'model-library', 'map-library'))
@@ -182,7 +207,7 @@ def package_web(embed_dir, new_map_dir, output_dir, source_commit):
                        extra_metadata=catalog_metadata,
                        notices={**notice, 'YuLan-Apache-2.0.txt': display['scene/licenses/YuLan-Apache-2.0.txt']}),
         write_artifact(output_dir, 'map-library', source_commit, maps, requires=model_dependency,
-                       extra_metadata={**catalog_metadata, 'map_ref': map_ref,
+                       extra_metadata={**catalog_metadata, 'map_refs': map_refs,
                                        'legacy_scenario_sha256': legacy_sha256}, notices=notice),
     ]
 
@@ -190,12 +215,12 @@ def package_web(embed_dir, new_map_dir, output_dir, source_commit):
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--embed-dir', type=Path, required=True)
-    parser.add_argument('--new-map-dir', type=Path, required=True)
+    parser.add_argument('--maps-dir', type=Path, required=True)
     parser.add_argument('--output-dir', type=Path, required=True)
     parser.add_argument('--source-commit', required=True)
     args = parser.parse_args()
     try:
-        artifacts = package_web(args.embed_dir, args.new_map_dir, args.output_dir, args.source_commit)
+        artifacts = package_web(args.embed_dir, args.maps_dir, args.output_dir, args.source_commit)
     except (OSError, ValueError, KeyError, TypeError) as error:
         parser.exit(1, f'{parser.prog}: {error}\n')
     for path in artifacts:
