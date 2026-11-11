@@ -1,7 +1,36 @@
 {
   "exporter": {
-    "sha256": "1fa87e61132e3653c8a819b368ea199a79cb41d26e5097da5a12011c0b6b0be8",
-    "version": "1"
+    "sha256": "62471305853b5e473e922d0cbc780a8962af24129af62d8dc82cb0a08a9f4dd2",
+    "source_policy": {
+      "excluded_directories": {
+        "__pycache__": "Interpreter cache is not source or a runtime delivery input.",
+        "fixtures": "Synthetic inputs and fixture generators are not runtime dependencies.",
+        "tests": "Package-local tests are not runtime dependencies."
+      },
+      "excluded_files": {
+        "__init__.py": "Original broad API; the runtime package has a generated stable API.",
+        "__main__.py": "Original CLI includes preparation and publication; no runtime CLI.",
+        "evidence_rules.json": "Publication defaults; runtime reads each map frozen rules.",
+        "map_package.py": "Map publication stays outside the runtime package."
+      },
+      "exported_files": [
+        "auto_evidence.py",
+        "checker.py",
+        "common.py",
+        "compiler.py",
+        "contract-v2.json",
+        "contract.json",
+        "evidence.py",
+        "geometry.py",
+        "issue_messages.json",
+        "issues.py",
+        "maps.py",
+        "request.py",
+        "resolver.py",
+        "validation.py"
+      ]
+    },
+    "version": "2"
   },
   "files": {
     "NOTICE.md": "0c9d021d10cd7c3f5936b67b41e4e45d5eaa19bf26b066843256b4126f7ef4b1",

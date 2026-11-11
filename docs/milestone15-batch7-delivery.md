@@ -33,7 +33,7 @@ python packages/scene-service/verify_export.py
 
 交付目录包含 pyproject.toml、VERSION、README.md、NOTICE.md、verify_export.py、EXPORT_MANIFEST.json，以及 src/mecoffe_scene_service/。版本值统一由导出配方生成，避免手工维护多份版本号。
 
-本次交付清单 SHA-256：24a17a340f02e99ef87d71d5526a5f74c4115be3ad5a8cc7fe2358b41bcc4229。接收方应与已审版本的清单核对，再运行目录核验。
+补测后的交付清单 SHA-256：58e4a1d47f3afc57ca7dc737c26488f3f2178abcb2683ab152dbb139bc50b159。接收方应与已审版本的清单核对，再运行目录核验；清单变化原因见第八节，运行包版本和其他文件字节不变。
 
 EXPORT_MANIFEST.json 记录包身份、运行源码提交、每份输入的摘要及字节规则、导出器版本/摘要、全部交付文件摘要。清单自身不包含在自己的摘要表内，不产生自引用；目录核验要求清单之外没有多余或缺失文件。不记录时间戳或机器绝对路径。
 
@@ -111,7 +111,7 @@ python scripts/verify_scene_service_install.py --python D:\App\anaconda\envs\hel
 6. 检查安装后源码没有 adapter.* 导入、没有 CLI/map_package/prepare-ai-review，发行元数据没有运行依赖。
 7. 从 Git c0bf430 导出独立临时基线源码，以同一 3.11 venv 解释器在另一个进程运行原代码。这个基线进程明确导入临时基线；安装包进程不加入任何仓库源码路径。
 
-最终结果：logs/milestone15-batch7-install-delivery/report.json。安装成功并确认模块来自临时 venv/Lib/site-packages/mecoffe_scene_service/__init__.py；完整实际路径与 sys.path 保存在 installed/metadata.json 和 installed.log。临时环境在验证结束后清理，日志中的路径是当时的验证证据，不是长期保留环境。
+首轮结果：logs/milestone15-batch7-install-delivery/report.json；本次补测结果：logs/milestone15-batch7-rules2-install/report.json。安装成功并确认模块来自临时 venv/Lib/site-packages/mecoffe_scene_service/__init__.py；完整实际路径与 sys.path 保存在 installed/metadata.json 和 installed.log。临时环境在验证结束后清理，日志中的路径是当时的验证证据，不是长期保留环境。
 
 ### 与基线逐字节比较
 
@@ -141,7 +141,7 @@ python scripts/verify_scene_service_install.py --python D:\App\anaconda\envs\hel
 
 团队仓库具体放置路径、uv.sources 条目、地图库本地目录与 URL、权限、运行绑定和修订关系都未在本批确定或实现。
 
-## 六、回归结果
+## 六、首轮回归结果（ecd2383，补测见第八节）
 
 | 命令 / 检查 | 结果 |
 | --- | --- |
@@ -174,3 +174,61 @@ python scripts/verify_scene_service_install.py --python D:\App\anaconda\envs\hel
 本批不把整个建图工具装进主 worker。后续团队薄适配只需按确认的契约读取真实快照、计划、已准备地图，调用稳定接口，并转换团队响应与错误；仍需先确认 PR #22 的结果外壳、结构化意图、MAP_NOT_READY、计划修订关系及 map=false 识别规则。
 
 包版本 0.1.0 只声明支持 Python 3.11。旧仓库脚本继续使用原环境，没有因打包改变其解释器要求。位置和路线仍为示意，不影响模拟。
+
+## 八、验收补丁：导入依赖与源码归类
+
+独立验收发现：首轮导出只按白名单收集文件。原模块新加 from .newmod import HELPER 时，newmod.py 会被忽略；重新导出后的字节检查仍能通过，安装导入才暴露缺依赖。单独新增的未引用源码也没有提示。本次补丁在写任何交付文件前增加两条检查，正常导出和 --check 共用同一入口。
+
+### 1. AST 静态导入检查
+
+对所有转换后的导出模块（含生成的 __init__.py 和素材登记模块）解析 AST，建立导出模块/包集合，检查函数内、条件分支内和顶层的静态导入：
+
+- from .newmod import HELPER、from . import newmod：必须能解析到导出集合中的模块。
+- import mecoffe_scene_service.newmod、from mecoffe_scene_service.newmod import HELPER、from mecoffe_scene_service import newmod：同样检查包内绝对导入。
+- from . import common 等已有子模块正常通过；稳定门面上已声明的 compile_scene 等属性不会误判为新模块。
+- 引用了 map_package 或 fixtures 等明确排除内容，仍然拒绝；排除名单不能用来隐藏运行依赖。
+- 相对导入超出包边界时拒绝。
+
+缺依赖的报错包含导出文件、行号、被引用模块和缺失文件候选，例如 compiler.py 引用 newmod，会明确指出 src/mecoffe_scene_service/newmod.py 未导出。不会先写出一份缺模块的包，也不会回退为成功。
+
+此检查针对静态 import 语句，不执行源码，不代替真实安装验收；不声称能验证任意动态导入、导入环或所有运行时符号行为。
+
+### 2. 源码文件必须显式归类
+
+递归扫描 adapter/scene_service 下的 .py / .json。每个文件必须落入下列之一：
+
+| 分类 | 内容 |
+| --- | --- |
+| 导出名单 | MODULES 中的 11 个模块，以及 contract.json、contract-v2.json、issue_messages.json |
+| 明确排除文件 | __init__.py（使用生成门面）、__main__.py（旧 CLI）、map_package.py（发布流程）、evidence_rules.json（发布默认规则） |
+| 明确排除目录 | fixtures、tests、__pycache__；规则覆盖这些目录下的内容 |
+
+其他文件一律报“未归类”，要求加入导出名单或排除名单并更新导出规则版本。新增未引用模块、未引用 JSON 或新的子目录文件，都不能再被静默忽略。已有明确排除内容的新增或改动不影响交付物；若运行模块去导入这些内容，前一条依赖检查会拒绝。
+
+导出/排除名单及原因写入 EXPORT_MANIFEST.json 的 exporter.source_policy。导出规则版本由 1 升为 2，另记录新导出器摘要。Python 包仍是 0.1.0；src、契约、资源、README、安装配置、VERSION、独立核验脚本等 23 个清单内文件都与 ecd2383 逐字节相同。交付目录仅 EXPORT_MANIFEST.json 元数据变化，files 摘要表完全不变。
+
+### 补测结果与本次回归范围
+
+新增 5 项测试，均使用临时源码副本或内存中的导出内容，不修改真实 adapter 源码：
+
+1. 新增 newmod.py 并以五种写法引用：导出及 --check 都退出 1，指出引用者和缺失文件，输出目录未创建。
+2. 新增未引用的 .py、.json，包含子目录：导出及 --check 都退出 1，要求显式归类。
+3. 新增或修改明确排除文件（含 map_package.py）和排除目录内容：导出内容完全不变。
+4. 已有模块、包内绝对导入和稳定门面属性可通过；缺失、排除或越界导入被拒绝。
+5. 逐个与 Git ecd2383 比较 23 个运行交付文件，并确认包版本 0.1.0、导出规则版本 2。
+
+| 补测 | 结果 |
+| --- | --- |
+| python -m unittest discover -s scripts -p "test_*.py" | 28 项通过：原打包 17 项 + 导出 11 项 |
+| python scripts/export_scene_service.py --check | 通过，24 个文件 |
+| python packages/scene-service/verify_export.py | 通过 |
+| Python 3.11.15 干净 venv 离线安装验收 | 通过，来自 site-packages，无运行依赖、未加载 adapter |
+| 与 c0bf430 的七组完整编译响应字节对比 | 全部相同；外部地图 compile/check、v1/v2 校验、中文说明及 SceneError 检查通过 |
+
+安装复验命令使用原脚本，只换了新的输出目录：
+
+```powershell
+python scripts/verify_scene_service_install.py --python D:\App\anaconda\envs\hello-agents\python.exe --out logs/milestone15-batch7-rules2-install
+```
+
+日志：logs/m15-batch7-rules2-scripts.log、logs/m15-batch7-rules2-install.log。原运行源码、前端及资源字节均未改变；本次只改导出预检、测试、清单元数据和文档，所以按本轮约定不重跑前端与浏览器回归。第六节保留首轮结果，独立验收方也已确认原全套回归及 build:split、建图包 v1/v2 复现通过。

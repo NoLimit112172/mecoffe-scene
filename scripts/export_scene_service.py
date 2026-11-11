@@ -13,13 +13,25 @@ VERSION = '0.1.0'
 IMPORT_NAME = 'mecoffe_scene_service'
 DISTRIBUTION = 'mecoffe-scene-service'
 REQUIRES_PYTHON = '>=3.11,<3.12'
-EXPORTER_VERSION = '1'
+EXPORTER_VERSION = '2'
 MANIFEST = 'EXPORT_MANIFEST.json'
 MODULES = ('common', 'compiler', 'request', 'resolver', 'validation', 'checker',
            'maps', 'evidence', 'geometry', 'issues', 'auto_evidence')
 SERVICE = 'adapter/scene_service/'
 ASSETS = 'adapter/scene_builder/resources/mecoffe-embed-v1/'
 JSON_FILES = ('contract.json', 'contract-v2.json', 'issue_messages.json')
+# Every service Python/JSON file must be exported or covered by one of these rules.
+EXCLUDED_SERVICE_FILES = {
+    '__init__.py': 'Original broad API; the runtime package has a generated stable API.',
+    '__main__.py': 'Original CLI includes preparation and publication; no runtime CLI.',
+    'map_package.py': 'Map publication stays outside the runtime package.',
+    'evidence_rules.json': 'Publication defaults; runtime reads each map frozen rules.',
+}
+EXCLUDED_SERVICE_DIRECTORIES = {
+    'fixtures': 'Synthetic inputs and fixture generators are not runtime dependencies.',
+    'tests': 'Package-local tests are not runtime dependencies.',
+    '__pycache__': 'Interpreter cache is not source or a runtime delivery input.',
+}
 
 
 def sha(raw):
@@ -38,6 +50,105 @@ def input_paths():
     return [*(SERVICE+name+'.py' for name in MODULES),
             *(SERVICE+name for name in JSON_FILES), 'adapter/scene_builder/asset_library.py',
             ASSETS+'asset-library.json', ASSETS+'catalog.json', 'NOTICE.md']
+
+
+def source_policy():
+    return {'exported_files': sorted([name+'.py' for name in MODULES]+list(JSON_FILES)),
+            'excluded_files': dict(sorted(EXCLUDED_SERVICE_FILES.items())),
+            'excluded_directories': dict(sorted(EXCLUDED_SERVICE_DIRECTORIES.items()))}
+
+
+def check_source_classification(root):
+    directory=Path(root)/SERVICE
+    exported=set(source_policy()['exported_files'])
+    unknown=[]
+    for path in sorted(directory.rglob('*')):
+        if not (path.is_file() or path.is_symlink()) or path.suffix not in ('.py','.json'):
+            continue
+        relative=path.relative_to(directory)
+        if relative.parts[0] in EXCLUDED_SERVICE_DIRECTORIES:
+            continue
+        name=relative.as_posix()
+        if name not in exported and name not in EXCLUDED_SERVICE_FILES:
+            unknown.append(SERVICE+name)
+    if unknown:
+        raise ValueError('未归类的场景源码：'+', '.join(unknown)+
+                         '；请显式加入导出或排除名单，并更新导出规则版本')
+
+
+def check_import_dependencies(payload):
+    """Check static imports in every exported module without importing any code."""
+    prefix=f'src/{IMPORT_NAME}/'
+    modules={}
+    packages=set()
+    for path,raw in payload.items():
+        if not path.startswith(prefix) or not path.endswith('.py'):
+            continue
+        parts=path[len('src/'):].split('/')
+        is_package=parts[-1]=='__init__.py'
+        name='.'.join(parts[:-1] if is_package else parts[:-1]+[parts[-1][:-3]])
+        modules[name]=(path,ast.parse(raw.decode('utf-8')),is_package)
+        # Explicit and namespace package parents both belong to the exported tree.
+        parent=name if is_package else name.rpartition('.')[0]
+        while parent:
+            packages.add(parent);parent=parent.rpartition('.')[0]
+
+    def own(name):
+        return name==IMPORT_NAME or name.startswith(IMPORT_NAME+'.')
+
+    def missing(target,path,line):
+        relative=target.replace('.', '/')
+        raise ValueError(f'导入依赖缺失：{path}:{line} 引用 {target}，'
+                         f'未导出 src/{relative}.py 或 src/{relative}/__init__.py')
+
+    def require_module(target,path,line):
+        if target not in modules and target not in packages:
+            missing(target,path,line)
+
+    def package_symbols(name):
+        # Package attributes such as compile_scene may be imported from the stable API.
+        # Do not count "from <this package> import x" as proof that x exists.
+        if name not in modules:
+            return set()
+        symbols=set()
+        for node in modules[name][1].body:
+            if isinstance(node,(ast.FunctionDef,ast.AsyncFunctionDef,ast.ClassDef)):
+                symbols.add(node.name)
+            elif isinstance(node,(ast.Assign,ast.AnnAssign)):
+                targets=node.targets if isinstance(node,ast.Assign) else [node.target]
+                for target in targets:
+                    symbols.update(n.id for n in ast.walk(target) if isinstance(n,ast.Name))
+            elif isinstance(node,ast.ImportFrom) and node.module:
+                imported=node.module if not node.level else '.'*node.level+node.module
+                if imported!=name:
+                    symbols.update(alias.asname or alias.name for alias in node.names if alias.name!='*')
+            elif isinstance(node,ast.Import):
+                symbols.update(alias.asname or alias.name.split('.')[0] for alias in node.names)
+        return symbols
+
+    for name,(path,tree,is_package) in modules.items():
+        package=name if is_package else name.rpartition('.')[0]
+        for node in ast.walk(tree):
+            if isinstance(node,ast.Import):
+                for alias in node.names:
+                    if own(alias.name):require_module(alias.name,path,node.lineno)
+            elif isinstance(node,ast.ImportFrom):
+                if node.level:
+                    parts=package.split('.')
+                    if node.level>len(parts):
+                        raise ValueError(f'导入依赖越界：{path}:{node.lineno} 的相对导入超出 {IMPORT_NAME}')
+                    base='.'.join(parts[:len(parts)-node.level+1])
+                    target=base+('.'+node.module if node.module else '')
+                elif node.module and own(node.module):
+                    target=node.module
+                else:
+                    continue
+                require_module(target,path,node.lineno)
+                if target in packages:
+                    symbols=package_symbols(target)
+                    for alias in node.names:
+                        if alias.name!='*' and alias.name not in symbols:
+                            require_module(target+'.'+alias.name,path,node.lineno)
 
 
 def source_revision(root):
@@ -228,10 +339,14 @@ def build_export(root=ROOT, *, source_commit=None):
     payload.update({'pyproject.toml':pyproject(),'VERSION':(VERSION+'\n').encode('utf-8'),
                     'README.md':readme(),'verify_export.py':VERIFY_SOURCE.encode('utf-8'),
                     f'src/{IMPORT_NAME}/__init__.py':public_init()})
+    # Diagnose missing dependencies with the importer before reporting unrelated unclassified files.
+    check_import_dependencies(payload)
+    check_source_classification(root)
     manifest={'schema_version':'scene.service-export.v1','package':{'name':DISTRIBUTION,'import_name':IMPORT_NAME,
               'version':VERSION,'requires_python':REQUIRES_PYTHON},
               'source_commit':source_commit or source_revision(root),'inputs':inputs,
-              'exporter':{'version':EXPORTER_VERSION,'sha256':sha(lf((root/'scripts/export_scene_service.py').read_bytes()))},
+              'exporter':{'version':EXPORTER_VERSION,'sha256':sha(lf((root/'scripts/export_scene_service.py').read_bytes())),
+                          'source_policy':source_policy()},
               'files':{name:sha(raw) for name,raw in sorted(payload.items())}}
     payload[MANIFEST]=json_bytes(manifest)
     return payload

@@ -10,10 +10,16 @@ import tempfile
 import unittest
 
 from export_scene_service import (ROOT, DEFAULT_OUT, IMPORT_NAME, MANIFEST, VERSION, build_export,
-                                 check_export, input_paths, lf, runtime_module, write_export)
+                                 check_export, check_import_dependencies, input_paths, lf, runtime_module,
+                                 write_export)
 
 
 class SceneServiceExportTests(unittest.TestCase):
+    def source_copy(self,target):
+        for name in input_paths()+['scripts/export_scene_service.py']:
+            file=target/name;file.parent.mkdir(parents=True,exist_ok=True)
+            shutil.copyfile(ROOT/name,file)
+
     def test_committed_delivery_matches_source_and_is_reproducible(self):
         expected=build_export()
         self.assertTrue(check_export(DEFAULT_OUT,expected)['ok'])
@@ -91,6 +97,84 @@ class SceneServiceExportTests(unittest.TestCase):
                                    capture_output=True,encoding='utf-8')
             self.assertEqual(process.returncode,0,process.stderr)
             self.assertTrue(json.loads(process.stdout)['ok'])
+
+    def test_new_referenced_module_fails_before_export_and_check(self):
+        imports=('from .newmod import HELPER','from . import newmod',
+                 'import mecoffe_scene_service.newmod',
+                 'from mecoffe_scene_service.newmod import HELPER',
+                 'from mecoffe_scene_service import newmod')
+        for statement in imports:
+            with self.subTest(statement=statement),tempfile.TemporaryDirectory() as temporary:
+                source=Path(temporary)/'source';self.source_copy(source)
+                compiler=source/'adapter/scene_service/compiler.py'
+                compiler.write_text(statement+'\n'+compiler.read_text(encoding='utf-8'),encoding='utf-8')
+                (compiler.parent/'newmod.py').write_text('HELPER = 1\n',encoding='utf-8')
+                with self.assertRaisesRegex(ValueError,r'compiler\.py:.*newmod.*newmod\.py'):
+                    build_export(source,source_commit='0'*40)
+                # Both public CLI paths must fail before writing anything or asking Git for a revision.
+                for flag in ([],['--check']):
+                    out=Path(temporary)/'output'
+                    process=subprocess.run([sys.executable,str(source/'scripts/export_scene_service.py'),
+                                            '--out',str(out),*flag],cwd=temporary,
+                                           capture_output=True,encoding='utf-8')
+                    self.assertEqual(process.returncode,1,process.stdout)
+                    self.assertIn('compiler.py',process.stderr);self.assertIn('newmod.py',process.stderr)
+                    self.assertFalse(out.exists())
+
+    def test_new_unclassified_python_and_json_files_fail(self):
+        for name in ('unused.py','unused.json','nested/unused.py','nested/unused.json'):
+            with self.subTest(name=name),tempfile.TemporaryDirectory() as temporary:
+                source=Path(temporary)/'source';self.source_copy(source)
+                file=source/'adapter/scene_service'/name;file.parent.mkdir(parents=True,exist_ok=True)
+                file.write_text('{}\n',encoding='utf-8')
+                with self.assertRaises(ValueError) as error:build_export(source,source_commit='0'*40)
+                self.assertIn('未归类',str(error.exception));self.assertIn(name,str(error.exception))
+                for flag in ([],['--check']):
+                    out=Path(temporary)/'output'
+                    process=subprocess.run([sys.executable,str(source/'scripts/export_scene_service.py'),
+                                            '--out',str(out),*flag],cwd=temporary,
+                                           capture_output=True,encoding='utf-8')
+                    self.assertEqual(process.returncode,1,process.stdout)
+                    self.assertIn(name,process.stderr);self.assertFalse(out.exists())
+
+    def test_explicitly_excluded_sources_do_not_change_payload(self):
+        revision='0'*40;expected=build_export(source_commit=revision)
+        with tempfile.TemporaryDirectory() as temporary:
+            source=Path(temporary)/'source';self.source_copy(source)
+            for name in ('map_package.py','__main__.py','__init__.py','evidence_rules.json',
+                         'fixtures/new-fixture.json','tests/new_test.py','__pycache__/cache.json'):
+                file=source/'adapter/scene_service'/name;file.parent.mkdir(parents=True,exist_ok=True)
+                file.write_text('explicitly excluded synthetic content\n',encoding='utf-8')
+            actual=build_export(source,source_commit=revision)
+            self.assertEqual(actual,expected)
+            policy=json.loads(actual[MANIFEST])['exporter']['source_policy']
+            self.assertIn('map_package.py',policy['excluded_files'])
+            self.assertIn('fixtures',policy['excluded_directories'])
+
+    def test_import_graph_accepts_present_modules_and_rejects_missing_excluded_or_parent(self):
+        files=build_export();name=f'src/{IMPORT_NAME}/compiler.py'
+        valid=('from . import common','from .common import digest',
+               'import mecoffe_scene_service.common as common',
+               'from mecoffe_scene_service import common',
+               'from mecoffe_scene_service.common import digest',
+               'from mecoffe_scene_service import compile_scene')
+        for statement in valid:
+            with self.subTest(statement=statement):
+                check_import_dependencies({**files,name:(statement+'\n').encode()+files[name]})
+        for statement in ('from .map_package import publish_map','from . import fixtures',
+                          'from ..newmod import HELPER','from .unknown.module import HELPER'):
+            with self.subTest(statement=statement),self.assertRaises(ValueError):
+                check_import_dependencies({**files,name:(statement+'\n').encode()+files[name]})
+
+    def test_runtime_payload_and_package_version_remain_identical_to_ecd2383(self):
+        files=build_export()
+        for name,raw in files.items():
+            if name==MANIFEST:continue
+            before=subprocess.check_output(['git','show','ecd2383:packages/scene-service/'+name],cwd=ROOT)
+            self.assertEqual(raw,before,name)
+        manifest=json.loads(files[MANIFEST])
+        self.assertEqual(manifest['package']['version'],'0.1.0')
+        self.assertEqual(manifest['exporter']['version'],'2')
 
 
 if __name__=='__main__':unittest.main()
