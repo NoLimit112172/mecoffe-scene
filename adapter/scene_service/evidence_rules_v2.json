@@ -64,7 +64,7 @@
     {
       "function": "medical",
       "id": "medical-suffix",
-      "pattern": "(?:医院|卫生院|诊所|药店|医务室)$"
+      "pattern": "(?:医院|卫生院|诊所|药店|医务室|门诊楼|住院楼|急诊楼|医技楼|住院部|门诊部|病房楼)$"
     },
     {
       "function": "government",
@@ -109,7 +109,7 @@
     "utility"
   ],
   "schema_version": "scene.evidence-rules.v1",
-  "sha256": "2409494cab095cfbe85dc4eae3dab037ccd15821f65a3d0156eb183eda4df06c",
+  "sha256": "e209fba9757b6416a2a1aa5d316c48d88a214eebd6d03bdcc4d18d0f45063315",
   "tag_functions": {
     "abandoned:building": {
       "yes": "construction"
@@ -578,6 +578,26 @@
       ],
       "label": "后勤设施",
       "placeable": false
+    }
+  },
+  "venue_poi_functions": {
+    "amenity": {
+      "college": "education",
+      "courthouse": "government",
+      "fire_station": "government",
+      "hospital": "medical",
+      "kindergarten": "education",
+      "place_of_worship": "religious",
+      "police": "government",
+      "school": "education",
+      "townhall": "government",
+      "university": "education"
+    },
+    "healthcare": {
+      "hospital": "medical"
+    },
+    "tourism": {
+      "hotel": "hotel"
     }
   },
   "version": "auto-evidence.2"

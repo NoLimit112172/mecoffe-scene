@@ -55,10 +55,10 @@
     "src/mecoffe_scene_service/issues.py": "a8712add07044dd0be134846096f9e46ab5b5d8827ce74b2328d25c01ecb7c7c",
     "src/mecoffe_scene_service/maps.py": "27592b9a2e136e6cbcd768e0e0b377db037cab3ceb19fe38c773debd5af6efe9",
     "src/mecoffe_scene_service/request.py": "d9648787afbe612a6951f432caf7d14866e6b576ddce5a925926c814d00827f7",
-    "src/mecoffe_scene_service/resolver.py": "05c92bd6eccdd6796f21e2567371749c6b18003f45dbe547a3653f08c5af1c7e",
+    "src/mecoffe_scene_service/resolver.py": "61485cb99dce32a863ebcd31ec03e13a3b5656f999d0851ba4bf3ce558fa283a",
     "src/mecoffe_scene_service/resources/mecoffe-embed-v1/asset-library.json": "cffecbe3ab2bcca21939d1180347bb06813cd14a1af0e752f0b46552655419b1",
     "src/mecoffe_scene_service/resources/mecoffe-embed-v1/catalog.json": "a4444d42d820359ff180d4390c1b16a5a86249cfd008a0d2e5eafa1dfc55aa0c",
-    "src/mecoffe_scene_service/taxonomy.py": "d290bf0159b59fa61907561e59ee56d332c8cd3d60092da5998d4b60814b591c",
+    "src/mecoffe_scene_service/taxonomy.py": "67d518ed31618b974a56aba1fa1b789a89313fab93b6eec58a3dcd7ab0841757",
     "src/mecoffe_scene_service/validation.py": "86e9defce41d1aabbc8910d7a9907410c0c4d6f335311376018b93c5d8321a2c",
     "verify_export.py": "f69ef7c364457a045c2c090d8c46809c3c501c4e22d133de8be6932eed590f8a"
   },
@@ -133,11 +133,11 @@
     },
     "adapter/scene_service/resolver.py": {
       "byte_policy": "lf",
-      "sha256": "05c92bd6eccdd6796f21e2567371749c6b18003f45dbe547a3653f08c5af1c7e"
+      "sha256": "61485cb99dce32a863ebcd31ec03e13a3b5656f999d0851ba4bf3ce558fa283a"
     },
     "adapter/scene_service/taxonomy.py": {
       "byte_policy": "lf",
-      "sha256": "d290bf0159b59fa61907561e59ee56d332c8cd3d60092da5998d4b60814b591c"
+      "sha256": "67d518ed31618b974a56aba1fa1b789a89313fab93b6eec58a3dcd7ab0841757"
     },
     "adapter/scene_service/validation.py": {
       "byte_policy": "lf",

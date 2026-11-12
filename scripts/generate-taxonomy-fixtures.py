@@ -22,6 +22,13 @@ def generate(out):
     request['snapshot']['edges']=[]
     request['role_prefs']['synthetic_operator']['functions']=['hotel']
     raw=request['map'];campus=raw['campus']
+    campus['buildings'][2].update(name='合成门诊楼',tags={'building':'yes'},building_type='yes')
+    campus['buildings'][7].update(name='',tags={'building':'yes'},building_type='yes')
+    campus['pois'].extend([
+        {'osm_id':'synthetic/outpatient-restaurant','name':'合成门诊楼餐厅','point':[45,15],'tags':{'amenity':'restaurant'}},
+        {'osm_id':'synthetic/anonymous-hospital','name':'合成医院设施点','point':[145,15],'tags':{'amenity':'hospital'}},
+        {'osm_id':'synthetic/anonymous-restaurant','name':'合成无名楼餐厅','point':[146,15],'tags':{'amenity':'restaurant'}},
+    ])
     projection={'method':'local_equirectangular','origin_lat':0,'origin_lon':0,'earth_radius_m':6371008.8,'units':'metres'}
     campus.update(schema_version='mecoffe.campus3d.v1',projection=projection,title='合成医院与楼内服务',
                   source={'attribution':'完全合成，仅用于离线测试','sha256':digest(raw)},roads=[],landcovers=[],

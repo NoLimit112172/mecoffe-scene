@@ -1,17 +1,17 @@
 {
   "buildings": 8,
-  "buildings_with_services": 2,
+  "buildings_with_services": 4,
   "eligible_buildings": 6,
   "entrances": 8,
   "evidence_policy": {
-    "ai_evidence_sha256": "bd0b03103055d596bd0ac13d04b1a7c50d0eaf7a33360fbdf90184aed0e6a48f",
+    "ai_evidence_sha256": "0bb69956e141bea8b5483195a206dde6b8fdbe81386604dcc0b8a69bba614bf2",
     "ai_min_confidence_pct": 80,
     "input_map_ref": {
-      "manifest_sha256": "282af75f69f6ceac0a6049c21fe3206549e2796e921624b900be99cca09ee409",
+      "manifest_sha256": "75011d47f26d77e1fa9c24ce898593f363935327b4964eda1a2a8bebcfbb54b5",
       "map_id": "synthetic-taxonomy-source",
       "map_version": "1"
     },
-    "sha256": "2409494cab095cfbe85dc4eae3dab037ccd15821f65a3d0156eb183eda4df06c",
+    "sha256": "e209fba9757b6416a2a1aa5d316c48d88a214eebd6d03bdcc4d18d0f45063315",
     "version": "auto-evidence.2"
   },
   "function_counts": {
@@ -19,16 +19,16 @@
     "culture": 0,
     "dining": 0,
     "dormitory": 0,
-    "education": 1,
+    "education": 0,
     "government": 0,
     "hotel": 1,
     "industrial": 0,
     "library": 0,
     "life_service": 0,
-    "medical": 1,
+    "medical": 3,
     "office": 0,
     "religious": 0,
-    "research": 1,
+    "research": 0,
     "residential": 1,
     "retail": 1,
     "sports": 0,
@@ -42,27 +42,27 @@
   "non_placeable_buildings": 2,
   "poi": {
     "ambiguous": 0,
-    "associated": 2,
+    "associated": 5,
     "invalid": 0,
-    "total": 2,
+    "total": 5,
     "unassociated": 0
   },
-  "poi_only_primary_buildings": 0,
+  "poi_only_primary_buildings": 1,
   "primary_function_counts": {
     "construction": 0,
     "culture": 0,
     "dining": 0,
     "dormitory": 0,
-    "education": 1,
+    "education": 0,
     "government": 0,
     "hotel": 1,
     "industrial": 0,
     "library": 0,
     "life_service": 0,
-    "medical": 1,
+    "medical": 3,
     "office": 0,
     "religious": 0,
-    "research": 1,
+    "research": 0,
     "residential": 1,
     "retail": 1,
     "sports": 0,
@@ -97,20 +97,6 @@
       "message": "Invalid geometry, outside scope, water conflict, or no safe reachable entrance",
       "refs": [
         "synthetic/b5"
-      ]
-    },
-    {
-      "code": "EVIDENCE_CONFLICT",
-      "message": "Lower-priority or same-tier primary-use evidence conflicts; no automatic override",
-      "refs": [
-        "synthetic/b7"
-      ]
-    },
-    {
-      "code": "GENERIC_USE_SUPERSEDED",
-      "message": "Generic education tag retained as superseded evidence, not a teaching candidate",
-      "refs": [
-        "synthetic/b7"
       ]
     }
   ]

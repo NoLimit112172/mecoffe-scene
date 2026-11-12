@@ -179,42 +179,26 @@
       ]
     },
     {
-      "building_type": "university",
+      "building_type": "yes",
       "function_evidence": [
         {
-          "function": "education",
-          "key": "building",
-          "layer": "primary",
-          "ref": "synthetic/b2",
-          "source": "building_tag",
-          "value": "university"
-        },
-        {
-          "function": "education",
-          "key": "name",
-          "layer": "primary",
-          "ref": "synthetic/b2",
-          "source": "name_keyword",
-          "value": "教学楼"
-        },
-        {
-          "function": "education",
-          "key": "education-suffix",
+          "function": "medical",
+          "key": "medical-suffix",
           "layer": "primary",
           "ref": "synthetic/b2",
           "source": "name_rule",
-          "value": "教学楼"
+          "value": "门诊楼"
         }
       ],
       "functions": [
-        "education"
+        "medical"
       ],
       "height_m": 12,
       "holes": [],
       "inactive_function_evidence": [],
       "kind": "legacy-appearance",
       "levels": 3,
-      "name": "合成教学楼",
+      "name": "合成门诊楼",
       "needs_ai_review": false,
       "osm_id": "synthetic/b2",
       "polygon": [
@@ -241,10 +225,21 @@
       ],
       "primary_from_services": false,
       "scene_eligible": true,
-      "service_evidence": [],
-      "services": [],
+      "service_evidence": [
+        {
+          "function": "dining",
+          "key": "amenity",
+          "layer": "service",
+          "ref": "synthetic/outpatient-restaurant",
+          "source": "poi",
+          "value": "restaurant"
+        }
+      ],
+      "services": [
+        "dining"
+      ],
       "tags": {
-        "building": "university"
+        "building": "yes"
       },
       "usable_entrance_ids": [
         "synthetic/b2/entrance"
@@ -476,31 +471,23 @@
       ]
     },
     {
-      "building_type": "university",
+      "building_type": "yes",
       "function_evidence": [
         {
-          "function": "research",
-          "key": "research-suffix",
+          "function": "medical",
+          "key": "amenity",
           "layer": "primary",
-          "ref": "synthetic/b7",
-          "source": "name_rule",
-          "value": "实验楼"
+          "ref": "synthetic/anonymous-hospital",
+          "source": "poi",
+          "value": "hospital"
         }
       ],
       "functions": [
-        "research"
+        "medical"
       ],
       "height_m": 12,
       "holes": [],
       "inactive_function_evidence": [
-        {
-          "function": "education",
-          "key": "building",
-          "layer": "primary",
-          "ref": "synthetic/b7",
-          "source": "building_tag",
-          "value": "university"
-        },
         {
           "confidence_pct": 40,
           "function": "government",
@@ -513,7 +500,7 @@
       ],
       "kind": "legacy-appearance",
       "levels": 3,
-      "name": "合成实验楼",
+      "name": "",
       "needs_ai_review": true,
       "osm_id": "synthetic/b7",
       "polygon": [
@@ -538,22 +525,32 @@
           10
         ]
       ],
-      "primary_from_services": false,
+      "primary_from_services": true,
       "scene_eligible": true,
-      "service_evidence": [],
-      "services": [],
-      "superseded_function_evidence": [
+      "service_evidence": [
         {
-          "function": "education",
-          "key": "building",
-          "layer": "primary",
-          "ref": "synthetic/b7",
-          "source": "building_tag",
-          "value": "university"
+          "function": "dining",
+          "key": "amenity",
+          "layer": "service",
+          "ref": "synthetic/anonymous-restaurant",
+          "source": "poi",
+          "value": "restaurant"
+        },
+        {
+          "function": "medical",
+          "key": "amenity",
+          "layer": "service",
+          "ref": "synthetic/anonymous-hospital",
+          "source": "poi",
+          "value": "hospital"
         }
       ],
+      "services": [
+        "dining",
+        "medical"
+      ],
       "tags": {
-        "building": "university"
+        "building": "yes"
       },
       "usable_entrance_ids": [
         "synthetic/b7/entrance"
@@ -585,6 +582,39 @@
       "tags": {
         "shop": "supermarket"
       }
+    },
+    {
+      "name": "合成门诊楼餐厅",
+      "osm_id": "synthetic/outpatient-restaurant",
+      "point": [
+        45,
+        15
+      ],
+      "tags": {
+        "amenity": "restaurant"
+      }
+    },
+    {
+      "name": "合成医院设施点",
+      "osm_id": "synthetic/anonymous-hospital",
+      "point": [
+        145,
+        15
+      ],
+      "tags": {
+        "amenity": "hospital"
+      }
+    },
+    {
+      "name": "合成无名楼餐厅",
+      "osm_id": "synthetic/anonymous-restaurant",
+      "point": [
+        146,
+        15
+      ],
+      "tags": {
+        "amenity": "restaurant"
+      }
     }
   ],
   "projection": {
@@ -598,7 +628,7 @@
   "schema_version": "mecoffe.campus3d.v1",
   "source": {
     "attribution": "完全合成，仅用于离线测试",
-    "sha256": "aa6736088657575d500e2fce35f540b276d03f8508d40e6b56ce6fbb60f50bc5"
+    "sha256": "d4b40efb895585294083ca32a890587b4217af2fdff5f7bd2e135eebec08daef"
   },
   "synthetic": true,
   "title": "合成医院与楼内服务",

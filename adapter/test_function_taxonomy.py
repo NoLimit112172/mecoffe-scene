@@ -154,6 +154,109 @@ class TaxonomyCase(unittest.TestCase):
         self.assertCode('SCENE_NO_CANDIDATE',lambda:resolve(self.request))
 
 
+class HospitalPatchCase(unittest.TestCase):
+    def setUp(self):
+        self.request=layered_request();self.package=self.request['map']
+
+    def anonymous(self,tags):
+        self.package['campus']['buildings'][0].update(name='',tags={'building':'yes'},building_type='yes')
+        self.package['campus']['pois'].append({'osm_id':'synthetic/venue','point':[6,15],'tags':tags})
+
+    def test_hospital_building_names_are_primary_and_pet_hospital_is_excluded(self):
+        for suffix in ('门诊楼','住院楼','急诊楼','医技楼','住院部','门诊部','病房楼','宠物医院'):
+            with self.subTest(name=suffix):
+                package=copy.deepcopy(self.package)
+                package['campus']['buildings'][0].update(name='合成XX'+suffix,tags={'building':'yes'},building_type='yes')
+                building=enrich_map(package)['campus']['buildings'][0]
+                if suffix=='宠物医院':
+                    # The restaurant remains ordinary POI-only evidence; never medical.
+                    self.assertNotIn('medical',building['functions'])
+                    self.assertFalse(any(e['function']=='medical' and e['source']=='name_rule' for e in building['function_evidence']))
+                else:
+                    self.assertEqual(building['functions'],['medical'])
+                    self.assertEqual(building['services'],['dining'])
+                    self.assertFalse(building['primary_from_services'])
+                    self.assertTrue(any(e['source']=='name_rule' and e['value']==suffix for e in building['function_evidence']))
+
+    def test_venue_only_hospital_controls_primary_and_brand_uses_service_tier(self):
+        self.anonymous({'amenity':'hospital'})
+        building=enrich_map(self.package)['campus']['buildings'][0]
+        self.assertEqual(building['functions'],['medical'])
+        self.assertEqual(building['services'],['dining','medical'])
+        self.assertTrue(building['primary_from_services']);self.assertTrue(building['needs_ai_review'])
+        self.assertEqual({e['function'] for e in building['function_evidence'] if e['source']!='name_keyword'},{'medical'})
+        other=self.package['campus']['buildings'][6]
+        other.update(name='合成餐厅',tags={'building':'yes','amenity':'restaurant'},building_type='yes')
+        result=resolve(self.request)
+        shop=next(x for x in result['service_points'] if x['brand_name']=='合成品牌甲')
+        self.assertEqual(shop['building_id'],'synthetic/b6')
+        self.assertTrue(all(e['layer']=='primary' for e in shop['evidence']))
+        other.update(name='合成购物广场',tags={'building':'yes'})
+        result=resolve(self.request)
+        shop=next(x for x in result['service_points'] if x['brand_name']=='合成品牌甲')
+        self.assertEqual(shop['building_id'],'synthetic/b0')
+        self.assertTrue(all(e['layer']=='service' for e in shop['evidence']))
+        self.assertIn('医疗楼内有餐饮服务',shop['reason'])
+        self.assertIn('仅据楼内设施推断',next(x for x in result['assignments'] if x['role']=='synthetic_student')['reason'])
+        self.package['campus']['pois'].reverse()
+        self.assertEqual(resolve(self.request),result)
+        report=prepare_ai_review(self.package,self.package['evidence_rules'])
+        self.assertIn('synthetic/b0',{b['building_id'] for b in report['buildings']})
+
+    def test_clinic_restaurant_keeps_ordinary_poi_union(self):
+        self.anonymous({'amenity':'clinic'})
+        building=enrich_map(self.package)['campus']['buildings'][0]
+        self.assertEqual(building['functions'],['dining','medical'])
+        self.assertEqual(building['services'],['dining','medical'])
+        self.assertTrue(building['primary_from_services']);self.assertTrue(building['needs_ai_review'])
+        result=resolve(self.request)
+        shop=next(x for x in result['service_points'] if x['brand_name']=='合成品牌甲')
+        self.assertEqual(shop['building_id'],'synthetic/b0')
+        self.assertTrue(all(e['layer']=='primary' for e in shop['evidence']))
+        self.assertIn('仅据楼内店铺推断',shop['reason'])
+
+    def test_all_frozen_venue_labels_and_university_point_scope(self):
+        rules=self.package['evidence_rules']
+        for key,table in rules['venue_poi_functions'].items():
+            for value,function in table.items():
+                with self.subTest(tag=f'{key}={value}'):
+                    package=copy.deepcopy(self.package)
+                    package['campus']['buildings'][0].update(name='',tags={'building':'yes'},building_type='yes')
+                    package['campus']['pois'].append({'osm_id':'synthetic/venue','point':[6,15],'tags':{key:value}})
+                    b=enrich_map(package)['campus']['buildings'][0]
+                    self.assertEqual(b['functions'],[function]);self.assertIn('dining',b['services'])
+                    self.assertTrue(b['primary_from_services']);self.assertTrue(b['needs_ai_review'])
+        self.assertEqual(tag_evidence({'amenity':'university'},'building_tag','x',rules),[])
+        self.assertEqual(tag_evidence({'amenity':'university'},'poi','x',rules)[0]['function'],'education')
+
+    def test_existing_primary_sources_ignore_venue_priority(self):
+        for source in ('building_tag','name_rule','ai_inferred','annotation'):
+            with self.subTest(source=source):
+                package=copy.deepcopy(self.package);b=package['campus']['buildings'][0]
+                b.update(name='',tags={'building':'yes'},building_type='yes')
+                kwargs={}
+                if source=='building_tag':b['tags']={'building':'office'}
+                elif source=='name_rule':b['name']='合成办公楼'
+                elif source=='ai_inferred':kwargs['ai_evidence']=prediction(package,{'synthetic/b0':(['office'],.9)})
+                else:kwargs['annotations']={'map_ref':package['map_ref'],'buildings':{'synthetic/b0':{
+                    'functions':['office'],'source':'合成审核','reviewer':'合成确认','note':'仅测试','mode':'replace'}}}
+                before=enrich_map(package,**kwargs)['campus']['buildings'][0]
+                package['campus']['pois'].append({'osm_id':'synthetic/venue','point':[6,15],'tags':{'amenity':'hospital'}})
+                after=enrich_map(package,**kwargs)['campus']['buildings'][0]
+                self.assertEqual(after['functions'],['office'])
+                self.assertEqual(after['function_evidence'],before['function_evidence'])
+                self.assertFalse(after['primary_from_services'])
+
+    def test_venue_table_is_required_and_validated(self):
+        for invalid in (None,[],{'amenity':{'hospital':'invented'}},{'amenity':{'hospital':'office'}}):
+            rules=copy.deepcopy(self.package['evidence_rules'])
+            if invalid is None:rules.pop('venue_poi_functions')
+            else:rules['venue_poi_functions']=invalid
+            rules['sha256']=digest({k:v for k,v in rules.items() if k!='sha256'})
+            with self.subTest(value=invalid),self.assertRaises(SceneError) as caught:validate_rules(rules)
+            self.assertEqual(caught.exception.code,'INVALID_EVIDENCE_RULES')
+
+
 class LegacyBaselineCase(unittest.TestCase):
     def test_all_existing_map_compilations_and_bytes_match_pre_change_baseline(self):
         baseline=json.loads((ROOT/'adapter/scene_service/fixtures/compat/legacy-compile-baseline.json').read_text(encoding='utf-8'))

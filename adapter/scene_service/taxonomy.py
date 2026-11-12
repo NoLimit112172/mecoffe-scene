@@ -44,14 +44,38 @@ def validate_taxonomy(rules):
                 for key, table in mappings.items()), 'INVALID_EVIDENCE_RULES', 'Invalid explicit tag mappings')
     require(not any(value in mappings.get('building', {}) for value in ('yes', 'commercial')),
             'INVALID_EVIDENCE_RULES', 'Ambiguous building tags must not imply a function')
+    venues = rules.get('venue_poi_functions')
+    require(isinstance(venues, dict) and venues and
+            all(isinstance(key, str) and key in ('amenity', 'healthcare', 'tourism') and
+                isinstance(table, dict) and table and
+                all(isinstance(value, str) and value and function in FUNCTIONS and function != 'unknown'
+                    for value, function in table.items()) for key, table in venues.items()),
+            'INVALID_EVIDENCE_RULES', 'Invalid frozen venue-level POI mappings')
+    require(all(value not in mappings.get(key, {}) or mappings[key][value] == function
+                for key, table in venues.items() for value, function in table.items()),
+            'INVALID_EVIDENCE_RULES', 'Venue POI function contradicts its ordinary tag mapping')
     require(rules.get('non_placeable') == sorted(NON_PLACEABLE),
             'INVALID_EVIDENCE_RULES', 'Layered rules cannot relax the non-placeable classes')
 
 
 def tag_evidence(tags, source, ref, rules):
-    return [{'function': table[tags[key]], 'source': source, 'key': key, 'value': tags[key], 'ref': ref}
-            for key, table in rules['tag_functions'].items()
-            if isinstance(tags.get(key), str) and tags[key] in table]
+    records = [{'function': table[tags[key]], 'source': source, 'key': key, 'value': tags[key], 'ref': ref}
+               for key, table in rules['tag_functions'].items()
+               if isinstance(tags.get(key), str) and tags[key] in table]
+    # Venue-only values (notably amenity=university) are point evidence only:
+    # never reinterpret a campus-wide polygon tag as every building's use.
+    if source == 'poi':
+        for key, table in rules['venue_poi_functions'].items():
+            if isinstance(tags.get(key), str) and tags[key] in table:
+                record = {'function': table[tags[key]], 'source': source, 'key': key, 'value': tags[key], 'ref': ref}
+                if record not in records:
+                    records.append(record)
+    return records
+
+
+def is_venue_poi(evidence, rules):
+    return (evidence['source'] == 'poi' and
+            rules['venue_poi_functions'].get(evidence['key'], {}).get(evidence['value']) == evidence['function'])
 
 
 def functions(records):
@@ -110,8 +134,10 @@ def apply_layered_evidence(package, rules, ai_file, warn):
         primary_from_services = not selected and bool(functions(services)) and not annotations
         candidates = [e for e in base if e['source'] != 'poi'] + names + inferred
         if primary_from_services:
-            selected = functions(services)
-            primary = [dict(e, layer='primary') for e in services]
+            venues = [e for e in services if is_venue_poi(e, rules)]
+            basis = venues or services
+            selected = functions(basis)
+            primary = [dict(e, layer='primary') for e in basis]
             # Only POI is the actual primary-use basis in this exceptional case.
             active = [dict(e, layer='primary') for e in weak] + primary
         else:

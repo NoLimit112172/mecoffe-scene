@@ -2,7 +2,7 @@
 
 这是一份项目自己的、可审查的有限规则表，不是 OSM 全量字典。没有列出的标签值不作硬推断。正式依据是地图随带的 `evidence-rules.json`；当前发布源为 `adapter/scene_service/evidence_rules_v2.json`。
 
-规则版本：`auto-evidence.2`；规范化内容 SHA-256：`2409494cab095cfbe85dc4eae3dab037ccd15821f65a3d0156eb183eda4df06c`。摘要不含 sha256 字段自身；原文件字节的摘要另由地图 manifest.files 登记。
+规则版本：`auto-evidence.2`；规范化内容 SHA-256：`e209fba9757b6416a2a1aa5d316c48d88a214eebd6d03bdcc4d18d0f45063315`。摘要不含 sha256 字段自身；原文件字节的摘要另由地图 manifest.files 登记。
 
 ## 分类总表
 
@@ -144,7 +144,7 @@
 名称规则 `medical-suffix`：
 
 ```regex
-(?:医院|卫生院|诊所|药店|医务室)$
+(?:医院|卫生院|诊所|药店|医务室|门诊楼|住院楼|急诊楼|医技楼|住院部|门诊部|病房楼)$
 ```
 
 ### office：办公
@@ -245,6 +245,39 @@
 
 证据不增加小类字段：建筑/POI 的原始 key/value 保留；新名称规则的 key 是规则 ID，value 保存实际命中的名称后缀。显示端可因此显示“医疗·医院”“餐饮·餐厅”；AI 未提供可核实小类时只显示大类，不猜小类。
 
-主用途只采用 annotation > building_tag > name_rule > ai_inferred；通用教学标签在具体用途之后。annotation 的 add 仍保留具体建筑标签用途，replace 替换主用途但不删真实楼内 POI 服务。楼内 POI 只进 services；完全没有主用途时才临时据其推断主用途，并标“仅据楼内店铺推断”，仍进入 AI 待判断清单。附近 POI 只作 AI 背景，不能当成楼内服务。
+主用途只采用 annotation > building_tag > name_rule > ai_inferred；通用教学标签在具体用途之后。annotation 的 add 仍保留具体建筑标签用途，replace 替换主用途但不删真实楼内 POI 服务。楼内 POI 只进 services；完全没有主用途时才临时据其推断主用途：先取场所级 POI，若没有再取普通 POI 的并集。场所级的理由为“仅据楼内设施推断”，普通的仍为“仅据楼内店铺推断”；两者都进入 AI 待判断清单。附近 POI 只作 AI 背景，不能当成楼内服务。
 
 AI 的类别定义直接采用同一份 taxonomy，阈值仍为 80%，比较原始小数而非四舍五入后的百分比；结果只带整数 confidence_pct。无 AI 或人工补注也可在质量达标后发布。
+
+## 医院补丁：楼内场所级 POI
+
+医疗名称新增门诊楼、住院楼、急诊楼、医技楼、住院部、门诊部、病房楼；原有“宠物医院”排除保留。其他类别的名称规则没有改动。
+
+新字段 `venue_poi_functions` 与整个规则 JSON 一起冻结。它只识别位于唯一楼栋内的点，不解释整片院区，也不把校园 amenity=university 下放到每栋楼。场所级表如下，共 12 个具体值：
+
+| 标签 | 场所类别 |
+| --- | --- |
+| `amenity=college` | education（教学） |
+| `amenity=courthouse` | government（政务公共） |
+| `amenity=fire_station` | government（政务公共） |
+| `amenity=hospital` | medical（医疗） |
+| `amenity=kindergarten` | education（教学） |
+| `amenity=place_of_worship` | religious（宗教） |
+| `amenity=police` | government（政务公共） |
+| `amenity=school` | education（教学） |
+| `amenity=townhall` | government（政务公共） |
+| `amenity=university` | education（教学） |
+| `healthcare=hospital` | medical（医疗） |
+| `tourism=hotel` | hotel（酒店住宿） |
+
+诊所（含 healthcare=clinic）、药店、餐厅、商店、银行不算场所级。此表没有通配项，没有扩展到整类 amenity/healthcare/tourism。已有标签映射的用途必须与场所级表一致，否则规则校验失败。
+
+只有主用途证据全缺、必须从楼内 POI 推断时，此表才影响主用途选择：有场所级 POI 时只复制它们到 primary，普通店面仍留在 services；没有则保持普通 POI 并集。若多个场所级类别并存，保留其类别并继续待 AI 判断，不擅自选一个。`primary_from_services=true`、`needs_ai_review=true` 均保留，不能因为有场所标记就冒充人工确认或跳过 AI 待判断清单。已有建筑标签、名称规则、达标 AI 或人工补注的主用途优先级不变。
+
+例如无名 building=yes 楼内有 hospital+restaurant：主用途只有医疗，services 含医疗和餐饮；有别的餐饮主用途楼时品牌去那里，没有时才走医院楼内服务层。clinic+restaurant 则仍保留原来的餐饮/医疗并集。三维/GIS 的简短提示统一写“仅据楼内兴趣点推断”，详情理由区分设施和店铺。
+
+## 后续记录，本补丁不实现
+
+医院、学校若只标在整个院区多边形上，目前不会把院区用途继承给内部楼栋。先请建图维护者在绿化、水体、多段关系处理时保留院区多边形，再单独约定楼栋继承范围、孔洞/重叠处理、证据来源和冲突优先级后接入用途规则。当前仍不做跨楼、就近或整片校园的自动下放。医院点在楼外、轮廓边界或多栋重叠处时，仍不能关联为楼内证据。本补丁不等于真实院区里的所有楼都已获得医疗用途。
+
+其他类别尚未补的名称例子：教学中心、实验中心/科研中心、行政中心、变电站等。它们需要下一轮按真实样本评审；本次不新增对应正则。特别是仅有“变电站”名称而无有效标签时，仍可能是 unknown，当前 unknown 允许已确认的任意楼栋兜底；不能把这张有限名称表当成后勤设施的完整识别保证。

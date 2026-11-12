@@ -175,38 +175,33 @@
         "category": "building",
         "function_evidence": [
           {
-            "function": "education",
-            "key": "building",
-            "layer": "primary",
-            "ref": "synthetic/b2",
-            "source": "building_tag",
-            "value": "university"
-          },
-          {
-            "function": "education",
-            "key": "name",
-            "layer": "primary",
-            "ref": "synthetic/b2",
-            "source": "name_keyword",
-            "value": "教学楼"
-          },
-          {
-            "function": "education",
-            "key": "education-suffix",
+            "function": "medical",
+            "key": "medical-suffix",
             "layer": "primary",
             "ref": "synthetic/b2",
             "source": "name_rule",
-            "value": "教学楼"
+            "value": "门诊楼"
           }
         ],
         "functions": [
-          "education"
+          "medical"
         ],
         "height_m": 12,
-        "name": "合成教学楼",
+        "name": "合成门诊楼",
         "primary_from_services": false,
-        "service_evidence": [],
-        "services": []
+        "service_evidence": [
+          {
+            "function": "dining",
+            "key": "amenity",
+            "layer": "service",
+            "ref": "synthetic/outpatient-restaurant",
+            "source": "poi",
+            "value": "restaurant"
+          }
+        ],
+        "services": [
+          "dining"
+        ]
       },
       "type": "Feature"
     },
@@ -452,22 +447,42 @@
         "category": "building",
         "function_evidence": [
           {
-            "function": "research",
-            "key": "research-suffix",
+            "function": "medical",
+            "key": "amenity",
             "layer": "primary",
-            "ref": "synthetic/b7",
-            "source": "name_rule",
-            "value": "实验楼"
+            "ref": "synthetic/anonymous-hospital",
+            "source": "poi",
+            "value": "hospital"
           }
         ],
         "functions": [
-          "research"
+          "medical"
         ],
         "height_m": 12,
-        "name": "合成实验楼",
-        "primary_from_services": false,
-        "service_evidence": [],
-        "services": []
+        "name": "",
+        "primary_from_services": true,
+        "service_evidence": [
+          {
+            "function": "dining",
+            "key": "amenity",
+            "layer": "service",
+            "ref": "synthetic/anonymous-restaurant",
+            "source": "poi",
+            "value": "restaurant"
+          },
+          {
+            "function": "medical",
+            "key": "amenity",
+            "layer": "service",
+            "ref": "synthetic/anonymous-hospital",
+            "source": "poi",
+            "value": "hospital"
+          }
+        ],
+        "services": [
+          "dining",
+          "medical"
+        ]
       },
       "type": "Feature"
     }

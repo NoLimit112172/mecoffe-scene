@@ -5,7 +5,7 @@ from .common import digest, portable, require
 from .evidence import FUNCTIONS, enrich_map
 from .validation import brand_catalog, indexed, validate_result
 from .auto_evidence import STRONG_SOURCES
-from .taxonomy import is_layered, NON_PLACEABLE, FUNCTIONS as LAYERED_FUNCTIONS, FUNCTION_LABELS as LAYERED_LABELS
+from .taxonomy import is_layered, is_venue_poi, NON_PLACEABLE, FUNCTIONS as LAYERED_FUNCTIONS, FUNCTION_LABELS as LAYERED_LABELS
 
 FUNCTION_LABELS={'dining':'餐饮','retail':'零售','dormitory':'宿舍','residential':'住宅','education':'教学','office':'办公','library':'图书服务','unknown':'未知'}
 
@@ -131,16 +131,18 @@ def resolve(request):
             standard_reason=(f"依据{'、'.join(auto_sources)}判定为{uses}，入口可达，按确定性规则选定" if auto_sources else
                              f'有{uses}用途证据且入口可达，按确定性规则选定')
             if layered:
+                inference_noun='设施' if chosen['primary_from_services'] and any(
+                    is_venue_poi(e,package['evidence_rules']) for e in chosen['function_evidence']) else '店铺'
                 if layer=='service':
                     primary='、'.join(labels[f] for f in chosen['functions'])
                     standard_reason=f'{primary}楼内有{uses}服务，依据楼内兴趣点，入口可达，按确定性规则选定'
                 elif chosen['primary_from_services']:
-                    standard_reason=f'仅据楼内店铺推断主用途为{uses}，入口可达，按确定性规则选定'
+                    standard_reason=f'仅据楼内{inference_noun}推断主用途为{uses}，入口可达，按确定性规则选定'
             reason=('按已确认的指定楼栋安置，入口可达' if explicit else '按已确认的范围内任意楼栋兜底安置，入口可达' if fallback else standard_reason)
             if auto_sources and (explicit or fallback):
                 reason+=f"；楼栋用途依据{'、'.join(auto_sources)}（{uses}）"
             if layered and chosen['primary_from_services'] and (explicit or fallback):
-                reason+='；主用途仅据楼内店铺推断'
+                reason+=f'；主用途仅据楼内{inference_noun}推断'
             return {'status':'placed','building_id':chosen['osm_id'],'entrance_id':chosen['usable_entrance_ids'][0],
                     'reason':reason,
                     'evidence':evidence,'fallback_used':fallback}

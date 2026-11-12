@@ -62,3 +62,20 @@ test('frozen v3 map loads and preserves identical placements for Three/GIS',asyn
   const mapping=Object.values(result.files['location_mapping.json'].mappings).find(m=>m.osm_id===store.building_id)
   assert.equal(mapping.entrance_id,store.entrance_id)
 })
+
+test('outpatient building uses its medical name and keeps its restaurant as service',()=>{
+  const b=input(),building=b.map.campus.buildings.find(b=>b.osm_id==='synthetic/b2')
+  assert.deepEqual(building.functions,['medical']);assert.deepEqual(building.services,['dining'])
+  assert.equal(building.primary_from_services,false)
+  assert.ok(building.function_evidence.some(e=>e.source==='name_rule'&&e.value==='门诊楼'))
+  validateSceneResult(b.expected.result,context(b))
+})
+test('anonymous hospital point dominates restaurant primary inference in frozen v3 fixture',()=>{
+  const b=input(),building=b.map.campus.buildings.find(b=>b.osm_id==='synthetic/b7')
+  assert.deepEqual(building.functions,['medical']);assert.deepEqual(building.services,['dining','medical'])
+  assert.equal(building.primary_from_services,true);assert.equal(building.needs_ai_review,true)
+  assert.ok(building.function_evidence.every(e=>e.function==='medical'&&e.source==='poi'&&e.layer==='primary'))
+  const residents=b.expected.result.assignments.filter(p=>p.building_id==='synthetic/b7')
+  assert.ok(residents.length>0);assert.ok(residents.every(p=>p.reason.includes('仅据楼内设施推断')))
+  validateSceneResult(b.expected.result,context(b))
+})

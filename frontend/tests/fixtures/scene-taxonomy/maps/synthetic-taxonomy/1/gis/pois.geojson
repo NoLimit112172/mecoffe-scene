@@ -29,6 +29,51 @@
         "name": "合成一层商店"
       },
       "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          0.0004046941636760421,
+          0.0001348980545586807
+        ],
+        "type": "Point"
+      },
+      "id": "synthetic/outpatient-restaurant",
+      "properties": {
+        "category": "poi",
+        "name": "合成门诊楼餐厅"
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          0.0013040145274005798,
+          0.0001348980545586807
+        ],
+        "type": "Point"
+      },
+      "id": "synthetic/anonymous-hospital",
+      "properties": {
+        "category": "poi",
+        "name": "合成医院设施点"
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          0.0013130077310378257,
+          0.0001348980545586807
+        ],
+        "type": "Point"
+      },
+      "id": "synthetic/anonymous-restaurant",
+      "properties": {
+        "category": "poi",
+        "name": "合成无名楼餐厅"
+      },
+      "type": "Feature"
     }
   ],
   "synthetic": true,

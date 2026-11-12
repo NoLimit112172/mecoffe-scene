@@ -54,7 +54,7 @@ assignment_meta.rules_version 仍指安置偏好规范；分类规则由 map_ref
 
 修改前从 39b4ae1 保存了 65 组 compile 响应，覆盖中科大 1/2、旧中科大/NUS 归档、现有三份前端地图、内部合成地图和 none。包括 57 份成功结果及 8 份原本就拒绝的响应；逐份比较规范化 JSON 字节，连 scene_id/result_sha256、理由和 warning 都相同。同时检查原来 98 个地图/相关文件的原字节摘要。基准在 adapter/scene_service/fixtures/compat/legacy-compile-baseline.json；没有重生成任何旧夹具。
 
-新增 frontend/tests/fixtures/scene-taxonomy/maps/synthetic-taxonomy/1 为完全合成测试图，不进 data/maps 或 embed。包含医院+院内餐厅、住宅+底商、教学楼、AI 酒店、配电房、门卫、购物广场、通用教学标签下的科研楼。AI 使用固定手写离线样例：0.84 生效，0.4 不生效。规则、AI 文件及新夹具重新生成后逐字节一致。
+新增 frontend/tests/fixtures/scene-taxonomy/maps/synthetic-taxonomy/1 为完全合成测试图，不进 data/maps 或 embed。包含医院+院内餐厅、住宅+底商、门诊楼+餐厅、AI 酒店、配电房、门卫、购物广场、无名医院设施点+餐厅。AI 使用固定手写离线样例：0.84 生效，0.4 不生效。规则、AI 文件及新夹具重新生成后逐字节一致。
 
 python scripts/generate-taxonomy-fixtures.py <一个空输出目录>
 
@@ -75,7 +75,7 @@ python scripts/verify_scene_service_install.py --python <Python3.11路径> --out
 
 干净 3.11 环境离线安装：--no-index --no-deps --no-build-isolation --no-cache-dir；构建工具只用本机 ensurepip 已有离线版本，零运行依赖，导入路径来自 site-packages，未加载 adapter。安装验收保留原 7 组与 c0bf430 的字节比较，另编译并校验含 name_rule、ai_inferred、service 层的 v3 新合成地图。
 
-## 测试结果
+## 主体首次交付测试结果（补丁前）
 
 | 检查 | 命令 / 结果 |
 | --- | --- |
@@ -107,7 +107,7 @@ Python 全套在本机已有 Pillow 的 Python 3.12.4 下执行。首次尝试�
 
 ## 给学弟的重建说明
 
-先用本分支的新规则，不要只跑旧的 --auto-evidence 默认命令。五张图已有的本地几何可以直接用，不必为用途重下 OSM。每张按下面命令发布到一个新的空目录，再检查 quality：医院应是 medical，楼内餐厅在 services；住宅底商同理；配电房、门卫不参加兜底。
+先等医院补丁独立验收并合并，当前暂停五张图重建。届时使用本分支的新规则，不要只跑旧的 --auto-evidence 默认命令。五张图已有的本地几何可以直接用，不必为用途重下 OSM。每张按下面命令发布到一个新的空目录，再检查 quality：医院应是 medical，楼内餐厅在 services；住宅底商同理；配电房、门卫不参加兜底。
 
 ```powershell
 python -m adapter.scene_service publish --source <现有几何目录> --out <新空目录>/<map_id>/<版本> --map-id <map_id> --map-version <版本> --title <地图中文名> --rules adapter/scene_service/evidence_rules_v2.json
@@ -125,10 +125,41 @@ python -m adapter.scene_service evidence --map <新地图版本目录> --out <�
 - 旧规则中的 POI 混算和旧兜底行为为了字节兼容继续保留，只在新规则地图解决；不能把旧 v1/v2 地图挂上新规则而不升地图版本。
 - 本批不优化建图耗时，不重建或发布学弟的五张真实地图，不同步团队仓库，不部署。
 
-## 最终交付清单锁定
+## 第九批医院补丁（待独立验收，不推送或合并）
 
-源码提交：`c0bc3f596af726732ef7246e05b5568a9fa01d05`。
+第九批主体已经验收，补丁只补两个缺口：
 
-0.2.0 的 EXPORT_MANIFEST.json 原字节 SHA-256：`380212d1718d4b6f5e7dd6b02d4d1b0c5deef876aff5c8b219901dff19717409`。测试同样锁定此值，不会仅靠重新导出放行。
+1. medical 名称规则补上门诊楼、住院楼、急诊楼、医技楼、住院部、门诊部、病房楼，保留宠物医院排除；其他类别名称不扩展。
+2. 在规则中冻结 venue_poi_functions：amenity=hospital / school / university / college / kindergarten / townhall / police / fire_station / courthouse / place_of_worship，healthcare=hospital，tourism=hotel，共 12 个具体值。诊所、药店、餐厅、商店、银行不在表里。
 
-实现提交完成后只更新清单的来源提交号及对应锁值；25 个包文件的逐文件摘要和所有输入摘要都未变化。随后再跑 scripts 全套、verify_export 和新的干净 3.11 安装验收。Python/前端全套针对同一份未再改动的实现代码已通过，不因来源编号变化重复跑。若后续改写来源提交历史，需审查并重新登记清单，不能绕过锁定测试。
+仅在没有任何主用途证据、要从楼内 POI 兜底推断时启用场所级筛选：有场所级时主用途只取场所级，其余 POI 留在 services；没有则维持原来并集。primary_from_services 和 needs_ai_review 仍为 true。理由分别写“仅据楼内设施推断”或原来的“仅据楼内店铺推断”，三维/GIS 简短提示用“仅据楼内兴趣点推断”。强主用途不被 POI 覆盖。amenity=university 只作为唯一楼内的点证据补充，不作楼标签映射或校园整体下放。
+
+场所级字段结构、用途及与普通标签映射的一致性均复用 INVALID_EVIDENCE_RULES 校验，没有新错误码或宽松兜底。品牌仍先主用途再楼内服务；医院点+餐厅不会再把餐饮当作主用途。诊所点+餐厅按本次明确约定仍保留并集，暂未做更细的医疗场景判断。
+
+auto-evidence.2 尚无已发布地图使用，按本轮批准在原版本内更新，内容摘要已变更；SceneResult v3 与运行包 0.2.0 版本号不变。新摘要为 `e209fba9757b6416a2a1aa5d316c48d88a214eebd6d03bdcc4d18d0f45063315`。既有 legacy/auto-evidence.1 路径、已发布中科大 1/2 和旧 65 组基准不改。旧的未发布 .2 测试图必须重新生成并使用新 manifest 的完整 map_ref。本次夹具的源几何引用也变化，AI 原文件已一并重生；其他数据只有源几何 map_ref 完全一致时才可复用 AI 回填，仍须通过原引用校验。
+
+用 scripts/generate-taxonomy-fixtures.py 在新空临时目录生成，再更新未发布的 synthetic-taxonomy 和 input-v3.json。夹具仍为 8 栋楼，新增门诊楼+餐厅、无名医院点+餐厅两种情形；旧前端断言未改，增加两个前端测试。Python 增加 6 项测试，含全部 12 种场所级标签、主用途四种来源不被覆盖、诊所并集、表结构/冲突校验，以及品牌两级选择。
+
+待补丁验收合并后再通知学弟使用新规则生成五张地图；当前先暂停，不动任何已发布目录。auto-evidence.2 正式发布后，再改这类表必须升新规则版本并发布新地图版本。
+
+补丁后验证（原测试断言未改；只更新获准重生成的 .2 夹具及固定清单锁值）：
+
+| 检查 | 命令与结果 |
+| --- | --- |
+| Python 全套 | `D:\App\anaconda\python.exe -m unittest discover -s adapter -p "test_*.py"`：152 通过，576.730 秒；Python 3.12.4，含旧 65 组规范化字节基准及 98 个既有文件摘要检查 |
+| 前端全套 | `npm --prefix frontend test`：395 通过，原断言保持不变 |
+| 打包全套 | `python -m unittest discover -s scripts -p "test_*.py"`：28 通过，含旧 1/2 地图独立复现及 AST/未归类文件/篡改检查 |
+| 默认嵌入构建 | `npm --prefix frontend run build:embed`：通过，242 文件、113.83 MB；仅原有大分块提示 |
+| 公开审计 | `node scripts/audit-public.cjs`：0 项 |
+| 导出核验 | `python scripts/export_scene_service.py --check`、`python -I packages/scene-service/verify_export.py`：通过；26 个交付文件（含清单） |
+| 3.11 离线安装 | `python scripts/verify_scene_service_install.py --python D:\App\anaconda\envs\hello-agents\python.exe --out logs/milestone15-batch9-hospital-install`：通过；site-packages 导入、无 adapter、零运行依赖；原 7 组编译响应与 c0bf430 一致，新 v3 compile/validate/check 通过 |
+
+日志为 logs/milestone15-batch9-hospital-*，不进公开提交。安装验收的 25 个包文件与最终来源登记后的包逐文件一致；最终只更新来源提交编号及其整份清单锁值，再跑打包全套与 verify_export 核验。未执行真实地图下载、真实 AI、服务器部署或团队仓库同步。
+
+补丁改动：taxonomy.py、resolver.py、evidence_rules_v2.json、两个页面的推断提示、生成脚本、新规则夹具、新增测试、0.2.0 导出及清单锁定、这两份文档。没有改 data/maps、团队仓库、建图几何算法或其他类别规则。
+
+后续明确暂不做：医院/学校院区多边形向内部楼栋继承用途。先由学弟在建图侧保留院区多边形，和绿化、水体、多段关系处理一起推进；再另批约定继承范围与冲突规则。完整场所级表、医疗新正则及其他类别缺失名称记录见 function-taxonomy-v2.md 的医院补丁与后续记录。
+
+## 补丁清单锁定
+
+0.2.0 版本号与导出规则版本 3 保持不变；清单仍由逐文件摘要与测试中的固定 EXPORT_MANIFEST SHA-256 双重锁定。来源提交编号在随后独立的登记提交中写入；不放宽 AST、未归类文件或清单一致性检查。

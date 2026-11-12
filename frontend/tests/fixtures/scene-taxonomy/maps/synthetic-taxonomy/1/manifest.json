@@ -2,31 +2,31 @@
   "asset_library_version": "mecoffe-embed-v1",
   "catalog_sha256": "a4444d42d820359ff180d4390c1b16a5a86249cfd008a0d2e5eafa1dfc55aa0c",
   "evidence_policy": {
-    "ai_evidence_sha256": "bd0b03103055d596bd0ac13d04b1a7c50d0eaf7a33360fbdf90184aed0e6a48f",
+    "ai_evidence_sha256": "0bb69956e141bea8b5483195a206dde6b8fdbe81386604dcc0b8a69bba614bf2",
     "ai_min_confidence_pct": 80,
     "input_map_ref": {
-      "manifest_sha256": "282af75f69f6ceac0a6049c21fe3206549e2796e921624b900be99cca09ee409",
+      "manifest_sha256": "75011d47f26d77e1fa9c24ce898593f363935327b4964eda1a2a8bebcfbb54b5",
       "map_id": "synthetic-taxonomy-source",
       "map_version": "1"
     },
-    "sha256": "2409494cab095cfbe85dc4eae3dab037ccd15821f65a3d0156eb183eda4df06c",
+    "sha256": "e209fba9757b6416a2a1aa5d316c48d88a214eebd6d03bdcc4d18d0f45063315",
     "version": "auto-evidence.2"
   },
   "files": {
-    "ai-evidence.json": "bd0b03103055d596bd0ac13d04b1a7c50d0eaf7a33360fbdf90184aed0e6a48f",
-    "asset_assignments.json": "d66bf6f279798b2ca29225d0eba4f2dfb79875fd0503a01bdcc712e30deaf430",
-    "campus3d.json": "a22a98481e7b38bb39690059fe66c034fe5db56150cc0a122676e9ccd40bec82",
+    "ai-evidence.json": "0bb69956e141bea8b5483195a206dde6b8fdbe81386604dcc0b8a69bba614bf2",
+    "asset_assignments.json": "f5a3c3fb70ffc4fa554e45e46f17f016dc26fe5b9275b280231e620a5453eb43",
+    "campus3d.json": "a8541283abd9b98339c727a7ef0e204e3f716ac470d52ca6d2b04f3ee0729a17",
     "entrances.json": "25d22c7dda6da15d02d8e7d7beadf005a9dbb8cbfd08a05db0c854cbf17259ce",
-    "evidence-rules.json": "9c2879f63f1c2f0481d8f5aed56b55ffcdd163dd36c781a7195b81f83a037d38",
+    "evidence-rules.json": "86d7db99a5be5ef6cbeb69c7afeb1c2834bb0235a7df1c8bea51a7e105af691a",
     "gis/boundary.geojson": "a33290c10eb15235814b336e0cf53e50cb14a5200648d46faa95f2fde2337d17",
-    "gis/buildings.geojson": "0a900e5963c237f45a2f5211a1df223b49dfbe6875009a24e94d0c6637fe0356",
+    "gis/buildings.geojson": "637715d0e446edf0f61f0e3284037e8eb739089f7436472bb93f29a1add34d7e",
     "gis/entrances.geojson": "aa1b43e35665f30dd246de385473e00bf4e25d12260e5ef60b125c4d78cad7e8",
     "gis/landcover.geojson": "38b3e82f249a1d7fb952b0b53a6a0f6748c1850372615ccae783b9e47400e75a",
-    "gis/pois.geojson": "dc6c6c3053cda158ffc11b2fb61184be8d241b6554aee9bb2bcfd3aa7748fb03",
+    "gis/pois.geojson": "92800c1e51c49b2f1c298f07c05fea2b979c9e1095057d6a16db4b00ae799e97",
     "gis/roads.geojson": "38b3e82f249a1d7fb952b0b53a6a0f6748c1850372615ccae783b9e47400e75a",
     "gis/water.geojson": "38b3e82f249a1d7fb952b0b53a6a0f6748c1850372615ccae783b9e47400e75a",
     "landcover.json": "acaa808168729c19c7edf6e8a0f607c57785698988ad9a2e40c67791a1fd9acc",
-    "quality.json": "d5ae920c7fb77992c197ff62a7701e07a885676804ebe7225d49f68be5164f68"
+    "quality.json": "b11faa8f09d02f3044527b98ce75b30813916f10008166f7ae70c3c18bac0af7"
   },
   "map_id": "synthetic-taxonomy",
   "map_version": "1",

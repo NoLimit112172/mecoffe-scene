@@ -118,7 +118,7 @@
                 <i class="fa-solid fa-building" aria-hidden="true"></i>
                 <div><h3>{{ selectedBuilding.name }}</h3><p>楼内 {{ buildingResidents.length }} 人（示意）</p></div>
               </div>
-              <div v-if="selectedBuilding.services" class="mapping-note" data-testid="building-uses"><p>主用途：{{buildingUseInfo(selectedBuilding).primary.join('、')}}</p><p>楼内服务：{{buildingUseInfo(selectedBuilding).services.join('、')||'暂无证据'}}</p><small v-if="buildingUseInfo(selectedBuilding).fromServices">仅据楼内店铺推断</small></div>
+              <div v-if="selectedBuilding.services" class="mapping-note" data-testid="building-uses"><p>主用途：{{buildingUseInfo(selectedBuilding).primary.join('、')}}</p><p>楼内服务：{{buildingUseInfo(selectedBuilding).services.join('、')||'暂无证据'}}</p><small v-if="buildingUseInfo(selectedBuilding).fromServices">仅据楼内兴趣点推断</small></div>
               <section v-if="buildingShops.length" class="building-shops" data-testid="building-shops"><h4>本楼门店（示意）</h4><div v-for="shop in buildingShops" :key="shop.brandId" :data-shop-brand="shop.brandId"><b>{{shop.name}}</b><span>{{shop.productName}}</span><small>{{shop.brandId}}</small></div></section>
               <p v-if="!buildingResidents.length" class="empty">当前没有楼内人员。</p>
               <div v-else class="roster" aria-label="楼内人员">

@@ -50,25 +50,17 @@
           "status": "placed"
         },
         {
-          "building_id": "synthetic/b0",
+          "building_id": "synthetic/b2",
           "entity_id": "synthetic_student_000",
-          "entrance_id": "synthetic/b0/entrance",
+          "entrance_id": "synthetic/b2/entrance",
           "evidence": [
-            {
-              "function": "medical",
-              "key": "building",
-              "layer": "primary",
-              "ref": "synthetic/b0",
-              "source": "building_tag",
-              "value": "hospital"
-            },
             {
               "function": "medical",
               "key": "medical-suffix",
               "layer": "primary",
-              "ref": "synthetic/b0",
+              "ref": "synthetic/b2",
               "source": "name_rule",
-              "value": "医院"
+              "value": "门诊楼"
             }
           ],
           "fallback_used": null,
@@ -77,25 +69,17 @@
           "status": "placed"
         },
         {
-          "building_id": "synthetic/b0",
+          "building_id": "synthetic/b2",
           "entity_id": "synthetic_student_001",
-          "entrance_id": "synthetic/b0/entrance",
+          "entrance_id": "synthetic/b2/entrance",
           "evidence": [
-            {
-              "function": "medical",
-              "key": "building",
-              "layer": "primary",
-              "ref": "synthetic/b0",
-              "source": "building_tag",
-              "value": "hospital"
-            },
             {
               "function": "medical",
               "key": "medical-suffix",
               "layer": "primary",
-              "ref": "synthetic/b0",
+              "ref": "synthetic/b2",
               "source": "name_rule",
-              "value": "医院"
+              "value": "门诊楼"
             }
           ],
           "fallback_used": null,
@@ -104,52 +88,36 @@
           "status": "placed"
         },
         {
-          "building_id": "synthetic/b0",
+          "building_id": "synthetic/b7",
           "entity_id": "synthetic_student_002",
-          "entrance_id": "synthetic/b0/entrance",
+          "entrance_id": "synthetic/b7/entrance",
           "evidence": [
             {
               "function": "medical",
-              "key": "building",
+              "key": "amenity",
               "layer": "primary",
-              "ref": "synthetic/b0",
-              "source": "building_tag",
+              "ref": "synthetic/anonymous-hospital",
+              "source": "poi",
               "value": "hospital"
-            },
-            {
-              "function": "medical",
-              "key": "medical-suffix",
-              "layer": "primary",
-              "ref": "synthetic/b0",
-              "source": "name_rule",
-              "value": "医院"
             }
           ],
           "fallback_used": null,
-          "reason": "依据名称规则判定为医疗，入口可达，按确定性规则选定",
+          "reason": "仅据楼内设施推断主用途为医疗，入口可达，按确定性规则选定",
           "role": "synthetic_student",
           "status": "placed"
         },
         {
-          "building_id": "synthetic/b0",
+          "building_id": "synthetic/b2",
           "entity_id": "synthetic_student_003",
-          "entrance_id": "synthetic/b0/entrance",
+          "entrance_id": "synthetic/b2/entrance",
           "evidence": [
-            {
-              "function": "medical",
-              "key": "building",
-              "layer": "primary",
-              "ref": "synthetic/b0",
-              "source": "building_tag",
-              "value": "hospital"
-            },
             {
               "function": "medical",
               "key": "medical-suffix",
               "layer": "primary",
-              "ref": "synthetic/b0",
+              "ref": "synthetic/b2",
               "source": "name_rule",
-              "value": "医院"
+              "value": "门诊楼"
             }
           ],
           "fallback_used": null,
@@ -158,25 +126,17 @@
           "status": "placed"
         },
         {
-          "building_id": "synthetic/b0",
+          "building_id": "synthetic/b2",
           "entity_id": "synthetic_student_004",
-          "entrance_id": "synthetic/b0/entrance",
+          "entrance_id": "synthetic/b2/entrance",
           "evidence": [
-            {
-              "function": "medical",
-              "key": "building",
-              "layer": "primary",
-              "ref": "synthetic/b0",
-              "source": "building_tag",
-              "value": "hospital"
-            },
             {
               "function": "medical",
               "key": "medical-suffix",
               "layer": "primary",
-              "ref": "synthetic/b0",
+              "ref": "synthetic/b2",
               "source": "name_rule",
-              "value": "医院"
+              "value": "门诊楼"
             }
           ],
           "fallback_used": null,
@@ -185,25 +145,17 @@
           "status": "placed"
         },
         {
-          "building_id": "synthetic/b0",
+          "building_id": "synthetic/b2",
           "entity_id": "synthetic_student_005",
-          "entrance_id": "synthetic/b0/entrance",
+          "entrance_id": "synthetic/b2/entrance",
           "evidence": [
-            {
-              "function": "medical",
-              "key": "building",
-              "layer": "primary",
-              "ref": "synthetic/b0",
-              "source": "building_tag",
-              "value": "hospital"
-            },
             {
               "function": "medical",
               "key": "medical-suffix",
               "layer": "primary",
-              "ref": "synthetic/b0",
+              "ref": "synthetic/b2",
               "source": "name_rule",
-              "value": "医院"
+              "value": "门诊楼"
             }
           ],
           "fallback_used": null,
@@ -212,25 +164,17 @@
           "status": "placed"
         },
         {
-          "building_id": "synthetic/b0",
+          "building_id": "synthetic/b2",
           "entity_id": "synthetic_student_006",
-          "entrance_id": "synthetic/b0/entrance",
+          "entrance_id": "synthetic/b2/entrance",
           "evidence": [
-            {
-              "function": "medical",
-              "key": "building",
-              "layer": "primary",
-              "ref": "synthetic/b0",
-              "source": "building_tag",
-              "value": "hospital"
-            },
             {
               "function": "medical",
               "key": "medical-suffix",
               "layer": "primary",
-              "ref": "synthetic/b0",
+              "ref": "synthetic/b2",
               "source": "name_rule",
-              "value": "医院"
+              "value": "门诊楼"
             }
           ],
           "fallback_used": null,
@@ -239,29 +183,21 @@
           "status": "placed"
         },
         {
-          "building_id": "synthetic/b0",
+          "building_id": "synthetic/b7",
           "entity_id": "synthetic_student_007",
-          "entrance_id": "synthetic/b0/entrance",
+          "entrance_id": "synthetic/b7/entrance",
           "evidence": [
             {
               "function": "medical",
-              "key": "building",
+              "key": "amenity",
               "layer": "primary",
-              "ref": "synthetic/b0",
-              "source": "building_tag",
+              "ref": "synthetic/anonymous-hospital",
+              "source": "poi",
               "value": "hospital"
-            },
-            {
-              "function": "medical",
-              "key": "medical-suffix",
-              "layer": "primary",
-              "ref": "synthetic/b0",
-              "source": "name_rule",
-              "value": "医院"
             }
           ],
           "fallback_used": null,
-          "reason": "依据名称规则判定为医疗，入口可达，按确定性规则选定",
+          "reason": "仅据楼内设施推断主用途为医疗，入口可达，按确定性规则选定",
           "role": "synthetic_student",
           "status": "placed"
         },
@@ -293,52 +229,36 @@
           "status": "placed"
         },
         {
-          "building_id": "synthetic/b0",
+          "building_id": "synthetic/b7",
           "entity_id": "synthetic_student_009",
-          "entrance_id": "synthetic/b0/entrance",
+          "entrance_id": "synthetic/b7/entrance",
           "evidence": [
             {
               "function": "medical",
-              "key": "building",
+              "key": "amenity",
               "layer": "primary",
-              "ref": "synthetic/b0",
-              "source": "building_tag",
+              "ref": "synthetic/anonymous-hospital",
+              "source": "poi",
               "value": "hospital"
-            },
-            {
-              "function": "medical",
-              "key": "medical-suffix",
-              "layer": "primary",
-              "ref": "synthetic/b0",
-              "source": "name_rule",
-              "value": "医院"
             }
           ],
           "fallback_used": null,
-          "reason": "依据名称规则判定为医疗，入口可达，按确定性规则选定",
+          "reason": "仅据楼内设施推断主用途为医疗，入口可达，按确定性规则选定",
           "role": "synthetic_student",
           "status": "placed"
         },
         {
-          "building_id": "synthetic/b0",
+          "building_id": "synthetic/b2",
           "entity_id": "synthetic_student_010",
-          "entrance_id": "synthetic/b0/entrance",
+          "entrance_id": "synthetic/b2/entrance",
           "evidence": [
-            {
-              "function": "medical",
-              "key": "building",
-              "layer": "primary",
-              "ref": "synthetic/b0",
-              "source": "building_tag",
-              "value": "hospital"
-            },
             {
               "function": "medical",
               "key": "medical-suffix",
               "layer": "primary",
-              "ref": "synthetic/b0",
+              "ref": "synthetic/b2",
               "source": "name_rule",
-              "value": "医院"
+              "value": "门诊楼"
             }
           ],
           "fallback_used": null,
@@ -374,29 +294,21 @@
           "status": "placed"
         },
         {
-          "building_id": "synthetic/b0",
+          "building_id": "synthetic/b7",
           "entity_id": "synthetic_student_012",
-          "entrance_id": "synthetic/b0/entrance",
+          "entrance_id": "synthetic/b7/entrance",
           "evidence": [
             {
               "function": "medical",
-              "key": "building",
+              "key": "amenity",
               "layer": "primary",
-              "ref": "synthetic/b0",
-              "source": "building_tag",
+              "ref": "synthetic/anonymous-hospital",
+              "source": "poi",
               "value": "hospital"
-            },
-            {
-              "function": "medical",
-              "key": "medical-suffix",
-              "layer": "primary",
-              "ref": "synthetic/b0",
-              "source": "name_rule",
-              "value": "医院"
             }
           ],
           "fallback_used": null,
-          "reason": "依据名称规则判定为医疗，入口可达，按确定性规则选定",
+          "reason": "仅据楼内设施推断主用途为医疗，入口可达，按确定性规则选定",
           "role": "synthetic_student",
           "status": "placed"
         },
@@ -428,25 +340,17 @@
           "status": "placed"
         },
         {
-          "building_id": "synthetic/b0",
+          "building_id": "synthetic/b2",
           "entity_id": "synthetic_student_014",
-          "entrance_id": "synthetic/b0/entrance",
+          "entrance_id": "synthetic/b2/entrance",
           "evidence": [
-            {
-              "function": "medical",
-              "key": "building",
-              "layer": "primary",
-              "ref": "synthetic/b0",
-              "source": "building_tag",
-              "value": "hospital"
-            },
             {
               "function": "medical",
               "key": "medical-suffix",
               "layer": "primary",
-              "ref": "synthetic/b0",
+              "ref": "synthetic/b2",
               "source": "name_rule",
-              "value": "医院"
+              "value": "门诊楼"
             }
           ],
           "fallback_used": null,
@@ -455,29 +359,21 @@
           "status": "placed"
         },
         {
-          "building_id": "synthetic/b0",
+          "building_id": "synthetic/b7",
           "entity_id": "synthetic_student_015",
-          "entrance_id": "synthetic/b0/entrance",
+          "entrance_id": "synthetic/b7/entrance",
           "evidence": [
             {
               "function": "medical",
-              "key": "building",
+              "key": "amenity",
               "layer": "primary",
-              "ref": "synthetic/b0",
-              "source": "building_tag",
+              "ref": "synthetic/anonymous-hospital",
+              "source": "poi",
               "value": "hospital"
-            },
-            {
-              "function": "medical",
-              "key": "medical-suffix",
-              "layer": "primary",
-              "ref": "synthetic/b0",
-              "source": "name_rule",
-              "value": "医院"
             }
           ],
           "fallback_used": null,
-          "reason": "依据名称规则判定为医疗，入口可达，按确定性规则选定",
+          "reason": "仅据楼内设施推断主用途为医疗，入口可达，按确定性规则选定",
           "role": "synthetic_student",
           "status": "placed"
         },
@@ -563,133 +459,93 @@
           "status": "placed"
         },
         {
-          "building_id": "synthetic/b0",
+          "building_id": "synthetic/b7",
           "entity_id": "synthetic_student_019",
-          "entrance_id": "synthetic/b0/entrance",
+          "entrance_id": "synthetic/b7/entrance",
           "evidence": [
             {
               "function": "medical",
-              "key": "building",
+              "key": "amenity",
               "layer": "primary",
-              "ref": "synthetic/b0",
-              "source": "building_tag",
+              "ref": "synthetic/anonymous-hospital",
+              "source": "poi",
               "value": "hospital"
-            },
-            {
-              "function": "medical",
-              "key": "medical-suffix",
-              "layer": "primary",
-              "ref": "synthetic/b0",
-              "source": "name_rule",
-              "value": "医院"
             }
           ],
           "fallback_used": null,
-          "reason": "依据名称规则判定为医疗，入口可达，按确定性规则选定",
+          "reason": "仅据楼内设施推断主用途为医疗，入口可达，按确定性规则选定",
           "role": "synthetic_student",
           "status": "placed"
         },
         {
-          "building_id": "synthetic/b0",
+          "building_id": "synthetic/b7",
           "entity_id": "synthetic_student_020",
-          "entrance_id": "synthetic/b0/entrance",
+          "entrance_id": "synthetic/b7/entrance",
           "evidence": [
             {
               "function": "medical",
-              "key": "building",
+              "key": "amenity",
               "layer": "primary",
-              "ref": "synthetic/b0",
-              "source": "building_tag",
+              "ref": "synthetic/anonymous-hospital",
+              "source": "poi",
               "value": "hospital"
-            },
-            {
-              "function": "medical",
-              "key": "medical-suffix",
-              "layer": "primary",
-              "ref": "synthetic/b0",
-              "source": "name_rule",
-              "value": "医院"
             }
           ],
           "fallback_used": null,
-          "reason": "依据名称规则判定为医疗，入口可达，按确定性规则选定",
+          "reason": "仅据楼内设施推断主用途为医疗，入口可达，按确定性规则选定",
           "role": "synthetic_student",
           "status": "placed"
         },
         {
-          "building_id": "synthetic/b0",
+          "building_id": "synthetic/b7",
           "entity_id": "synthetic_student_021",
-          "entrance_id": "synthetic/b0/entrance",
+          "entrance_id": "synthetic/b7/entrance",
           "evidence": [
             {
               "function": "medical",
-              "key": "building",
+              "key": "amenity",
               "layer": "primary",
-              "ref": "synthetic/b0",
-              "source": "building_tag",
+              "ref": "synthetic/anonymous-hospital",
+              "source": "poi",
               "value": "hospital"
-            },
-            {
-              "function": "medical",
-              "key": "medical-suffix",
-              "layer": "primary",
-              "ref": "synthetic/b0",
-              "source": "name_rule",
-              "value": "医院"
             }
           ],
           "fallback_used": null,
-          "reason": "依据名称规则判定为医疗，入口可达，按确定性规则选定",
+          "reason": "仅据楼内设施推断主用途为医疗，入口可达，按确定性规则选定",
           "role": "synthetic_student",
           "status": "placed"
         },
         {
-          "building_id": "synthetic/b0",
+          "building_id": "synthetic/b7",
           "entity_id": "synthetic_student_022",
-          "entrance_id": "synthetic/b0/entrance",
+          "entrance_id": "synthetic/b7/entrance",
           "evidence": [
             {
               "function": "medical",
-              "key": "building",
+              "key": "amenity",
               "layer": "primary",
-              "ref": "synthetic/b0",
-              "source": "building_tag",
+              "ref": "synthetic/anonymous-hospital",
+              "source": "poi",
               "value": "hospital"
-            },
-            {
-              "function": "medical",
-              "key": "medical-suffix",
-              "layer": "primary",
-              "ref": "synthetic/b0",
-              "source": "name_rule",
-              "value": "医院"
             }
           ],
           "fallback_used": null,
-          "reason": "依据名称规则判定为医疗，入口可达，按确定性规则选定",
+          "reason": "仅据楼内设施推断主用途为医疗，入口可达，按确定性规则选定",
           "role": "synthetic_student",
           "status": "placed"
         },
         {
-          "building_id": "synthetic/b0",
+          "building_id": "synthetic/b2",
           "entity_id": "synthetic_student_023",
-          "entrance_id": "synthetic/b0/entrance",
+          "entrance_id": "synthetic/b2/entrance",
           "evidence": [
-            {
-              "function": "medical",
-              "key": "building",
-              "layer": "primary",
-              "ref": "synthetic/b0",
-              "source": "building_tag",
-              "value": "hospital"
-            },
             {
               "function": "medical",
               "key": "medical-suffix",
               "layer": "primary",
-              "ref": "synthetic/b0",
+              "ref": "synthetic/b2",
               "source": "name_rule",
-              "value": "医院"
+              "value": "门诊楼"
             }
           ],
           "fallback_used": null,
@@ -704,12 +560,12 @@
       ],
       "illustrative": true,
       "map_ref": {
-        "manifest_sha256": "d6ee12119a4dc12fae71252837a40e08b6882075846f1cd36ef2e3a916113cb2",
+        "manifest_sha256": "79204ad4a92dd70c3acfb1a35b79b556bc8528f90d490de5ce690028409ff019",
         "map_id": "synthetic-taxonomy",
         "map_version": "1"
       },
       "mode": "map",
-      "result_sha256": "96f6a57560a67c2dad1d52c8cc2b998b1c40a1d16c6faf3c706d05f6897e3e82",
+      "result_sha256": "ec22643b61595d678aa336f6139284abbf07d3433215650f9855b999e16c3491",
       "rules": {
         "brand_prefs": {
           "合成品牌乙": {
@@ -748,7 +604,7 @@
           }
         }
       },
-      "scene_id": "scene_e454297d95be41065be470e8",
+      "scene_id": "scene_16ad5da7ef8b489c9fdf71ce",
       "scene_revision": 1,
       "schema_version": "scene.result.v3",
       "service_points": [
@@ -823,20 +679,6 @@
           "refs": [
             "synthetic/b5"
           ]
-        },
-        {
-          "code": "EVIDENCE_CONFLICT",
-          "message": "Lower-priority or same-tier primary-use evidence conflicts; no automatic override",
-          "refs": [
-            "synthetic/b7"
-          ]
-        },
-        {
-          "code": "GENERIC_USE_SUPERSEDED",
-          "message": "Generic education tag retained as superseded evidence, not a teaching candidate",
-          "refs": [
-            "synthetic/b7"
-          ]
         }
       ]
     }
@@ -864,7 +706,7 @@
     },
     "config_id": "synthetic-config",
     "map_ref": {
-      "manifest_sha256": "d6ee12119a4dc12fae71252837a40e08b6882075846f1cd36ef2e3a916113cb2",
+      "manifest_sha256": "79204ad4a92dd70c3acfb1a35b79b556bc8528f90d490de5ce690028409ff019",
       "map_id": "synthetic-taxonomy",
       "map_version": "1"
     },
@@ -916,7 +758,7 @@
         }
       },
       "map_ref": {
-        "manifest_sha256": "282af75f69f6ceac0a6049c21fe3206549e2796e921624b900be99cca09ee409",
+        "manifest_sha256": "75011d47f26d77e1fa9c24ce898593f363935327b4964eda1a2a8bebcfbb54b5",
         "map_id": "synthetic-taxonomy-source",
         "map_version": "1"
       },
@@ -926,7 +768,7 @@
     "annotations": {
       "buildings": {},
       "map_ref": {
-        "manifest_sha256": "d6ee12119a4dc12fae71252837a40e08b6882075846f1cd36ef2e3a916113cb2",
+        "manifest_sha256": "79204ad4a92dd70c3acfb1a35b79b556bc8528f90d490de5ce690028409ff019",
         "map_id": "synthetic-taxonomy",
         "map_version": "1"
       }
@@ -1112,42 +954,26 @@
           ]
         },
         {
-          "building_type": "university",
+          "building_type": "yes",
           "function_evidence": [
             {
-              "function": "education",
-              "key": "building",
-              "layer": "primary",
-              "ref": "synthetic/b2",
-              "source": "building_tag",
-              "value": "university"
-            },
-            {
-              "function": "education",
-              "key": "name",
-              "layer": "primary",
-              "ref": "synthetic/b2",
-              "source": "name_keyword",
-              "value": "教学楼"
-            },
-            {
-              "function": "education",
-              "key": "education-suffix",
+              "function": "medical",
+              "key": "medical-suffix",
               "layer": "primary",
               "ref": "synthetic/b2",
               "source": "name_rule",
-              "value": "教学楼"
+              "value": "门诊楼"
             }
           ],
           "functions": [
-            "education"
+            "medical"
           ],
           "height_m": 12,
           "holes": [],
           "inactive_function_evidence": [],
           "kind": "legacy-appearance",
           "levels": 3,
-          "name": "合成教学楼",
+          "name": "合成门诊楼",
           "needs_ai_review": false,
           "osm_id": "synthetic/b2",
           "polygon": [
@@ -1174,10 +1000,21 @@
           ],
           "primary_from_services": false,
           "scene_eligible": true,
-          "service_evidence": [],
-          "services": [],
+          "service_evidence": [
+            {
+              "function": "dining",
+              "key": "amenity",
+              "layer": "service",
+              "ref": "synthetic/outpatient-restaurant",
+              "source": "poi",
+              "value": "restaurant"
+            }
+          ],
+          "services": [
+            "dining"
+          ],
           "tags": {
-            "building": "university"
+            "building": "yes"
           },
           "usable_entrance_ids": [
             "synthetic/b2/entrance"
@@ -1409,31 +1246,23 @@
           ]
         },
         {
-          "building_type": "university",
+          "building_type": "yes",
           "function_evidence": [
             {
-              "function": "research",
-              "key": "research-suffix",
+              "function": "medical",
+              "key": "amenity",
               "layer": "primary",
-              "ref": "synthetic/b7",
-              "source": "name_rule",
-              "value": "实验楼"
+              "ref": "synthetic/anonymous-hospital",
+              "source": "poi",
+              "value": "hospital"
             }
           ],
           "functions": [
-            "research"
+            "medical"
           ],
           "height_m": 12,
           "holes": [],
           "inactive_function_evidence": [
-            {
-              "function": "education",
-              "key": "building",
-              "layer": "primary",
-              "ref": "synthetic/b7",
-              "source": "building_tag",
-              "value": "university"
-            },
             {
               "confidence_pct": 40,
               "function": "government",
@@ -1446,7 +1275,7 @@
           ],
           "kind": "legacy-appearance",
           "levels": 3,
-          "name": "合成实验楼",
+          "name": "",
           "needs_ai_review": true,
           "osm_id": "synthetic/b7",
           "polygon": [
@@ -1471,22 +1300,32 @@
               10
             ]
           ],
-          "primary_from_services": false,
+          "primary_from_services": true,
           "scene_eligible": true,
-          "service_evidence": [],
-          "services": [],
-          "superseded_function_evidence": [
+          "service_evidence": [
             {
-              "function": "education",
-              "key": "building",
-              "layer": "primary",
-              "ref": "synthetic/b7",
-              "source": "building_tag",
-              "value": "university"
+              "function": "dining",
+              "key": "amenity",
+              "layer": "service",
+              "ref": "synthetic/anonymous-restaurant",
+              "source": "poi",
+              "value": "restaurant"
+            },
+            {
+              "function": "medical",
+              "key": "amenity",
+              "layer": "service",
+              "ref": "synthetic/anonymous-hospital",
+              "source": "poi",
+              "value": "hospital"
             }
           ],
+          "services": [
+            "dining",
+            "medical"
+          ],
           "tags": {
-            "building": "university"
+            "building": "yes"
           },
           "usable_entrance_ids": [
             "synthetic/b7/entrance"
@@ -1518,6 +1357,39 @@
           "tags": {
             "shop": "supermarket"
           }
+        },
+        {
+          "name": "合成门诊楼餐厅",
+          "osm_id": "synthetic/outpatient-restaurant",
+          "point": [
+            45,
+            15
+          ],
+          "tags": {
+            "amenity": "restaurant"
+          }
+        },
+        {
+          "name": "合成医院设施点",
+          "osm_id": "synthetic/anonymous-hospital",
+          "point": [
+            145,
+            15
+          ],
+          "tags": {
+            "amenity": "hospital"
+          }
+        },
+        {
+          "name": "合成无名楼餐厅",
+          "osm_id": "synthetic/anonymous-restaurant",
+          "point": [
+            146,
+            15
+          ],
+          "tags": {
+            "amenity": "restaurant"
+          }
         }
       ],
       "projection": {
@@ -1531,7 +1403,7 @@
       "schema_version": "mecoffe.campus3d.v1",
       "source": {
         "attribution": "完全合成，仅用于离线测试",
-        "sha256": "aa6736088657575d500e2fce35f540b276d03f8508d40e6b56ce6fbb60f50bc5"
+        "sha256": "d4b40efb895585294083ca32a890587b4217af2fdff5f7bd2e135eebec08daef"
       },
       "synthetic": true,
       "title": "合成医院与楼内服务",
@@ -1785,7 +1657,7 @@
     },
     "evidence_frozen": true,
     "evidence_input_ref": {
-      "manifest_sha256": "282af75f69f6ceac0a6049c21fe3206549e2796e921624b900be99cca09ee409",
+      "manifest_sha256": "75011d47f26d77e1fa9c24ce898593f363935327b4964eda1a2a8bebcfbb54b5",
       "map_id": "synthetic-taxonomy-source",
       "map_version": "1"
     },
@@ -1855,7 +1727,7 @@
         {
           "function": "medical",
           "id": "medical-suffix",
-          "pattern": "(?:医院|卫生院|诊所|药店|医务室)$"
+          "pattern": "(?:医院|卫生院|诊所|药店|医务室|门诊楼|住院楼|急诊楼|医技楼|住院部|门诊部|病房楼)$"
         },
         {
           "function": "government",
@@ -1900,7 +1772,7 @@
         "utility"
       ],
       "schema_version": "scene.evidence-rules.v1",
-      "sha256": "2409494cab095cfbe85dc4eae3dab037ccd15821f65a3d0156eb183eda4df06c",
+      "sha256": "e209fba9757b6416a2a1aa5d316c48d88a214eebd6d03bdcc4d18d0f45063315",
       "tag_functions": {
         "abandoned:building": {
           "yes": "construction"
@@ -2371,24 +2243,44 @@
           "placeable": false
         }
       },
+      "venue_poi_functions": {
+        "amenity": {
+          "college": "education",
+          "courthouse": "government",
+          "fire_station": "government",
+          "hospital": "medical",
+          "kindergarten": "education",
+          "place_of_worship": "religious",
+          "police": "government",
+          "school": "education",
+          "townhall": "government",
+          "university": "education"
+        },
+        "healthcare": {
+          "hospital": "medical"
+        },
+        "tourism": {
+          "hotel": "hotel"
+        }
+      },
       "version": "auto-evidence.2"
     },
     "landcover": {
       "features": []
     },
     "map_ref": {
-      "manifest_sha256": "d6ee12119a4dc12fae71252837a40e08b6882075846f1cd36ef2e3a916113cb2",
+      "manifest_sha256": "79204ad4a92dd70c3acfb1a35b79b556bc8528f90d490de5ce690028409ff019",
       "map_id": "synthetic-taxonomy",
       "map_version": "1"
     },
     "quality": {
       "buildings": 8,
-      "buildings_with_services": 2,
+      "buildings_with_services": 4,
       "eligible_buildings": 6,
       "entrances": 8,
       "evidence_policy": {
         "ai_min_confidence_pct": 80,
-        "sha256": "2409494cab095cfbe85dc4eae3dab037ccd15821f65a3d0156eb183eda4df06c",
+        "sha256": "e209fba9757b6416a2a1aa5d316c48d88a214eebd6d03bdcc4d18d0f45063315",
         "version": "auto-evidence.2"
       },
       "function_counts": {
@@ -2396,16 +2288,16 @@
         "culture": 0,
         "dining": 0,
         "dormitory": 0,
-        "education": 1,
+        "education": 0,
         "government": 0,
         "hotel": 1,
         "industrial": 0,
         "library": 0,
         "life_service": 0,
-        "medical": 1,
+        "medical": 3,
         "office": 0,
         "religious": 0,
-        "research": 1,
+        "research": 0,
         "residential": 1,
         "retail": 1,
         "sports": 0,
@@ -2419,27 +2311,27 @@
       "non_placeable_buildings": 2,
       "poi": {
         "ambiguous": 0,
-        "associated": 2,
+        "associated": 5,
         "invalid": 0,
-        "total": 2,
+        "total": 5,
         "unassociated": 0
       },
-      "poi_only_primary_buildings": 0,
+      "poi_only_primary_buildings": 1,
       "primary_function_counts": {
         "construction": 0,
         "culture": 0,
         "dining": 0,
         "dormitory": 0,
-        "education": 1,
+        "education": 0,
         "government": 0,
         "hotel": 1,
         "industrial": 0,
         "library": 0,
         "life_service": 0,
-        "medical": 1,
+        "medical": 3,
         "office": 0,
         "religious": 0,
-        "research": 1,
+        "research": 0,
         "residential": 1,
         "retail": 1,
         "sports": 0,
@@ -2474,20 +2366,6 @@
           "message": "Invalid geometry, outside scope, water conflict, or no safe reachable entrance",
           "refs": [
             "synthetic/b5"
-          ]
-        },
-        {
-          "code": "EVIDENCE_CONFLICT",
-          "message": "Lower-priority or same-tier primary-use evidence conflicts; no automatic override",
-          "refs": [
-            "synthetic/b7"
-          ]
-        },
-        {
-          "code": "GENERIC_USE_SUPERSEDED",
-          "message": "Generic education tag retained as superseded evidence, not a teaching candidate",
-          "refs": [
-            "synthetic/b7"
           ]
         }
       ]
