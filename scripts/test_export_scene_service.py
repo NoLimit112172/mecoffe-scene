@@ -15,7 +15,7 @@ from export_scene_service import (ROOT, DEFAULT_OUT, IMPORT_NAME, MANIFEST, VERS
                                  write_export)
 
 # Deliberate release lock, in addition to source/export and per-file checks.
-RELEASE_MANIFEST_SHA256 = '5103bce165426d1d339c215b5c230109a25d05cbf61503c1471fefc0be80173f'
+RELEASE_MANIFEST_SHA256 = '380212d1718d4b6f5e7dd6b02d4d1b0c5deef876aff5c8b219901dff19717409'
 
 
 class SceneServiceExportTests(unittest.TestCase):

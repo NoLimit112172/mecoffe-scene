@@ -85,7 +85,7 @@ python scripts/verify_scene_service_install.py --python <Python3.11路径> --out
 | 默认嵌入构建 | `npm --prefix frontend run build:embed`：通过，242 文件、113.83 MB；仅有原有大分块提示 |
 | 公开审计 | `node scripts/audit-public.cjs`：0 项 |
 | 导出与清单 | `python scripts/export_scene_service.py --check`、`python -I packages/scene-service/verify_export.py`：通过；26 个交付文件（含清单自身） |
-| 离线安装 | `python scripts/verify_scene_service_install.py --python D:\App\anaconda\envs\hello-agents\python.exe --out logs/milestone15-batch9-install-release`：通过；Python 3.11.15，site-packages，零运行依赖，无 adapter 导入 |
+| 离线安装 | `python scripts/verify_scene_service_install.py --python D:\App\anaconda\envs\hello-agents\python.exe --out logs/milestone15-batch9-install-pinned`：通过；Python 3.11.15，site-packages，零运行依赖，无 adapter 导入 |
 | 兼容 | 65 组旧响应规范化字节一致；98 个既有文件字节一致；安装后的原 7 组 compile 与 c0bf430 一致；新增 v3 的 compile、validate、check 全通过 |
 
 Python 全套在本机已有 Pillow 的 Python 3.12.4 下执行。首次尝试用独立 3.11 环境跑全部 adapter 测试时，旧贴图测试因缺少 Pillow 无法导入；没有下载依赖或修改旧测试。运行包本身另在无源仓库路径的干净 3.11 环境完成离线安装与功能验收，符合团队 Python 版本要求。
@@ -124,3 +124,11 @@ python -m adapter.scene_service evidence --map <新地图版本目录> --out <�
 - 主用途同档多用途暂保留并警告；人工 annotation add 保持原含义，不自动做排他选择。
 - 旧规则中的 POI 混算和旧兜底行为为了字节兼容继续保留，只在新规则地图解决；不能把旧 v1/v2 地图挂上新规则而不升地图版本。
 - 本批不优化建图耗时，不重建或发布学弟的五张真实地图，不同步团队仓库，不部署。
+
+## 最终交付清单锁定
+
+源码提交：`c0bc3f596af726732ef7246e05b5568a9fa01d05`。
+
+0.2.0 的 EXPORT_MANIFEST.json 原字节 SHA-256：`380212d1718d4b6f5e7dd6b02d4d1b0c5deef876aff5c8b219901dff19717409`。测试同样锁定此值，不会仅靠重新导出放行。
+
+实现提交完成后只更新清单的来源提交号及对应锁值；25 个包文件的逐文件摘要和所有输入摘要都未变化。随后再跑 scripts 全套、verify_export 和新的干净 3.11 安装验收。Python/前端全套针对同一份未再改动的实现代码已通过，不因来源编号变化重复跑。若后续改写来源提交历史，需审查并重新登记清单，不能绕过锁定测试。
