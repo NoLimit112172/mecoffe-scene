@@ -10,7 +10,8 @@ from scene_split_manifest import ASSET_DIRECTORY, json_bytes, require_published_
 
 ROOT = Path(__file__).resolve().parents[1]
 CATALOG = "frontend/public/mecoffe/assets3d/catalog.json"
-BUILDER_MODULES = ("__init__", "__main__", "asset_library", "core", "entrances", "gis", "io", "scenario")
+BUILDER_MODULES = ("__init__", "__main__", "asset_library", "core", "entrances", "gis", "io", "scenario",
+                   "physical_map", "physical_scope")
 OSM_SOURCES = ("ustc_gaoxin", "ustc_gaoxin_surroundings", "nus")
 PREPARED_SOURCE = "frontend/public/mecoffe/scenarios/ustc-history"
 BUILDINGS_LAYER = "gis/buildings.geojson"
@@ -63,7 +64,9 @@ def package_builder(catalog, legacy_map_dir, output_dir, source_commit):
         "adapter/osm_landcover.py",
         "adapter/osm_surroundings.py",
         "scripts/generate-ustc-map.py",
+        "scripts/prepare-physical-map.py",
         "data/examples/offline-map.geojson",
+        "adapter/physical_map_examples/nus-scope.geojson",
         "data/maps/ustc-gaoxin/review-annotations.v2.json",
     )
     files = {name: ROOT / name for name in relative_files}

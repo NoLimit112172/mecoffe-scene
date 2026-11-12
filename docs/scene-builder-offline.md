@@ -40,6 +40,24 @@ python3.11 -B -S -m adapter.scene_builder geojson \
 
 这些命令直接从归档的 OSM 或 GeoJSON 生成基础地图清单 `mecoffe.scene-bundle.v1`，适合检验新校园数据和素材匹配。中科大原始 OSM 的建图结果使用独立预览编号 `ustc-gaoxin-preview`，正式 `ustc-gaoxin/1` 由上面的发布脚本复现。输入 GeoJSON 采用 WGS84 经纬度，包内示例为合成地物。已有 OSM 归档用 `--osm` 和 `--metadata`，联网采集才使用 `--bbox`。
 
-## Linux 验收
+## 已确认多边形范围的纯地图入口
+
+新命令只读取离线 OSM，不搜索地点、不下载、不调模型，也不生成模拟时间或轨迹。在源码根可运行 `python -B -m adapter.scene_builder physical-map`；解包后可在任意工作目录使用下面的隔离入口，路径按实际解包位置调整，输出目录必须为空或不存在：
+
+```sh
+python3.11 -I -B /path/to/payload/scripts/prepare-physical-map.py \
+  --osm /path/to/payload/data/osm/nus.osm \
+  --metadata /path/to/payload/data/osm/nus.metadata.json \
+  --scope /path/to/payload/adapter/physical_map_examples/nus-scope.geojson \
+  --map-id nus-physical-example --title "NUS offline example" \
+  --rules /path/to/payload/adapter/scene_service/evidence_rules_v2.json \
+  --out /tmp/nus-physical-candidate
+```
+
+scope 为 WGS-84 Polygon/MultiPolygon 几何，可带孔洞；从 Feature 导出时取 geometry。`--scope-source` 可另给来源 JSON（osm/manual/manual_subset），默认仅记录 manual。显式传新规则，不依赖旧默认；道路缓冲默认 50m，只扩道路上下文，不扩大人物和品牌的可安置范围。`--limits` 可读 JSON 限额，`--draft-out` 可保留完整草稿。
+
+stdout 为结果 JSON、stderr 为实际阶段；生成成功仍需检查 `summary.status`。包内 NUS 手写范围只是已有小归档内的演示，不是完整校园边界，当前按既有质量门槛得到 preview_only，不能直接上线。旧 USTC v1/v2 仍按上文原命令复现，不用此命令覆盖。算法边界、限额和完整交付说明见源码仓库 `docs/realtime-map-batch1-delivery.md`。
+
+## Linux 验收（原有复现路径）
 
 在禁止出网的测试环境将 `payload/` 只读挂载，把输出写到独立目录。将复现的 v1、v2 与地图库归档中对应的 `payload/scene-maps/ustc-gaoxin/<version>/` 逐文件比对，检查七个 GIS 图层、`quality.json.status`、`catalog_sha256` 和 v2 的 3 座食堂。另取 OSM 元数据副本改动 `sha256`，确认输入被拒绝。

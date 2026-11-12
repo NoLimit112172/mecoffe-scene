@@ -33,8 +33,29 @@ def main(argv=None):
     index_command=sub.add_parser('scenario-index', help='Rebuild the directory of already prepared scenarios')
     index_command.add_argument('--scenario-dir', type=Path)
     index_command.add_argument('--default-id')
+    physical = sub.add_parser('physical-map', help='Prepare an offline polygon-scoped physical map')
+    for name in ('osm', 'metadata', 'scope', 'rules', 'out'):
+        physical.add_argument('--'+name, type=Path, required=True)
+    physical.add_argument('--map-id', required=True)
+    physical.add_argument('--map-version', default='1')
+    physical.add_argument('--title', required=True)
+    physical.add_argument('--scope-source', type=Path, help='Scope provenance JSON; default type=manual')
+    physical.add_argument('--road-buffer-m', type=float, default=50.)
+    physical.add_argument('--limits', type=Path, help='JSON overrides for PhysicalMapLimits')
+    physical.add_argument('--draft-out', type=Path, help='Optionally retain a complete pre-publication draft')
+    physical.add_argument('--seed', default='0', help='Map-building seed, independent of assignment/simulation seeds')
     args=parser.parse_args(argv)
     try:
+        if args.format=='physical-map':
+            from .physical_map import prepare_physical_map
+            result=prepare_physical_map(args.osm,args.metadata,json.loads(args.scope.read_text(encoding='utf-8')),
+                scope_source=json.loads(args.scope_source.read_text(encoding='utf-8')) if args.scope_source else {'type':'manual'},
+                title=args.title,map_id=args.map_id,map_version=args.map_version,rules_path=args.rules,out=args.out,
+                road_buffer_m=args.road_buffer_m,seed=args.seed,draft_out=args.draft_out,
+                limits=json.loads(args.limits.read_text(encoding='utf-8')) if args.limits else None,
+                progress=lambda event:print(json.dumps(event,ensure_ascii=False),file=sys.stderr))
+            print(json.dumps(result,ensure_ascii=False))
+            return 0
         if args.format=='scenario-index':
             from .scenario import write_scenario_index
             print(json.dumps(write_scenario_index(args.scenario_dir, args.default_id), ensure_ascii=False))
