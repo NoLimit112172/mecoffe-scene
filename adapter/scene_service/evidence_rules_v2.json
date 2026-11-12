@@ -1,0 +1,584 @@
+{
+  "ai_min_confidence_pct": 80,
+  "exclusion_patterns": [
+    "旧址|遗址|拆除|筹建|拟建|原址|^原",
+    "道路|路口|公交站牌|公交站点|地铁出入口|(?:路|街|大道|大街|东门|西门|南门|北门|大门|停车场)$",
+    "宠物医院$"
+  ],
+  "name_rules": [
+    {
+      "function": "dormitory",
+      "id": "dormitory-suffix",
+      "pattern": "(?:学生公寓|宿舍楼?)(?:[A-Za-z0-9一二三四五六七八九十]+(?:号楼|栋|区))?$"
+    },
+    {
+      "function": "residential",
+      "id": "residential-suffix",
+      "pattern": "(?:住宅楼|居民楼|别墅)$"
+    },
+    {
+      "function": "hotel",
+      "id": "hotel-suffix",
+      "pattern": "(?:酒店|宾馆|旅馆|招待所|青年旅舍|青旅)$"
+    },
+    {
+      "function": "education",
+      "id": "education-suffix",
+      "pattern": "(?:教学楼|小学|中学|幼儿园)$"
+    },
+    {
+      "function": "research",
+      "id": "research-suffix",
+      "pattern": "(?:实验楼|实验大楼|研究院|研究所|科研楼)$"
+    },
+    {
+      "function": "office",
+      "id": "office-suffix",
+      "pattern": "(?:办公楼|行政楼|写字楼)$"
+    },
+    {
+      "function": "library",
+      "id": "library-suffix",
+      "pattern": "图书馆$"
+    },
+    {
+      "function": "industrial",
+      "id": "industrial-suffix",
+      "pattern": "(?:厂房|仓库|物流中心|仓储中心)$"
+    },
+    {
+      "function": "dining",
+      "id": "dining-suffix",
+      "pattern": "(?:食堂|餐厅|咖啡馆|咖啡厅|快餐店)(?:[A-Za-z0-9一二三四五六七八九十]+区)?$"
+    },
+    {
+      "function": "retail",
+      "id": "retail-suffix",
+      "pattern": "(?:购物广场|商业广场|购物中心|商场|百货大楼|超市|便利店)$"
+    },
+    {
+      "function": "life_service",
+      "id": "life_service-suffix",
+      "pattern": "(?:银行|邮局|邮政所|快递驿站|理发店|理发室|洗衣店|维修店)$"
+    },
+    {
+      "function": "medical",
+      "id": "medical-suffix",
+      "pattern": "(?:医院|卫生院|诊所|药店|医务室)$"
+    },
+    {
+      "function": "government",
+      "id": "government-suffix",
+      "pattern": "(?:人民政府|街道办事处|街道办|居委会|派出所|消防站)$"
+    },
+    {
+      "function": "sports",
+      "id": "sports-suffix",
+      "pattern": "(?:体育馆|健身房|游泳馆)$"
+    },
+    {
+      "function": "culture",
+      "id": "culture-suffix",
+      "pattern": "(?:博物馆|剧院|电影院|活动中心|KTV|ktv)$"
+    },
+    {
+      "function": "religious",
+      "id": "religious-suffix",
+      "pattern": "(?:寺庙|寺|教堂|清真寺)$"
+    },
+    {
+      "function": "transport",
+      "id": "transport-suffix",
+      "pattern": "(?:火车站|汽车站|客运站|地铁站|车站|停车楼)$"
+    },
+    {
+      "function": "utility",
+      "id": "utility-suffix",
+      "pattern": "(?:配电房|配电室|锅炉房|泵房|门卫室?|垃圾站|公厕|厕所)$"
+    },
+    {
+      "function": "construction",
+      "id": "construction-suffix",
+      "pattern": "(?:在建楼|施工楼|废弃楼|废弃建筑)$"
+    }
+  ],
+  "nearby_poi_radius_m": 50,
+  "non_placeable": [
+    "construction",
+    "transport",
+    "utility"
+  ],
+  "schema_version": "scene.evidence-rules.v1",
+  "sha256": "2409494cab095cfbe85dc4eae3dab037ccd15821f65a3d0156eb183eda4df06c",
+  "tag_functions": {
+    "abandoned:building": {
+      "yes": "construction"
+    },
+    "amenity": {
+      "arts_centre": "culture",
+      "atm": "life_service",
+      "bank": "life_service",
+      "bar": "dining",
+      "bus_station": "transport",
+      "cafe": "dining",
+      "canteen": "dining",
+      "cinema": "culture",
+      "clinic": "medical",
+      "college": "education",
+      "community_centre": "culture",
+      "courthouse": "government",
+      "dentist": "medical",
+      "doctors": "medical",
+      "fast_food": "dining",
+      "ferry_terminal": "transport",
+      "fire_station": "government",
+      "food_court": "dining",
+      "hospital": "medical",
+      "ice_cream": "dining",
+      "kindergarten": "education",
+      "library": "library",
+      "nightclub": "culture",
+      "nursing_home": "medical",
+      "parcel_locker": "life_service",
+      "parking": "transport",
+      "pharmacy": "medical",
+      "place_of_worship": "religious",
+      "police": "government",
+      "post_office": "life_service",
+      "pub": "dining",
+      "recycling": "utility",
+      "restaurant": "dining",
+      "school": "education",
+      "theatre": "culture",
+      "toilets": "utility",
+      "townhall": "government",
+      "waste_disposal": "utility"
+    },
+    "building": {
+      "apartments": "residential",
+      "bungalow": "residential",
+      "carport": "transport",
+      "cathedral": "religious",
+      "chapel": "religious",
+      "church": "religious",
+      "cinema": "culture",
+      "civic": "government",
+      "clinic": "medical",
+      "college": "education",
+      "construction": "construction",
+      "detached": "residential",
+      "dormitory": "dormitory",
+      "factory": "industrial",
+      "fire_station": "government",
+      "garages": "transport",
+      "gatehouse": "utility",
+      "government": "government",
+      "hospital": "medical",
+      "hotel": "hotel",
+      "house": "residential",
+      "industrial": "industrial",
+      "kindergarten": "education",
+      "kiosk": "retail",
+      "laboratory": "research",
+      "library": "library",
+      "mosque": "religious",
+      "museum": "culture",
+      "office": "office",
+      "parking": "transport",
+      "religious": "religious",
+      "research": "research",
+      "residential": "residential",
+      "retail": "retail",
+      "ruins": "construction",
+      "school": "education",
+      "semidetached_house": "residential",
+      "shrine": "religious",
+      "sports_centre": "sports",
+      "sports_hall": "sports",
+      "stadium": "sports",
+      "supermarket": "retail",
+      "synagogue": "religious",
+      "temple": "religious",
+      "terrace": "residential",
+      "theatre": "culture",
+      "toilets": "utility",
+      "train_station": "transport",
+      "transformer_tower": "utility",
+      "transportation": "transport",
+      "university": "education",
+      "villa": "residential",
+      "warehouse": "industrial"
+    },
+    "healthcare": {
+      "blood_donation": "medical",
+      "clinic": "medical",
+      "dentist": "medical",
+      "doctor": "medical",
+      "hospital": "medical",
+      "pharmacy": "medical",
+      "physiotherapist": "medical",
+      "rehabilitation": "medical"
+    },
+    "leisure": {
+      "fitness_centre": "sports",
+      "sports_centre": "sports",
+      "sports_hall": "sports",
+      "stadium": "sports",
+      "swimming_pool": "sports"
+    },
+    "man_made": {
+      "pumping_station": "utility",
+      "silo": "industrial",
+      "storage_tank": "industrial",
+      "warehouse": "industrial",
+      "wastewater_plant": "utility",
+      "water_tower": "utility",
+      "water_works": "utility",
+      "works": "industrial"
+    },
+    "office": {
+      "accountant": "office",
+      "administrative": "office",
+      "architect": "office",
+      "association": "office",
+      "company": "office",
+      "coworking": "office",
+      "diplomatic": "government",
+      "employment_agency": "office",
+      "estate_agent": "office",
+      "financial": "life_service",
+      "government": "government",
+      "insurance": "office",
+      "it": "office",
+      "lawyer": "office",
+      "research": "research",
+      "telecommunication": "office"
+    },
+    "power": {
+      "generator": "utility",
+      "plant": "utility",
+      "substation": "utility",
+      "transformer": "utility"
+    },
+    "public_transport": {
+      "station": "transport"
+    },
+    "railway": {
+      "station": "transport"
+    },
+    "shop": {
+      "bakery": "retail",
+      "beauty": "life_service",
+      "bicycle_repair": "life_service",
+      "books": "retail",
+      "butcher": "retail",
+      "car_repair": "life_service",
+      "clothes": "retail",
+      "convenience": "retail",
+      "copyshop": "life_service",
+      "department_store": "retail",
+      "dry_cleaning": "life_service",
+      "electronics": "retail",
+      "furniture": "retail",
+      "general": "retail",
+      "greengrocer": "retail",
+      "hairdresser": "life_service",
+      "hardware": "retail",
+      "kiosk": "retail",
+      "laundry": "life_service",
+      "locksmith": "life_service",
+      "mall": "retail",
+      "medical_supply": "medical",
+      "shoe_repair": "life_service",
+      "shoes": "retail",
+      "stationery": "retail",
+      "supermarket": "retail",
+      "tailor": "life_service",
+      "variety_store": "retail"
+    },
+    "tourism": {
+      "apartment": "hotel",
+      "gallery": "culture",
+      "guest_house": "hotel",
+      "hostel": "hotel",
+      "hotel": "hotel",
+      "motel": "hotel",
+      "museum": "culture"
+    }
+  },
+  "taxonomy": {
+    "construction": {
+      "counterexamples": [
+        "正常运营楼",
+        "仅名称含旧址的楼"
+      ],
+      "definition": "仍在施工或已废弃、毁坏的建筑，本版禁止安置。",
+      "examples": [
+        "在建楼",
+        "废弃楼"
+      ],
+      "label": "在建或废弃",
+      "placeable": false
+    },
+    "culture": {
+      "counterexamples": [
+        "图书馆",
+        "教学楼"
+      ],
+      "definition": "开展文化展示、演出或娱乐活动的建筑。",
+      "examples": [
+        "博物馆",
+        "电影院",
+        "活动中心",
+        "KTV"
+      ],
+      "label": "文化娱乐",
+      "placeable": true
+    },
+    "dining": {
+      "counterexamples": [
+        "餐饮旁的医院",
+        "超市"
+      ],
+      "definition": "提供餐食或饮品的食堂、餐厅和咖啡场所。",
+      "examples": [
+        "食堂",
+        "餐厅",
+        "咖啡馆"
+      ],
+      "label": "餐饮",
+      "placeable": true
+    },
+    "dormitory": {
+      "counterexamples": [
+        "商品住宅",
+        "酒店"
+      ],
+      "definition": "供学生集体居住的宿舍和学生公寓。",
+      "examples": [
+        "学生宿舍",
+        "学生公寓"
+      ],
+      "label": "宿舍",
+      "placeable": true
+    },
+    "education": {
+      "counterexamples": [
+        "研究所",
+        "院系办公楼"
+      ],
+      "definition": "开展课堂教学和基础教育的建筑。",
+      "examples": [
+        "教学楼",
+        "中小学",
+        "幼儿园"
+      ],
+      "label": "教学",
+      "placeable": true
+    },
+    "government": {
+      "counterexamples": [
+        "普通公司办公楼",
+        "公交站"
+      ],
+      "definition": "提供政务、基层治理、公安或消防公共服务的建筑。",
+      "examples": [
+        "街道办事处",
+        "派出所",
+        "消防站"
+      ],
+      "label": "政务公共",
+      "placeable": true
+    },
+    "hotel": {
+      "counterexamples": [
+        "住宅楼",
+        "学生宿舍"
+      ],
+      "definition": "向旅客提供临时住宿的经营场所。",
+      "examples": [
+        "酒店",
+        "招待所",
+        "青年旅舍"
+      ],
+      "label": "酒店住宿",
+      "placeable": true
+    },
+    "industrial": {
+      "counterexamples": [
+        "快递驿站",
+        "零售商店"
+      ],
+      "definition": "以生产、仓储或物流作业为主要用途的建筑。",
+      "examples": [
+        "厂房",
+        "仓库",
+        "物流中心"
+      ],
+      "label": "工业仓储",
+      "placeable": true
+    },
+    "library": {
+      "counterexamples": [
+        "书店",
+        "博物馆"
+      ],
+      "definition": "提供图书收藏、借阅和阅读服务的建筑。",
+      "examples": [
+        "图书馆"
+      ],
+      "label": "图书馆",
+      "placeable": true
+    },
+    "life_service": {
+      "counterexamples": [
+        "超市",
+        "药店"
+      ],
+      "definition": "提供银行、邮政、快递、理发、洗衣或维修等日常服务。",
+      "examples": [
+        "银行",
+        "快递驿站",
+        "理发店"
+      ],
+      "label": "生活服务",
+      "placeable": true
+    },
+    "medical": {
+      "counterexamples": [
+        "宠物医院",
+        "保健品店"
+      ],
+      "definition": "提供诊疗、医疗照护或药品零售的场所。",
+      "examples": [
+        "医院",
+        "校医院",
+        "诊所",
+        "药店"
+      ],
+      "label": "医疗",
+      "placeable": true
+    },
+    "office": {
+      "counterexamples": [
+        "教学楼",
+        "实验楼"
+      ],
+      "definition": "处理行政或商业办公事务的建筑。",
+      "examples": [
+        "写字楼",
+        "行政楼",
+        "院系办公楼"
+      ],
+      "label": "办公",
+      "placeable": true
+    },
+    "religious": {
+      "counterexamples": [
+        "宗教用品店",
+        "纪念馆"
+      ],
+      "definition": "用于宗教活动的寺庙、教堂等建筑。",
+      "examples": [
+        "寺庙",
+        "教堂"
+      ],
+      "label": "宗教",
+      "placeable": true
+    },
+    "research": {
+      "counterexamples": [
+        "普通教学楼",
+        "办公楼"
+      ],
+      "definition": "以实验和科学研究为主要用途的建筑。",
+      "examples": [
+        "实验楼",
+        "研究院",
+        "研究所"
+      ],
+      "label": "科研",
+      "placeable": true
+    },
+    "residential": {
+      "counterexamples": [
+        "学生宿舍",
+        "宾馆"
+      ],
+      "definition": "家庭日常居住的住宅楼、小区住宅和别墅。",
+      "examples": [
+        "住宅楼",
+        "别墅"
+      ],
+      "label": "住宅",
+      "placeable": true
+    },
+    "retail": {
+      "counterexamples": [
+        "理发店",
+        "洗衣店"
+      ],
+      "definition": "以商品零售为主要用途的商场和商铺。",
+      "examples": [
+        "商场",
+        "超市",
+        "便利店"
+      ],
+      "label": "零售",
+      "placeable": true
+    },
+    "sports": {
+      "counterexamples": [
+        "体育用品店",
+        "室外球场"
+      ],
+      "definition": "开展体育运动、健身或游泳活动的建筑。",
+      "examples": [
+        "体育馆",
+        "健身房",
+        "游泳馆"
+      ],
+      "label": "体育",
+      "placeable": true
+    },
+    "transport": {
+      "counterexamples": [
+        "公交站点名称",
+        "普通道路"
+      ],
+      "definition": "车站、停车楼等交通运输建筑，本版禁止安置。",
+      "examples": [
+        "火车站",
+        "停车楼"
+      ],
+      "label": "交通",
+      "placeable": false
+    },
+    "unknown": {
+      "counterexamples": [
+        "已有明确主用途的楼"
+      ],
+      "definition": "证据不足或无法明确归类；允许已确认的任意楼栋兜底。",
+      "examples": [
+        "无名称无有效标签的楼"
+      ],
+      "label": "未知",
+      "placeable": true
+    },
+    "utility": {
+      "counterexamples": [
+        "行政办公楼",
+        "住宅"
+      ],
+      "definition": "供能、设备、门卫、垃圾处理或公厕等后勤建筑，本版禁止安置。",
+      "examples": [
+        "配电房",
+        "门卫室",
+        "公厕"
+      ],
+      "label": "后勤设施",
+      "placeable": false
+    }
+  },
+  "version": "auto-evidence.2"
+}

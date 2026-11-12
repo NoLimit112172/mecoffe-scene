@@ -1,0 +1,9 @@
+{
+  "assignments": [],
+  "campus_id": "synthetic-campus",
+  "geometry_source": {
+    "sha256": "aa6736088657575d500e2fce35f540b276d03f8508d40e6b56ce6fbb60f50bc5"
+  },
+  "schema_version": "mecoffe.asset-assignments.v1",
+  "synthetic": true
+}

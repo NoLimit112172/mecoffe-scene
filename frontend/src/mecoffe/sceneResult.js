@@ -1,6 +1,7 @@
 // M15 validation only. No rendering, fetching, placement or legacy-path changes.
 import contract from '../../../adapter/scene_service/contract.json' with {type:'json'}
 import contractV2 from '../../../adapter/scene_service/contract-v2.json' with {type:'json'}
+import contractV3 from '../../../adapter/scene_service/contract-v3.json' with {type:'json'}
 import {sha256HexJs} from './sha256.js'
 
 export class SceneResultError extends Error {
@@ -72,9 +73,9 @@ const sameKeys=(list,values)=>list.length===values.size&&list.every(k=>values.ha
 
 /** Optional context {map,snapshot,plan,source_refs} verifies external references. */
 export function validateSceneResult(value,context={}){
-  const v2=value?.schema_version==='scene.result.v2'
+  const v3=value?.schema_version==='scene.result.v3',v2=v3||value?.schema_version==='scene.result.v2'
   const strong=e=>v2?['building_tag','poi','annotation','name_rule','ai_inferred'].includes(e.source):e.source!=='name_keyword'
-  canonicalSceneJson(value);check(value,v2?contractV2:contract)
+  canonicalSceneJson(value);check(value,v3?contractV3:v2?contractV2:contract)
   const {result_sha256,...body}=value
   requireValue(result_sha256===sceneDigest(body),'HASH_MISMATCH','SceneResult hash mismatch')
   requireValue(value.assignment_meta.rules_sha256===sceneDigest(value.rules),'HASH_MISMATCH','Rules hash mismatch')
@@ -89,6 +90,10 @@ export function validateSceneResult(value,context={}){
     requireValue(value.service_points.every(x=>people.has(x.owner_entity_id)),'REF_MISMATCH','Service owner missing from assignments')
   }
   for(const item of [...value.assignments,...value.service_points]){
+    if(v3){
+      requireValue(!Object.hasOwn(item,'entity_id')||item.evidence.every(e=>e.layer==='primary'),'INVALID_SCENE','People cannot use interior-service evidence')
+      requireValue(new Set(item.evidence.map(e=>e.layer)).size<=1,'INVALID_SCENE','A placement must use one evidence layer')
+    }
     if(v2)requireValue(item.evidence.every(e=>(e.source==='ai_inferred')===Object.hasOwn(e,'confidence_pct')),'INVALID_SCENE','Only AI evidence requires integer confidence_pct')
     const group=Object.hasOwn(item,'entity_id')?'entities':'brands',name=item.entity_id??item.brand_name
     const pref=group==='entities'?value.rules.role_prefs[item.role]:value.rules.brand_prefs[name]
@@ -103,11 +108,14 @@ export function validateSceneResult(value,context={}){
   if(context.source_refs)requireValue(equal(value.source_refs,context.source_refs),'REF_MISMATCH','Source references differ')
   if(context.map&&map){
     requireValue(equal(value.map_ref,context.map.map_ref),'REF_MISMATCH','Map reference differs')
+    requireValue(v3===(context.map.evidence_rules?.version==='auto-evidence.2'),'REF_MISMATCH','Result contract differs from frozen map policy')
     const buildings=indexed(context.map.campus.buildings,'osm_id'),entrances=indexed(context.map.entrances.entrances,'id')
     for(const item of [...value.assignments,...value.service_points])if(item.status==='placed'){
       const b=buildings.get(item.building_id),e=entrances.get(item.entrance_id)
       requireValue(b&&e&&e.building_id===item.building_id&&b.scene_eligible===true&&e.scene_reachable===true,'REF_MISMATCH','Unknown, mismatched or unreachable place')
-      requireValue(item.evidence.every(e=>(b.function_evidence||[]).some(known=>equal(e,known))),'REF_MISMATCH','Evidence absent from map')
+      if(v3)requireValue(!b.functions.some(f=>['transport','utility','construction'].includes(f)),'REF_MISMATCH','Non-placeable primary use cannot be overridden')
+      const records=[...(b.function_evidence||[]),...(v3&&!Object.hasOwn(item,'entity_id')?b.service_evidence||[]:[])]
+      requireValue(item.evidence.every(e=>records.some(known=>equal(e,known))),'REF_MISMATCH','Evidence absent from map')
       const group=Object.hasOwn(item,'entity_id')?'entities':'brands',name=item.entity_id??item.brand_name
       const pref=group==='entities'?value.rules.role_prefs[item.role]:value.rules.brand_prefs[name]
       requireValue(item.fallback_used!==null||value.rules.overrides[group][name]===item.building_id||item.evidence.some(e=>strong(e)&&e.function!=='unknown'&&pref.functions.includes(e.function)),'REF_MISMATCH','Evidence does not satisfy preference')

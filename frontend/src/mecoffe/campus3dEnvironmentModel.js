@@ -1,6 +1,7 @@
 // Pure display helpers: scenery defaults do not describe measured facilities,
 // weather, opening hours or agent state, and never modify OSM or walking data.
 import { prototypeParams } from './assetCatalog.js'
+import {buildingUseInfo} from './sceneLabels.js'
 const clamp = (value, low, high) => Math.max(low, Math.min(high, value))
 
 export function visualSeed(value) {
@@ -26,6 +27,7 @@ const PALETTES = Object.fromEntries(['dormitory','education','library','office',
 }))
 
 export function buildingPalette(building = {}) {
+  if(Array.isArray(building.services))return {kind:building.functions?.[0]||'unknown',...PALETTES.other,wall:buildingUseInfo(building).colour}
   const name = building.name || ''
   let kind = building.kind
   if (!PALETTES[kind]) kind = /图书/.test(name) ? 'library' : /食堂/.test(name) ? 'dining'

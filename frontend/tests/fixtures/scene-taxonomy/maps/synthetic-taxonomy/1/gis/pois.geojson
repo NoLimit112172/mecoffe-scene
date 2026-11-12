@@ -1,0 +1,36 @@
+{
+  "features": [
+    {
+      "geometry": {
+        "coordinates": [
+          4.49660181862269e-05,
+          0.0001348980545586807
+        ],
+        "type": "Point"
+      },
+      "id": "synthetic/hospital-restaurant",
+      "properties": {
+        "category": "poi",
+        "name": "合成院内餐厅"
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          0.00022483009093113453,
+          0.0001348980545586807
+        ],
+        "type": "Point"
+      },
+      "id": "synthetic/home-shop",
+      "properties": {
+        "category": "poi",
+        "name": "合成一层商店"
+      },
+      "type": "Feature"
+    }
+  ],
+  "synthetic": true,
+  "type": "FeatureCollection"
+}

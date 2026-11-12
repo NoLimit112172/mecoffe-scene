@@ -4,9 +4,11 @@ from pathlib import Path
 import re
 
 from .common import canonical, digest, nonblank, portable, require, SceneError
+from .taxonomy import is_layered, placeable
 
 CONTRACT=json.loads(Path(__file__).with_name('contract.json').read_text(encoding='utf-8'))
 CONTRACT_V2=json.loads(Path(__file__).with_name('contract-v2.json').read_text(encoding='utf-8'))
+CONTRACT_V3=json.loads(Path(__file__).with_name('contract-v3.json').read_text(encoding='utf-8'))
 STRONG_V2=frozenset(('building_tag','poi','annotation','name_rule','ai_inferred'))
 
 
@@ -73,8 +75,9 @@ def brand_catalog(plan, people=None):
 
 def validate_result(result, context=None):
     result=portable(result)
-    v2=isinstance(result,dict) and result.get('schema_version')=='scene.result.v2'
-    check_schema(result,CONTRACT_V2 if v2 else CONTRACT); context=context or {}
+    v3=isinstance(result,dict) and result.get('schema_version')=='scene.result.v3'
+    v2=v3 or isinstance(result,dict) and result.get('schema_version')=='scene.result.v2'
+    check_schema(result,CONTRACT_V3 if v3 else CONTRACT_V2 if v2 else CONTRACT); context=context or {}
     strong=lambda e:e['source'] in STRONG_V2 if v2 else e['source']!='name_keyword'
     require(result['result_sha256']==digest({k:v for k,v in result.items() if k!='result_sha256'}),'HASH_MISMATCH','SceneResult hash mismatch')
     require(result['assignment_meta']['rules_sha256']==digest(result['rules']),'HASH_MISMATCH','Rules hash mismatch')
@@ -96,6 +99,11 @@ def validate_result(result, context=None):
         require(all(x['owner_entity_id'] in {a['entity_id'] for a in result['assignments']} for x in result['service_points']),
                 'REF_MISMATCH','Service owner missing from assignments')
     for item in result['assignments']+result['service_points']:
+        if v3:
+            require('entity_id' not in item or all(e['layer']=='primary' for e in item['evidence']),
+                    'INVALID_SCENE','People cannot use interior-service evidence')
+            require(len({e['layer'] for e in item['evidence']})<=1,
+                    'INVALID_SCENE','A placement must use one evidence layer')
         if v2:
             require(all((e['source']=='ai_inferred')==('confidence_pct' in e) for e in item['evidence']),
                     'INVALID_SCENE','Only AI evidence requires integer confidence_pct')
@@ -117,6 +125,7 @@ def validate_result(result, context=None):
     if 'map' in context and mode=='map':
         package=context['map']
         require(result['map_ref']==package['map_ref'],'REF_MISMATCH','Map reference differs')
+        require(v3==is_layered(package.get('evidence_rules')),'REF_MISMATCH','Result contract differs from frozen map policy')
         buildings=indexed(package['campus']['buildings'],'osm_id'); entrances=indexed(package['entrances']['entrances'],'id')
         for item in result['assignments']+result['service_points']:
             if item['status']=='placed':
@@ -124,7 +133,10 @@ def validate_result(result, context=None):
                 require(b is not None and e is not None and e['building_id']==item['building_id'] and
                         b.get('scene_eligible') is True and e.get('scene_reachable') is True,
                         'REF_MISMATCH','Unknown, mismatched or unreachable building/entrance')
-                require(all(e in b.get('function_evidence',[]) for e in item['evidence']), 'REF_MISMATCH','Evidence not present in the bound map')
+                if v3:
+                    require(placeable(b),'REF_MISMATCH','Non-placeable primary use cannot be overridden')
+                records=b.get('function_evidence',[])+(b.get('service_evidence',[]) if v3 and 'entity_id' not in item else [])
+                require(all(e in records for e in item['evidence']), 'REF_MISMATCH','Evidence not present in the bound map')
                 group='entities' if 'entity_id' in item else 'brands'
                 name=item.get('entity_id',item.get('brand_name'))
                 override=result['rules']['overrides'][group].get(name)

@@ -1,4 +1,5 @@
 // Engine-independent GIS presentation contract. No MapLibre/Three/Vue imports.
+import {buildingUseInfo} from '../sceneLabels.js'
 export const GIS_LAYERS=['buildings','roads','landcover','water','boundary','pois','entrances']
 export const ROLE_COLORS={merchant:'#b86a38',undergraduate_consumer:'#3185a0',graduate_consumer:'#8b6da5',teacher_consumer:'#3e8a68'}
 export const CATEGORY_COLORS={dormitory:'#d6b78e',education:'#8fb3bf',library:'#ad9bbd',public:'#83b6a0',commercial:'#d1a06c'}
@@ -17,7 +18,8 @@ export function gisLayers(scenario){
   for(const key of GIS_LAYERS){
     const value=scenario.files[`gis/${key}.geojson`]
     if(value?.type!=='FeatureCollection'||!Array.isArray(value.features))throw new Error(`场景缺少 GIS 图层 ${key}，请重新生成场景包`)
-    result[key]=value
+    result[key]=key==='buildings'?{...value,features:value.features.map(feature=>Array.isArray(feature.properties?.services)?
+      {...feature,properties:{...feature.properties,function_colour:buildingUseInfo(feature.properties).colour}}:feature)}:value
   }
   return result
 }

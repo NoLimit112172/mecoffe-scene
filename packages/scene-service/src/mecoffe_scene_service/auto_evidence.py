@@ -9,11 +9,13 @@ import re
 
 from .common import digest, require
 from .geometry import in_building, point, valid_building
+from .taxonomy import is_layered, FUNCTIONS as LAYERED_FUNCTIONS, validate_taxonomy
 
 STRONG_SOURCES = frozenset(('building_tag','poi','annotation','name_rule','ai_inferred'))
 FUNCTIONS = frozenset(('dining','retail','dormitory','residential','education','office','library','unknown'))
 AUTO_WARNINGS = frozenset(('NAME_RULE_EXCLUDED','NAME_RULE_CONFLICT','AI_LOW_CONFIDENCE','EVIDENCE_CONFLICT','GENERIC_USE_SUPERSEDED'))
-FROZEN_FIELDS = ('function_evidence','inactive_function_evidence','superseded_function_evidence','function_annotation','needs_ai_review')
+FROZEN_FIELDS = ('function_evidence','inactive_function_evidence','superseded_function_evidence','function_annotation','needs_ai_review',
+                 'services','service_evidence','primary_from_services')
 
 
 def validate_rules(rules):
@@ -29,10 +31,13 @@ def validate_rules(rules):
             all(isinstance(value,str) and value for value in rules['exclusion_patterns']) and
             isinstance(rules.get('name_rules'),list),'INVALID_EVIDENCE_RULES','Invalid rules tables')
     seen=set()
+    allowed_functions=set(LAYERED_FUNCTIONS) if is_layered(rules) else FUNCTIONS
+    if is_layered(rules):
+        validate_taxonomy(rules)
     for rule in rules['name_rules']:
         require(isinstance(rule,dict) and set(rule)=={'id','function','pattern'} and
                 isinstance(rule['id'],str) and rule['id'] and rule['id'] not in seen and
-                isinstance(rule['function'],str) and rule['function'] in FUNCTIONS-{'unknown'} and isinstance(rule['pattern'],str) and rule['pattern'],
+                isinstance(rule['function'],str) and rule['function'] in allowed_functions-{'unknown'} and isinstance(rule['pattern'],str) and rule['pattern'],
                 'INVALID_EVIDENCE_RULES','Invalid/duplicate name rule')
         seen.add(rule['id'])
     try:
@@ -59,7 +64,7 @@ def name_evidence(building,rules):
     return [{'function':rule['function'],'source':'name_rule','key':rule['id'],'value':name,'ref':building['osm_id']} for rule in matches],None
 
 
-def validate_ai_file(value,map_ref,building_ids):
+def validate_ai_file(value,map_ref,building_ids,*,rules=None):
     require(isinstance(value,dict) and set(value)<={'schema_version','map_ref','buildings','synthetic'} and
             value.get('schema_version')=='scene.ai-evidence.v1' and isinstance(value.get('buildings'),dict),
             'INVALID_AI_EVIDENCE','Expected scene.ai-evidence.v1')
@@ -69,7 +74,8 @@ def validate_ai_file(value,map_ref,building_ids):
     for identifier,entry in value['buildings'].items():
         require(isinstance(entry,dict) and set(entry)==fields,'INVALID_AI_EVIDENCE',f'{identifier}: incomplete/unknown AI fields')
         functions=entry['functions']
-        require(isinstance(functions,list) and functions and all(isinstance(f,str) and f in FUNCTIONS for f in functions),
+        allowed_functions=LAYERED_FUNCTIONS if is_layered(rules) else FUNCTIONS
+        require(isinstance(functions,list) and functions and all(isinstance(f,str) and f in allowed_functions for f in functions),
                 'UNKNOWN_FUNCTION',f'{identifier}: invalid AI function')
         require(len(set(functions))==len(functions) and ('unknown' not in functions or len(functions)==1),
                 'INVALID_AI_EVIDENCE',f'{identifier}: duplicate/mixed unknown functions')
@@ -92,10 +98,14 @@ def apply_auto_evidence(package,rules,ai_file,warn):
     rules=validate_rules(rules)
     buildings=package['campus']['buildings']
     if ai_file is not None:
-        validate_ai_file(ai_file,package.get('evidence_input_ref',package['map_ref']),[b['osm_id'] for b in buildings])
+        validate_ai_file(ai_file,package.get('evidence_input_ref',package['map_ref']),[b['osm_id'] for b in buildings],rules=rules)
     package['evidence_rules']=copy.deepcopy(rules)
     if ai_file is not None:
         package['ai_evidence']=copy.deepcopy(ai_file)
+    if is_layered(rules):
+        from .taxonomy import apply_layered_evidence
+        apply_layered_evidence(package,rules,ai_file,warn)
+        return
     threshold=Decimal(rules['ai_min_confidence_pct'])/100
     for building in buildings:
         identifier=building['osm_id']

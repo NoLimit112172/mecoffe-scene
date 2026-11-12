@@ -56,7 +56,7 @@ def load_map(path):
                     require(policy.get('ai_evidence_sha256')==hashlib.sha256(raw).hexdigest(),
                             'REF_MISMATCH','AI original bytes differ from manifest policy')
                     package['ai_evidence']=validate_ai_file(read_json(path/'ai-evidence.json'),package['evidence_input_ref'],
-                                                          [b['osm_id'] for b in package['campus']['buildings']])
+                                                          [b['osm_id'] for b in package['campus']['buildings']],rules=rules)
                 else:
                     require('ai_evidence_sha256' not in policy,'REF_MISMATCH','Frozen AI input is missing')
             else:

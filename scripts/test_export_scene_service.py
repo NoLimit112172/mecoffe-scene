@@ -1,5 +1,6 @@
 """Generated delivery has one source and fails closed on stale/altered files."""
 import ast
+import hashlib
 import json
 from pathlib import Path
 import runpy
@@ -12,6 +13,9 @@ import unittest
 from export_scene_service import (ROOT, DEFAULT_OUT, IMPORT_NAME, MANIFEST, VERSION, build_export,
                                  check_export, check_import_dependencies, input_paths, lf, runtime_module,
                                  write_export)
+
+# Deliberate release lock, in addition to source/export and per-file checks.
+RELEASE_MANIFEST_SHA256 = '5103bce165426d1d339c215b5c230109a25d05cbf61503c1471fefc0be80173f'
 
 
 class SceneServiceExportTests(unittest.TestCase):
@@ -166,15 +170,21 @@ class SceneServiceExportTests(unittest.TestCase):
             with self.subTest(statement=statement),self.assertRaises(ValueError):
                 check_import_dependencies({**files,name:(statement+'\n').encode()+files[name]})
 
-    def test_runtime_payload_and_package_version_remain_identical_to_ecd2383(self):
+    def test_runtime_020_manifest_is_locked_and_old_contracts_assets_are_identical(self):
         files=build_export()
-        for name,raw in files.items():
-            if name==MANIFEST:continue
-            before=subprocess.check_output(['git','show','ecd2383:packages/scene-service/'+name],cwd=ROOT)
-            self.assertEqual(raw,before,name)
+        self.assertEqual(hashlib.sha256(files[MANIFEST]).hexdigest(),RELEASE_MANIFEST_SHA256)
+        frozen=['contract.json','contract-v2.json','resources/mecoffe-embed-v1/catalog.json',
+                'resources/mecoffe-embed-v1/asset-library.json']
+        for relative in frozen:
+            name=f'src/{IMPORT_NAME}/{relative}'
+            before=subprocess.check_output(['git','show','39b4ae1:packages/scene-service/'+name],cwd=ROOT)
+            self.assertEqual(files[name],before,name)
         manifest=json.loads(files[MANIFEST])
-        self.assertEqual(manifest['package']['version'],'0.1.0')
-        self.assertEqual(manifest['exporter']['version'],'2')
+        self.assertEqual(manifest['package']['version'],'0.2.0')
+        self.assertEqual(manifest['exporter']['version'],'3')
+        contract=json.loads(files[f'src/{IMPORT_NAME}/contract-v3.json'])
+        self.assertEqual(contract['properties']['schema_version']['const'],'scene.result.v3')
+        self.assertIn('layer',contract['properties']['assignments']['items']['properties']['evidence']['items']['required'])
 
 
 if __name__=='__main__':unittest.main()

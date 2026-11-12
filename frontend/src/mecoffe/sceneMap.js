@@ -32,7 +32,8 @@ export async function loadSceneMap(ref,{mapsBase='/scene-maps/',assets,fetcher=f
   check(files['campus3d.json'].buildings?.length&&files['entrances.json'].schema_version==='mecoffe.entrances.v1','INVALID_MAP_MANIFEST','地图缺少楼栋或有效入口')
   files['surroundings.json']||={roads:[]}
   const start='2026-01-01T00:00:00+08:00'
-  return {map_ref:structuredClone(ref),mapContext:{map_ref:structuredClone(ref),campus:files['campus3d.json'],entrances:files['entrances.json'],landcover:files['landcover.json']},
+  return {map_ref:structuredClone(ref),mapContext:{map_ref:structuredClone(ref),campus:files['campus3d.json'],entrances:files['entrances.json'],landcover:files['landcover.json'],
+      ...(files['evidence-rules.json']?{evidence_rules:files['evidence-rules.json']}: {})},
     manifest:{...manifest,id:manifest.map_id,map:{source:files['campus3d.json'].source||{attribution:'本地地图 · 展示示意'}},
       style:manifest.style||{buildings:'procedural',characters:'campus'},simulation_data:false,
       simulation_time:{start,timezone:'Asia/Shanghai',step_unit:'day',steps:1,intervals:[{start,end:'2026-01-02T00:00:00+08:00'}]}},files}

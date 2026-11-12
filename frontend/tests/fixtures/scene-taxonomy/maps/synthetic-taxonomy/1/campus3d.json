@@ -1,0 +1,679 @@
+{
+  "boundary": [
+    [
+      -10,
+      -10
+    ],
+    [
+      170,
+      -10
+    ],
+    [
+      170,
+      40
+    ],
+    [
+      -10,
+      40
+    ],
+    [
+      -10,
+      -10
+    ]
+  ],
+  "bounds_m": {
+    "max_x": 170,
+    "max_y": 40,
+    "min_x": -10,
+    "min_y": -10
+  },
+  "buildings": [
+    {
+      "building_type": "hospital",
+      "function_evidence": [
+        {
+          "function": "medical",
+          "key": "building",
+          "layer": "primary",
+          "ref": "synthetic/b0",
+          "source": "building_tag",
+          "value": "hospital"
+        },
+        {
+          "function": "medical",
+          "key": "medical-suffix",
+          "layer": "primary",
+          "ref": "synthetic/b0",
+          "source": "name_rule",
+          "value": "医院"
+        }
+      ],
+      "functions": [
+        "medical"
+      ],
+      "height_m": 12,
+      "holes": [],
+      "inactive_function_evidence": [],
+      "kind": "legacy-appearance",
+      "levels": 3,
+      "name": "合成医院",
+      "needs_ai_review": false,
+      "osm_id": "synthetic/b0",
+      "polygon": [
+        [
+          0,
+          10
+        ],
+        [
+          10,
+          10
+        ],
+        [
+          10,
+          20
+        ],
+        [
+          0,
+          20
+        ],
+        [
+          0,
+          10
+        ]
+      ],
+      "primary_from_services": false,
+      "scene_eligible": true,
+      "service_evidence": [
+        {
+          "function": "dining",
+          "key": "amenity",
+          "layer": "service",
+          "ref": "synthetic/hospital-restaurant",
+          "source": "poi",
+          "value": "restaurant"
+        }
+      ],
+      "services": [
+        "dining"
+      ],
+      "tags": {
+        "building": "hospital"
+      },
+      "usable_entrance_ids": [
+        "synthetic/b0/entrance"
+      ]
+    },
+    {
+      "building_type": "residential",
+      "function_evidence": [
+        {
+          "function": "residential",
+          "key": "building",
+          "layer": "primary",
+          "ref": "synthetic/b1",
+          "source": "building_tag",
+          "value": "residential"
+        },
+        {
+          "function": "residential",
+          "key": "residential-suffix",
+          "layer": "primary",
+          "ref": "synthetic/b1",
+          "source": "name_rule",
+          "value": "住宅楼"
+        }
+      ],
+      "functions": [
+        "residential"
+      ],
+      "height_m": 12,
+      "holes": [],
+      "inactive_function_evidence": [],
+      "kind": "legacy-appearance",
+      "levels": 3,
+      "name": "合成住宅楼",
+      "needs_ai_review": false,
+      "osm_id": "synthetic/b1",
+      "polygon": [
+        [
+          20,
+          10
+        ],
+        [
+          30,
+          10
+        ],
+        [
+          30,
+          20
+        ],
+        [
+          20,
+          20
+        ],
+        [
+          20,
+          10
+        ]
+      ],
+      "primary_from_services": false,
+      "scene_eligible": true,
+      "service_evidence": [
+        {
+          "function": "retail",
+          "key": "shop",
+          "layer": "service",
+          "ref": "synthetic/home-shop",
+          "source": "poi",
+          "value": "supermarket"
+        }
+      ],
+      "services": [
+        "retail"
+      ],
+      "tags": {
+        "building": "residential"
+      },
+      "usable_entrance_ids": [
+        "synthetic/b1/entrance"
+      ]
+    },
+    {
+      "building_type": "university",
+      "function_evidence": [
+        {
+          "function": "education",
+          "key": "building",
+          "layer": "primary",
+          "ref": "synthetic/b2",
+          "source": "building_tag",
+          "value": "university"
+        },
+        {
+          "function": "education",
+          "key": "name",
+          "layer": "primary",
+          "ref": "synthetic/b2",
+          "source": "name_keyword",
+          "value": "教学楼"
+        },
+        {
+          "function": "education",
+          "key": "education-suffix",
+          "layer": "primary",
+          "ref": "synthetic/b2",
+          "source": "name_rule",
+          "value": "教学楼"
+        }
+      ],
+      "functions": [
+        "education"
+      ],
+      "height_m": 12,
+      "holes": [],
+      "inactive_function_evidence": [],
+      "kind": "legacy-appearance",
+      "levels": 3,
+      "name": "合成教学楼",
+      "needs_ai_review": false,
+      "osm_id": "synthetic/b2",
+      "polygon": [
+        [
+          40,
+          10
+        ],
+        [
+          50,
+          10
+        ],
+        [
+          50,
+          20
+        ],
+        [
+          40,
+          20
+        ],
+        [
+          40,
+          10
+        ]
+      ],
+      "primary_from_services": false,
+      "scene_eligible": true,
+      "service_evidence": [],
+      "services": [],
+      "tags": {
+        "building": "university"
+      },
+      "usable_entrance_ids": [
+        "synthetic/b2/entrance"
+      ]
+    },
+    {
+      "building_type": "yes",
+      "function_evidence": [
+        {
+          "confidence_pct": 84,
+          "function": "hotel",
+          "key": "ai_evidence",
+          "layer": "primary",
+          "ref": "synthetic/b3",
+          "source": "ai_inferred",
+          "value": "完全合成的离线用途判断，未调用模型。"
+        }
+      ],
+      "functions": [
+        "hotel"
+      ],
+      "height_m": 12,
+      "holes": [],
+      "inactive_function_evidence": [],
+      "kind": "legacy-appearance",
+      "levels": 3,
+      "name": "",
+      "needs_ai_review": false,
+      "osm_id": "synthetic/b3",
+      "polygon": [
+        [
+          60,
+          10
+        ],
+        [
+          70,
+          10
+        ],
+        [
+          70,
+          20
+        ],
+        [
+          60,
+          20
+        ],
+        [
+          60,
+          10
+        ]
+      ],
+      "primary_from_services": false,
+      "scene_eligible": true,
+      "service_evidence": [],
+      "services": [],
+      "tags": {
+        "building": "yes"
+      },
+      "usable_entrance_ids": [
+        "synthetic/b3/entrance"
+      ]
+    },
+    {
+      "building_type": "yes",
+      "function_evidence": [
+        {
+          "function": "utility",
+          "key": "utility-suffix",
+          "layer": "primary",
+          "ref": "synthetic/b4",
+          "source": "name_rule",
+          "value": "配电房"
+        }
+      ],
+      "functions": [
+        "utility"
+      ],
+      "height_m": 12,
+      "holes": [],
+      "inactive_function_evidence": [],
+      "kind": "legacy-appearance",
+      "levels": 3,
+      "name": "合成配电房",
+      "needs_ai_review": false,
+      "osm_id": "synthetic/b4",
+      "polygon": [
+        [
+          80,
+          10
+        ],
+        [
+          90,
+          10
+        ],
+        [
+          90,
+          20
+        ],
+        [
+          80,
+          20
+        ],
+        [
+          80,
+          10
+        ]
+      ],
+      "primary_from_services": false,
+      "scene_eligible": false,
+      "service_evidence": [],
+      "services": [],
+      "tags": {
+        "building": "yes"
+      },
+      "usable_entrance_ids": [
+        "synthetic/b4/entrance"
+      ]
+    },
+    {
+      "building_type": "yes",
+      "function_evidence": [
+        {
+          "function": "utility",
+          "key": "utility-suffix",
+          "layer": "primary",
+          "ref": "synthetic/b5",
+          "source": "name_rule",
+          "value": "门卫室"
+        }
+      ],
+      "functions": [
+        "utility"
+      ],
+      "height_m": 12,
+      "holes": [],
+      "inactive_function_evidence": [],
+      "kind": "legacy-appearance",
+      "levels": 3,
+      "name": "合成门卫室",
+      "needs_ai_review": false,
+      "osm_id": "synthetic/b5",
+      "polygon": [
+        [
+          100,
+          10
+        ],
+        [
+          110,
+          10
+        ],
+        [
+          110,
+          20
+        ],
+        [
+          100,
+          20
+        ],
+        [
+          100,
+          10
+        ]
+      ],
+      "primary_from_services": false,
+      "scene_eligible": false,
+      "service_evidence": [],
+      "services": [],
+      "tags": {
+        "building": "yes"
+      },
+      "usable_entrance_ids": [
+        "synthetic/b5/entrance"
+      ]
+    },
+    {
+      "building_type": "yes",
+      "function_evidence": [
+        {
+          "function": "retail",
+          "key": "retail-suffix",
+          "layer": "primary",
+          "ref": "synthetic/b6",
+          "source": "name_rule",
+          "value": "购物广场"
+        }
+      ],
+      "functions": [
+        "retail"
+      ],
+      "height_m": 12,
+      "holes": [],
+      "inactive_function_evidence": [],
+      "kind": "legacy-appearance",
+      "levels": 3,
+      "name": "合成购物广场",
+      "needs_ai_review": false,
+      "osm_id": "synthetic/b6",
+      "polygon": [
+        [
+          120,
+          10
+        ],
+        [
+          130,
+          10
+        ],
+        [
+          130,
+          20
+        ],
+        [
+          120,
+          20
+        ],
+        [
+          120,
+          10
+        ]
+      ],
+      "primary_from_services": false,
+      "scene_eligible": true,
+      "service_evidence": [],
+      "services": [],
+      "tags": {
+        "building": "yes"
+      },
+      "usable_entrance_ids": [
+        "synthetic/b6/entrance"
+      ]
+    },
+    {
+      "building_type": "university",
+      "function_evidence": [
+        {
+          "function": "research",
+          "key": "research-suffix",
+          "layer": "primary",
+          "ref": "synthetic/b7",
+          "source": "name_rule",
+          "value": "实验楼"
+        }
+      ],
+      "functions": [
+        "research"
+      ],
+      "height_m": 12,
+      "holes": [],
+      "inactive_function_evidence": [
+        {
+          "function": "education",
+          "key": "building",
+          "layer": "primary",
+          "ref": "synthetic/b7",
+          "source": "building_tag",
+          "value": "university"
+        },
+        {
+          "confidence_pct": 40,
+          "function": "government",
+          "key": "ai_evidence",
+          "layer": "primary",
+          "ref": "synthetic/b7",
+          "source": "ai_inferred",
+          "value": "完全合成的离线用途判断，未调用模型。"
+        }
+      ],
+      "kind": "legacy-appearance",
+      "levels": 3,
+      "name": "合成实验楼",
+      "needs_ai_review": true,
+      "osm_id": "synthetic/b7",
+      "polygon": [
+        [
+          140,
+          10
+        ],
+        [
+          150,
+          10
+        ],
+        [
+          150,
+          20
+        ],
+        [
+          140,
+          20
+        ],
+        [
+          140,
+          10
+        ]
+      ],
+      "primary_from_services": false,
+      "scene_eligible": true,
+      "service_evidence": [],
+      "services": [],
+      "superseded_function_evidence": [
+        {
+          "function": "education",
+          "key": "building",
+          "layer": "primary",
+          "ref": "synthetic/b7",
+          "source": "building_tag",
+          "value": "university"
+        }
+      ],
+      "tags": {
+        "building": "university"
+      },
+      "usable_entrance_ids": [
+        "synthetic/b7/entrance"
+      ]
+    }
+  ],
+  "campus_id": "synthetic-campus",
+  "defaults": {},
+  "landcovers": [],
+  "pois": [
+    {
+      "name": "合成院内餐厅",
+      "osm_id": "synthetic/hospital-restaurant",
+      "point": [
+        5,
+        15
+      ],
+      "tags": {
+        "amenity": "restaurant"
+      }
+    },
+    {
+      "name": "合成一层商店",
+      "osm_id": "synthetic/home-shop",
+      "point": [
+        25,
+        15
+      ],
+      "tags": {
+        "shop": "supermarket"
+      }
+    }
+  ],
+  "projection": {
+    "earth_radius_m": 6371008.8,
+    "method": "local_equirectangular",
+    "origin_lat": 0,
+    "origin_lon": 0,
+    "units": "metres"
+  },
+  "roads": [],
+  "schema_version": "mecoffe.campus3d.v1",
+  "source": {
+    "attribution": "完全合成，仅用于离线测试",
+    "sha256": "aa6736088657575d500e2fce35f540b276d03f8508d40e6b56ce6fbb60f50bc5"
+  },
+  "synthetic": true,
+  "title": "合成医院与楼内服务",
+  "walk_graph": {
+    "edges": [
+      {
+        "source": "synthetic/n0",
+        "target": "synthetic/n1"
+      },
+      {
+        "source": "synthetic/n1",
+        "target": "synthetic/n2"
+      },
+      {
+        "source": "synthetic/n2",
+        "target": "synthetic/n3"
+      },
+      {
+        "source": "synthetic/n3",
+        "target": "synthetic/n4"
+      },
+      {
+        "source": "synthetic/n4",
+        "target": "synthetic/n5"
+      },
+      {
+        "source": "synthetic/n5",
+        "target": "synthetic/n6"
+      },
+      {
+        "source": "synthetic/n6",
+        "target": "synthetic/n7"
+      }
+    ],
+    "nodes": [
+      {
+        "id": "synthetic/n0",
+        "x": 5,
+        "y": 0
+      },
+      {
+        "id": "synthetic/n1",
+        "x": 25,
+        "y": 0
+      },
+      {
+        "id": "synthetic/n2",
+        "x": 45,
+        "y": 0
+      },
+      {
+        "id": "synthetic/n3",
+        "x": 65,
+        "y": 0
+      },
+      {
+        "id": "synthetic/n4",
+        "x": 85,
+        "y": 0
+      },
+      {
+        "id": "synthetic/n5",
+        "x": 105,
+        "y": 0
+      },
+      {
+        "id": "synthetic/n6",
+        "x": 125,
+        "y": 0
+      },
+      {
+        "id": "synthetic/n7",
+        "x": 145,
+        "y": 0
+      }
+    ]
+  }
+}

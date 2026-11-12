@@ -50,9 +50,9 @@ request=json.loads(pathlib.Path(sys.argv[1]).read_text(encoding='utf-8'))
 installed=sys.argv[2]=='installed'
 if installed:
     import mecoffe_scene_service as service
-    assert service.__version__=='0.1.0'
-    assert service.SCENE_RESULT_SCHEMA_VERSIONS==('scene.result.v1','scene.result.v2')
-    assert service.SCENE_RESULT_OUTPUT_SCHEMA_VERSION=='scene.result.v2'
+    assert service.__version__=='0.2.0'
+    assert service.SCENE_RESULT_SCHEMA_VERSIONS==('scene.result.v1','scene.result.v2','scene.result.v3')
+    assert service.SCENE_RESULT_OUTPUT_SCHEMA_VERSION=='scene.result.v3'
     assert not importlib.metadata.distribution('mecoffe-scene-service').requires
     package=pathlib.Path(service.__file__).resolve().parent
     assert package.is_relative_to(pathlib.Path(sys.prefix).resolve())
@@ -94,6 +94,15 @@ for case in request['cases']:
 for file in request['old_results']:
     service.validate_result(json.loads(pathlib.Path(file).read_text(encoding='utf-8')))
 if installed:
+    taxonomy=request['taxonomy']
+    response=service.compile_scene(taxonomy['intent'],taxonomy['snapshot'],taxonomy['plan'],taxonomy['map'],assignment_seed=42)
+    assert response==taxonomy['expected'],response
+    service.validate_result(response['result'],{'map':taxonomy['map'],'snapshot':taxonomy['snapshot'],'plan':taxonomy['plan']})
+    assert response['result']['schema_version']=='scene.result.v3'
+    report=service.check_scene(taxonomy['intent'],taxonomy['snapshot'],taxonomy['plan'],taxonomy['map_path'],assignment_seed=42)
+    assert report['configuration_ok'] and report['result']==response['result'],report
+    assert report['evidence_usage']['by_source']['name_rule']>0 and report['evidence_usage']['ai_count']>0
+    checks['taxonomy-v3']=report
     damaged=json.loads(json.dumps(responses['ustc-v2']['result']));damaged['result_sha256']='0'*64
     try:
         service.validate_result(damaged)
@@ -147,8 +156,10 @@ def main():
                     raise ValueError('Unsafe baseline archive member')
             archive.extractall(baseline,filter='data')
         request={'repo':str(ROOT),'baseline_root':str(baseline),'cases':cases(),'output':str(work),
+                 'taxonomy':read(ROOT/'frontend/tests/fixtures/scene-taxonomy/input-v3.json'),
                  'old_results':[str(ROOT/'adapter/scene_service/fixtures/map-valid.json'),
                                 str(ROOT/'frontend/tests/fixtures/scene-auto/input-v2.json')]}
+        request['taxonomy']['map_path']=str(ROOT/'frontend/tests/fixtures/scene-taxonomy/maps/synthetic-taxonomy/1')
         # Both fixtures wrap their original SceneResult; never rewrite a source fixture.
         old_v1=work/'old-v1.json';old_v1.write_bytes(json_bytes(read(request['old_results'][0])['result']))
         request['old_results'][0]=str(old_v1)

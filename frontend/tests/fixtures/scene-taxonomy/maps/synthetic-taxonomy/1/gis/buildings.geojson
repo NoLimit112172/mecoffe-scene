@@ -1,0 +1,477 @@
+{
+  "features": [
+    {
+      "geometry": {
+        "coordinates": [
+          [
+            [
+              0.0,
+              8.99320363724538e-05
+            ],
+            [
+              8.99320363724538e-05,
+              8.99320363724538e-05
+            ],
+            [
+              8.99320363724538e-05,
+              0.0001798640727449076
+            ],
+            [
+              0.0,
+              0.0001798640727449076
+            ],
+            [
+              0.0,
+              8.99320363724538e-05
+            ]
+          ]
+        ],
+        "type": "Polygon"
+      },
+      "id": "synthetic/b0",
+      "properties": {
+        "category": "building",
+        "function_evidence": [
+          {
+            "function": "medical",
+            "key": "building",
+            "layer": "primary",
+            "ref": "synthetic/b0",
+            "source": "building_tag",
+            "value": "hospital"
+          },
+          {
+            "function": "medical",
+            "key": "medical-suffix",
+            "layer": "primary",
+            "ref": "synthetic/b0",
+            "source": "name_rule",
+            "value": "医院"
+          }
+        ],
+        "functions": [
+          "medical"
+        ],
+        "height_m": 12,
+        "name": "合成医院",
+        "primary_from_services": false,
+        "service_evidence": [
+          {
+            "function": "dining",
+            "key": "amenity",
+            "layer": "service",
+            "ref": "synthetic/hospital-restaurant",
+            "source": "poi",
+            "value": "restaurant"
+          }
+        ],
+        "services": [
+          "dining"
+        ]
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          [
+            [
+              0.0001798640727449076,
+              8.99320363724538e-05
+            ],
+            [
+              0.0002697961091173614,
+              8.99320363724538e-05
+            ],
+            [
+              0.0002697961091173614,
+              0.0001798640727449076
+            ],
+            [
+              0.0001798640727449076,
+              0.0001798640727449076
+            ],
+            [
+              0.0001798640727449076,
+              8.99320363724538e-05
+            ]
+          ]
+        ],
+        "type": "Polygon"
+      },
+      "id": "synthetic/b1",
+      "properties": {
+        "category": "building",
+        "function_evidence": [
+          {
+            "function": "residential",
+            "key": "building",
+            "layer": "primary",
+            "ref": "synthetic/b1",
+            "source": "building_tag",
+            "value": "residential"
+          },
+          {
+            "function": "residential",
+            "key": "residential-suffix",
+            "layer": "primary",
+            "ref": "synthetic/b1",
+            "source": "name_rule",
+            "value": "住宅楼"
+          }
+        ],
+        "functions": [
+          "residential"
+        ],
+        "height_m": 12,
+        "name": "合成住宅楼",
+        "primary_from_services": false,
+        "service_evidence": [
+          {
+            "function": "retail",
+            "key": "shop",
+            "layer": "service",
+            "ref": "synthetic/home-shop",
+            "source": "poi",
+            "value": "supermarket"
+          }
+        ],
+        "services": [
+          "retail"
+        ]
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          [
+            [
+              0.0003597281454898152,
+              8.99320363724538e-05
+            ],
+            [
+              0.00044966018186226906,
+              8.99320363724538e-05
+            ],
+            [
+              0.00044966018186226906,
+              0.0001798640727449076
+            ],
+            [
+              0.0003597281454898152,
+              0.0001798640727449076
+            ],
+            [
+              0.0003597281454898152,
+              8.99320363724538e-05
+            ]
+          ]
+        ],
+        "type": "Polygon"
+      },
+      "id": "synthetic/b2",
+      "properties": {
+        "category": "building",
+        "function_evidence": [
+          {
+            "function": "education",
+            "key": "building",
+            "layer": "primary",
+            "ref": "synthetic/b2",
+            "source": "building_tag",
+            "value": "university"
+          },
+          {
+            "function": "education",
+            "key": "name",
+            "layer": "primary",
+            "ref": "synthetic/b2",
+            "source": "name_keyword",
+            "value": "教学楼"
+          },
+          {
+            "function": "education",
+            "key": "education-suffix",
+            "layer": "primary",
+            "ref": "synthetic/b2",
+            "source": "name_rule",
+            "value": "教学楼"
+          }
+        ],
+        "functions": [
+          "education"
+        ],
+        "height_m": 12,
+        "name": "合成教学楼",
+        "primary_from_services": false,
+        "service_evidence": [],
+        "services": []
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          [
+            [
+              0.0005395922182347228,
+              8.99320363724538e-05
+            ],
+            [
+              0.0006295242546071766,
+              8.99320363724538e-05
+            ],
+            [
+              0.0006295242546071766,
+              0.0001798640727449076
+            ],
+            [
+              0.0005395922182347228,
+              0.0001798640727449076
+            ],
+            [
+              0.0005395922182347228,
+              8.99320363724538e-05
+            ]
+          ]
+        ],
+        "type": "Polygon"
+      },
+      "id": "synthetic/b3",
+      "properties": {
+        "category": "building",
+        "function_evidence": [
+          {
+            "confidence_pct": 84,
+            "function": "hotel",
+            "key": "ai_evidence",
+            "layer": "primary",
+            "ref": "synthetic/b3",
+            "source": "ai_inferred",
+            "value": "完全合成的离线用途判断，未调用模型。"
+          }
+        ],
+        "functions": [
+          "hotel"
+        ],
+        "height_m": 12,
+        "name": "",
+        "primary_from_services": false,
+        "service_evidence": [],
+        "services": []
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          [
+            [
+              0.0007194562909796304,
+              8.99320363724538e-05
+            ],
+            [
+              0.0008093883273520842,
+              8.99320363724538e-05
+            ],
+            [
+              0.0008093883273520842,
+              0.0001798640727449076
+            ],
+            [
+              0.0007194562909796304,
+              0.0001798640727449076
+            ],
+            [
+              0.0007194562909796304,
+              8.99320363724538e-05
+            ]
+          ]
+        ],
+        "type": "Polygon"
+      },
+      "id": "synthetic/b4",
+      "properties": {
+        "category": "building",
+        "function_evidence": [
+          {
+            "function": "utility",
+            "key": "utility-suffix",
+            "layer": "primary",
+            "ref": "synthetic/b4",
+            "source": "name_rule",
+            "value": "配电房"
+          }
+        ],
+        "functions": [
+          "utility"
+        ],
+        "height_m": 12,
+        "name": "合成配电房",
+        "primary_from_services": false,
+        "service_evidence": [],
+        "services": []
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          [
+            [
+              0.0008993203637245381,
+              8.99320363724538e-05
+            ],
+            [
+              0.0009892524000969917,
+              8.99320363724538e-05
+            ],
+            [
+              0.0009892524000969917,
+              0.0001798640727449076
+            ],
+            [
+              0.0008993203637245381,
+              0.0001798640727449076
+            ],
+            [
+              0.0008993203637245381,
+              8.99320363724538e-05
+            ]
+          ]
+        ],
+        "type": "Polygon"
+      },
+      "id": "synthetic/b5",
+      "properties": {
+        "category": "building",
+        "function_evidence": [
+          {
+            "function": "utility",
+            "key": "utility-suffix",
+            "layer": "primary",
+            "ref": "synthetic/b5",
+            "source": "name_rule",
+            "value": "门卫室"
+          }
+        ],
+        "functions": [
+          "utility"
+        ],
+        "height_m": 12,
+        "name": "合成门卫室",
+        "primary_from_services": false,
+        "service_evidence": [],
+        "services": []
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          [
+            [
+              0.0010791844364694456,
+              8.99320363724538e-05
+            ],
+            [
+              0.0011691164728418993,
+              8.99320363724538e-05
+            ],
+            [
+              0.0011691164728418993,
+              0.0001798640727449076
+            ],
+            [
+              0.0010791844364694456,
+              0.0001798640727449076
+            ],
+            [
+              0.0010791844364694456,
+              8.99320363724538e-05
+            ]
+          ]
+        ],
+        "type": "Polygon"
+      },
+      "id": "synthetic/b6",
+      "properties": {
+        "category": "building",
+        "function_evidence": [
+          {
+            "function": "retail",
+            "key": "retail-suffix",
+            "layer": "primary",
+            "ref": "synthetic/b6",
+            "source": "name_rule",
+            "value": "购物广场"
+          }
+        ],
+        "functions": [
+          "retail"
+        ],
+        "height_m": 12,
+        "name": "合成购物广场",
+        "primary_from_services": false,
+        "service_evidence": [],
+        "services": []
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          [
+            [
+              0.0012590485092143532,
+              8.99320363724538e-05
+            ],
+            [
+              0.001348980545586807,
+              8.99320363724538e-05
+            ],
+            [
+              0.001348980545586807,
+              0.0001798640727449076
+            ],
+            [
+              0.0012590485092143532,
+              0.0001798640727449076
+            ],
+            [
+              0.0012590485092143532,
+              8.99320363724538e-05
+            ]
+          ]
+        ],
+        "type": "Polygon"
+      },
+      "id": "synthetic/b7",
+      "properties": {
+        "category": "building",
+        "function_evidence": [
+          {
+            "function": "research",
+            "key": "research-suffix",
+            "layer": "primary",
+            "ref": "synthetic/b7",
+            "source": "name_rule",
+            "value": "实验楼"
+          }
+        ],
+        "functions": [
+          "research"
+        ],
+        "height_m": 12,
+        "name": "合成实验楼",
+        "primary_from_services": false,
+        "service_evidence": [],
+        "services": []
+      },
+      "type": "Feature"
+    }
+  ],
+  "synthetic": true,
+  "type": "FeatureCollection"
+}

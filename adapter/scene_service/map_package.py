@@ -73,6 +73,13 @@ def publish_map(source,out,map_id,map_version,title,annotations=None,template_ou
             for feature in value['features']:
                 feature['properties'].pop('location_ids',None);feature['properties'].pop('location_id',None)
         files[f'gis/{name}.geojson']=value
+    if policy is not None and policy['version']=='auto-evidence.2':
+        by_id={b['osm_id']:b for b in package['campus']['buildings']}
+        for feature in files['gis/buildings.geojson']['features']:
+            building=by_id.get(str(feature.get('id')))
+            if building is not None:
+                for key in ('functions','services','function_evidence','service_evidence','primary_from_services'):
+                    feature['properties'][key]=copy.deepcopy(building[key])
     raw={name:json_bytes(value) for name,value in files.items()}
     if rules_raw is not None:raw['evidence-rules.json']=rules_raw
     if ai_raw is not None:raw['ai-evidence.json']=ai_raw

@@ -1,0 +1,644 @@
+{
+  "type": "object",
+  "properties": {
+    "schema_version": {
+      "const": "scene.result.v3"
+    },
+    "scene_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "scene_revision": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 9007199254740991
+    },
+    "mode": {
+      "enum": [
+        "map",
+        "none"
+      ]
+    },
+    "illustrative": {
+      "const": true
+    },
+    "map_ref": {
+      "anyOf": [
+        {
+          "type": "null"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "map_id": {
+              "type": "string",
+              "minLength": 1
+            },
+            "map_version": {
+              "type": "string",
+              "minLength": 1
+            },
+            "manifest_sha256": {
+              "type": "string",
+              "pattern": "^[a-f0-9]{64}$"
+            }
+          },
+          "required": [
+            "map_id",
+            "map_version",
+            "manifest_sha256"
+          ],
+          "additionalProperties": false
+        }
+      ]
+    },
+    "source_refs": {
+      "type": "object",
+      "properties": {
+        "config_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "snapshot_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "snapshot_revision": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 9007199254740991
+        },
+        "plan_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "plan_revision": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 9007199254740991
+        }
+      },
+      "required": [
+        "config_id",
+        "snapshot_id",
+        "snapshot_revision",
+        "plan_id",
+        "plan_revision"
+      ],
+      "additionalProperties": false
+    },
+    "assignment_meta": {
+      "type": "object",
+      "properties": {
+        "assignment_seed": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1
+            },
+            {
+              "type": "integer",
+              "minimum": -9007199254740991,
+              "maximum": 9007199254740991
+            }
+          ]
+        },
+        "rules_version": {
+          "type": "string",
+          "minLength": 1
+        },
+        "resolver_version": {
+          "type": "string",
+          "minLength": 1
+        },
+        "rules_sha256": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        }
+      },
+      "required": [
+        "assignment_seed",
+        "rules_version",
+        "resolver_version",
+        "rules_sha256"
+      ],
+      "additionalProperties": false
+    },
+    "rules": {
+      "anyOf": [
+        {
+          "type": "object",
+          "properties": {},
+          "required": [],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "role_prefs": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "object",
+                "properties": {
+                  "functions": {
+                    "type": "array",
+                    "items": {
+                      "enum": [
+                        "dormitory",
+                        "residential",
+                        "hotel",
+                        "education",
+                        "research",
+                        "office",
+                        "library",
+                        "industrial",
+                        "dining",
+                        "retail",
+                        "life_service",
+                        "medical",
+                        "government",
+                        "sports",
+                        "culture",
+                        "religious",
+                        "transport",
+                        "utility",
+                        "construction",
+                        "unknown"
+                      ]
+                    },
+                    "minItems": 1,
+                    "uniqueItems": true
+                  },
+                  "distribution": {
+                    "enum": [
+                      "balanced",
+                      "clustered"
+                    ]
+                  },
+                  "fallback": {
+                    "enum": [
+                      "fail",
+                      "any_building_in_scope",
+                      "out_of_scene"
+                    ]
+                  }
+                },
+                "required": [
+                  "functions",
+                  "distribution",
+                  "fallback"
+                ],
+                "additionalProperties": false
+              }
+            },
+            "brand_prefs": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "object",
+                "properties": {
+                  "functions": {
+                    "type": "array",
+                    "items": {
+                      "enum": [
+                        "dormitory",
+                        "residential",
+                        "hotel",
+                        "education",
+                        "research",
+                        "office",
+                        "library",
+                        "industrial",
+                        "dining",
+                        "retail",
+                        "life_service",
+                        "medical",
+                        "government",
+                        "sports",
+                        "culture",
+                        "religious",
+                        "transport",
+                        "utility",
+                        "construction",
+                        "unknown"
+                      ]
+                    },
+                    "minItems": 1,
+                    "uniqueItems": true
+                  },
+                  "separate_when_possible": {
+                    "type": "boolean"
+                  },
+                  "fallback": {
+                    "enum": [
+                      "fail",
+                      "any_building_in_scope",
+                      "out_of_scene"
+                    ]
+                  }
+                },
+                "required": [
+                  "functions",
+                  "separate_when_possible",
+                  "fallback"
+                ],
+                "additionalProperties": false
+              }
+            },
+            "overrides": {
+              "type": "object",
+              "properties": {
+                "entities": {
+                  "type": "object",
+                  "additionalProperties": {
+                    "type": "string",
+                    "minLength": 1
+                  }
+                },
+                "brands": {
+                  "type": "object",
+                  "additionalProperties": {
+                    "type": "string",
+                    "minLength": 1
+                  }
+                }
+              },
+              "required": [
+                "entities",
+                "brands"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "required": [
+            "role_prefs",
+            "brand_prefs",
+            "overrides"
+          ],
+          "additionalProperties": false
+        }
+      ]
+    },
+    "assumptions": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "assignments": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "entity_id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "role": {
+            "type": "string",
+            "minLength": 1
+          },
+          "status": {
+            "enum": [
+              "placed",
+              "out_of_scene"
+            ]
+          },
+          "building_id": {
+            "anyOf": [
+              {
+                "type": "string",
+                "minLength": 1
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "entrance_id": {
+            "anyOf": [
+              {
+                "type": "string",
+                "minLength": 1
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "reason": {
+            "type": "string",
+            "minLength": 1
+          },
+          "evidence": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "function": {
+                  "enum": [
+                    "dormitory",
+                    "residential",
+                    "hotel",
+                    "education",
+                    "research",
+                    "office",
+                    "library",
+                    "industrial",
+                    "dining",
+                    "retail",
+                    "life_service",
+                    "medical",
+                    "government",
+                    "sports",
+                    "culture",
+                    "religious",
+                    "transport",
+                    "utility",
+                    "construction",
+                    "unknown"
+                  ]
+                },
+                "source": {
+                  "enum": [
+                    "building_tag",
+                    "poi",
+                    "annotation",
+                    "name_keyword",
+                    "name_rule",
+                    "ai_inferred"
+                  ]
+                },
+                "key": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "value": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "ref": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "confidence_pct": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 100
+                },
+                "layer": {
+                  "enum": [
+                    "primary",
+                    "service"
+                  ]
+                }
+              },
+              "required": [
+                "function",
+                "source",
+                "key",
+                "value",
+                "ref",
+                "layer"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "fallback_used": {
+            "anyOf": [
+              {
+                "type": "null"
+              },
+              {
+                "enum": [
+                  "any_building_in_scope",
+                  "out_of_scene"
+                ]
+              }
+            ]
+          }
+        },
+        "required": [
+          "entity_id",
+          "role",
+          "status",
+          "building_id",
+          "entrance_id",
+          "reason",
+          "evidence",
+          "fallback_used"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "service_points": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "service_id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "brand_name": {
+            "type": "string",
+            "minLength": 1
+          },
+          "brand_id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "owner_entity_id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "status": {
+            "enum": [
+              "placed",
+              "out_of_scene"
+            ]
+          },
+          "building_id": {
+            "anyOf": [
+              {
+                "type": "string",
+                "minLength": 1
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "entrance_id": {
+            "anyOf": [
+              {
+                "type": "string",
+                "minLength": 1
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "reason": {
+            "type": "string",
+            "minLength": 1
+          },
+          "evidence": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "function": {
+                  "enum": [
+                    "dormitory",
+                    "residential",
+                    "hotel",
+                    "education",
+                    "research",
+                    "office",
+                    "library",
+                    "industrial",
+                    "dining",
+                    "retail",
+                    "life_service",
+                    "medical",
+                    "government",
+                    "sports",
+                    "culture",
+                    "religious",
+                    "transport",
+                    "utility",
+                    "construction",
+                    "unknown"
+                  ]
+                },
+                "source": {
+                  "enum": [
+                    "building_tag",
+                    "poi",
+                    "annotation",
+                    "name_keyword",
+                    "name_rule",
+                    "ai_inferred"
+                  ]
+                },
+                "key": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "value": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "ref": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "confidence_pct": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 100
+                },
+                "layer": {
+                  "enum": [
+                    "primary",
+                    "service"
+                  ]
+                }
+              },
+              "required": [
+                "function",
+                "source",
+                "key",
+                "value",
+                "ref",
+                "layer"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "fallback_used": {
+            "anyOf": [
+              {
+                "type": "null"
+              },
+              {
+                "enum": [
+                  "any_building_in_scope",
+                  "out_of_scene"
+                ]
+              }
+            ]
+          }
+        },
+        "required": [
+          "service_id",
+          "brand_name",
+          "brand_id",
+          "owner_entity_id",
+          "status",
+          "building_id",
+          "entrance_id",
+          "reason",
+          "evidence",
+          "fallback_used"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "warnings": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "string",
+            "minLength": 1
+          },
+          "message": {
+            "type": "string",
+            "minLength": 1
+          },
+          "refs": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1
+            }
+          }
+        },
+        "required": [
+          "code",
+          "message",
+          "refs"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "reason": {
+      "type": "string",
+      "minLength": 1
+    },
+    "result_sha256": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    }
+  },
+  "required": [
+    "schema_version",
+    "scene_id",
+    "scene_revision",
+    "mode",
+    "illustrative",
+    "map_ref",
+    "source_refs",
+    "assignment_meta",
+    "rules",
+    "assumptions",
+    "assignments",
+    "service_points",
+    "warnings",
+    "result_sha256"
+  ],
+  "additionalProperties": false
+}

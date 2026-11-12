@@ -9,12 +9,14 @@ import re
 
 from .common import digest, require
 from .geometry import in_building, point, valid_building
+from .taxonomy import is_layered, FUNCTIONS as LAYERED_FUNCTIONS, validate_taxonomy
 
 STRONG_SOURCES = frozenset(('building_tag','poi','annotation','name_rule','ai_inferred'))
 FUNCTIONS = frozenset(('dining','retail','dormitory','residential','education','office','library','unknown'))
 RULES_PATH = Path(__file__).with_name('evidence_rules.json')
 AUTO_WARNINGS = frozenset(('NAME_RULE_EXCLUDED','NAME_RULE_CONFLICT','AI_LOW_CONFIDENCE','EVIDENCE_CONFLICT','GENERIC_USE_SUPERSEDED'))
-FROZEN_FIELDS = ('function_evidence','inactive_function_evidence','superseded_function_evidence','function_annotation','needs_ai_review')
+FROZEN_FIELDS = ('function_evidence','inactive_function_evidence','superseded_function_evidence','function_annotation','needs_ai_review',
+                 'services','service_evidence','primary_from_services')
 
 
 def validate_rules(rules):
@@ -30,10 +32,13 @@ def validate_rules(rules):
             all(isinstance(value,str) and value for value in rules['exclusion_patterns']) and
             isinstance(rules.get('name_rules'),list),'INVALID_EVIDENCE_RULES','Invalid rules tables')
     seen=set()
+    allowed_functions=set(LAYERED_FUNCTIONS) if is_layered(rules) else FUNCTIONS
+    if is_layered(rules):
+        validate_taxonomy(rules)
     for rule in rules['name_rules']:
         require(isinstance(rule,dict) and set(rule)=={'id','function','pattern'} and
                 isinstance(rule['id'],str) and rule['id'] and rule['id'] not in seen and
-                isinstance(rule['function'],str) and rule['function'] in FUNCTIONS-{'unknown'} and isinstance(rule['pattern'],str) and rule['pattern'],
+                isinstance(rule['function'],str) and rule['function'] in allowed_functions-{'unknown'} and isinstance(rule['pattern'],str) and rule['pattern'],
                 'INVALID_EVIDENCE_RULES','Invalid/duplicate name rule')
         seen.add(rule['id'])
     try:
@@ -62,7 +67,7 @@ def name_evidence(building,rules):
     return [{'function':rule['function'],'source':'name_rule','key':rule['id'],'value':name,'ref':building['osm_id']} for rule in matches],None
 
 
-def validate_ai_file(value,map_ref,building_ids):
+def validate_ai_file(value,map_ref,building_ids,*,rules=None):
     require(isinstance(value,dict) and set(value)<={'schema_version','map_ref','buildings','synthetic'} and
             value.get('schema_version')=='scene.ai-evidence.v1' and isinstance(value.get('buildings'),dict),
             'INVALID_AI_EVIDENCE','Expected scene.ai-evidence.v1')
@@ -72,7 +77,8 @@ def validate_ai_file(value,map_ref,building_ids):
     for identifier,entry in value['buildings'].items():
         require(isinstance(entry,dict) and set(entry)==fields,'INVALID_AI_EVIDENCE',f'{identifier}: incomplete/unknown AI fields')
         functions=entry['functions']
-        require(isinstance(functions,list) and functions and all(isinstance(f,str) and f in FUNCTIONS for f in functions),
+        allowed_functions=LAYERED_FUNCTIONS if is_layered(rules) else FUNCTIONS
+        require(isinstance(functions,list) and functions and all(isinstance(f,str) and f in allowed_functions for f in functions),
                 'UNKNOWN_FUNCTION',f'{identifier}: invalid AI function')
         require(len(set(functions))==len(functions) and ('unknown' not in functions or len(functions)==1),
                 'INVALID_AI_EVIDENCE',f'{identifier}: duplicate/mixed unknown functions')
@@ -95,10 +101,14 @@ def apply_auto_evidence(package,rules,ai_file,warn):
     rules=validate_rules(rules)
     buildings=package['campus']['buildings']
     if ai_file is not None:
-        validate_ai_file(ai_file,package.get('evidence_input_ref',package['map_ref']),[b['osm_id'] for b in buildings])
+        validate_ai_file(ai_file,package.get('evidence_input_ref',package['map_ref']),[b['osm_id'] for b in buildings],rules=rules)
     package['evidence_rules']=copy.deepcopy(rules)
     if ai_file is not None:
         package['ai_evidence']=copy.deepcopy(ai_file)
+    if is_layered(rules):
+        from .taxonomy import apply_layered_evidence
+        apply_layered_evidence(package,rules,ai_file,warn)
+        return
     threshold=Decimal(rules['ai_min_confidence_pct'])/100
     for building in buildings:
         identifier=building['osm_id']
@@ -159,7 +169,8 @@ def prepare_ai_review(package,rules=None):
     enriched=enrich_map(package,auto_rules=rules)
     pois=enriched['campus'].get('pois',[])
     def tags(value):
-        return {key:item for key,item in value.items() if key in ('building','amenity','shop','office','building:levels','height')}
+        allowed=set(rules['tag_functions'])|{'building:levels','height'} if is_layered(rules) else {'building','amenity','shop','office','building:levels','height'}
+        return {key:item for key,item in value.items() if key in allowed}
     def poi_record(poi):
         return {'id':str(poi.get('osm_id','')),'name':poi.get('name',''),'tags':tags(poi.get('tags',{}))}
     valid_buildings=[b for b in enriched['campus']['buildings'] if valid_building(b)]
@@ -189,5 +200,9 @@ def prepare_ai_review(package,rules=None):
                         'area_m2':round(area(ring)-sum(area(hole) for hole in building.get('holes',[])),3) if valid else None,
                         'levels':building.get('levels',building.get('tags',{}).get('building:levels')),
                         'location_description':f"地图 {package['map_ref']['map_id']} 内，投影米坐标中心 {center}；附近 POI 仅作推断背景，不是楼内用途证据。"})
-    return {'schema_version':'scene.ai-review.v1','map_ref':copy.deepcopy(package['map_ref']),
+    report={'schema_version':'scene.ai-review.v1','map_ref':copy.deepcopy(package['map_ref']),
             'rules_version':rules['version'],'rules_sha256':rules['sha256'],'buildings':records}
+    if is_layered(rules):
+        report['function_definitions']=copy.deepcopy(rules['taxonomy'])
+        report['instructions']='仅判断建筑主用途，不能用楼内一家店代表整栋楼。只能从 function_definitions 的键中选；无法判断填 unknown。附近 POI 仅作背景，不是楼内服务证据。不要返回人物或团队数据。'
+    return report

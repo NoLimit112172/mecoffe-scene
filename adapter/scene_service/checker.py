@@ -96,12 +96,15 @@ def _input(intent,snapshot,plan):
     require(intent.get('mode') in ('map','none'),'INVALID_INPUT','mode must explicitly be map or none')
 
 
-def _selectors(intent,snapshot,plan):
+def _selectors(intent,snapshot,plan,package=None):
     people=indexed(snapshot.get('nodes'),'entity_id')
     require(all(isinstance(person.get('role'),str) and person['role'] for person in people.values()),
             'UNKNOWN_ROLE','Every person needs a role')
     brands=brand_catalog(plan,people)
-    normalize_prefs(intent,{person['role'] for person in people.values()},brands)
+    from .taxonomy import is_layered, FUNCTIONS as LAYERED_FUNCTIONS
+    from .evidence import FUNCTIONS
+    allowed=LAYERED_FUNCTIONS if package is not None and is_layered(package.get('evidence_rules')) else FUNCTIONS
+    normalize_prefs(intent,{person['role'] for person in people.values()},brands,allowed)
 
 
 def _seed(intent,snapshot,plan,seed):
@@ -180,8 +183,6 @@ def check_scene(intent,snapshot,plan,map_directory=None,*,assignment_seed=None):
     mode=intent['mode']
     if mode=='none':
         _item(report,'selectors').update(status='通过',reason='明确不用地图，不做空间角色/品牌选择；人物与计划引用仍由原结果校验核对。')
-    else:
-        _attempt(report,'selectors',lambda:_selectors(intent,snapshot,plan),'原有名称和偏好校验通过，角色、品牌名和经营者可对应到实际输入。')
     _attempt(report,'seed',lambda:_seed(intent,snapshot,plan,assignment_seed),'独立种子已提供且与意图种子对齐；值的合法性继续由原编译校验。')
     package=None
     map_keys=('map_manifest','map_catalog','map_files','map_quality')
@@ -199,6 +200,7 @@ def check_scene(intent,snapshot,plan,map_directory=None,*,assignment_seed=None):
                                  '正式文件清单完整，原地图加载器已核对所有列出文件的原始字节摘要。')
             if package is not None:
                 package=_attempt(report,'map_quality',lambda:_quality(package),'归档 ready，原用途证据与安全可达性重算也通过质量门槛。')
+        _attempt(report,'selectors',lambda:_selectors(intent,snapshot,plan,package),'原有名称和偏好校验通过，角色、品牌名和经营者可对应到实际输入。')
     if not _passed(report,'selectors','seed',*map_keys):
         return _finish(report)
     result=_attempt(report,'compile',lambda:_compile(intent,snapshot,plan,package,assignment_seed),

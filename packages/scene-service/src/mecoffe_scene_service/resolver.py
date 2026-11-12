@@ -5,11 +5,12 @@ from .common import digest, portable, require
 from .evidence import FUNCTIONS, enrich_map
 from .validation import brand_catalog, indexed, validate_result
 from .auto_evidence import STRONG_SOURCES
+from .taxonomy import is_layered, NON_PLACEABLE, FUNCTIONS as LAYERED_FUNCTIONS, FUNCTION_LABELS as LAYERED_LABELS
 
 FUNCTION_LABELS={'dining':'餐饮','retail':'零售','dormitory':'宿舍','residential':'住宅','education':'教学','office':'办公','library':'图书服务','unknown':'未知'}
 
 
-def normalize_prefs(request, roles, brands):
+def normalize_prefs(request, roles, brands, allowed_functions=FUNCTIONS):
     role_prefs=request.get('role_prefs',{}); brand_prefs=request.get('brand_prefs',{})
     require(isinstance(role_prefs,dict) and set(role_prefs)==roles,'UNKNOWN_ROLE','Role preferences must exactly match snapshot roles')
     require(isinstance(brand_prefs,dict) and set(brand_prefs)==set(brands),'BRAND_NAME_MISMATCH','Brand preferences must exactly match current unique brand names')
@@ -23,7 +24,7 @@ def normalize_prefs(request, roles, brands):
         for name,pref in sorted(preferences.items()):
             require(isinstance(pref,dict),'INVALID_PREFERENCE','Preference must be an object')
             functions=pref.get('functions')
-            require(isinstance(functions,list) and functions and all(isinstance(f,str) and f in FUNCTIONS for f in functions),
+            require(isinstance(functions,list) and functions and all(isinstance(f,str) and f in allowed_functions for f in functions),
                     'UNKNOWN_FUNCTION','Unknown or missing function preference')
             fallback=pref.get('fallback','fail')
             require(fallback in ('fail','any_building_in_scope','out_of_scene'),'INVALID_PREFERENCE','Unknown fallback')
@@ -76,26 +77,34 @@ def resolve(request):
         thresholds=package.get('quality',{}).get('thresholds',{})
         package=enrich_map(package,annotations=package.get('annotations'),**thresholds)
         require(package['quality']['status']=='ready','MAP_NOT_READY','Map quality gate has not passed')
+        layered=is_layered(package.get('evidence_rules'))
+        labels=LAYERED_LABELS if layered else FUNCTION_LABELS
+        if layered:
+            result['schema_version']='scene.result.v3'
+            result['assignment_meta']['resolver_version']='3'
         if 'map_ref' in request:
             require(request['map_ref']==package['map_ref'],'REF_MISMATCH','Requested map reference differs')
         people=indexed(snapshot.get('nodes'),'entity_id')
         require(all(isinstance(p.get('role'),str) and p['role'] for p in people.values()),'UNKNOWN_ROLE','Every person needs a role')
         brands=brand_catalog(plan,people)
-        rules=normalize_prefs(request,{p['role'] for p in people.values()},brands)
+        rules=normalize_prefs(request,{p['role'] for p in people.values()},brands,LAYERED_FUNCTIONS if layered else FUNCTIONS)
         require(set(rules['overrides']['entities'])<=set(people),'OVERRIDE_INVALID','Unknown entity override')
         require(set(rules['overrides']['brands'])<=set(brands),'UNKNOWN_BRAND','Unknown brand override')
         result['rules']=rules; result['map_ref']=copy.deepcopy(package['map_ref'])
         result['warnings']=copy.deepcopy(package['quality']['warnings']); context['map']=package
         buildings={b['osm_id']:b for b in package['campus']['buildings']}
-        def choose(name, pref, override=None, avoid=None):
+        def choose(name, pref, override=None, avoid=None, *, brand=False):
             eligible=[b for b in buildings.values() if b['scene_eligible']]
-            fallback=None; explicit=override is not None
+            fallback=None; explicit=override is not None; layer='primary'
             if explicit:
                 require(isinstance(override,str) and override in buildings and buildings[override]['scene_eligible'],
                         'OVERRIDE_INVALID','Override building is absent, outside scope, or unreachable')
                 candidates=[buildings[override]]
             else:
                 candidates=[b for b in eligible if set(pref['functions']) & (set(b['functions'])-{'unknown'})]
+                if layered and brand and not candidates:
+                    candidates=[b for b in eligible if (set(pref['functions'])-NON_PLACEABLE) & set(b['services'])]
+                    layer='service'
             if not candidates:
                 fallback=pref['fallback']
                 require(fallback!='fail','SCENE_NO_CANDIDATE',f'No usable function candidate for {name}')
@@ -109,9 +118,10 @@ def resolve(request):
                 candidates=[b for b in candidates if b['osm_id'] not in avoid] or candidates
             # Structured JSON avoids delimiter collisions; hex order equals integer order.
             chosen=max(candidates,key=lambda b:(digest([seed,name,b['osm_id']]),b['osm_id']))
-            evidence=[copy.deepcopy(e) for e in chosen['function_evidence'] if e['source'] in STRONG_SOURCES and
+            records=chosen['service_evidence'] if layered and layer=='service' and fallback is None else chosen['function_evidence']
+            evidence=[copy.deepcopy(e) for e in records if e['source'] in STRONG_SOURCES and
                       (explicit or fallback is not None or e['function'] in pref['functions'])]
-            uses='、'.join(FUNCTION_LABELS[f] for f in sorted({e['function'] for e in evidence}))
+            uses='、'.join(labels[f] for f in sorted({e['function'] for e in evidence}))
             auto_sources=[]
             if any(e['source']=='name_rule' for e in evidence):
                 auto_sources.append('名称规则')
@@ -120,9 +130,17 @@ def resolve(request):
                 auto_sources.append(f'AI 推断（把握 {min(ai_confidence)}%）')
             standard_reason=(f"依据{'、'.join(auto_sources)}判定为{uses}，入口可达，按确定性规则选定" if auto_sources else
                              f'有{uses}用途证据且入口可达，按确定性规则选定')
+            if layered:
+                if layer=='service':
+                    primary='、'.join(labels[f] for f in chosen['functions'])
+                    standard_reason=f'{primary}楼内有{uses}服务，依据楼内兴趣点，入口可达，按确定性规则选定'
+                elif chosen['primary_from_services']:
+                    standard_reason=f'仅据楼内店铺推断主用途为{uses}，入口可达，按确定性规则选定'
             reason=('按已确认的指定楼栋安置，入口可达' if explicit else '按已确认的范围内任意楼栋兜底安置，入口可达' if fallback else standard_reason)
             if auto_sources and (explicit or fallback):
                 reason+=f"；楼栋用途依据{'、'.join(auto_sources)}（{uses}）"
+            if layered and chosen['primary_from_services'] and (explicit or fallback):
+                reason+='；主用途仅据楼内店铺推断'
             return {'status':'placed','building_id':chosen['osm_id'],'entrance_id':chosen['usable_entrance_ids'][0],
                     'reason':reason,
                     'evidence':evidence,'fallback_used':fallback}
@@ -134,7 +152,7 @@ def resolve(request):
         used=set()
         for name,brand in sorted(brands.items()):
             pref=rules['brand_prefs'][name]
-            place=choose(name,pref,rules['overrides']['brands'].get(name),used if pref['separate_when_possible'] else None)
+            place=choose(name,pref,rules['overrides']['brands'].get(name),used if pref['separate_when_possible'] else None,brand=True)
             if place['building_id']:
                 used.add(place['building_id'])
             result['service_points'].append({'service_id':'service_'+digest(name)[:24],'brand_name':name,

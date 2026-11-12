@@ -1,0 +1,31 @@
+{
+  "buildings": {
+    "synthetic/b3": {
+      "confidence": 0.84,
+      "functions": [
+        "hotel"
+      ],
+      "generated_at": "2026-11-12T00:00:00+08:00",
+      "model": "synthetic-offline",
+      "prompt_version": "taxonomy-demo-1",
+      "rationale": "完全合成的离线用途判断，未调用模型。"
+    },
+    "synthetic/b7": {
+      "confidence": 0.4,
+      "functions": [
+        "government"
+      ],
+      "generated_at": "2026-11-12T00:00:00+08:00",
+      "model": "synthetic-offline",
+      "prompt_version": "taxonomy-demo-1",
+      "rationale": "完全合成的离线用途判断，未调用模型。"
+    }
+  },
+  "map_ref": {
+    "manifest_sha256": "282af75f69f6ceac0a6049c21fe3206549e2796e921624b900be99cca09ee409",
+    "map_id": "synthetic-taxonomy-source",
+    "map_version": "1"
+  },
+  "schema_version": "scene.ai-evidence.v1",
+  "synthetic": true
+}

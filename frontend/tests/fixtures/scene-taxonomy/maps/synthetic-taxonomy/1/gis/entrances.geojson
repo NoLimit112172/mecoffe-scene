@@ -1,0 +1,126 @@
+{
+  "features": [
+    {
+      "geometry": {
+        "coordinates": [
+          4.49660181862269e-05,
+          8.99320363724538e-05
+        ],
+        "type": "Point"
+      },
+      "id": "synthetic/b0/entrance",
+      "properties": {
+        "building_id": "synthetic/b0",
+        "category": "entrance"
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          0.00022483009093113453,
+          8.99320363724538e-05
+        ],
+        "type": "Point"
+      },
+      "id": "synthetic/b1/entrance",
+      "properties": {
+        "building_id": "synthetic/b1",
+        "category": "entrance"
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          0.0004046941636760421,
+          8.99320363724538e-05
+        ],
+        "type": "Point"
+      },
+      "id": "synthetic/b2/entrance",
+      "properties": {
+        "building_id": "synthetic/b2",
+        "category": "entrance"
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          0.0005845582364209497,
+          8.99320363724538e-05
+        ],
+        "type": "Point"
+      },
+      "id": "synthetic/b3/entrance",
+      "properties": {
+        "building_id": "synthetic/b3",
+        "category": "entrance"
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          0.0007644223091658574,
+          8.99320363724538e-05
+        ],
+        "type": "Point"
+      },
+      "id": "synthetic/b4/entrance",
+      "properties": {
+        "building_id": "synthetic/b4",
+        "category": "entrance"
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          0.0009442863819107651,
+          8.99320363724538e-05
+        ],
+        "type": "Point"
+      },
+      "id": "synthetic/b5/entrance",
+      "properties": {
+        "building_id": "synthetic/b5",
+        "category": "entrance"
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          0.0011241504546556725,
+          8.99320363724538e-05
+        ],
+        "type": "Point"
+      },
+      "id": "synthetic/b6/entrance",
+      "properties": {
+        "building_id": "synthetic/b6",
+        "category": "entrance"
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          0.0013040145274005798,
+          8.99320363724538e-05
+        ],
+        "type": "Point"
+      },
+      "id": "synthetic/b7/entrance",
+      "properties": {
+        "building_id": "synthetic/b7",
+        "category": "entrance"
+      },
+      "type": "Feature"
+    }
+  ],
+  "synthetic": true,
+  "type": "FeatureCollection"
+}

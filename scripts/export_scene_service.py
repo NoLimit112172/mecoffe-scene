@@ -9,23 +9,24 @@ import sys
 
 ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_OUT = ROOT / 'packages/scene-service'
-VERSION = '0.1.0'
+VERSION = '0.2.0'
 IMPORT_NAME = 'mecoffe_scene_service'
 DISTRIBUTION = 'mecoffe-scene-service'
 REQUIRES_PYTHON = '>=3.11,<3.12'
-EXPORTER_VERSION = '2'
+EXPORTER_VERSION = '3'
 MANIFEST = 'EXPORT_MANIFEST.json'
 MODULES = ('common', 'compiler', 'request', 'resolver', 'validation', 'checker',
-           'maps', 'evidence', 'geometry', 'issues', 'auto_evidence')
+           'maps', 'evidence', 'geometry', 'issues', 'auto_evidence', 'taxonomy')
 SERVICE = 'adapter/scene_service/'
 ASSETS = 'adapter/scene_builder/resources/mecoffe-embed-v1/'
-JSON_FILES = ('contract.json', 'contract-v2.json', 'issue_messages.json')
+JSON_FILES = ('contract.json', 'contract-v2.json', 'contract-v3.json', 'issue_messages.json')
 # Every service Python/JSON file must be exported or covered by one of these rules.
 EXCLUDED_SERVICE_FILES = {
     '__init__.py': 'Original broad API; the runtime package has a generated stable API.',
     '__main__.py': 'Original CLI includes preparation and publication; no runtime CLI.',
     'map_package.py': 'Map publication stays outside the runtime package.',
     'evidence_rules.json': 'Publication defaults; runtime reads each map frozen rules.',
+    'evidence_rules_v2.json': 'Layered publication defaults; runtime reads the exact frozen rules from its map.',
 }
 EXCLUDED_SERVICE_DIRECTORIES = {
     'fixtures': 'Synthetic inputs and fixture generators are not runtime dependencies.',
@@ -194,8 +195,9 @@ from .issues import describe_issue
 from .common import SceneError
 
 __version__ = {VERSION!r}
-SCENE_RESULT_SCHEMA_VERSIONS = ('scene.result.v1', 'scene.result.v2')
-SCENE_RESULT_OUTPUT_SCHEMA_VERSION = 'scene.result.v2'
+SCENE_RESULT_SCHEMA_VERSIONS = ('scene.result.v1', 'scene.result.v2', 'scene.result.v3')
+# New auto-evidence.2 maps emit v3; legacy maps and none still emit v2.
+SCENE_RESULT_OUTPUT_SCHEMA_VERSION = 'scene.result.v3'
 __all__ = ['compile_scene', 'validate_result', 'check_scene', 'load_map', 'describe_issue',
            'SceneError', '__version__', 'SCENE_RESULT_SCHEMA_VERSIONS', 'SCENE_RESULT_OUTPUT_SCHEMA_VERSION']
 '''.encode('utf-8')
@@ -281,20 +283,20 @@ Python {REQUIRES_PYTHON}；运行依赖为空。构建工具仅 setuptools>=68�
 
 | 稳定接口 | 返回 / 异常 / 副作用 |
 | --- | --- |
-| compile_scene(intent, snapshot, plan, map_package=None, *, assignment_seed=None) | 成功返回 {{ok: true, result}}，已知输入错误返回 {{ok: false, error}}；纯计算，不读网络、数据库或写文件；新结果统一 v2 |
+| compile_scene(intent, snapshot, plan, map_package=None, *, assignment_seed=None) | 成功返回 {{ok: true, result}}，已知输入错误返回 {{ok: false, error}}；纯计算，不读网络、数据库或写文件；auto-evidence.2 地图产出 v3，旧规则地图及 none 仍产出原 v2 |
 | validate_result(result, context=None) | 返回通过校验的原结果；失败抛 SceneError；不改正文，不读取地图目录，不重算 AI 阈值 |
 | load_map(path) | 读取本地已准备地图并返回包；核对资源与冻结证据；校验错抛 SceneError，文件错可能抛 OSError/ValueError 等；只读文件 |
 | check_scene(intent, snapshot, plan, map_directory=None, *, assignment_seed=None) | 返回 JSON 可序列化的检查报告；读取本地地图，不写文件、不联网；配置期通过仍明确运行绑定待确认 |
 | describe_issue(code, details='') | 返回独立中文说明字典；未知码保留原码并用 INVALID_INPUT 说明；无文件或网络副作用 |
 | SceneError | 继承 ValueError；code 为已有错误码，str(error) 为原始诊断；业务薄适配负责转换为团队错误 |
 
-`__version__` 为运行包版本；`SCENE_RESULT_SCHEMA_VERSIONS` 为支持的两种契约版本；
-`SCENE_RESULT_OUTPUT_SCHEMA_VERSION` 为统一输出版本。其他模块、常量和函数均为内部实现。
+`__version__` 为运行包版本；`SCENE_RESULT_SCHEMA_VERSIONS` 为可读取的 v1/v2/v3；
+`SCENE_RESULT_OUTPUT_SCHEMA_VERSION` 为新规则的输出版本 v3，不表示旧地图也要升级。其他模块、常量和函数均为内部实现。
 不把可修改的契约字典作为稳定公共 API。检查和加载函数沿用现有异常边界，不保证所有错误都包装成 SceneError。
 
 本包包含几何可达性、旧证据重算及编译必需的纯函数，读取新地图时使用已冻结证据；
 没有 prepare-ai-review、map_package、OSM 转换、地图文件、测试、夹具、模型文件。
-包内资源只有 v1/v2 契约、中文说明、发布素材登记和 catalog；catalog 原字节不改。
+包内资源只有 v1/v2/v3 契约、中文说明、发布素材登记和 catalog；catalog 原字节不改。
 不会自动下载地图、放宽偏好、改为 none 或实现团队运行绑定。
 
 源码一致性在源仓库运行：
@@ -329,7 +331,7 @@ def build_export(root=ROOT, *, source_commit=None):
         else:
             payload['NOTICE.md']=normalized
     # Check source contracts and the pinned published catalog before generating anything.
-    for filename,version in [('contract.json','scene.result.v1'),('contract-v2.json','scene.result.v2')]:
+    for filename,version in [('contract.json','scene.result.v1'),('contract-v2.json','scene.result.v2'),('contract-v3.json','scene.result.v3')]:
         if json.loads(payload[f'src/{IMPORT_NAME}/{filename}'])['properties']['schema_version']['const']!=version:
             raise ValueError('Review the supported contract version constants')
     resource=f'src/{IMPORT_NAME}/resources/mecoffe-embed-v1/'

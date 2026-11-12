@@ -1,0 +1,173 @@
+{
+  "entrances": [
+    {
+      "building_id": "synthetic/b0",
+      "connected": true,
+      "connector": [
+        [
+          5,
+          10
+        ],
+        [
+          5,
+          0
+        ]
+      ],
+      "id": "synthetic/b0/entrance",
+      "point": [
+        5,
+        10
+      ],
+      "road_node_id": "synthetic/n0",
+      "scene_reachable": true
+    },
+    {
+      "building_id": "synthetic/b1",
+      "connected": true,
+      "connector": [
+        [
+          25,
+          10
+        ],
+        [
+          25,
+          0
+        ]
+      ],
+      "id": "synthetic/b1/entrance",
+      "point": [
+        25,
+        10
+      ],
+      "road_node_id": "synthetic/n1",
+      "scene_reachable": true
+    },
+    {
+      "building_id": "synthetic/b2",
+      "connected": true,
+      "connector": [
+        [
+          45,
+          10
+        ],
+        [
+          45,
+          0
+        ]
+      ],
+      "id": "synthetic/b2/entrance",
+      "point": [
+        45,
+        10
+      ],
+      "road_node_id": "synthetic/n2",
+      "scene_reachable": true
+    },
+    {
+      "building_id": "synthetic/b3",
+      "connected": true,
+      "connector": [
+        [
+          65,
+          10
+        ],
+        [
+          65,
+          0
+        ]
+      ],
+      "id": "synthetic/b3/entrance",
+      "point": [
+        65,
+        10
+      ],
+      "road_node_id": "synthetic/n3",
+      "scene_reachable": true
+    },
+    {
+      "building_id": "synthetic/b4",
+      "connected": true,
+      "connector": [
+        [
+          85,
+          10
+        ],
+        [
+          85,
+          0
+        ]
+      ],
+      "id": "synthetic/b4/entrance",
+      "point": [
+        85,
+        10
+      ],
+      "road_node_id": "synthetic/n4",
+      "scene_reachable": true
+    },
+    {
+      "building_id": "synthetic/b5",
+      "connected": true,
+      "connector": [
+        [
+          105,
+          10
+        ],
+        [
+          105,
+          0
+        ]
+      ],
+      "id": "synthetic/b5/entrance",
+      "point": [
+        105,
+        10
+      ],
+      "road_node_id": "synthetic/n5",
+      "scene_reachable": true
+    },
+    {
+      "building_id": "synthetic/b6",
+      "connected": true,
+      "connector": [
+        [
+          125,
+          10
+        ],
+        [
+          125,
+          0
+        ]
+      ],
+      "id": "synthetic/b6/entrance",
+      "point": [
+        125,
+        10
+      ],
+      "road_node_id": "synthetic/n6",
+      "scene_reachable": true
+    },
+    {
+      "building_id": "synthetic/b7",
+      "connected": true,
+      "connector": [
+        [
+          145,
+          10
+        ],
+        [
+          145,
+          0
+        ]
+      ],
+      "id": "synthetic/b7/entrance",
+      "point": [
+        145,
+        10
+      ],
+      "road_node_id": "synthetic/n7",
+      "scene_reachable": true
+    }
+  ],
+  "schema_version": "mecoffe.entrances.v1"
+}

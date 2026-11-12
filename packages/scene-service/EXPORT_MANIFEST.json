@@ -1,6 +1,6 @@
 {
   "exporter": {
-    "sha256": "62471305853b5e473e922d0cbc780a8962af24129af62d8dc82cb0a08a9f4dd2",
+    "sha256": "6ae0b66f6532aecb98e61f83f37b0a7af5af2a99f0339cf3717d74d4686746e4",
     "source_policy": {
       "excluded_directories": {
         "__pycache__": "Interpreter cache is not source or a runtime delivery input.",
@@ -11,6 +11,7 @@
         "__init__.py": "Original broad API; the runtime package has a generated stable API.",
         "__main__.py": "Original CLI includes preparation and publication; no runtime CLI.",
         "evidence_rules.json": "Publication defaults; runtime reads each map frozen rules.",
+        "evidence_rules_v2.json": "Layered publication defaults; runtime reads the exact frozen rules from its map.",
         "map_package.py": "Map publication stays outside the runtime package."
       },
       "exported_files": [
@@ -19,6 +20,7 @@
         "common.py",
         "compiler.py",
         "contract-v2.json",
+        "contract-v3.json",
         "contract.json",
         "evidence.py",
         "geometry.py",
@@ -27,34 +29,37 @@
         "maps.py",
         "request.py",
         "resolver.py",
+        "taxonomy.py",
         "validation.py"
       ]
     },
-    "version": "2"
+    "version": "3"
   },
   "files": {
     "NOTICE.md": "0c9d021d10cd7c3f5936b67b41e4e45d5eaa19bf26b066843256b4126f7ef4b1",
-    "README.md": "2e1ab0ffaddf0365f25568e3361572fc529f2f4024d36d631aa82af0f8394eb3",
-    "VERSION": "e9dd8507f4bf0c6f42458e41aea833ad0bd3f6127272335eee9bf4d58541ed67",
-    "pyproject.toml": "abfaee33ac77c58a83188bcae13263be72ad4a6702ff75b0eba71c5c9e2c4493",
-    "src/mecoffe_scene_service/__init__.py": "13c78a3a0796dea50c888d0e7f2a0b377193be4b8dc0b326a73ea847ff28cd2f",
+    "README.md": "66e7fe94c10dd13c9984f1f41d61f728ca8d331002c15963b56ef6df34fea867",
+    "VERSION": "1f930dd1f133c1f97a94fe3acb8db34372cf4c01ffdb2b3ff4ca72f9494121e9",
+    "pyproject.toml": "dcc9c6e418788748ec62521922827d5c302e05dac74bd9d5a41107eec244c323",
+    "src/mecoffe_scene_service/__init__.py": "efc26dfe84ec31d7fdc1134ce768cbbf82c54fec64af98d0e4d21a281edb8139",
     "src/mecoffe_scene_service/_asset_library.py": "62a897bd3b57f1d082cf782c812636c647a11749fc6a9c2b8e153221e01b521b",
-    "src/mecoffe_scene_service/auto_evidence.py": "95caf1399de1e46ba3f29f23dc408f5f6fc8d575c7458ca92568f278de0bab6f",
-    "src/mecoffe_scene_service/checker.py": "b2bd108a2da54ee4176d1a2b14b5ad4e41481c441c7fc7383d582ab505639b62",
+    "src/mecoffe_scene_service/auto_evidence.py": "e46d2f5e0adff81a917576c03d4e8c79e8d680077363e4097a127fe0b612318e",
+    "src/mecoffe_scene_service/checker.py": "b73d79c2ed96a9857da19cc16a9f90dbe95edc1729670264946e36e7a0d7d005",
     "src/mecoffe_scene_service/common.py": "297a431a0858bcfba03878e50786a5b75d0156c027dc7f6a7d66f8d57ae15fd9",
     "src/mecoffe_scene_service/compiler.py": "35988f26acb290f07a61a1e9ac33a3b177c57f9c587c3b1815662476b8fbbda9",
     "src/mecoffe_scene_service/contract-v2.json": "2aedb7b78e0cccd05693a30a407926eaa87e44eba6f959e027431631975dd992",
+    "src/mecoffe_scene_service/contract-v3.json": "b12359faec57e5e770e87acb0a88cfb80c7a51016b38e39cd7f01499fd688fff",
     "src/mecoffe_scene_service/contract.json": "6789f985d31efa257e3ab7a0178517f6c0febb81faaee74f7a567bc58c0d82df",
-    "src/mecoffe_scene_service/evidence.py": "d4f244bef24f5e7fca5d3830238513ca08a52d6a779f0e57c38959b76a730c4a",
+    "src/mecoffe_scene_service/evidence.py": "41dafebe31b60c60c369a7f99c91e4abba8c85d578c64b21cb8e817493f05185",
     "src/mecoffe_scene_service/geometry.py": "0ab96e3763a96be436826f23bb5ed580dcab7694211fdbd7bcb66ca4df0151f2",
     "src/mecoffe_scene_service/issue_messages.json": "77150dbefb6e2242abbb60801713c3c36a00bf5e0521078b4b2f04fcd8127575",
     "src/mecoffe_scene_service/issues.py": "a8712add07044dd0be134846096f9e46ab5b5d8827ce74b2328d25c01ecb7c7c",
-    "src/mecoffe_scene_service/maps.py": "c289d5f272d2792ed7c1e6d825c0d6447d0a1bf26685cbe142f39d72a9fb66e4",
+    "src/mecoffe_scene_service/maps.py": "27592b9a2e136e6cbcd768e0e0b377db037cab3ceb19fe38c773debd5af6efe9",
     "src/mecoffe_scene_service/request.py": "d9648787afbe612a6951f432caf7d14866e6b576ddce5a925926c814d00827f7",
-    "src/mecoffe_scene_service/resolver.py": "d88e3770f3c264d58578a5011d19dc62aa0b3666069d1537bed917f0d7ae986b",
+    "src/mecoffe_scene_service/resolver.py": "05c92bd6eccdd6796f21e2567371749c6b18003f45dbe547a3653f08c5af1c7e",
     "src/mecoffe_scene_service/resources/mecoffe-embed-v1/asset-library.json": "cffecbe3ab2bcca21939d1180347bb06813cd14a1af0e752f0b46552655419b1",
     "src/mecoffe_scene_service/resources/mecoffe-embed-v1/catalog.json": "a4444d42d820359ff180d4390c1b16a5a86249cfd008a0d2e5eafa1dfc55aa0c",
-    "src/mecoffe_scene_service/validation.py": "c7c92fcf3a0d2f0839c622afc53dcc80a80c03cde95e9505473fc87f8a73bdf6",
+    "src/mecoffe_scene_service/taxonomy.py": "d290bf0159b59fa61907561e59ee56d332c8cd3d60092da5998d4b60814b591c",
+    "src/mecoffe_scene_service/validation.py": "86e9defce41d1aabbc8910d7a9907410c0c4d6f335311376018b93c5d8321a2c",
     "verify_export.py": "f69ef7c364457a045c2c090d8c46809c3c501c4e22d133de8be6932eed590f8a"
   },
   "inputs": {
@@ -76,11 +81,11 @@
     },
     "adapter/scene_service/auto_evidence.py": {
       "byte_policy": "lf",
-      "sha256": "e4491cf885a0293eb23b5af396e7e6c19ff6c742617d81b49986723cef9654bb"
+      "sha256": "cb5b6f8d2a16442a05e0a23f9726fbf62bc5769051ba2b66dc807c087d30e061"
     },
     "adapter/scene_service/checker.py": {
       "byte_policy": "lf",
-      "sha256": "e28fd6deca878b47961fc9377fa6a694c503a738c4f12f7a13729023ad4d3cf5"
+      "sha256": "e61f685529060e7a7685b851d56460e85157ec94bb996a1746f62763607ca624"
     },
     "adapter/scene_service/common.py": {
       "byte_policy": "lf",
@@ -94,13 +99,17 @@
       "byte_policy": "lf",
       "sha256": "2aedb7b78e0cccd05693a30a407926eaa87e44eba6f959e027431631975dd992"
     },
+    "adapter/scene_service/contract-v3.json": {
+      "byte_policy": "lf",
+      "sha256": "b12359faec57e5e770e87acb0a88cfb80c7a51016b38e39cd7f01499fd688fff"
+    },
     "adapter/scene_service/contract.json": {
       "byte_policy": "lf",
       "sha256": "6789f985d31efa257e3ab7a0178517f6c0febb81faaee74f7a567bc58c0d82df"
     },
     "adapter/scene_service/evidence.py": {
       "byte_policy": "lf",
-      "sha256": "d4f244bef24f5e7fca5d3830238513ca08a52d6a779f0e57c38959b76a730c4a"
+      "sha256": "41dafebe31b60c60c369a7f99c91e4abba8c85d578c64b21cb8e817493f05185"
     },
     "adapter/scene_service/geometry.py": {
       "byte_policy": "lf",
@@ -116,7 +125,7 @@
     },
     "adapter/scene_service/maps.py": {
       "byte_policy": "lf",
-      "sha256": "803b602ea4d39e8d25ebc127690fb2dcee2b5516b2884d34336e1b6fd5238b3a"
+      "sha256": "c9cedd11c517f663c43c3c1dddde6bc039cc222f1b90260bc3b4fc2d773f4dd1"
     },
     "adapter/scene_service/request.py": {
       "byte_policy": "lf",
@@ -124,18 +133,22 @@
     },
     "adapter/scene_service/resolver.py": {
       "byte_policy": "lf",
-      "sha256": "d88e3770f3c264d58578a5011d19dc62aa0b3666069d1537bed917f0d7ae986b"
+      "sha256": "05c92bd6eccdd6796f21e2567371749c6b18003f45dbe547a3653f08c5af1c7e"
+    },
+    "adapter/scene_service/taxonomy.py": {
+      "byte_policy": "lf",
+      "sha256": "d290bf0159b59fa61907561e59ee56d332c8cd3d60092da5998d4b60814b591c"
     },
     "adapter/scene_service/validation.py": {
       "byte_policy": "lf",
-      "sha256": "c7c92fcf3a0d2f0839c622afc53dcc80a80c03cde95e9505473fc87f8a73bdf6"
+      "sha256": "86e9defce41d1aabbc8910d7a9907410c0c4d6f335311376018b93c5d8321a2c"
     }
   },
   "package": {
     "import_name": "mecoffe_scene_service",
     "name": "mecoffe-scene-service",
     "requires_python": ">=3.11,<3.12",
-    "version": "0.1.0"
+    "version": "0.2.0"
   },
   "schema_version": "scene.service-export.v1",
   "source_commit": "c0bf4302b9005f6dc0e08f8d3baabe339fba7e9e"

@@ -4,6 +4,7 @@ from collections import Counter
 
 from .common import require
 from .geometry import cuts_interior, in_building, inside, intersects, point, valid_building, valid_ring, within_scope
+from .taxonomy import is_layered, placeable
 
 FUNCTIONS = ('dining','retail','dormitory','residential','education','office','library','unknown')
 TAG_FUNCTIONS = {
@@ -15,7 +16,10 @@ TAG_FUNCTIONS = {
 KEYWORDS = {'食堂':'dining','咖啡':'dining','宿舍':'dormitory','教学楼':'education','图书馆':'library','办公':'office'}
 
 
-def tag_evidence(tags, source, ref):
+def tag_evidence(tags, source, ref, rules=None):
+    if is_layered(rules):
+        from .taxonomy import tag_evidence as layered_tags
+        return layered_tags(tags,source,ref,rules)
     result=[]
     for key, mapping in TAG_FUNCTIONS.items():
         function=mapping.get(tags.get(key)) if isinstance(tags.get(key), str) else None
@@ -55,6 +59,11 @@ def enrich_map(package, annotations=None, min_main_ratio=.9, min_function_ratio=
             'INVALID_THRESHOLD','Quality thresholds must be in [0,1]')
     result=copy.deepcopy(package); campus=result['campus']
     auto_rules=auto_rules if auto_rules is not None else package.get('evidence_rules')
+    layered=is_layered(auto_rules)
+    if layered:
+        from .auto_evidence import validate_rules
+        validate_rules(auto_rules)
+    functions=tuple(auto_rules['taxonomy']) if layered else FUNCTIONS
     ai_evidence=ai_evidence if ai_evidence is not None else package.get('ai_evidence')
     buildings=campus.get('buildings', []); entrances=result.get('entrances', {}).get('entrances', [])
     require(isinstance(buildings,list) and isinstance(entrances,list), 'INVALID_MAP','Buildings and entrances must be arrays')
@@ -85,12 +94,12 @@ def enrich_map(package, annotations=None, min_main_ratio=.9, min_function_ratio=
     require(isinstance(entries,dict) and set(entries)<=set(ids), 'OVERRIDE_INVALID','Annotation references an unknown building')
     for b in buildings:
         if auto_rules is not None:
-            for key in ('superseded_function_evidence','inactive_function_evidence','function_annotation','needs_ai_review'):
+            for key in ('superseded_function_evidence','inactive_function_evidence','function_annotation','needs_ai_review','services','service_evidence','primary_from_services'):
                 b.pop(key,None)
         tags=dict(b.get('tags', {}))
         if isinstance(b.get('building_type'),str):
             tags.setdefault('building',b['building_type'])
-        b['function_evidence']=tag_evidence(tags,'building_tag',b['osm_id'])
+        b['function_evidence']=tag_evidence(tags,'building_tag',b['osm_id'],auto_rules)
         for text,function in KEYWORDS.items():
             if text in b.get('name',''):
                 b['function_evidence'].append({'function':function,'source':'name_keyword','key':'name','value':text,'ref':b['osm_id']})
@@ -106,18 +115,18 @@ def enrich_map(package, annotations=None, min_main_ratio=.9, min_function_ratio=
         touching=[b for b in buildings if b['osm_id'] in valid and in_building(poi['point'],b,False)]
         if len(matches)==1 and len(touching)==1:
             poi_stats['associated']+=1
-            matches[0]['function_evidence'].extend(tag_evidence(poi.get('tags',{}),'poi',str(poi.get('osm_id','unknown-poi'))))
+            matches[0]['function_evidence'].extend(tag_evidence(poi.get('tags',{}),'poi',str(poi.get('osm_id','unknown-poi')),auto_rules))
         else:
             poi_stats['ambiguous' if len(touching)>1 else 'unassociated']+=1
     for identifier, entry in entries.items():
         require(isinstance(entry,dict) and isinstance(entry.get('functions'),list) and entry['functions'] and
-                all(f in FUNCTIONS for f in entry['functions']) and
+                all(f in functions for f in entry['functions']) and
                 all(isinstance(entry.get(k),str) and entry[k].strip() for k in ('source','reviewer','note')) and
                 entry.get('mode','add') in ('add','replace'), 'INVALID_ANNOTATION','Annotation needs functions, source, reviewer, note and add/replace mode')
         b=by_id[identifier]
         if entry.get('mode','add')=='replace':
-            b['superseded_function_evidence']=copy.deepcopy([e for e in b['function_evidence'] if e['source']!='name_keyword'])
-            b['function_evidence']=[e for e in b['function_evidence'] if e['source']=='name_keyword']
+            b['superseded_function_evidence']=copy.deepcopy([e for e in b['function_evidence'] if e['source']!='name_keyword' and (not layered or e['source']!='poi')])
+            b['function_evidence']=[e for e in b['function_evidence'] if e['source']=='name_keyword' or (layered and e['source']=='poi')]
         b['function_evidence'].extend({'function':f,'source':'annotation','key':'functions','value':f,'ref':identifier} for f in sorted(set(entry['functions'])))
         b['function_annotation']=copy.deepcopy(entry)
     if auto_rules is not None:
@@ -125,6 +134,9 @@ def enrich_map(package, annotations=None, min_main_ratio=.9, min_function_ratio=
         if frozen:
             validate_rules(auto_rules)
             for building in buildings:
+                if layered:
+                    require(all(key in frozen_fields[building['osm_id']] for key in ('services','service_evidence','primary_from_services')),
+                            'INVALID_MAP','Frozen layered map lacks primary/service fields')
                 building.update(frozen_fields[building['osm_id']])
             for warning in package.get('quality',{}).get('warnings',[]):
                 if warning['code'] in AUTO_WARNINGS:
@@ -173,6 +185,8 @@ def enrich_map(package, annotations=None, min_main_ratio=.9, min_function_ratio=
         in_scope=b['osm_id'] in valid and any(within_scope(b,part) for part in boundaries)
         wet=b['osm_id'] in valid and any(any(inside(p,w['polygon'],False) for p in b['polygon'][:-1]) or any(in_building(p,b,False) for p in w['polygon'][:-1]) or any(intersects(a,c,u,v) for a,c in zip(b['polygon'],b['polygon'][1:]) for u,v in zip(w['polygon'],w['polygon'][1:])) for w in water)
         b['scene_eligible']=bool(in_scope and not wet and b['usable_entrance_ids'])
+        if layered:
+            b['scene_eligible']=b['scene_eligible'] and placeable(b)
         eligible+=b['scene_eligible']
         if not b['scene_eligible']:
             warn('BUILDING_EXCLUDED','Invalid geometry, outside scope, water conflict, or no safe reachable entrance',[b['osm_id']])
@@ -187,13 +201,18 @@ def enrich_map(package, annotations=None, min_main_ratio=.9, min_function_ratio=
         warn('POI_INVALID','Malformed POI coordinates ignored',[])
     warnings.sort(key=lambda w:(w['code'],w['refs']))
     result['quality']={'status':'ready' if ready else 'preview_only','buildings':len(buildings),'valid_buildings':len(valid),
-                       'function_counts':{f:counts[f] for f in FUNCTIONS},'unknown':counts['unknown'],'no_entrance':no_entrance,
+                       'function_counts':{f:counts[f] for f in functions},'unknown':counts['unknown'],'no_entrance':no_entrance,
                        'entrances':len(entrances),'main_component_entrances':main_count,'main_component_ratio':ratio,
                        'eligible_buildings':eligible,'poi':poi_stats,
                        'thresholds':{'min_main_ratio':min_main_ratio,'min_function_ratio':min_function_ratio},'warnings':warnings}
     if auto_rules is not None:
         result['quality']['evidence_policy']={'version':auto_rules['version'],'sha256':auto_rules['sha256'],
                                             'ai_min_confidence_pct':auto_rules['ai_min_confidence_pct']}
+    if layered:
+        result['quality']['primary_function_counts']={f:counts[f] for f in functions}
+        result['quality']['buildings_with_services']=sum(bool(b['services']) for b in buildings)
+        result['quality']['non_placeable_buildings']=sum(not placeable(b) for b in buildings)
+        result['quality']['poi_only_primary_buildings']=sum(b['primary_from_services'] for b in buildings)
     return result
 
 

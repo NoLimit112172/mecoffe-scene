@@ -34,6 +34,8 @@ frontend/public/mecoffe/assets3d/rocketbox/derivatives/openomsi/CREDITS.md -whit
 
 # Frozen automatic-evidence rules and new v2 map fixtures use exact bytes.
 adapter/scene_service/evidence_rules.json -text
+adapter/scene_service/evidence_rules_v2.json -text
 frontend/tests/fixtures/scene-auto/** -text
+frontend/tests/fixtures/scene-taxonomy/** -text
 # Generated runtime delivery keeps identical bytes on Windows and Linux.
 packages/scene-service/** -text

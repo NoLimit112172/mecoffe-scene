@@ -1,0 +1,117 @@
+{
+  "buildings": 8,
+  "buildings_with_services": 2,
+  "eligible_buildings": 6,
+  "entrances": 8,
+  "evidence_policy": {
+    "ai_evidence_sha256": "bd0b03103055d596bd0ac13d04b1a7c50d0eaf7a33360fbdf90184aed0e6a48f",
+    "ai_min_confidence_pct": 80,
+    "input_map_ref": {
+      "manifest_sha256": "282af75f69f6ceac0a6049c21fe3206549e2796e921624b900be99cca09ee409",
+      "map_id": "synthetic-taxonomy-source",
+      "map_version": "1"
+    },
+    "sha256": "2409494cab095cfbe85dc4eae3dab037ccd15821f65a3d0156eb183eda4df06c",
+    "version": "auto-evidence.2"
+  },
+  "function_counts": {
+    "construction": 0,
+    "culture": 0,
+    "dining": 0,
+    "dormitory": 0,
+    "education": 1,
+    "government": 0,
+    "hotel": 1,
+    "industrial": 0,
+    "library": 0,
+    "life_service": 0,
+    "medical": 1,
+    "office": 0,
+    "religious": 0,
+    "research": 1,
+    "residential": 1,
+    "retail": 1,
+    "sports": 0,
+    "transport": 0,
+    "unknown": 0,
+    "utility": 2
+  },
+  "main_component_entrances": 8,
+  "main_component_ratio": 1.0,
+  "no_entrance": 0,
+  "non_placeable_buildings": 2,
+  "poi": {
+    "ambiguous": 0,
+    "associated": 2,
+    "invalid": 0,
+    "total": 2,
+    "unassociated": 0
+  },
+  "poi_only_primary_buildings": 0,
+  "primary_function_counts": {
+    "construction": 0,
+    "culture": 0,
+    "dining": 0,
+    "dormitory": 0,
+    "education": 1,
+    "government": 0,
+    "hotel": 1,
+    "industrial": 0,
+    "library": 0,
+    "life_service": 0,
+    "medical": 1,
+    "office": 0,
+    "religious": 0,
+    "research": 1,
+    "residential": 1,
+    "retail": 1,
+    "sports": 0,
+    "transport": 0,
+    "unknown": 0,
+    "utility": 2
+  },
+  "status": "ready",
+  "thresholds": {
+    "min_function_ratio": 0.0,
+    "min_main_ratio": 0.9
+  },
+  "unknown": 0,
+  "valid_buildings": 8,
+  "warnings": [
+    {
+      "code": "AI_LOW_CONFIDENCE",
+      "message": "AI prediction retained but below the frozen map policy threshold",
+      "refs": [
+        "synthetic/b7"
+      ]
+    },
+    {
+      "code": "BUILDING_EXCLUDED",
+      "message": "Invalid geometry, outside scope, water conflict, or no safe reachable entrance",
+      "refs": [
+        "synthetic/b4"
+      ]
+    },
+    {
+      "code": "BUILDING_EXCLUDED",
+      "message": "Invalid geometry, outside scope, water conflict, or no safe reachable entrance",
+      "refs": [
+        "synthetic/b5"
+      ]
+    },
+    {
+      "code": "EVIDENCE_CONFLICT",
+      "message": "Lower-priority or same-tier primary-use evidence conflicts; no automatic override",
+      "refs": [
+        "synthetic/b7"
+      ]
+    },
+    {
+      "code": "GENERIC_USE_SUPERSEDED",
+      "message": "Generic education tag retained as superseded evidence, not a teaching candidate",
+      "refs": [
+        "synthetic/b7"
+      ]
+    }
+  ]
+}

@@ -17,7 +17,7 @@ const GROUPS={
 }
 const font={'text-font':['sans-serif'],'text-size':12,'text-allow-overlap':false,'text-ignore-placement':false,'text-padding':5,'text-max-width':12}
 const textPaint={'text-color':'#304f49','text-halo-color':'#fffcf2','text-halo-width':1.8}
-const colour=['match',['get','category'],...Object.entries(CATEGORY_COLORS).flat(),'#b7c4c3']
+const colour=['case',['has','function_colour'],['get','function_colour'],['match',['get','category'],...Object.entries(CATEGORY_COLORS).flat(),'#b7c4c3']]
 const roadWidth=(multiplier=1,extra=0)=>['interpolate',['linear'],['zoom'],14,1*multiplier+extra,17,5*multiplier+extra,19,14*multiplier+extra,22,55*multiplier+extra]
 
 export class MapLibreScene {
