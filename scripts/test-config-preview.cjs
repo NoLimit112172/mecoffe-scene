@@ -3,6 +3,7 @@ const fs = require('node:fs');
 const path = require('node:path');
 const assert = require('node:assert/strict');
 const http = require('node:http');
+const {legacySession}=require('./lib/legacy-session-fixture.cjs');
 const {chromium}=require(process.env.PLAYWRIGHT_MODULE||path.join(process.env.USERPROFILE,'.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules/playwright'));
 const root=path.resolve(__dirname,'..'),args=process.argv.slice(2),embed=args.includes('--embed');
 const privateAt=args.indexOf('--private-fixtures'),privateInput=privateAt>=0;
@@ -27,7 +28,15 @@ async function ready(page,gis=false){
 async function shot(page,name){if(!privateInput)await page.screenshot({path:path.join(output,name+'.png')});}
 async function open(url){const page=await browser.newPage({viewport:{width:1600,height:1000}});page.on('pageerror',e=>report.errors.push(e.message));await page.goto(url,{waitUntil:'domcontentloaded'});return page;}
 function stage(name,payload,status='completed'){return {name,status,reused:false,error:null,payload};}
-async function mock(page,status){await page.route('**/api/sessions/**',route=>{const network=new URL(route.request().url()).pathname.endsWith('/network');if(typeof status==='number')return route.fulfill({status,json:{detail:'测试响应'}});return route.fulfill({json:stage(network?'network':'roles',network?(status==='pending'?null:{snapshot,provenance:{}}):preparation,network&&status==='pending'?'running':'completed')});});}
+async function mock(page,status){await page.route('**/api/sessions/**',route=>{
+  const request=route.request(),pathname=new URL(request.url()).pathname,prefix='/api/sessions/synthetic-session';
+  assert.equal(request.method(),'GET');
+  assert([prefix,prefix+'/configs/synthetic-config/stages/network',prefix+'/configs/synthetic-config/stages/roles'].includes(pathname),'unexpected configuration API '+pathname);
+  if(pathname===prefix)return route.fulfill({json:legacySession({session:'synthetic-session',config:'synthetic-config'})});
+  if(typeof status==='number')return route.fulfill({status,json:{detail:'测试响应'}});
+  const network=pathname.endsWith('/network');
+  return route.fulfill({json:stage(network?'network':'roles',network?(status==='pending'?null:{snapshot,provenance:{}}):preparation,network&&status==='pending'?'running':'completed')});
+});}
 (async()=>{
   if(embed){const dist=path.join(root,'frontend/dist-embed');server=http.createServer((req,res)=>{const pathname=decodeURIComponent(new URL(req.url,'http://localhost').pathname);if(!pathname.startsWith('/scene/')){res.writeHead(404).end();return;}let file=path.resolve(dist,'.'+pathname.slice('/scene'.length));if(file!==dist&&!file.startsWith(dist+path.sep)){res.writeHead(404).end();return;}if(fs.existsSync(file)&&fs.statSync(file).isDirectory())file=path.join(file,'index.html');if(!fs.existsSync(file)){res.writeHead(404).end();return;}const type={'.js':'text/javascript','.css':'text/css','.json':'application/json','.geojson':'application/geo+json','.svg':'image/svg+xml','.html':'text/html','.png':'image/png','.wasm':'application/wasm'}[path.extname(file)]||'application/octet-stream';res.setHeader('Content-Type',type);fs.createReadStream(file).pipe(res);});await new Promise(resolve=>server.listen(5188,'127.0.0.1',resolve));}
   browser=await chromium.launch({channel:'chrome',headless:true});

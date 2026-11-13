@@ -2,6 +2,7 @@
 const fs=require('node:fs'),path=require('node:path'),assert=require('node:assert/strict');
 const {servePages}=require('./serve-pages.cjs');
 const {liveFixture}=require('./lib/live-fixture.cjs');
+const {legacySession}=require('./lib/legacy-session-fixture.cjs');
 const {chromium}=require(process.env.PLAYWRIGHT_MODULE||path.join(process.env.USERPROFILE,'.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules/playwright'));
 const root=path.resolve(__dirname,'..'),out=path.join(root,'logs/milestone14');fs.mkdirSync(out,{recursive:true});
 const origin='http://127.0.0.1:5194',base=origin+'/scene';
@@ -21,6 +22,7 @@ async function mockCase(options={}){
     if(!url.pathname.startsWith('/api/'))return route.continue();
     assert.equal(request.method(),'GET');assert.equal(request.headers().authorization,undefined);
     requests.push({path:url.pathname,query:url.search,time:Date.now()});
+    if(url.pathname===`/api/sessions/${f.session}`)return route.fulfill({json:legacySession({session:f.session,config:f.config,run:f.run,status:control.terminal?'completed':'running'})});
     if(control.failure==='detail-401'&&url.pathname===f.prefix)return route.fulfill({status:401,json:{detail:'合成登录失效'}});
     if(url.pathname===f.prefix)return route.fulfill({json:f.detail(control.terminal?'completed':control.phase==='partial'?'running':'running')});
     if(url.pathname===f.stages+'roles')return route.fulfill({json:{name:'roles',status:'completed',config_id:f.config,payload:f.roles}});

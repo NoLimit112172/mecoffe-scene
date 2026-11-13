@@ -2,6 +2,7 @@
 // --embed serves dist-embed at /scene/ using strict static directory indexes.
 const fs=require('node:fs'),path=require('node:path'),assert=require('node:assert/strict');
 const {servePages}=require('./serve-pages.cjs');
+const {legacySession}=require('./lib/legacy-session-fixture.cjs');
 const {chromium}=require(process.env.PLAYWRIGHT_MODULE||path.join(process.env.USERPROFILE,'.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules/playwright'));
 const root=path.resolve(__dirname,'..'),embed=process.argv.includes('--embed'),tag=embed?'embed':'local';
 const origin=embed?'http://127.0.0.1:5189':'http://127.0.0.1:5180',base=origin+(embed?'/scene':'');
@@ -11,10 +12,11 @@ const read=name=>JSON.parse(fs.readFileSync(path.join(fixture,name+'.json'),'utf
 const sample=()=>({trajectory:read('trajectory'),snapshot:read('snapshot'),plan:read('plan')});
 const session='synthetic-session',run='synthetic-run',config='synthetic-config';
 const api=`/api/sessions/${session}/runs/${run}`;
+const sessionApi=`/api/sessions/${session}`;
 const artifacts=['trajectory','population-snapshot','plan'].map(name=>api+'/artifacts/'+name);
 const stagePlan=`/api/sessions/${session}/configs/${config}/stages/plan`,stageRoles=`/api/sessions/${session}/configs/${config}/stages/roles`;
 // M14 first polls run detail, then loadRunReplay independently verifies it again.
-const expectedCounts=Object.fromEntries([[api,2],...artifacts.map(url=>[url,1]),[stagePlan,1],[stageRoles,1]].sort(([a],[b])=>a.localeCompare(b)));
+const expectedCounts=Object.fromEntries([[api,2],[sessionApi,1],...artifacts.map(url=>[url,1]),[stagePlan,1],[stageRoles,1]].sort(([a],[b])=>a.localeCompare(b)));
 const report={mode:tag,source:'synthetic-only',viewport:'1600x1000',expected:{people:7,relationships:4,brands:3,orders:2,declined:1,unknown:1,failed:1},checks:[],requestChecks:[],apiRequests:[],apiResponses:[],errors:[],badResponses:[],externalRequests:[]};
 let server,browser;
 const entry=(view='mecoffe3d')=>`${base}/${view}/?session=${session}&run=${run}`;
@@ -25,7 +27,7 @@ async function mock(context,mode='completed'){
   if(mode==='mismatch')input.snapshot.snapshot_revision++;
   if(mode==='engine-mismatch')detail.engine_run_id='synthetic-other-engine';
   if(mode==='pending')detail.status='running';
-  const allowedPaths=mode===401||mode===404?[api]:mode==='pending'?[api,api+'/scene/bootstrap']:[api,...artifacts,stagePlan,stageRoles];
+  const allowedPaths=mode===401||mode===404?[api]:mode==='pending'?[api,api+'/scene/bootstrap',sessionApi]:[api,sessionApi,...artifacts,stagePlan,stageRoles];
   const capture={calls:[],trace:[]};
   context.on('response',response=>{
     const url=new URL(response.url());if(url.origin!==origin||!url.pathname.startsWith('/api/'))return;
@@ -39,6 +41,7 @@ async function mock(context,mode='completed'){
       assert.equal(request.method(),'GET');assert.equal(request.headers().authorization,undefined);
       assert(allowedPaths.includes(url.pathname),'unexpected API path for '+mode+': '+url.pathname);
       if(mode===401||mode===404)return route.fulfill({status:mode,json:{detail:'合成错误响应'}});
+      if(url.pathname===sessionApi)return route.fulfill({json:legacySession({session,config,run,status:detail.status})});
       if(url.pathname===api)return route.fulfill({json:detail});
       if(mode==='pending'&&url.pathname===api+'/scene/bootstrap')return route.fulfill({status:404,json:{detail:'合成旧后端尚无实时接口'}});
       if(url.pathname===api+'/artifacts/trajectory')return route.fulfill({json:input.trajectory});
@@ -58,7 +61,9 @@ function assertTerminalRequests(capture,from,label,fresh=true){
   const calls=capture.calls.slice(from.calls),trace=capture.trace.slice(from.trace),counts={};
   for(const call of calls){assert.equal(call.method,'GET');counts[call.path]=(counts[call.path]||0)+1;}
   const sorted=Object.fromEntries(Object.entries(counts).sort(([a],[b])=>a.localeCompare(b)));
-  assert.deepEqual(sorted,fresh?expectedCounts:{},label);
+  // View entry remounts re-check the exact configuration's raw requirement;
+  // the M14 terminal bundle itself remains retained, so ONLY Session is read.
+  assert.deepEqual(sorted,fresh?expectedCounts:{[sessionApi]:1},label);
   assert.equal(counts[api+'/scene/bootstrap']||0,0);assert.equal(counts[api+'/scene/events']||0,0);
   if(fresh){
     assert.equal(calls[0].path,api,'first call must read run detail');

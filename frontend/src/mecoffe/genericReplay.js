@@ -1,4 +1,5 @@
 import {normalizeConfigPreview, buildConfigPreviewScenario, ConfigPreviewError} from './configPreview.js'
+import {prepareTeamPresentation} from './teamScene.js'
 
 const ID = /^[A-Za-z0-9][A-Za-z0-9_.:-]{0,127}$/
 const TERMINAL = new Set(['completed', 'failed', 'cancelled'])
@@ -199,25 +200,47 @@ function replayTime(plan,meta,mapTime){
     intervals:Array.from({length:meta.total_steps},(_,i)=>({start:localTimestamp(startMs+i*duration),end:localTimestamp(startMs+(i+1)*duration)}))}
 }
 
+function activitySummary(events,noop,people,relationships){
+  const byType=Object.fromEntries([...new Set(events.map(event=>event.type))].map(type=>[type,events.filter(event=>event.type===type).length]))
+  const purchases=events.filter(event=>event.type==='purchase')
+  return {people,relationships,events:events.length,orders:purchases.length,
+    revenue_fen:purchases.reduce((sum,event)=>sum+event.amount_fen,0),noop:[...noop.values()].reduce((a,b)=>a+b,0),
+    declined:byType.declined||0,unknown:byType.unknown||0,failed:byType.failed||0,by_type:byType}
+}
+
+/** Validated activity/commerce evidence without creating any map or placement. */
+export function buildReplayActivity(bundle){
+  const input=validateRunReplay(bundle),people=new Map(input.snapshot.nodes.map(person=>[person.entity_id,person]))
+  const {events,noop}=buildEvents(bundle.trajectory,economyIndex(bundle.plan,people),people)
+  return {input,events,noop,summary:activitySummary(events,noop,people.size,bundle.trajectory.initial_relationships.length)}
+}
+
 /** 将团队格式终态记录转换为两种地图共用的通用回放。 */
 export function buildGenericReplayScenario(bundle,mapScenario){
   const {trajectory,snapshot,plan,context={},placementRules={}}=bundle
-  const normalized=validateRunReplay(bundle)
-  if(bundle.sceneResult)Object.assign(normalized,{scenePlan:plan,sceneConfigId:context.config_id})
-  const scenario=buildConfigPreviewScenario(normalized,mapScenario,placementRules,bundle.sceneResult)
+  const activity=buildReplayActivity(bundle),normalized=activity.input
+  let sceneResult=bundle.sceneResult
+  if(bundle.scenePlacement){
+    const binding=bundle.scenePlacement
+    if(binding.config_id!==context.config_id)fail('REF_MISMATCH','场景绑定不属于该次运行配置')
+    const checked=prepareTeamPresentation({kind:'map',sceneResult:binding.result,configSnapshot:binding.snapshot,
+      configPlan:binding.plan,configId:binding.config_id},{snapshot,plan})
+    if(checked.kind!=='map')fail('REF_MISMATCH',checked.message)
+    if(sceneResult&&sceneResult.result_sha256!==binding.result.result_sha256)fail('REF_MISMATCH','运行展示使用了不同的场景正文')
+    sceneResult=binding.result
+    Object.assign(normalized,{scenePlan:binding.plan,sceneConfigId:binding.config_id})
+  }else if(sceneResult)Object.assign(normalized,{scenePlan:plan,sceneConfigId:context.config_id})
+  const scenario=buildConfigPreviewScenario(normalized,mapScenario,placementRules,sceneResult)
   const scene=scenario.files['trajectory.json'], people=new Map(scene.people.map(person=>[person.id,person]))
-  const economy=economyIndex(plan,people),{events,noop}=buildEvents(trajectory,economy,people)
+  const economy=economyIndex(plan,people),{events,noop}=activity
   const products=[...economy.products.values()]
-  if(!bundle.sceneResult)scene.brands=[...economy.brands.values()].map(brand=>({brand_id:brand.brand_id,merchant_id:brand.owner_entity_id,
+  if(!sceneResult)scene.brands=[...economy.brands.values()].map(brand=>({brand_id:brand.brand_id,merchant_id:brand.owner_entity_id,
     owner_entity_id:brand.owner_entity_id,location_id:people.get(brand.owner_entity_id).location_key,
     product_name:products.filter(product=>product.brand_id===brand.brand_id).map(product=>product.product_name).join('、')||brand.brand_id}))
   scene.events=events;scene.relationships=clone(trajectory.initial_relationships)
   scene.posts=Object.fromEntries((trajectory.objects.posts||[]).map(post=>[String(post.post_id),{author:post.author_entity_id,content:post.content||''}]))
-  const byType=Object.fromEntries([...new Set(events.map(event=>event.type))].map(type=>[type,events.filter(event=>event.type===type).length]))
-  const purchases=events.filter(event=>event.type==='purchase'),lastStep=Math.max(0,trajectory.metadata.completed_steps,...events.map(event=>event.step),...noop.keys())
-  scene.summary={people:people.size,relationships:scene.relationships.length,events:events.length,orders:purchases.length,
-    revenue_fen:purchases.reduce((sum,event)=>sum+event.amount_fen,0),noop:[...noop.values()].reduce((a,b)=>a+b,0),
-    declined:byType.declined||0,unknown:byType.unknown||0,failed:byType.failed||0,by_type:byType}
+  const lastStep=Math.max(0,trajectory.metadata.completed_steps,...events.map(event=>event.step),...noop.keys())
+  scene.summary=activity.summary
   scene.days=Array.from({length:lastStep+1},(_,step)=>({step,label:step===0?'初始化':`第 ${step} ${trajectory.metadata.step_unit==='day'?'天':'步'}`,
     complete:step<=trajectory.metadata.completed_steps,counts:Object.fromEntries([...new Set(events.filter(e=>e.step===step).map(e=>e.type))].map(type=>[type,events.filter(e=>e.step===step&&e.type===type).length])),noop:noop.get(step)||0}))
   Object.assign(scene.meta,{mode:'generic_replay',config_preview:false,generic_replay:true,run_id:trajectory.run_id,
@@ -226,7 +249,7 @@ export function buildGenericReplayScenario(bundle,mapScenario){
     status:trajectory.status,partial:trajectory.partial,plan_id:plan.plan_id,plan_revision:plan.plan_revision,
     completed_steps:trajectory.metadata.completed_steps,total_steps:trajectory.metadata.total_steps,step_unit:trajectory.metadata.step_unit,
     time_source:plan.runtime?.time?.start_time?'plan':'display_default',limitations:clone(trajectory.metadata.limitations||[])})
-  scenario.manifest={...scenario.manifest,id:'generic-replay',title:bundle.sceneResult?mapScenario.manifest.title:scene.meta.synthetic?'合成样例 · 通用运行回放':'通用模拟 · 运行回放',preview_mode:'replay',simulation_data:true,
+  scenario.manifest={...scenario.manifest,id:'generic-replay',title:sceneResult?mapScenario.manifest.title:scene.meta.synthetic?'合成样例 · 通用运行回放':'通用模拟 · 运行回放',preview_mode:'replay',simulation_data:true,
     context:clone(context),simulation_time:replayTime(plan,trajectory.metadata,mapScenario.manifest.simulation_time)}
   return scenario
 }
