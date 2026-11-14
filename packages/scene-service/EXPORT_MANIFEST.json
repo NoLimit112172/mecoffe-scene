@@ -56,7 +56,7 @@
     "src/mecoffe_scene_service/issue_messages.json": "88190dea6894401cf3ab8dbea1eb41d4b580c4d6e526cde4a14ad6856fa26f8c",
     "src/mecoffe_scene_service/issues.py": "a8712add07044dd0be134846096f9e46ab5b5d8827ce74b2328d25c01ecb7c7c",
     "src/mecoffe_scene_service/maps.py": "8027fc3df002f5c211a9c76b2bda0ab77e8c619e644b52a5fdf8e5f45341b9fb",
-    "src/mecoffe_scene_service/quality.py": "69149c80dfb50efda992c06999d1d3c393ec4841dc6b12a4fef98ff3ca057cb3",
+    "src/mecoffe_scene_service/quality.py": "d06aaaf95f6670c1b83c224ce5f1fe55f393f56fe4f3e0e5b912b3f1376d212f",
     "src/mecoffe_scene_service/request.py": "d9648787afbe612a6951f432caf7d14866e6b576ddce5a925926c814d00827f7",
     "src/mecoffe_scene_service/resolver.py": "61485cb99dce32a863ebcd31ec03e13a3b5656f999d0851ba4bf3ce558fa283a",
     "src/mecoffe_scene_service/resources/mecoffe-embed-v1/asset-library.json": "cffecbe3ab2bcca21939d1180347bb06813cd14a1af0e752f0b46552655419b1",
@@ -133,7 +133,7 @@
     },
     "adapter/scene_service/quality.py": {
       "byte_policy": "lf",
-      "sha256": "69149c80dfb50efda992c06999d1d3c393ec4841dc6b12a4fef98ff3ca057cb3"
+      "sha256": "d06aaaf95f6670c1b83c224ce5f1fe55f393f56fe4f3e0e5b912b3f1376d212f"
     },
     "adapter/scene_service/request.py": {
       "byte_policy": "lf",
@@ -163,5 +163,5 @@
     "version": "0.2.2"
   },
   "schema_version": "scene.service-export.v1",
-  "source_commit": "6d15f73f882448b60504d20226bc35988a132814"
+  "source_commit": "4cddfd289c5f1a0fa915c54d02210592fb27a4e8"
 }
