@@ -170,7 +170,7 @@ class SceneServiceExportTests(unittest.TestCase):
             with self.subTest(statement=statement),self.assertRaises(ValueError):
                 check_import_dependencies({**files,name:(statement+'\n').encode()+files[name]})
 
-    def test_runtime_020_manifest_is_locked_and_old_contracts_assets_are_identical(self):
+    def test_runtime_021_manifest_is_locked_and_old_contracts_assets_are_identical(self):
         files=build_export()
         self.assertEqual(hashlib.sha256(files[MANIFEST]).hexdigest(),RELEASE_MANIFEST_SHA256)
         frozen=['contract.json','contract-v2.json','resources/mecoffe-embed-v1/catalog.json',
@@ -180,8 +180,8 @@ class SceneServiceExportTests(unittest.TestCase):
             before=subprocess.check_output(['git','show','39b4ae1:packages/scene-service/'+name],cwd=ROOT)
             self.assertEqual(files[name],before,name)
         manifest=json.loads(files[MANIFEST])
-        self.assertEqual(manifest['package']['version'],'0.2.0')
-        self.assertEqual(manifest['exporter']['version'],'3')
+        self.assertEqual(manifest['package']['version'],'0.2.1')
+        self.assertEqual(manifest['exporter']['version'],'4')
         contract=json.loads(files[f'src/{IMPORT_NAME}/contract-v3.json'])
         self.assertEqual(contract['properties']['schema_version']['const'],'scene.result.v3')
         self.assertIn('layer',contract['properties']['assignments']['items']['properties']['evidence']['items']['required'])

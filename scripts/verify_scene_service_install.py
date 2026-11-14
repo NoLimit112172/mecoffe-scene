@@ -50,7 +50,7 @@ request=json.loads(pathlib.Path(sys.argv[1]).read_text(encoding='utf-8'))
 installed=sys.argv[2]=='installed'
 if installed:
     import mecoffe_scene_service as service
-    assert service.__version__=='0.2.0'
+    assert service.__version__=='0.2.1'
     assert service.SCENE_RESULT_SCHEMA_VERSIONS==('scene.result.v1','scene.result.v2','scene.result.v3')
     assert service.SCENE_RESULT_OUTPUT_SCHEMA_VERSION=='scene.result.v3'
     assert not importlib.metadata.distribution('mecoffe-scene-service').requires

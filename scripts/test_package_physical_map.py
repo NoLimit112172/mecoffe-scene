@@ -33,6 +33,7 @@ class PhysicalPackageCase(unittest.TestCase):
                     self.assertEqual(hashlib.sha256(archive.read('payload/'+entry['path'])).hexdigest(),entry['sha256'])
                 self.assertTrue({'payload/adapter/scene_builder/physical_map.py',
                                  'payload/adapter/scene_builder/physical_scope.py',
+                                 'payload/adapter/scene_service/spatial_index.py',
                                  'payload/scripts/prepare-physical-map.py'} <= set(archive.namelist()))
                 archive.extractall(work/'unpacked')
             payload = work/'unpacked/payload'

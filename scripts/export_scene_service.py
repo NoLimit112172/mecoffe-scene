@@ -9,14 +9,14 @@ import sys
 
 ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_OUT = ROOT / 'packages/scene-service'
-VERSION = '0.2.0'
+VERSION = '0.2.1'
 IMPORT_NAME = 'mecoffe_scene_service'
 DISTRIBUTION = 'mecoffe-scene-service'
 REQUIRES_PYTHON = '>=3.11,<3.12'
-EXPORTER_VERSION = '3'
+EXPORTER_VERSION = '4'
 MANIFEST = 'EXPORT_MANIFEST.json'
 MODULES = ('common', 'compiler', 'request', 'resolver', 'validation', 'checker',
-           'maps', 'evidence', 'geometry', 'issues', 'auto_evidence', 'taxonomy')
+           'maps', 'evidence', 'geometry', 'issues', 'auto_evidence', 'taxonomy', 'spatial_index')
 SERVICE = 'adapter/scene_service/'
 ASSETS = 'adapter/scene_builder/resources/mecoffe-embed-v1/'
 JSON_FILES = ('contract.json', 'contract-v2.json', 'contract-v3.json', 'issue_messages.json')
