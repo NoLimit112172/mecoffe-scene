@@ -15,7 +15,7 @@
     </header>
 
     <div class="spatial-notice" role="note"><i aria-hidden="true" class="fa-solid fa-circle-info"></i><strong>建筑与道路来自{{scenario?.files['trajectory.json']?.meta.scene_result?'当前地图包':' OpenStreetMap'}}；人物所在楼栋与行走路线为展示层示意，OASIS 没有位置数据</strong></div>
-    <ScenePlacementDetails v-if="scenario?.files['trajectory.json']?.meta.scene_result" :result="scenario.files['trajectory.json'].meta.scene_result" :people="scenario.files['trajectory.json'].people"/>
+    <ScenePlacementDetails v-if="scenario?.files['trajectory.json']?.meta.scene_result" :result="scenario.files['trajectory.json'].meta.scene_result" :people="scenario.files['trajectory.json'].people" :buildings="scenario.files['campus3d.json']?.buildings || []"/>
     <div v-if="loadError" class="error-panel" role="alert"><strong>三维场景未能加载</strong><p>{{ loadError }}</p><button @click="loadScene(requestedMode)">重新加载</button><RouterLink to="/mecoffe">打开原二维页面</RouterLink></div>
     <p v-if="styleError" role="alert" class="data-notice">{{styleError}}</p>
 
@@ -108,7 +108,7 @@
               </div>
             </article>
             <p v-if="!roster.length" class="empty">没有匹配的人物。</p>
-            <div class="roster" aria-label="人物名册"><button v-for="person in roster" :key="person.id" :data-person-id="person.id" :class="{ selected: selectedId === person.id }" @click="selectPerson(person.id)"><span class="person-dot" :style="{ background: roleColor(person.role) }"></span><span>{{ person.name }}<small :title="person.role_description || person.role_label">{{ isGenericReplay ? person.role_label + (mappedBuilding(person)?.name ? ' · ' + mappedBuilding(person).name : '') : mappedBuilding(person)?.name || person.role_label }}</small></span><i aria-hidden="true" v-if="selectedId === person.id" class="fa-solid fa-chevron-right"></i></button></div>
+            <div class="roster" aria-label="人物名册"><button v-for="person in roster" :key="person.id" :data-person-id="person.id" :class="{ selected: selectedId === person.id }" @click="selectPerson(person.id)"><span class="person-dot" :style="{ background: roleColor(person.role) }"></span><span>{{ person.name }}<small :title="person.role_description || person.role_label">{{ isGenericReplay ? person.role_label + (mappedBuilding(person) ? ' · ' + buildingName(mappedBuilding(person)) : '') : mappedBuilding(person) ? buildingName(mappedBuilding(person)) : person.role_label }}</small></span><i aria-hidden="true" v-if="selectedId === person.id" class="fa-solid fa-chevron-right"></i></button></div>
           </div>
           <div v-else-if="activeTab === 'building'" class="side-content">
             <div class="section-heading"><h2>楼栋详情</h2></div>
@@ -116,7 +116,7 @@
             <template v-else>
               <div class="building-summary">
                 <i class="fa-solid fa-building" aria-hidden="true"></i>
-                <div><h3>{{ selectedBuilding.name }}</h3><p>楼内 {{ buildingResidents.length }} 人（示意）</p></div>
+                <div><h3>{{ buildingName(selectedBuilding) }}</h3><small v-if="!hasBuildingName(selectedBuilding)">{{selectedBuilding.osm_id}}</small><p>楼内 {{ buildingResidents.length }} 人（示意）</p></div>
               </div>
               <div v-if="selectedBuilding.services" class="mapping-note" data-testid="building-uses"><p>主用途：{{buildingUseInfo(selectedBuilding).primary.join('、')}}</p><p>楼内服务：{{buildingUseInfo(selectedBuilding).services.join('、')||'暂无证据'}}</p><small v-if="buildingUseInfo(selectedBuilding).fromServices">仅据楼内兴趣点推断</small></div>
               <section v-if="buildingShops.length" class="building-shops" data-testid="building-shops"><h4>本楼门店（示意）</h4><div v-for="shop in buildingShops" :key="shop.brandId" :data-shop-brand="shop.brandId"><b>{{shop.name}}</b><span>{{shop.productName}}</span><small>{{shop.brandId}}</small></div></section>
@@ -131,7 +131,7 @@
           <div v-else class="side-content">
             <div class="section-heading"><h2>真实楼栋 · 示意对应</h2><small>{{Object.keys(mappingData?.mappings || {}).length}} 个地点</small></div><p class="muted">轮廓与楼名来自 OSM。{{isConfigPreview?'下面是当前配置的展示映射。楼栋安置为示意。':'下面是原沙盘地点的人工展示映射，咖啡店不是核实店址。'}}</p>
             <div v-for="[key, entry] in Object.entries(mappingData?.mappings || {})" :key="key" class="mapping-row">
-              <b><i class="fa-solid fa-location-dot" aria-hidden="true"></i>{{ buildingById.get(entry.osm_id)?.name || entry.osm_id }}</b>
+              <b><i class="fa-solid fa-location-dot" aria-hidden="true"></i>{{ buildingName(buildingById.get(entry.osm_id)) }}</b><small v-if="!hasBuildingName(buildingById.get(entry.osm_id))">{{entry.osm_id}}</small>
               <small>{{ key }}</small><p>{{ entry.note }}</p>
             </div>
           </div>
@@ -190,6 +190,7 @@ import EventResultDetails from '../components/EventResultDetails.vue'
 import {shopEntries, shopsInBuilding} from '../mecoffe/shopPresentation.js'
 import {previewQuery} from '../mecoffe/configPreviewStore.js'
 import ScenePlacementDetails from '../components/ScenePlacementDetails.vue'
+import {buildingName,hasBuildingName} from '../mecoffe/buildingDisplay.js'
 import {sceneEvidenceLabel,buildingUseInfo} from '../mecoffe/sceneLabels.js'
 import Campus3DVisualControls from '../components/Campus3DVisualControls.vue'
 import { Campus3DScene } from '../mecoffe/Campus3DScene.js'
@@ -221,7 +222,7 @@ const campusData = shallowRef(null)
 const indoorState=shallowRef({buildings:{},persons:{},inside:0}), selectedBuildingId=ref(null), sourceTime=shallowRef(null)
 const selectedBuilding=computed(()=>campusData.value?.buildings.find(b=>b.osm_id===selectedBuildingId.value))
 const buildingResidents=computed(()=>(indoorState.value.buildings[selectedBuildingId.value]||[]).map(id=>index.value?.people.get(id)).filter(Boolean))
-function personPlacement(id){if(index.value?.people.get(id)?.out_of_scene)return '场景外（示意，不在地图落位）';const state=indoorState.value.persons[id],b=campusData.value?.buildings.find(b=>b.osm_id===state?.buildingId);return state?.buildingId?`在 ${b?.name || '楼栋'} 内（示意）`:'正在进出楼或沿步行路线移动（示意）'}
+function personPlacement(id){if(index.value?.people.get(id)?.out_of_scene)return '场景外（示意，不在地图落位）';const state=indoorState.value.persons[id],b=campusData.value?.buildings.find(b=>b.osm_id===state?.buildingId);return state?.buildingId?`在 ${buildingName(b)} 内（示意）`:'正在进出楼或沿步行路线移动（示意）'}
 const mappingData = shallowRef(null)
 const mapEl = ref(null)
 const loading = ref(true)

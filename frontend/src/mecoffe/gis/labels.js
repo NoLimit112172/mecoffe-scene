@@ -1,5 +1,6 @@
 // Shared by the information card, search results and map popup. Display only.
 import {buildingUseInfo,FUNCTION_LABELS} from '../sceneLabels.js'
+import {buildingName} from '../buildingDisplay.js'
 const CATEGORIES={library:'图书馆',education:'教学科研',university:'大学教学楼',school:'教学楼',college:'学院',
   dormitory:'宿舍',apartments:'公寓',residential:'住宅',public:'公共设施',commercial:'商业设施',office:'办公楼',
   building:'建筑',yes:'建筑',hospital:'医疗设施',sports_centre:'体育设施',cafe:'咖啡店',restaurant:'餐饮',
@@ -12,7 +13,8 @@ export function featureInfo(feature,{catalog={prototypes:[]},mapping={}}={}){
     prototype:{name:!p.prototype_id?'未分配':hasChinese(prototype?.title)?prototype.title:'未提供中文名称',code:p.prototype_id&&!hasChinese(prototype?.title)?p.prototype_id:''},
     locations:(p.location_ids||[]).map(id=>{
       const entry=mapping.mappings?.[id]||{}
-      return {id,name:entry.display_name||entry.name||entry.osm_name||'未命名地点'}
+      const name=entry.display_name||entry.name||entry.osm_name
+      return {id,name:name?buildingName({name,osm_id:entry.osm_id}):'未命名地点'}
     }),
     sourceId:String(feature.id??p.feature_id??''),
     ...(Array.isArray(p.functions)?{uses:buildingUseInfo(p)}:{}),

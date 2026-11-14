@@ -1,4 +1,5 @@
 import {brandLocationKey} from './campus3dRouting.js'
+import {buildingName} from './buildingDisplay.js'
 
 // Display identities belong to brand ids, never input array order or a person's role.
 export function shopLetter(ordinal) {
@@ -29,6 +30,6 @@ export function buildingShopLabel(index,mapping,buildingId,buildingName='未命�
 export function shopLabelFeatures(index,mapping,collection) {
   return {...collection,features:collection.features.map(feature=>{
     const shops=shopsInBuilding(index,mapping,feature.id)
-    return shops.length?{...feature,properties:{...feature.properties,display_shop_label:buildingShopLabel(index,mapping,feature.id,feature.properties.name||'未命名楼栋')}}:feature
+    return shops.length?{...feature,properties:{...feature.properties,display_shop_label:buildingShopLabel(index,mapping,feature.id,buildingName(feature.properties))}}:feature
   })}
 }

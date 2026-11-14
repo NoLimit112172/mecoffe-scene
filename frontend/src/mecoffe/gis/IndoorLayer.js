@@ -1,4 +1,5 @@
 import {buildingShopLabel,shopsInBuilding} from '../shopPresentation.js'
+import {buildingName} from '../buildingDisplay.js'
 import {MercatorCoordinate} from 'maplibre-gl'
 import {Vector4} from 'three'
 import {featureCentre} from './model.js'
@@ -29,7 +30,7 @@ export class IndoorRoofLabels {
       const count=counts[feature.id]?.length||0,mapping=view.replay.scenario.files['location_mapping.json'],shops=shopsInBuilding(view.replay.index,mapping,feature.id);let el=this.elements.get(feature.id)
       if((!count&&!shops.length)||!matrix||view.map.getZoom()<15.3||view.visibility.buildings===false){if(el)el.style.display='none';continue}
       if(!el){el=document.createElement('div');el.setAttribute('data-indoor-building',feature.id);Object.assign(el.style,{position:'absolute',background:'#fffef4f2',border:'1px solid #a2b5a1',borderRadius:'6px',padding:'4px 8px',font:'600 12px/18px Microsoft YaHei,sans-serif',color:'#315c4d',whiteSpace:'nowrap',boxShadow:'0 2px 6px #28453420'});this.host.append(el);this.elements.set(feature.id,el)}
-      const label=buildingShopLabel(view.replay.index,mapping,feature.id,feature.properties.name||'楼栋'),text=label+(count?` · ${count} 人`:'')
+      const label=buildingShopLabel(view.replay.index,mapping,feature.id,buildingName(feature.properties)),text=label+(count?` · ${count} 人`:'')
       if(el.textContent!==text){el.textContent=text;el.title=label+' · 在楼内（示意）'+(shops.length?'\n'+shops.map(shop=>`${shop.name} · ${shop.productName}`).join('\n'):'');el.dataset.count=String(count)}
       if(shops.length){el.dataset.shopBuilding=String(feature.id);el.dataset.shopBrands=shops.map(shop=>shop.brandId).join(',');el.setAttribute('role','button');el.tabIndex=0;el.style.pointerEvents='auto';el.style.cursor='pointer';const select=()=>view.select({type:'feature',layer:'buildings',feature});el.onclick=event=>{event.stopPropagation();select()};el.onpointerdown=event=>event.stopPropagation();el.onkeydown=event=>{if(['Enter',' '].includes(event.key)){event.preventDefault();select()}}}
       const c=MercatorCoordinate.fromLngLat(featureCentre(feature),(feature.properties.height_m||0)+2),clip=new Vector4(c.x,c.y,c.z,1).applyMatrix4(matrix)

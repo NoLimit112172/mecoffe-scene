@@ -1,4 +1,5 @@
 import {shopLabelFeatures,shopsInBuilding,buildingShopLabel} from '../shopPresentation.js'
+import {buildingName} from '../buildingDisplay.js'
 import * as maplibregl from 'maplibre-gl'
 import workerUrl from 'maplibre-gl/dist/maplibre-gl-worker.mjs?worker&url'
 import {GisCharacterLayer} from './CharacterLayer.js'
@@ -124,7 +125,7 @@ export class MapLibreScene {
       coordinate=localToPoint(record,this.replay)
       this.popupPerson=item.id
     }else{
-      const p=item.feature.properties,info=this.describeFeature(item.feature),mapping=this.replay.scenario.files['location_mapping.json'],shops=item.layer==='buildings'?shopsInBuilding(this.replay.index,mapping,item.feature.id):[];title.textContent=shops.length?buildingShopLabel(this.replay.index,mapping,item.feature.id,p.name||info.category.name):p.name||info.category.name||'未命名要素'
+      const p=item.feature.properties,info=this.describeFeature(item.feature),mapping=this.replay.scenario.files['location_mapping.json'],shops=item.layer==='buildings'?shopsInBuilding(this.replay.index,mapping,item.feature.id):[],name=item.layer==='buildings'?buildingName(p):p.name||info.category.name||'未命名要素';title.textContent=shops.length?buildingShopLabel(this.replay.index,mapping,item.feature.id,name):name
       appendLabel(body,info.category)
       if(p.height_m)body.append(` · ${p.height_m} 米`)
       body.append(' · ');appendLabel(body,info.prototype)

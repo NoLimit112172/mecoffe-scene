@@ -5,6 +5,7 @@ import {positionAtCursor} from './campus3dPlayback.js'
 import {tripQueueEntries} from './renderPerformance.js'
 import {displayRoutePoints} from './campus3dCrowd.js'
 import {buildSpatialEnvironment} from './campus3dSpatial.js'
+import {buildingName} from './buildingDisplay.js'
 
 export const INDOOR_DEFAULTS=Object.freeze({doorSeconds:.5,shopSeconds:6,speedMps:100,headwaySeconds:.4,secondsPerDay:12,hz:60})
 const point=p=>({x:p[0],y:p[1]})
@@ -117,5 +118,5 @@ export class IndoorMotion {
   get snapshot(){if(this.lastRevision!==this.revision){this.lastRevision=this.revision;this.lastSnapshot=indoorSnapshot(this.people.values())}return this.lastSnapshot}
   get outside(){return [...this.people.values()].filter(outsidePerson)}
   get accounting(){const value=auditPeople(this.people.values(),this.buildingIds);if(!this.index?.scene.meta?.scene_result)return value;const out=this.index.scene.people.filter(p=>p.out_of_scene).length;return {...value,total:value.total+out,accounted:value.accounted+out,out_of_scene:out}}
-  personLocation(id){if(this.index?.people.get(id)?.out_of_scene)return {buildingId:null,name:'场景外',inside:false,phase:'out_of_scene'};const p=this.people.get(id),insideId=p&&indoorBuilding(p),phase=p?.walker?.phase||'home',buildingId=insideId||(['enter-shop','exit-shop'].includes(phase)?p.walker.shopBuilding:['enter-home','exit-home'].includes(phase)?p.homeBuilding:null),building=this.campus.buildings.find(b=>b.osm_id===buildingId);return {buildingId,name:building?.name||'',inside:Boolean(insideId),phase}}
+  personLocation(id){if(this.index?.people.get(id)?.out_of_scene)return {buildingId:null,name:'场景外',inside:false,phase:'out_of_scene'};const p=this.people.get(id),insideId=p&&indoorBuilding(p),phase=p?.walker?.phase||'home',buildingId=insideId||(['enter-shop','exit-shop'].includes(phase)?p.walker.shopBuilding:['enter-home','exit-home'].includes(phase)?p.homeBuilding:null),building=this.campus.buildings.find(b=>b.osm_id===buildingId);return {buildingId,name:buildingId?buildingName(building):'',inside:Boolean(insideId),phase}}
 }

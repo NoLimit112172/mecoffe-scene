@@ -1,6 +1,7 @@
 // SceneResult -> presentation only. Never chooses buildings or changes v1 validation.
 import {validateSceneResult} from './sceneResult.js'
 import {presentRole} from './rolePresentation.js'
+import {buildingName} from './buildingDisplay.js'
 export function checkScenePlacement(result,{snapshot,plan,config_id,map}={}){
   if(!plan||!snapshot||typeof config_id!=='string')throw new Error('缺少当前配置、快照或计划引用')
   return validateSceneResult(result,{snapshot,plan,source_refs:{config_id,snapshot_id:snapshot.snapshot_id,snapshot_revision:snapshot.snapshot_revision,plan_id:plan.plan_id,plan_revision:plan.plan_revision},...(map?{map:map.mapContext}:{} )})
@@ -15,7 +16,7 @@ export function buildScenePlacement(input,map,result){
     if(entry.status==='out_of_scene')return null
     const b=campus.buildings.find(b=>b.osm_id===entry.building_id)
     mappings[key]={osm_id:entry.building_id,entrance_id:entry.entrance_id,osm_name:b.name,illustrative:true,note:entry.reason}
-    locations.push({location_id:key,name:b.name||entry.building_id,kind:b.kind||'other',illustrative:true,buildings:[{building_id:key,name:b.name}],default_for_roles:[]})
+    locations.push({location_id:key,name:buildingName(b),kind:b.kind||'other',illustrative:true,buildings:[{building_id:key,name:buildingName(b)}],default_for_roles:[]})
     return key
   }
   const people=input.snapshot.nodes.map(node=>{

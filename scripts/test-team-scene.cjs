@@ -14,7 +14,7 @@ const SID='synthetic-team-session',RID='synthetic-team-run',PREFIX=`/api/session
 const clone=x=>structuredClone(x);
 async function mock(options={}){
   const {version=2,mode='config',revision=1,failure=null}=options,flag=Object.hasOwn(options,'flag')?options.flag:true;
-  const b=helpers.teamFixture(version),actualPlan=clone(b.plan);actualPlan.plan_revision=revision;
+  const b=options.buildingNames?helpers.ustcBuildingNamesFixture():helpers.teamFixture(version),actualPlan=clone(b.plan);actualPlan.plan_revision=revision;
   let virtualFiles=null;
   if(version===3){
     // The frozen taxonomy unit fixture intentionally omits rendering-only
@@ -114,8 +114,46 @@ function strictRequests(input,label,{mapFiles=true}={}){
   report.requests.push({label,counts});
 }
 async function shot(page,name){const file=path.join(out,(embed?'embed-':'')+name+'.png');await page.screenshot({path:file});report.screenshots.push(path.relative(root,file));}
+async function buildingNames(input,view){
+  const {page,b}=input,before=JSON.stringify(b.scene_result);
+  await accounting(input,view);
+  const panel=page.getByTestId('scene-placement-details');
+  assert.equal(await panel.count(),1);
+  await panel.locator('summary').click();
+  assert.equal(await panel.evaluate(element=>element.open),true);
+  const {dormitory,diningStaff,diningStudent,unnamed}=b.buildingNamesCases;
+  const expectedServices=new Map([['brand_alpha',diningStaff],['brand_beta',diningStudent]]);
+  const person=panel.locator('[data-assignment-person="synthetic_person_01"]');
+  assert.match(await person.locator('b').innerText(),new RegExp(dormitory.name));
+  assert(!(await person.locator('b').innerText()).includes(dormitory.id),'dormitory ID stays out of the main name');
+  assert.equal(await person.getAttribute('data-building'),dormitory.id);
+  const missing=panel.locator('[data-assignment-person="synthetic_person_06"]');
+  assert.match(await missing.locator('b').innerText(),/未命名楼栋/);
+  assert.doesNotMatch(await missing.locator('b').innerText(),/way\/|1501639766|未命名建筑/);
+  assert.equal((await missing.locator('small.placement-building-id').innerText()).includes(unnamed.id),true);
+  assert.equal(await missing.locator('small.placement-building-id').evaluate(element=>parseFloat(getComputedStyle(element).fontSize)<parseFloat(getComputedStyle(element.parentElement.querySelector('b')).fontSize)),true,'unnamed ID is secondary small text');
+  for(const [brand,expected]of expectedServices){
+    const row=panel.locator(`[data-service-brand="${brand}"]`),entry=b.scene_result.service_points.find(item=>item.brand_id===brand);
+    const label=await row.locator('b').innerText();
+    assert(label.includes(expected.name));assert(!label.includes(expected.id),'named building ID must not replace its name');
+    assert.equal(await row.getAttribute('data-building'),expected.id);
+    assert.equal(await row.getAttribute('data-entrance'),entry.entrance_id);
+  }
+  for(const entry of [...b.scene_result.assignments,...b.scene_result.service_points]){
+    const row=panel.locator(Object.hasOwn(entry,'entity_id')?`[data-assignment-person="${entry.entity_id}"]`:`[data-service-brand="${entry.brand_id}"]`);
+    const evidence=await row.locator('small:not(.placement-building-id)').allTextContents();
+    assert.equal(evidence.length,entry.evidence.length,'every original evidence row remains visible');
+    for(const item of entry.evidence)assert(evidence.some(text=>text.includes(`${item.key}=${item.value}`)&&text.includes(item.ref)),'key, value and original reference remain visible');
+  }
+  const outside=panel.locator('[data-assignment-person="synthetic_person_07"]');
+  assert.match(await outside.locator('b').innerText(),/场景外/);
+  assert.equal(await outside.locator('small.placement-building-id').count(),0);
+  assert.equal(JSON.stringify(b.scene_result),before);
+  await shot(page,`ustc-building-names-${view}`);
+}
 (async()=>{
-  helpers=await import(pathToFileURL(path.join(root,'frontend/tests/helpers/teamSceneFixtures.js')).href);
+  helpers={...await import(pathToFileURL(path.join(root,'frontend/tests/helpers/teamSceneFixtures.js')).href),
+    ...await import(pathToFileURL(path.join(root,'frontend/tests/helpers/buildingNameFixtures.js')).href)};
   if(embed){
     server=await servePages({root:path.join(root,'frontend/dist-embed'),prefix:'/scene/',port:5211});
   }else{
@@ -135,6 +173,11 @@ async function shot(page,name){const file=path.join(out,(embed?'embed-':'')+name
     await input.page.close();strictRequests(input,`v2 ${mode} ${view}`);await input.context.close();
   }
   if(!onlyV3&&!onlyNone)report.checks.push('v2: Three/GIS config/live/replay all use identical frozen assignments, 7 total and 2 outside; runtime revision 2 keeps original scene revision 1');
+  for(const view of onlyV3||onlyNone?[]:['three','gis']){
+    const input=await mock({buildingNames:true});await input.page.goto(input.url(view));await buildingNames(input,view);
+    await input.page.close();strictRequests(input,'USTC v2 building names '+view);await input.context.close();
+  }
+  if(!onlyV3&&!onlyNone)report.checks.push('public USTC v2 unchanged: Three/GIS placement details show 5号楼, 教工食堂, 学生食堂A区; unnamed building uses secondary small ID; evidence key/value/ref and placement IDs are preserved');
   for(const view of onlyNone?[]:['three','gis']){const input=await mock({version:3});await input.page.goto(input.url(view));await accounting(input,view);await input.page.close();strictRequests(input,'v3 config '+view);await input.context.close();}
   if(!onlyNone)report.checks.push('v3: fixture-derived synthetic-taxonomy-render adds only required walk-edge lengths under a new map ID/hash, original fixture remains read-only; 26 people render in both views');
   if(onlyV3){assert.deepEqual(report.errors,[]);assert.deepEqual(report.externalRequests,[]);assert.deepEqual(report.unexpectedApis,[]);report.ok=true;return;}

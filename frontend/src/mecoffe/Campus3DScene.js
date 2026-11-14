@@ -1,4 +1,5 @@
 import {shopEntries,shopsInBuilding,buildingShopLabel} from './shopPresentation.js'
+import {buildingName} from './buildingDisplay.js'
 import {SpatialWorker} from './spatialWorker.js'
 import {AdaptiveQuality,consolidateMaterialGroups,tripQueueEntries} from './renderPerformance.js'
 // Three.js presentation layer. The OSM graph constrains the drawn trips only;
@@ -403,7 +404,7 @@ export class Campus3DScene {
     }
     for (const building of this.campus.buildings) {
       const keys = mapped.get(building.osm_id) || []
-      const name = building.name || `OSM 楼栋 ${building.osm_id}`
+      const name = buildingName(building)
       let color = 0xa6b8bf
       if (/宿舍|[1-8]号楼/.test(name) || keys.some(key => /dorm|apartment/.test(key))) color = 0xd1b691
       if (/学科|教学/.test(name) || keys.includes('teaching_main')) color = 0x8daec6
@@ -1130,7 +1131,7 @@ export class Campus3DScene {
     if (person) {
       const entry = this.people.get(person.id)
       this.onHover?.({ type: 'person', name: person.name, person,
-        placement: { illustrative: true, building_name: entry.anchor.building.name, entrance: entry.entrance,
+        placement: { illustrative: true, building_name: buildingName(entry.anchor.building), entrance: entry.entrance,
           road_node_id: entry.anchor.node.id }, x: event.clientX, y: event.clientY })
       if (select) {
         this.selectPerson(person.id)
@@ -1147,7 +1148,7 @@ export class Campus3DScene {
         }
         this.invalidate()
       }
-      this.onHover?.({ type: 'building', name: building.name || `OSM ${building.osm_id}`, building,
+      this.onHover?.({ type: 'building', name: buildingName(building), building,
         preview: this.indoorPreview?.buildingId === building.osm_id, x: event.clientX, y: event.clientY })
     }
   }
