@@ -38,6 +38,7 @@ def validate_policy(value):
             value.get('schema_version') == 'scene.quality-policy.v1' and value.get('version') == VERSION,
             'INVALID_QUALITY_POLICY', '未知或不完整的地图质量规则；不能按旧口径静默解释')
     require(value['rules'] == RULES and value['rules_sha256'] == digest(RULES) and
+            value['rules_sha256'] == digest(value['rules']) and
             value['sha256'] == digest({key: item for key, item in value.items() if key != 'sha256'}),
             'INVALID_QUALITY_POLICY', '地图质量规则正文或摘要不一致')
     files = value['implementation_files']

@@ -209,6 +209,10 @@ class ScopeQualityCase(unittest.TestCase):
         unknown = copy.deepcopy(original); unknown['version'] = 'scope-quality.future'; variants.append(unknown)
         changed = copy.deepcopy(original); changed['rules']['empty_connectivity_population_ready'] = True; variants.append(changed)
         changed = copy.deepcopy(original); changed['sha256'] = '0' * 64; variants.append(changed)
+        # Python equality treats False == 0; the exact JSON rule bytes must
+        # still match their own frozen digest, even with a rehashed envelope.
+        changed = copy.deepcopy(original); changed['rules']['empty_connectivity_population_ready'] = 0
+        changed['sha256'] = digest({k: v for k, v in changed.items() if k != 'sha256'}); variants.append(changed)
         changed = copy.deepcopy(original); changed['implementation_files'].pop('geometry.py')
         changed['implementation_sha256'] = digest(changed['implementation_files'])
         changed['sha256'] = digest({k: v for k, v in changed.items() if k != 'sha256'}); variants.append(changed)
