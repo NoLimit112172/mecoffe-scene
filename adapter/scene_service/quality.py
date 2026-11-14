@@ -59,9 +59,13 @@ def policy_for(package):
         return None
     explicit = package.get('quality_policy')
     frozen = quality.get('quality_policy') if has_frozen else None
+    if has_explicit:
+        validate_policy(explicit)
+    if has_frozen:
+        validate_policy(frozen)
     require(not (has_explicit and has_frozen) or explicit == frozen,
             'INVALID_QUALITY_POLICY', '地图质量规则引用不一致')
-    return validate_policy(explicit if has_explicit else frozen)
+    return explicit if has_explicit else frozen
 
 
 def exclusion_warning(building, *, valid, in_scope, wet, associated, usable, layered, placeable, warn):

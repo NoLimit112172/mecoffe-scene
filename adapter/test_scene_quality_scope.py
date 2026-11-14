@@ -236,6 +236,12 @@ class ScopeQualityCase(unittest.TestCase):
         package['quality'] = {'quality_policy': copy.deepcopy(package['quality_policy'])}
         package['quality']['quality_policy']['implementation_files']['quality.py'] = '0' * 64
         self.assertCode('INVALID_QUALITY_POLICY', lambda: enrich_map(package))
+        package = synthetic_package()
+        package['quality'] = {'quality_policy': copy.deepcopy(package['quality_policy'])}
+        package['quality']['quality_policy']['rules']['empty_connectivity_population_ready'] = 0
+        # A valid explicit copy must not hide malformed frozen content, even
+        # though Python compares False and 0 as equal across nested dicts.
+        self.assertCode('INVALID_QUALITY_POLICY', lambda: enrich_map(package))
 
     def test_new_policy_publication_load_enrich_compile_and_inputs_remain_immutable(self):
         source_hashes = file_hashes(PUBLISHED)
