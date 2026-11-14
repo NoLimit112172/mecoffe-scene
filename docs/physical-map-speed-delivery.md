@@ -1,19 +1,12 @@
 # physical-map 提速兼容交付
 
-2026-11-14。按吴贤学长《在线建图：建图程序对接说明》收敛，学弟方只交付建图程序。基线为场景仓库 `c51f7bd04ac06c82c4d21c04f2ff20eb1a465eeb`，工作分支 `feat/physical-map-speed-compat`；纯性能源码提交 `3c2d5f3`。演示分支的HTTP服务、Qwen、选图、丰富底图和图书馆补注没有移植到本分支，也没有修改团队social-sim源码。
+2026-11-14。按吴贤学长《在线建图：建图程序对接说明》对齐，学弟方交付现有建图程序的兼容提速补丁。基线为场景仓库 `c51f7bd04ac06c82c4d21c04f2ff20eb1a465eeb`，工作分支 `feat/physical-map-speed-compat`；纯性能源码提交 `3c2d5f3`。
 
-## 给学长的回复（学弟口径，可直接转发）
+## 对接范围
 
-学长你好，我这边按你这份说明，把快速建图整理到你现有main的physical-map入口上了，不另做在线接口或部署。
+改动集中在入口道路搜索、建筑/水域候选索引和重复几何校验；配套提交运行包镜像、离线复跑输入、基准脚本及兼容性测试。已有后台继续负责搜索、确认、排队、OSM下载、存图、采用和部署。
 
-1. 调用还是你原来的 `python -m adapter.scene_builder physical-map`，参数和返回结构不变；解包后也保留原 `scripts/prepare-physical-map.py` 隔离入口。
-2. 只读你传入的OSM、metadata、已确认轮廓和规则，不自己搜索或补下载。数据不完整时沿用原错误。
-3. 支持现有Polygon/MultiPolygon及孔洞，道路仍按原50米缓冲处理；没有换成旧原型的矩形或代表点删楼方式。
-4. 输出仍是原14文件地图包，主用途/楼内服务继续走auto-evidence.2，ready/preview_only及质量门槛保持不变。
-5. 在0.77km²校园样本上，同输入、新进程三次中位总时从5.204秒降为0.197秒，约26.36倍；主要是用途和质量阶段从约4.897秒降至0.050秒。这些数值不含你后台的下载/排队。小社区子范围从0.311秒降为0.097秒。
-6. 代码在独立feat分支，兼容测试、旧图基准、隔离安装和建图包已整理；本地PR稿也已准备。尚未push或创建PR，远端操作仍按我们工作区约定等用户明确授权。
-
-补充一个来源口径：原程序会把实际源码SHA写进recipe，所以换实现后，来源摘要及下游manifest/map_ref会正常变化。固定源码身份的独立差分诊断中，两个样本的14文件和完整stdout都逐字节一致；没有通过放宽质量或减少建筑换速度。
+原程序会把实际源码SHA写进recipe，所以换实现后，来源摘要及下游manifest/map_ref会正常变化。固定源码身份的独立差分诊断中，两个样本的14文件和完整stdout逐字节一致；质量门槛和建筑数量保持不变。
 
 ## 不变的调用契约
 
@@ -68,7 +61,7 @@ stderr阶段严格保留 `reading → geometry → entrances_gis → evidence_qu
 
 生成的scene-service源码镜像升补丁版0.2.1，导出规则4显式纳入spatial_index，避免解包后缺模块。规则版本、SceneResult契约及地图格式不升级；调用方替换的是建图包，不要求改团队源码或增加服务。
 
-建图发布包位于团队仓库忽略目录 `social-sim/output/physical-map-speed-20261114/scene-map-builder-1.0.0.zip`，沿用原建图归档版本命名，实际源码由artifact.json的source_commit和逐文件SHA区分。解包后在payload根可用原`-m`命令，也可在任意工作目录运行：
+建图包继续由 `scripts/package_scene_builder.py` 生成，沿用 `scene-map-builder-1.0.0.zip` 归档命名，实际源码由artifact.json的source_commit和逐文件SHA区分。解包后在payload根可用原`-m`命令，也可在任意工作目录运行：
 
 ```sh
 python3.11 -I -B /path/to/payload/scripts/prepare-physical-map.py \
@@ -84,7 +77,7 @@ python3.11 -I -B /path/to/payload/scripts/prepare-physical-map.py \
 
 ## 逐文件改动与定位
 
-下表覆盖相对c51f7bd的每个改动文件；源码位置和验证结果在交付时自动核对。发布包、原始运行日志与输入归档另存忽略目录，不混入远端提交。
+下表覆盖相对c51f7bd的每个改动文件；源码位置和验证结果在交付时核对。运行产物、原始运行日志与源码快照存放在忽略目录；公开的离线复跑输入随性能用例提交。
 
 | 文件 | 函数/组件及行号 | 验证/用途 |
 | --- | --- | --- |
@@ -107,9 +100,8 @@ python3.11 -I -B /path/to/payload/scripts/prepare-physical-map.py \
 | `adapter/test_scene_geometry_cache.py` | `环缓存测试:8` | 值失效、非法环和容量约束通过 |
 | `adapter/test_scene_segment_bounds.py` | `线段保守排除测试:25` | 边界容差/随机原谓词差分通过 |
 | `adapter/test_scene_spatial_index.py` | `候选/证据差分测试:20` | 新版用途服务、冻结字段及水域原语义保持 |
-| `docs/physical-map-speed-delivery.md` | `本交付记录:1` | 学弟六问回复、指标、边界、逐文件与验收 |
+| `docs/physical-map-speed-delivery.md` | `本交付记录:1` | 对接边界、指标、逐文件与验收 |
 | `docs/physical-map-speed-measurements.json` | `实测摘要:2` | 来源报告SHA、两样本三对、严格差异审计 |
-| `docs/physical-map-speed-pr.md` | `本地PR稿:1` | 问题/行为/实测与验证，未写远端 |
 | `docs/scene-builder-offline.md` | `离线包说明:3` | 补丁口径、时间边界、原命令与14文件不变 |
 | `packages/scene-service/EXPORT_MANIFEST.json` | `自动生成0.2.1发布元数据:1` | 导出可复现、来源/文件SHA与离线安装通过 |
 | `packages/scene-service/README.md` | `自动生成0.2.1发布元数据:1` | 导出可复现、来源/文件SHA与离线安装通过 |
