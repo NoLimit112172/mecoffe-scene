@@ -115,8 +115,8 @@ python3.11 -I -B /path/to/payload/scripts/prepare-physical-map.py \
 | `adapter/physical_map_examples/performance/limits.json` | `基准输入 / 范围 / 来源 / 默认限额:1` | 原字节SHA核验；3对运行在原默认限额内；未联网 |
 | `adapter/physical_map_examples/performance/ustc-gaoxin-scope-source.json` | `基准输入 / 范围 / 来源 / 默认限额:1` | 原字节SHA核验；3对运行在原默认限额内；未联网 |
 | `adapter/physical_map_examples/performance/ustc-gaoxin-scope.geojson` | `基准输入 / 范围 / 来源 / 默认限额:1` | 原字节SHA核验；3对运行在原默认限额内；未联网 |
-| `adapter/scene_builder/entrances.py` | `_RoadIndex / generate_entrances:57` | 道路BVH；20项性能针对测试、188项adapter及物理CLI差分 |
-| `adapter/scene_service/evidence.py` | `enrich_map:57` | 候选与入口索引；用途/质量严格等价和65组旧编译 |
+| `adapter/scene_builder/entrances.py` | `_RoadIndex / generate_entrances:57` | 道路BVH；入口索引差分、193项adapter及物理CLI差分 |
+| `adapter/scene_service/evidence.py` | `enrich_map:57` | 候选与入口索引；常规输入用途/质量对照、退化几何纠正回归和65组旧编译 |
 | `adapter/scene_service/fixtures/compat/legacy-compile-baseline.json` | `map_files:40306` | 只移除1个误收临时副本；97正式SHA/65 expected未改 |
 | `adapter/scene_service/geometry.py` | `intersects / valid_ring / _valid_ring_coordinates:31` | 保守排除和坐标缓存；随机/边界/坐标修改回归 |
 | `adapter/scene_service/spatial_index.py` | `BoundsIndex:31` | 稳定网格、EPS/ULP、大对象回退；已知退化误报修正 |
