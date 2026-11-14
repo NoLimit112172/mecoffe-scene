@@ -1,8 +1,11 @@
-"""Per-operation conservative candidates; exact geometry remains authoritative.
+"""Per-operation box candidates for the current geometry predicates.
 
 The grid never stores map results between builds. Large objects and large
 queries fall back to ordered scans, bounding cell allocations without dropping
 candidates. Bounds expand outwards by the geometry tolerance and one float ULP.
+Separated boxes intentionally reject the legacy near-collinear floating-point
+false positives documented for 0.2.1; this is a known geometric correction,
+not a promise of identical results for all degenerate inputs.
 """
 import math
 

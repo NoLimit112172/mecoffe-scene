@@ -3,14 +3,79 @@ import hashlib
 import json
 import os
 from pathlib import Path
+import subprocess
 import sys
 import tempfile
 import unittest
 
 from profile_physical_map import audit_provenance_changes, compare_candidates, freeze_inputs, observed_stage_seconds, run_cli
 
+ROOT = Path(__file__).resolve().parents[1]
+CASES_PATH = ROOT/'adapter/physical_map_examples/performance/cases.json'
+
 
 class PhysicalMapBenchmarkTests(unittest.TestCase):
+    def test_every_real_case_archive_matches_metadata_and_expected_source_hash(self):
+        specification=json.loads(CASES_PATH.read_bytes())
+        self.assertTrue(specification['cases'])
+        for case in specification['cases']:
+            with self.subTest(case=case['id']):
+                raw=(ROOT/case['osm']).read_bytes()
+                metadata=json.loads((ROOT/case['metadata']).read_bytes())
+                self.assertEqual(hashlib.sha256(raw).hexdigest(),metadata['sha256'])
+                self.assertEqual(metadata['sha256'],case['expected_source_sha256'])
+
+    def test_real_archives_survive_git_autocrlf_checkout_without_byte_conversion(self):
+        """Exercise Git checkout conversion locally; this is not a Windows run."""
+        specification=json.loads(CASES_PATH.read_bytes())
+        paths={specification[field] for field in ['rules','limits']}
+        paths.update(case[field] for case in specification['cases']
+                     for field in ['osm','metadata','scope','scope_source'])
+        original={name:(ROOT/name).read_bytes() for name in paths}
+        with tempfile.TemporaryDirectory(prefix='physical-map-autocrlf-') as temporary:
+            work=Path(temporary);repo=work/'repository';repo.mkdir()
+            def git(*arguments):
+                return subprocess.run(['git','-C',str(repo),*arguments],check=True,
+                                      capture_output=True,text=True)
+            git('init','--quiet')
+            git('config','core.autocrlf','true')
+            git('config','core.safecrlf','false')
+            git('config','core.attributesFile',os.devnull)
+            (repo/'.gitattributes').write_bytes((ROOT/'.gitattributes').read_bytes())
+            for name,raw in original.items():
+                target=repo/name;target.parent.mkdir(parents=True,exist_ok=True);target.write_bytes(raw)
+            control=b'unprotected first line\nunprotected second line\n'
+            (repo/'conversion-control.txt').write_bytes(control)
+            git('add','--all')
+            for case in specification['cases']:
+                attributes=git('check-attr','text','diff','--',case['osm']).stdout.splitlines()
+                self.assertIn(case['osm']+': text: unset',attributes)
+                self.assertIn(case['osm']+': diff: set',attributes)
+            checkout=work/'checkout';checkout.mkdir()
+            git('checkout-index','--all','--prefix='+str(checkout)+os.sep)
+            self.assertEqual((checkout/'conversion-control.txt').read_bytes(),
+                             control.replace(b'\n',b'\r\n'),
+                             'The checkout must actually exercise CRLF conversion for unprotected text')
+            frozen,_=freeze_inputs(checkout,specification,work/'valid-frozen',None)
+            self.assertEqual(len(frozen),len(specification['cases']))
+            for case in specification['cases']:
+                with self.subTest(case=case['id']):
+                    raw=original[case['osm']]
+                    self.assertIn(b'\n',raw)
+                    self.assertNotIn(b'\r\n',raw)
+                    self.assertEqual((checkout/case['osm']).read_bytes(),raw)
+                    self.assertEqual(hashlib.sha256(raw).hexdigest(),case['expected_source_sha256'])
+                    # Reproduce the original review failure only in this
+                    # temporary checkout; production XML/metadata stay intact.
+                    converted=raw.replace(b'\n',b'\r\n')
+                    self.assertNotEqual(hashlib.sha256(converted).hexdigest(),case['expected_source_sha256'])
+                    (checkout/case['osm']).write_bytes(converted)
+                    with self.assertRaisesRegex(ValueError,'hash mismatch'):
+                        freeze_inputs(checkout,specification,work/('corrupt-'+case['id']),[case['id']])
+                    (checkout/case['osm']).write_bytes(raw)
+        for name,raw in original.items():
+            self.assertEqual((ROOT/name).read_bytes(),raw,'The source input must remain unchanged')
+
     def test_freeze_rejects_xml_metadata_disagreement_and_preserves_original_bytes(self):
         with tempfile.TemporaryDirectory() as temporary:
             root=Path(temporary);repo=root/'source';repo.mkdir()
