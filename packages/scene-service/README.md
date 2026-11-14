@@ -1,4 +1,4 @@
-# 场景编译运行包 0.2.0
+# 场景编译运行包 0.2.1
 
 这是自动生成的交付目录，不在这里手工改源码。源代码由 mecoffe-scene 的
 adapter/scene_service 和素材登记模块维护，导出规则为 scripts/export_scene_service.py。

@@ -260,6 +260,8 @@ class HospitalPatchCase(unittest.TestCase):
 class LegacyBaselineCase(unittest.TestCase):
     def test_all_existing_map_compilations_and_bytes_match_pre_change_baseline(self):
         baseline=json.loads((ROOT/'adapter/scene_service/fixtures/compat/legacy-compile-baseline.json').read_text(encoding='utf-8'))
+        self.assertEqual([name for name in baseline['map_files'] if name.endswith('.tmp')],[],
+                         'Compatibility baselines must list durable inputs, never temporary write copies')
         for name,sha in baseline['map_files'].items():
             with self.subTest(file=name):self.assertEqual(hashlib.sha256((ROOT/name).read_bytes()).hexdigest(),sha)
         packages={}

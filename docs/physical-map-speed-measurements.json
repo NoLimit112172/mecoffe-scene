@@ -1,0 +1,234 @@
+{
+  "schema": "mecoffe.physical-map-speed-summary.v1",
+  "date": "2026-11-14",
+  "baseline_commit": "c51f7bd04ac06c82c4d21c04f2ff20eb1a465eeb",
+  "optimized_implementation_commit": "3c2d5f324cf3b30ccb0905dadfcb37f4bd58e393",
+  "source_report": "logs/physical-map-speed/paired-01/result.json",
+  "source_report_sha256": "d46ae20509903cb840c5f5e7e7a42d53a670074de0e5a35db157497906e0cbd2",
+  "environment": {
+    "platform": "macOS-26.6-arm64-arm-64bit",
+    "python": "3.11.15"
+  },
+  "timing_scope": "Fresh-process local physical-map total wall time including startup; excludes upstream OSM download.",
+  "conditions": [
+    "Archived inputs; no network acquisition.",
+    "Every candidate directory is absent before its invocation.",
+    "OS filesystem caches are not flushed; fresh process is not a claim of cold disk cache.",
+    "Phase times are parent-observed unchanged stderr boundaries; RSS is per-child wait4 maximum.",
+    "Fixed-identity runs are compatibility diagnostics only and excluded from timing aggregates."
+  ],
+  "cases": {
+    "ustc-gaoxin-campus": {
+      "net_area_km2": 0.771875613072,
+      "fetch_area_km2": 1.0328529788339997,
+      "baseline_wall_seconds": [
+        5.171259665999969,
+        5.204124375002721,
+        5.205464375001611
+      ],
+      "optimized_wall_seconds": [
+        0.19678291699892725,
+        0.19739187500090338,
+        0.20030737499837414
+      ],
+      "baseline_median_seconds": 5.204124375002721,
+      "optimized_median_seconds": 0.19739187500090338,
+      "speedup": 26.364430526732185,
+      "baseline_max_rss_mib": 43.171875,
+      "optimized_max_rss_mib": 43.28125,
+      "baseline_phase_medians_seconds": {
+        "entrances_gis": 0.07039612500011572,
+        "evidence_quality": 4.89748079200217,
+        "geometry": 0.15142304199980572,
+        "publishing": 0.008063917000981746,
+        "reading": 0.03168691699829651,
+        "startup": 0.040842458001861814
+      },
+      "optimized_phase_medians_seconds": {
+        "entrances_gis": 0.021716750001360197,
+        "evidence_quality": 0.049693416000081925,
+        "geometry": 0.05153799999970943,
+        "publishing": 0.00846958400143194,
+        "reading": 0.02491891600220697,
+        "startup": 0.04134795899881283
+      },
+      "quality": {
+        "status": "preview_only",
+        "buildings": 77,
+        "primary_function_counts": {
+          "construction": 0,
+          "culture": 1,
+          "dining": 3,
+          "dormitory": 8,
+          "education": 39,
+          "government": 0,
+          "hotel": 0,
+          "industrial": 3,
+          "library": 0,
+          "life_service": 0,
+          "medical": 0,
+          "office": 0,
+          "religious": 0,
+          "research": 0,
+          "residential": 16,
+          "retail": 0,
+          "sports": 1,
+          "transport": 0,
+          "unknown": 6,
+          "utility": 0
+        },
+        "buildings_with_services": 0,
+        "unknown": 6,
+        "eligible_buildings": 29,
+        "main_component_ratio": 0.6493506493506493
+      },
+      "warning_count": 57,
+      "quality_summary_identical": true,
+      "raw_changed_files": [
+        "asset_assignments.json",
+        "campus3d.json",
+        "entrances.json",
+        "gis/boundary.geojson",
+        "gis/buildings.geojson",
+        "gis/entrances.geojson",
+        "gis/landcover.geojson",
+        "gis/pois.geojson",
+        "gis/roads.geojson",
+        "gis/water.geojson",
+        "landcover.json",
+        "manifest.json",
+        "quality.json"
+      ],
+      "raw_provenance_audit": {
+        "only_implementation_fingerprint_and_dependent_hashes_changed": true,
+        "unclassified_changes": [],
+        "stdout_json_changes": [
+          {
+            "path": "$.map_ref.manifest_sha256",
+            "before": "933adffddf458e6825155e30cf1748d45395f12bbaa37b9e08be5c859d59065c",
+            "after": "fe684d4d8fa50ac5cf80c60c179360d53420b251752e069a1c72ec1a7fd5b24b"
+          },
+          {
+            "path": "$.quality.evidence_policy.input_map_ref.manifest_sha256",
+            "before": "513dbfc5636fbf48547d05df8973a9d180d8d850e529eb0653bbb2eb7a69b880",
+            "after": "896b88f72c0908566b3cebf9cdb942f14c7c30b03f952a86e1842e51cdd703bd"
+          },
+          {
+            "path": "$.recipe.builder.implementation_sha256",
+            "before": "98b469f52087455d6a3dd1629b8cdcaf1aa5faf620ee51f2922e73f024d72ce0",
+            "after": "80ed9542026b5201a11e424d753831afc3e3fc1251ce13ca65b8e0765e71f0f5"
+          }
+        ],
+        "stdout_absolute_path_fields_changed": []
+      },
+      "fixed_identity_all_files_identical": true,
+      "fixed_identity_stdout_identical": true
+    },
+    "huaqing-subset": {
+      "net_area_km2": 0.0537119702,
+      "fetch_area_km2": 0.1100649702,
+      "baseline_wall_seconds": [
+        0.30989799999952083,
+        0.31090395800129045,
+        0.31107704199894215
+      ],
+      "optimized_wall_seconds": [
+        0.09723729200050002,
+        0.09739041699867812,
+        0.09834241700082202
+      ],
+      "baseline_median_seconds": 0.31090395800129045,
+      "optimized_median_seconds": 0.09739041699867812,
+      "speedup": 3.1923465119315626,
+      "baseline_max_rss_mib": 36.078125,
+      "optimized_max_rss_mib": 36.015625,
+      "baseline_phase_medians_seconds": {
+        "entrances_gis": 0.016252542001893744,
+        "evidence_quality": 0.22461420899708173,
+        "geometry": 0.010532958000112558,
+        "publishing": 0.007816916000592755,
+        "reading": 0.010801249998621643,
+        "startup": 0.04071625000142376
+      },
+      "optimized_phase_medians_seconds": {
+        "entrances_gis": 0.009962500000256114,
+        "evidence_quality": 0.017140666997875087,
+        "geometry": 0.009768209001776995,
+        "publishing": 0.008118875000945991,
+        "reading": 0.010995333999744616,
+        "startup": 0.041727708998223534
+      },
+      "quality": {
+        "status": "ready",
+        "buildings": 32,
+        "primary_function_counts": {
+          "construction": 0,
+          "culture": 0,
+          "dining": 3,
+          "dormitory": 0,
+          "education": 1,
+          "government": 3,
+          "hotel": 0,
+          "industrial": 0,
+          "library": 0,
+          "life_service": 0,
+          "medical": 0,
+          "office": 0,
+          "religious": 0,
+          "research": 0,
+          "residential": 14,
+          "retail": 1,
+          "sports": 0,
+          "transport": 1,
+          "unknown": 9,
+          "utility": 0
+        },
+        "buildings_with_services": 5,
+        "unknown": 9,
+        "eligible_buildings": 10,
+        "main_component_ratio": 0.9375
+      },
+      "warning_count": 23,
+      "quality_summary_identical": true,
+      "raw_changed_files": [
+        "asset_assignments.json",
+        "campus3d.json",
+        "entrances.json",
+        "gis/boundary.geojson",
+        "gis/buildings.geojson",
+        "gis/entrances.geojson",
+        "gis/landcover.geojson",
+        "gis/pois.geojson",
+        "gis/roads.geojson",
+        "gis/water.geojson",
+        "landcover.json",
+        "manifest.json",
+        "quality.json"
+      ],
+      "raw_provenance_audit": {
+        "only_implementation_fingerprint_and_dependent_hashes_changed": true,
+        "unclassified_changes": [],
+        "stdout_json_changes": [
+          {
+            "path": "$.map_ref.manifest_sha256",
+            "before": "d8bc7ae493aabb1f9dc606c9d77651775972ac9ddb949c4aa1312776410788d3",
+            "after": "92422429fa4d6dcecf008efa932c71187b9501db26f07105235032434228fd79"
+          },
+          {
+            "path": "$.quality.evidence_policy.input_map_ref.manifest_sha256",
+            "before": "f6c31926990a95e4f1822e9ac33956eb32ec3fbd6d8852d7752b036ddcfe9322",
+            "after": "490ed3c2b6a451fc894712176e2db77e68fb9b09ecbfea283e8402db4d462fb0"
+          },
+          {
+            "path": "$.recipe.builder.implementation_sha256",
+            "before": "98b469f52087455d6a3dd1629b8cdcaf1aa5faf620ee51f2922e73f024d72ce0",
+            "after": "80ed9542026b5201a11e424d753831afc3e3fc1251ce13ca65b8e0765e71f0f5"
+          }
+        ],
+        "stdout_absolute_path_fields_changed": []
+      },
+      "fixed_identity_all_files_identical": true,
+      "fixed_identity_stdout_identical": true
+    }
+  }
+}

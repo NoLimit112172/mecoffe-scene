@@ -1,0 +1,12 @@
+{
+  "max_area_km2": 1.0,
+  "max_fetch_area_km2": 1.5,
+  "max_nodes": 50000,
+  "max_ways": 10000,
+  "max_relations": 2000,
+  "max_buildings": 1000,
+  "max_road_segments": 10000,
+  "max_pois": 3000,
+  "max_xml_bytes": 26214400,
+  "max_scope_vertices": 2000
+}

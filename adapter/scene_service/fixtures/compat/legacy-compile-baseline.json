@@ -40347,7 +40347,6 @@
     "frontend/public/mecoffe/scenarios/nus-hourly/scenario.json": "7b4f3be5ebbc2ed2fc084d3f1827018da74abe6f8de1bab5eaa35490f984adae",
     "frontend/public/mecoffe/scenarios/ustc-history/asset_assignments.json": "28580dc4dd96230ebe8fb417f24481ae15d2285f2b084ed16cc62f07359491b6",
     "frontend/public/mecoffe/scenarios/ustc-history/campus3d.json": "e892d87164980f3822d567f2ba6625db51c045b329cb8535212b81013a790119",
-    "frontend/public/mecoffe/scenarios/ustc-history/campus3d.json.tmp": "e892d87164980f3822d567f2ba6625db51c045b329cb8535212b81013a790119",
     "frontend/public/mecoffe/scenarios/ustc-history/entrances.json": "eee81aa780b48efd535069900337ab5c3a816db77768be926cae569c8377b142",
     "frontend/public/mecoffe/scenarios/ustc-history/gis/boundary.geojson": "129f54793590b20c067b6be7e189ecb5d391908ae1de53172a1596a1bc8efd59",
     "frontend/public/mecoffe/scenarios/ustc-history/gis/buildings.geojson": "e8e89fa40d843e39add116dab841e13cf97f37b967c3b7866541065113781b59",
