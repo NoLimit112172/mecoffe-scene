@@ -1,0 +1,39 @@
+{
+  "schema": "mecoffe.physical-map-benchmark-cases.v1",
+  "rules": "adapter/scene_service/evidence_rules_v2.json",
+  "limits": "adapter/physical_map_examples/performance/limits.json",
+  "road_buffer_m": 50,
+  "seed": "0",
+  "cases": [
+    {
+      "id": "ustc-gaoxin-campus",
+      "title": "高新校区物理图性能对照",
+      "map_id": "speed-ustc-gaoxin-campus",
+      "map_version": "1",
+      "osm": "data/osm/ustc_gaoxin_surroundings.osm",
+      "metadata": "data/osm/ustc_gaoxin_surroundings.metadata.json",
+      "scope": "adapter/physical_map_examples/performance/ustc-gaoxin-scope.geojson",
+      "scope_source": "adapter/physical_map_examples/performance/ustc-gaoxin-scope-source.json",
+      "expected_source_sha256": "fe07a4f4caf8b29566c4352d38601a376b2e59be5bc0cffaad56a19f8c5a5da7",
+      "note": "主样本；约0.771876km²用户确认校园多边形，复用完整周边bbox归档以覆盖50米道路缓冲，外围对象按原physical-map语义保留。"
+    },
+    {
+      "id": "huaqing-subset",
+      "title": "华清嘉园内退子区域物理图性能对照",
+      "map_id": "speed-huaqing-subset",
+      "map_version": "1",
+      "osm": "adapter/physical_map_examples/performance/huaqingjiayuan.osm",
+      "metadata": "adapter/physical_map_examples/performance/huaqingjiayuan.metadata.json",
+      "scope": "adapter/physical_map_examples/performance/huaqing-subset-scope.geojson",
+      "scope_source": "adapter/physical_map_examples/performance/huaqing-subset-scope-source.json",
+      "expected_source_sha256": "8d16733a1a071113429ec4823e9d32651a2b4ec2c9425f73cdd0fd6308e2d3d3",
+      "note": "真实OSM输入的小社区子范围，不声明完整社区边界。"
+    }
+  ],
+  "data_license": {
+    "spdx": "ODbL-1.0",
+    "attribution": "© OpenStreetMap contributors",
+    "url": "https://www.openstreetmap.org/copyright",
+    "source_policy": "原XML和metadata原字节保留；基准不联网，不篡改source bbox。"
+  }
+}

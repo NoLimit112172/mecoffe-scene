@@ -3,6 +3,7 @@ import hashlib
 import copy
 import json
 import math
+import heapq
 
 from .gis import to_wgs84
 _CACHE={}
@@ -53,20 +54,89 @@ def facade_midpoints(building):
     return [x for x in result if x[3]>=min(8,max(x[3] for x in result))]
 
 
+class _RoadIndex:
+    """Cold-build BVH; exact projection and the original tie rule choose roads.
+
+    The box is only a distance lower bound. It cannot choose a road, because
+    the closest projection can be behind the facade and rounded ties still
+    depend on the original node IDs and edge order.
+    """
+    def __init__(self, edges):
+        self.edges = edges
+        self.nodes = []
+        boxes = [(min(a[0], b[0]), min(a[1], b[1]),
+                  max(a[0], b[0]), max(a[1], b[1])) for _, a, b in edges]
+        def build(indices):
+            bounds = (min(boxes[i][0] for i in indices), min(boxes[i][1] for i in indices),
+                      max(boxes[i][2] for i in indices), max(boxes[i][3] for i in indices))
+            identifier = len(self.nodes)
+            self.nodes.append(None)
+            if len(indices) <= 8:
+                self.nodes[identifier] = (bounds, None, None, indices)
+            else:
+                axis = 0 if bounds[2]-bounds[0] >= bounds[3]-bounds[1] else 1
+                indices.sort(key=lambda i: (boxes[i][axis]+boxes[i][axis+2], i))
+                middle = len(indices)//2
+                left, right = build(indices[:middle]), build(indices[middle:])
+                self.nodes[identifier] = (bounds, left, right, None)
+            return identifier
+        self.root = build(list(range(len(edges)))) if edges else None
+
+    @staticmethod
+    def _lower_distance(point, bounds):
+        return math.hypot(max(bounds[0]-point[0], 0., point[0]-bounds[2]),
+                          max(bounds[1]-point[1], 0., point[1]-bounds[3]))
+
+    def best(self, point, normal, facade, length, limit=math.inf):
+        if self.root is None:
+            return None
+        # A distance up to half a micrometre above the winning rounded value
+        # can tie it. Extra coordinate-ULP slack prevents floating projection
+        # error from making the box lower bound overly aggressive.
+        root_bounds = self.nodes[self.root][0]
+        slack = .500001e-6 + max(1e-9, 8*max(math.ulp(v) for v in (*point, *root_bounds)))
+        queue = [(self._lower_distance(point, root_bounds), self.root)]
+        selected = None
+        selected_order = None
+        while queue:
+            lower, identifier = heapq.heappop(queue)
+            if lower > limit+slack:
+                break
+            bounds, left, right, indices = self.nodes[identifier]
+            if indices is None:
+                for child in (left, right):
+                    child_lower = self._lower_distance(point, self.nodes[child][0])
+                    if child_lower <= limit+slack:
+                        heapq.heappush(queue, (child_lower, child))
+                continue
+            for order in indices:
+                edge, c, d = self.edges[order]
+                road = project(point, c, d)
+                dx, dy = road[0]-point[0], road[1]-point[1]
+                if dx*normal[0]+dy*normal[1] < -1e-6:
+                    continue
+                key = (round(distance(point, road), 6), -length,
+                       str(edge['source']), str(edge['target']), point)
+                if key[0] <= limit and (selected is None or (key, order) < (selected[0], selected_order)):
+                    selected = (key, edge, point, road, normal, facade)
+                    selected_order = order
+                    limit = key[0]
+        return selected
+
+
 def generate_entrances(campus):
     cache_key=hashlib.sha256(json.dumps([campus['campus_id'],campus['projection'],campus['source'],[(b['osm_id'],b['polygon']) for b in campus['buildings']],campus['walk_graph']],sort_keys=True).encode()).hexdigest()
     if cache_key in _CACHE:return copy.deepcopy(_CACHE[cache_key])
     nodes={p['id']:p for p in campus['walk_graph']['nodes']}
     edges=[(e,[nodes[e['source']]['x'],nodes[e['source']]['y']],[nodes[e['target']]['x'],nodes[e['target']]['y']]) for e in campus['walk_graph']['edges']]
+    road_index = _RoadIndex(edges)
     records=[]
     for building in sorted(campus['buildings'],key=lambda b:b['osm_id']):
         candidates=facade_midpoints(building);best=None
         for point,normal,facade,length in candidates:
-            for edge,c,d in edges:
-                road=project(point,c,d);dx,dy=road[0]-point[0],road[1]-point[1]
-                if dx*normal[0]+dy*normal[1]<-1e-6:continue
-                key=(round(distance(point,road),6),-length,str(edge['source']),str(edge['target']),point)
-                if best is None or key<best[0]:best=(key,edge,point,road,normal,facade)
+            selected = road_index.best(point, normal, facade, length, best[0][0] if best else math.inf)
+            if selected is not None and (best is None or selected[0] < best[0]):
+                best = selected
         if best is None:
             point,normal,facade,_=max(candidates,key=lambda c:c[3])
             record={'point':point,'road_node_id':None,'connector':[],'connected':False}

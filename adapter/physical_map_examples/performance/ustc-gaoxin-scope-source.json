@@ -1,0 +1,5 @@
+{
+  "type": "manual",
+  "note": "复用本地已确认的高新校区实际多边形；范围从既有归档plan导出，用于同一输入性能对照，不声明测绘核准边界。",
+  "archived_plan_relative": "mecoffe-map-build-analysis/logs/gaoxin-library-diagnostic-20261114/fresh-after/plan.json"
+}

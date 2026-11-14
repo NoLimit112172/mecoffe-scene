@@ -4,6 +4,7 @@ from collections import Counter
 
 from .common import require
 from .geometry import cuts_interior, in_building, inside, intersects, point, valid_building, valid_ring, within_scope
+from .spatial_index import BoundsIndex, coordinate_bounds
 from .taxonomy import is_layered, placeable
 
 FUNCTIONS = ('dining','retail','dormitory','residential','education','office','library','unknown')
@@ -72,6 +73,8 @@ def enrich_map(package, annotations=None, min_main_ratio=.9, min_function_ratio=
     entrance_ids=[e.get('id') for e in entrances]
     require(all(isinstance(i,str) and i for i in entrance_ids) and len(set(entrance_ids))==len(entrance_ids), 'INVALID_MAP','Entrance IDs must be unique')
     by_id={b['osm_id']:b for b in buildings}; valid={i for i,b in by_id.items() if valid_building(b)}
+    building_index=BoundsIndex((b for b in buildings if b['osm_id'] in valid),
+                               lambda b:coordinate_bounds(b['polygon']))
     require(all(isinstance(b.get('tags',{}),dict) and isinstance(b.get('name',''),str) for b in buildings),'INVALID_MAP','Building tags and names are malformed')
     frozen=auto_rules is not None and package.get('evidence_frozen') is True
     frozen_fields=None
@@ -110,9 +113,10 @@ def enrich_map(package, annotations=None, min_main_ratio=.9, min_function_ratio=
         poi_stats['total']+=1
         if not point(poi.get('point')):
             poi_stats['invalid']+=1; continue
-        matches=[b for b in buildings if b['osm_id'] in valid and in_building(poi['point'],b)]
+        candidates=building_index.query((*poi['point'],*poi['point']))
+        matches=[b for b in candidates if in_building(poi['point'],b)]
         # A boundary of a second footprint is ambiguous too, never snap across it.
-        touching=[b for b in buildings if b['osm_id'] in valid and in_building(poi['point'],b,False)]
+        touching=[b for b in candidates if in_building(poi['point'],b,False)]
         if len(matches)==1 and len(touching)==1:
             poi_stats['associated']+=1
             matches[0]['function_evidence'].extend(tag_evidence(poi.get('tags',{}),'poi',str(poi.get('osm_id','unknown-poi')),auto_rules))
@@ -156,6 +160,7 @@ def enrich_map(package, annotations=None, min_main_ratio=.9, min_function_ratio=
     component=main_component(graph)
     water=[{'polygon':f.get('polygon'),'holes':f.get('holes',[])} for f in result.get('landcover',{}).get('features',[]) if f.get('kind')=='water']
     require(all(valid_building(w) for w in water),'INVALID_MAP','Invalid water geometry cannot certify safe placement')
+    water_index=BoundsIndex(water,lambda w:coordinate_bounds(w['polygon']))
     boundaries=campus.get('boundary_polygons') or [{'outer':campus.get('boundary'),'holes':[]}]
     require(all(valid_building({'polygon':p.get('outer'),'holes':p.get('holes',[])}) for p in boundaries), 'INVALID_MAP','Valid explicit map boundary required')
     main_count=0
@@ -170,20 +175,28 @@ def enrich_map(package, annotations=None, min_main_ratio=.9, min_function_ratio=
                   distance(connector[0],entrance['point'])<=.002 and
                   entrance.get('road_node_id') in nodes and distance(connector[-1],nodes[entrance['road_node_id']])<=.002)
         if safe:
-            safe=not any(cuts_interior(a,c,other) for a,c in zip(connector,connector[1:]) for other in buildings if other['osm_id'] in valid)
-            safe=safe and not any(inside(p,w['polygon'],False) for w in water for p in connector)
-            safe=safe and not any(intersects(a,c,u,v) for a,c in zip(connector,connector[1:]) for w in water for u,v in zip(w['polygon'],w['polygon'][1:]))
+            safe=not any(cuts_interior(a,c,other) for a,c in zip(connector,connector[1:])
+                         for other in building_index.query(coordinate_bounds((a,c))))
+            candidates=water_index.query(coordinate_bounds(connector))
+            safe=safe and not any(inside(p,w['polygon'],False) for w in candidates for p in connector)
+            safe=safe and not any(intersects(a,c,u,v) for a,c in zip(connector,connector[1:]) for w in candidates for u,v in zip(w['polygon'],w['polygon'][1:]))
         entrance['scene_reachable']=bool(connected and safe)
+    entrances_by_building={identifier:[] for identifier in ids}
+    for item in entrances:
+        entrances_by_building[item['building_id']].append(item)
     counts=Counter(); no_entrance=0; eligible=0
+    # Disjoint-box rejection also removes legacy near-collinear roundoff false
+    # positives. Such degenerate wet/eligibility outcomes intentionally differ;
+    # thresholds and the remaining exact checks are unchanged.
     for b in buildings:
         b['function_evidence'].sort(key=lambda e:(e['function'],e['source'],e['key'],e['value'],e['ref']))
         b['functions']=sorted({e['function'] for e in b['function_evidence'] if e['source']!='name_keyword'}-{'unknown'}) or ['unknown']
         counts.update(b['functions'])
-        associated=[e for e in entrances if e.get('building_id')==b['osm_id']]
+        associated=entrances_by_building[b['osm_id']]
         no_entrance+=not bool(associated)
         b['usable_entrance_ids']=sorted(e['id'] for e in associated if e['scene_reachable'])
         in_scope=b['osm_id'] in valid and any(within_scope(b,part) for part in boundaries)
-        wet=b['osm_id'] in valid and any(any(inside(p,w['polygon'],False) for p in b['polygon'][:-1]) or any(in_building(p,b,False) for p in w['polygon'][:-1]) or any(intersects(a,c,u,v) for a,c in zip(b['polygon'],b['polygon'][1:]) for u,v in zip(w['polygon'],w['polygon'][1:])) for w in water)
+        wet=b['osm_id'] in valid and any(any(inside(p,w['polygon'],False) for p in b['polygon'][:-1]) or any(in_building(p,b,False) for p in w['polygon'][:-1]) or any(intersects(a,c,u,v) for a,c in zip(b['polygon'],b['polygon'][1:]) for u,v in zip(w['polygon'],w['polygon'][1:])) for w in water_index.query(coordinate_bounds(b['polygon'])))
         b['scene_eligible']=bool(in_scope and not wet and b['usable_entrance_ids'])
         if layered:
             b['scene_eligible']=b['scene_eligible'] and placeable(b)

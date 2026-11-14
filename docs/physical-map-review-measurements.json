@@ -1,0 +1,202 @@
+{
+  "schema": "mecoffe.physical-map-review-summary.v1",
+  "review": "PR #2 merge-blocking fixes 1-3",
+  "baseline_commit": "c51f7bd04ac06c82c4d21c04f2ff20eb1a465eeb",
+  "optimized_implementation_commit": "457b0e2b002d4c0f37750a481e1f2102cd7018fe",
+  "source_report": "logs/physical-map-speed/review-paired-01/result.json",
+  "source_report_sha256": "7959768696333ee4477e6be2eb9fc997032b05670a2a2ca538620942b26b82d3",
+  "environment": {
+    "platform": "macOS-26.6-arm64-arm-64bit",
+    "python": "3.11.15"
+  },
+  "timing_scope": "Fresh-process local physical-map total wall time including startup; excludes upstream OSM download.",
+  "conditions": [
+    "Archived inputs; no network acquisition.",
+    "Every candidate directory is absent before its invocation.",
+    "OS filesystem caches are not flushed; fresh process is not a claim of cold disk cache.",
+    "Phase times are parent-observed unchanged stderr boundaries; RSS is per-child wait4 maximum.",
+    "Fixed-identity runs are compatibility diagnostics only and excluded from timing aggregates."
+  ],
+  "validation": {
+    "adapter_passed": 193,
+    "scripts_passed": 36,
+    "legacy_compile_cases_unchanged": 65,
+    "official_input_hashes_unchanged": 97,
+    "standalone_installed_compile_cases_unchanged": 7,
+    "windows_autocrlf_checkout_simulation": true,
+    "actual_windows_or_linux_rerun_performed": false
+  },
+  "known_semantic_correction": {
+    "predicate": "separated near-collinear floating-point false positive",
+    "test_oracle": "adapter/physical_map_test_oracle.py",
+    "complete_regression": "adapter/test_scene_spatial_index.py",
+    "gap_m": 1.2499999988321682e-06,
+    "historical_intersects": true,
+    "current_intersects": false,
+    "historical_scene_eligible": false,
+    "current_scene_eligible": true,
+    "historical_quality": "preview_only",
+    "current_quality": "ready",
+    "thresholds_changed": false,
+    "ordinary_differential_oracle": "direct c51f7bd geometry/evidence with independent pinned dependencies",
+    "exception_scope": "Only old True/new False, exact-binary >2*EPS separated boxes, no historical on-segment contact, and all four floating and exact-rational determinants within a local ULP roundoff bound; never mask enrich_map output differences"
+  },
+  "cases": {
+    "ustc-gaoxin-campus": {
+      "net_area_km2": 0.771875613072,
+      "fetch_area_km2": 1.0328529788339997,
+      "baseline_wall_seconds": [
+        5.378380791000382,
+        5.059323125002265,
+        5.069449041999178
+      ],
+      "optimized_wall_seconds": [
+        0.20831158299552044,
+        0.20730183299747296,
+        0.20126358400011668
+      ],
+      "baseline_median_seconds": 5.069449041999178,
+      "optimized_median_seconds": 0.20730183299747296,
+      "speedup": 24.454434235808108,
+      "baseline_max_rss_mib": 43.140625,
+      "optimized_max_rss_mib": 43.1875,
+      "baseline_phase_medians_seconds": {
+        "entrances_gis": 0.07030370899883565,
+        "evidence_quality": 4.7753217089994,
+        "geometry": 0.15180954099923838,
+        "publishing": 0.009033290996740106,
+        "reading": 0.032523667003260925,
+        "startup": 0.04247120799846016
+      },
+      "optimized_phase_medians_seconds": {
+        "entrances_gis": 0.021476000001712237,
+        "evidence_quality": 0.05330241600313457,
+        "geometry": 0.0544913749981788,
+        "publishing": 0.009324749997176696,
+        "reading": 0.025817250003456138,
+        "startup": 0.04266999999526888
+      },
+      "quality_status": "preview_only",
+      "buildings": 77,
+      "eligible_buildings": 29,
+      "quality_summary_identical": true,
+      "raw_changed_files": [
+        "asset_assignments.json",
+        "campus3d.json",
+        "entrances.json",
+        "gis/boundary.geojson",
+        "gis/buildings.geojson",
+        "gis/entrances.geojson",
+        "gis/landcover.geojson",
+        "gis/pois.geojson",
+        "gis/roads.geojson",
+        "gis/water.geojson",
+        "landcover.json",
+        "manifest.json",
+        "quality.json"
+      ],
+      "raw_provenance_audit": {
+        "only_implementation_fingerprint_and_dependent_hashes_changed": true,
+        "unclassified_changes": [],
+        "stdout_json_changes": [
+          {
+            "path": "$.map_ref.manifest_sha256",
+            "before": "933adffddf458e6825155e30cf1748d45395f12bbaa37b9e08be5c859d59065c",
+            "after": "587d2012d2874d25c6cd890845f91faece3919a9a053a08074fc4f48baca2a58"
+          },
+          {
+            "path": "$.quality.evidence_policy.input_map_ref.manifest_sha256",
+            "before": "513dbfc5636fbf48547d05df8973a9d180d8d850e529eb0653bbb2eb7a69b880",
+            "after": "eca1d1d634cad5d102befdd4a20298ef65e4a038c6794d0f9d8bac4e8c6913bb"
+          },
+          {
+            "path": "$.recipe.builder.implementation_sha256",
+            "before": "98b469f52087455d6a3dd1629b8cdcaf1aa5faf620ee51f2922e73f024d72ce0",
+            "after": "ed5838845b22c66adad756d169f53895d93e0866351cbe75441b7f1c503be52e"
+          }
+        ],
+        "stdout_absolute_path_fields_changed": []
+      },
+      "fixed_identity_all_files_identical": true,
+      "fixed_identity_stdout_identical": true
+    },
+    "huaqing-subset": {
+      "net_area_km2": 0.0537119702,
+      "fetch_area_km2": 0.1100649702,
+      "baseline_wall_seconds": [
+        0.3068896249969839,
+        0.3065096669961349,
+        0.30141670900047757
+      ],
+      "optimized_wall_seconds": [
+        0.09580045800248627,
+        0.09468779199960409,
+        0.0941230419994099
+      ],
+      "baseline_median_seconds": 0.3065096669961349,
+      "optimized_median_seconds": 0.09468779199960409,
+      "speedup": 3.2370558075471494,
+      "baseline_max_rss_mib": 35.875,
+      "optimized_max_rss_mib": 35.9375,
+      "baseline_phase_medians_seconds": {
+        "entrances_gis": 0.015898917001322843,
+        "evidence_quality": 0.2213957920030225,
+        "geometry": 0.010161415993934497,
+        "publishing": 0.007765207999909762,
+        "reading": 0.010425417000078596,
+        "startup": 0.03994391699961852
+      },
+      "optimized_phase_medians_seconds": {
+        "entrances_gis": 0.009445874995435588,
+        "evidence_quality": 0.0168714160026866,
+        "geometry": 0.009707709003123455,
+        "publishing": 0.00782183300179895,
+        "reading": 0.010450957997818477,
+        "startup": 0.04038708299776772
+      },
+      "quality_status": "ready",
+      "buildings": 32,
+      "eligible_buildings": 10,
+      "quality_summary_identical": true,
+      "raw_changed_files": [
+        "asset_assignments.json",
+        "campus3d.json",
+        "entrances.json",
+        "gis/boundary.geojson",
+        "gis/buildings.geojson",
+        "gis/entrances.geojson",
+        "gis/landcover.geojson",
+        "gis/pois.geojson",
+        "gis/roads.geojson",
+        "gis/water.geojson",
+        "landcover.json",
+        "manifest.json",
+        "quality.json"
+      ],
+      "raw_provenance_audit": {
+        "only_implementation_fingerprint_and_dependent_hashes_changed": true,
+        "unclassified_changes": [],
+        "stdout_json_changes": [
+          {
+            "path": "$.map_ref.manifest_sha256",
+            "before": "d8bc7ae493aabb1f9dc606c9d77651775972ac9ddb949c4aa1312776410788d3",
+            "after": "6fe5d9a99f6c89530e1e75b4e2d36191a28d6de559a46c88adf985efe7c34bca"
+          },
+          {
+            "path": "$.quality.evidence_policy.input_map_ref.manifest_sha256",
+            "before": "f6c31926990a95e4f1822e9ac33956eb32ec3fbd6d8852d7752b036ddcfe9322",
+            "after": "75b4bfa615c3fa38374013b4768d3a8ccb25b10262d2e36501c3e3e43d75062f"
+          },
+          {
+            "path": "$.recipe.builder.implementation_sha256",
+            "before": "98b469f52087455d6a3dd1629b8cdcaf1aa5faf620ee51f2922e73f024d72ce0",
+            "after": "ed5838845b22c66adad756d169f53895d93e0866351cbe75441b7f1c503be52e"
+          }
+        ],
+        "stdout_absolute_path_fields_changed": []
+      },
+      "fixed_identity_all_files_identical": true,
+      "fixed_identity_stdout_identical": true
+    }
+  }
+}

@@ -1,5 +1,6 @@
 """Conservative local-metre geometry checks, independent of legacy rendering."""
 import math
+from functools import lru_cache
 
 EPS = 1e-7
 
@@ -28,6 +29,23 @@ def inside(p, ring, strict=True):
 
 
 def intersects(a, b, c, d):
+    # Reject spatially separate boxes before orientation arithmetic. Besides
+    # reducing work, this corrects a known near-collinear floating-cancellation
+    # false positive in the old predicate. Possible contacts retain its EPS
+    # convention; unusual inputs still fall through to the original arithmetic.
+    try:
+        ordinary=(len(a)==len(b)==len(c)==len(d)==2 and
+                  all(type(v) in (int,float) and math.isfinite(v) and abs(v)<=1e8
+                      for p in (a,b,c,d) for v in p))
+        if ordinary:
+            for i in (0,1):
+                ab_min,ab_max=min(a[i],b[i]),max(a[i],b[i])
+                cd_min,cd_max=min(c[i],d[i]),max(c[i],d[i])
+                if (math.nextafter(ab_max+EPS,math.inf)<math.nextafter(cd_min-EPS,-math.inf) or
+                        math.nextafter(cd_max+EPS,math.inf)<math.nextafter(ab_min-EPS,-math.inf)):
+                    return False
+    except (TypeError,ValueError,IndexError,OverflowError):
+        pass
     def cross(p, q, r):
         return (q[0]-p[0])*(r[1]-p[1])-(q[1]-p[1])*(r[0]-p[0])
     if any(on_segment(p, q, r) for p, q, r in ((a,c,d),(b,c,d),(c,a,b),(d,a,b))):
@@ -38,6 +56,17 @@ def intersects(a, b, c, d):
 def valid_ring(ring):
     if not isinstance(ring, list) or len(ring) < 4 or not all(point(p) for p in ring) or ring[0] != ring[-1]:
         return False
+    # Containment checks revisit the same rings for every POI and connector.
+    # Include each coordinate's type: equal-valued int/float rings can produce
+    # different area arithmetic. Copies share a key; edits must be rechecked.
+    return _valid_ring_coordinates(tuple(tuple((type(value),value) for value in p) for p in ring))
+
+
+@lru_cache(maxsize=4096)
+def _valid_ring_coordinates(typed_coordinates):
+    # Preserve the original values and arithmetic types rather than coercing
+    # coordinates to a common representation for either storage or validation.
+    ring=tuple(tuple(value for _,value in p) for p in typed_coordinates)
     if len({tuple(p) for p in ring[:-1]}) < 3:
         return False
     if abs(sum(a[0]*b[1]-b[0]*a[1] for a,b in zip(ring,ring[1:]))) <= EPS:

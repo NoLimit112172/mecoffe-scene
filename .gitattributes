@@ -21,6 +21,7 @@ data/maps/**/*.geojson -text diff
 # Keep downloaded OSM bytes identical to the recorded SHA-256 on Windows.
 frontend/public/mecoffe/scenarios/**/gis/*.geojson -text diff
 data/osm/*.osm -text diff
+adapter/physical_map_examples/**/*.osm -text diff
 
 # Keep the pinned model bundle byte-identical for offline integrity tests.
 frontend/public/mecoffe/assets3d/rocketbox/*.md -text diff

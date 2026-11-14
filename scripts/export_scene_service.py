@@ -9,14 +9,14 @@ import sys
 
 ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_OUT = ROOT / 'packages/scene-service'
-VERSION = '0.2.0'
+VERSION = '0.2.1'
 IMPORT_NAME = 'mecoffe_scene_service'
 DISTRIBUTION = 'mecoffe-scene-service'
 REQUIRES_PYTHON = '>=3.11,<3.12'
-EXPORTER_VERSION = '3'
+EXPORTER_VERSION = '4'
 MANIFEST = 'EXPORT_MANIFEST.json'
 MODULES = ('common', 'compiler', 'request', 'resolver', 'validation', 'checker',
-           'maps', 'evidence', 'geometry', 'issues', 'auto_evidence', 'taxonomy')
+           'maps', 'evidence', 'geometry', 'issues', 'auto_evidence', 'taxonomy', 'spatial_index')
 SERVICE = 'adapter/scene_service/'
 ASSETS = 'adapter/scene_builder/resources/mecoffe-embed-v1/'
 JSON_FILES = ('contract.json', 'contract-v2.json', 'contract-v3.json', 'issue_messages.json')
@@ -266,6 +266,12 @@ def readme():
 这是自动生成的交付目录，不在这里手工改源码。源代码由 mecoffe-scene 的
 adapter/scene_service 和素材登记模块维护，导出规则为 scripts/export_scene_service.py。
 团队按固定版本接入，升级通过 PR；包版本与 SceneResult v1/v2、地图版本相互独立。
+
+## 0.2.1 的已知几何行为修正
+
+本版明确修正一种旧版共线浮点噪声误判：两条近共线线段的外框已分离，原版仍可能因约1e-12量级的叉积舍入噪声判为相交。本版在带EPS/ULP容差的外框确认分离后返回不相交。该类退化输入下，自交合法性、入口安全、涉水与可安置判定及最终编译结果可能与0.2.0不同；不能把本版描述为所有输入均无语义变化。
+
+这项修正有独立几何和完整证据/质量回归；其他差分直接使用固定旧模块作基准。已发布输入与既有编译基准保持一致。`valid_ring`缓存键逐坐标保留数值类型，整数和同值浮点数不会因缓存顺序互相污染。地图格式、用途规则及公开接口不变。
 
 Python {REQUIRES_PYTHON}；运行依赖为空。构建工具仅 setuptools>=68，需离线预备。
 正式安装前运行 `python verify_export.py` 核验目录。构建可能产生临时文件，建议从交付目录
