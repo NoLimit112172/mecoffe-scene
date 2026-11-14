@@ -185,6 +185,9 @@ def enrich_map(package, annotations=None, min_main_ratio=.9, min_function_ratio=
     for item in entrances:
         entrances_by_building[item['building_id']].append(item)
     counts=Counter(); no_entrance=0; eligible=0
+    # Disjoint-box rejection also removes legacy near-collinear roundoff false
+    # positives. Such degenerate wet/eligibility outcomes intentionally differ;
+    # thresholds and the remaining exact checks are unchanged.
     for b in buildings:
         b['function_evidence'].sort(key=lambda e:(e['function'],e['source'],e['key'],e['value'],e['ref']))
         b['functions']=sorted({e['function'] for e in b['function_evidence'] if e['source']!='name_keyword'}-{'unknown'}) or ['unknown']
