@@ -66,15 +66,22 @@ def prepare(name,case,required):
                 rules_path=root/'adapter/scene_service/evidence_rules_v2.json',quality_policy=current_policy())
     package=load_map(directory);intent=copy.deepcopy(case['intent']);intent['map_ref']=package['map_ref']
     seed=case.get('assignment_seed',case.get('seed',42))
-    response=compile_scene(intent,case['snapshot'],case['plan'],package,assignment_seed=seed)
+    # The installed child reads the sorted request JSON. Give the source the
+    # identical object ordering too; then compare its original response bytes,
+    # rather than mistaking serialization of differently ordered inputs for a
+    # runtime difference.
+    inputs=json.loads(json.dumps({'intent':intent,'snapshot':case['snapshot'],'plan':case['plan']},sort_keys=True,ensure_ascii=False))
+    intent,snapshot,plan=inputs['intent'],inputs['snapshot'],inputs['plan']
+    response=compile_scene(intent,snapshot,plan,package,assignment_seed=seed)
     if required:assert response['ok'],response
-    if response['ok']:validate_result(response['result'],{'map':package,'snapshot':case['snapshot'],'plan':case['plan']})
-    report=check_scene(intent,case['snapshot'],case['plan'],str(directory),assignment_seed=seed)
+    if response['ok']:validate_result(response['result'],{'map':package,'snapshot':snapshot,'plan':plan})
+    report=check_scene(intent,snapshot,plan,str(directory),assignment_seed=seed)
     assert bool(response['ok'])==bool(report['configuration_ok']),{'compile_ok':response['ok'],
         'failed_checks':[item for item in report['items'] if item['status']=='不通过']}
     assert hashes(source)==before,'Source map bytes were changed during installation preparation'
-    return {'name':name,'intent':intent,'snapshot':case['snapshot'],'plan':case['plan'],'seed':seed,
+    return {'name':name,'intent':intent,'snapshot':snapshot,'plan':plan,'seed':seed,
             'map_path':str(directory),'expected':response,'expected_check':report,
+            'expected_response_sha256':hashlib.sha256(json.dumps(response,ensure_ascii=False).encode('utf-8')).hexdigest(),
             'policy':copy.deepcopy(package['quality']['quality_policy']),'file_hashes':hashes(directory),
             'source_map_path':str(source),'source_map_ref':source_ref,'source_file_hashes':before}
 
@@ -184,6 +191,14 @@ if installed:
         historical['sha256']=digest({k:v for k,v in historical.items() if k!='sha256'})
         frozen=copy.deepcopy(historical)
         assert validate_policy(historical)==frozen and historical==frozen
+        tampered=copy.deepcopy(policy);tampered['rules']['empty_connectivity_population_ready']=0
+        tampered['sha256']=digest({k:v for k,v in tampered.items() if k!='sha256'})
+        try:
+            validate_policy(tampered)
+        except service.SceneError as error:
+            assert error.code=='INVALID_QUALITY_POLICY'
+        else:
+            raise AssertionError('False-to-zero policy tampering must not bypass its rules digest')
         responses[case['name']]=response;checks[case['name']]=report
     try:
         service.load_map(request['invalid_policy_map'])
@@ -272,8 +287,8 @@ def main():
         policy_hashes={}
         for case in request['policy_cases']:
             after=(work/'installed'/(case['name']+'.json')).read_bytes()
-            before=json.dumps(case['expected'],ensure_ascii=False).encode('utf-8')
-            if before!=after:raise AssertionError('Scope-policy compile response bytes differ: '+case['name'])
+            if case['expected_response_sha256']!=hashlib.sha256(after).hexdigest():
+                raise AssertionError('Scope-policy compile response bytes differ: '+case['name'])
             policy_hashes[case['name']]={'sha256':hashlib.sha256(after).hexdigest(),'ok':case['expected']['ok'],
                                         'policy_version':case['policy']['version'],
                                         'policy_sha256':case['policy']['sha256'],
