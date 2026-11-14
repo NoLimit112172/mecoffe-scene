@@ -38,6 +38,8 @@ def load_map(path):
                    'landcover':read_json(path/'landcover.json')}
         if formal:
             package['quality']=read_json(path/'quality.json')
+            from .quality import policy_for
+            policy_for(package)
             package['annotations']={'map_ref':copy.deepcopy(package['map_ref']),'buildings':{
                 b['osm_id']:copy.deepcopy(b['function_annotation']) for b in package['campus']['buildings'] if b.get('function_annotation')}}
             policy=manifest.get('evidence_policy')

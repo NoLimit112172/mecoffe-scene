@@ -94,6 +94,15 @@ class SceneServiceExportTests(unittest.TestCase):
         with self.assertRaises(ValueError):runtime_module('compiler',b'import adapter.unexpected\n')
         with self.assertRaises(ValueError):runtime_module('maps',b'import json\n')
 
+    def test_quality_helper_and_all_publisher_implementation_files_are_exported_verbatim(self):
+        files=build_export();manifest=json.loads(files[MANIFEST])
+        for name in ('quality','evidence','geometry','spatial_index'):
+            source='adapter/scene_service/'+name+'.py'
+            exported=f'src/{IMPORT_NAME}/'+name+'.py'
+            raw=lf((ROOT/source).read_bytes())
+            self.assertEqual(files[exported],raw,exported)
+            self.assertEqual(manifest['inputs'][source]['sha256'],hashlib.sha256(raw).hexdigest())
+
     def test_standalone_verifier_does_not_need_source_repository(self):
         with tempfile.TemporaryDirectory() as temporary:
             target=Path(temporary)/'package';write_export(target,build_export())
@@ -170,18 +179,21 @@ class SceneServiceExportTests(unittest.TestCase):
             with self.subTest(statement=statement),self.assertRaises(ValueError):
                 check_import_dependencies({**files,name:(statement+'\n').encode()+files[name]})
 
-    def test_runtime_021_manifest_is_locked_and_old_contracts_assets_are_identical(self):
+    def test_runtime_022_manifest_is_locked_and_old_contracts_assets_are_identical(self):
         files=build_export()
         self.assertEqual(hashlib.sha256(files[MANIFEST]).hexdigest(),RELEASE_MANIFEST_SHA256)
-        frozen=['contract.json','contract-v2.json','resources/mecoffe-embed-v1/catalog.json',
-                'resources/mecoffe-embed-v1/asset-library.json']
-        for relative in frozen:
+        frozen=[('contract.json','39b4ae1'),('contract-v2.json','39b4ae1'),
+                ('contract-v3.json','9411d9e'),('resources/mecoffe-embed-v1/catalog.json','39b4ae1'),
+                ('resources/mecoffe-embed-v1/asset-library.json','39b4ae1')]
+        for relative,baseline in frozen:
             name=f'src/{IMPORT_NAME}/{relative}'
-            before=subprocess.check_output(['git','show','39b4ae1:packages/scene-service/'+name],cwd=ROOT)
+            before=subprocess.check_output(['git','show',baseline+':packages/scene-service/'+name],cwd=ROOT)
             self.assertEqual(files[name],before,name)
         manifest=json.loads(files[MANIFEST])
-        self.assertEqual(manifest['package']['version'],'0.2.1')
-        self.assertEqual(manifest['exporter']['version'],'4')
+        self.assertEqual(manifest['package']['version'],'0.2.2')
+        self.assertEqual(manifest['exporter']['version'],'5')
+        self.assertIn('adapter/scene_service/quality.py',manifest['inputs'])
+        self.assertIn(f'src/{IMPORT_NAME}/quality.py',manifest['files'])
         contract=json.loads(files[f'src/{IMPORT_NAME}/contract-v3.json'])
         self.assertEqual(contract['properties']['schema_version']['const'],'scene.result.v3')
         self.assertIn('layer',contract['properties']['assignments']['items']['properties']['evidence']['items']['required'])

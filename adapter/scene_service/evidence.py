@@ -6,6 +6,7 @@ from .common import require
 from .geometry import cuts_interior, in_building, inside, intersects, point, valid_building, valid_ring, within_scope
 from .spatial_index import BoundsIndex, coordinate_bounds
 from .taxonomy import is_layered, placeable
+from .quality import policy_for, exclusion_warning
 
 FUNCTIONS = ('dining','retail','dormitory','residential','education','office','library','unknown')
 TAG_FUNCTIONS = {
@@ -163,11 +164,21 @@ def enrich_map(package, annotations=None, min_main_ratio=.9, min_function_ratio=
     water_index=BoundsIndex(water,lambda w:coordinate_bounds(w['polygon']))
     boundaries=campus.get('boundary_polygons') or [{'outer':campus.get('boundary'),'holes':[]}]
     require(all(valid_building({'polygon':p.get('outer'),'holes':p.get('holes',[])}) for p in boundaries), 'INVALID_MAP','Valid explicit map boundary required')
-    main_count=0
+    quality_policy=policy_for(package)
+    scoped={identifier for identifier,b in by_id.items() if identifier in valid and
+            any(within_scope(b,part) for part in boundaries)}
+    main_count=0;scope_entrances=0;background_entrances=0;background_main=0;invalid_entrances=0
     for entrance in entrances:
         b=by_id.get(entrance.get('building_id')); connector=entrance.get('connector', [])
         connected=(entrance.get('connected') is True and entrance.get('road_node_id') in component)
-        main_count+=bool(connected)
+        if quality_policy is None:
+            main_count+=bool(connected)
+        elif b['osm_id'] in scoped:
+            scope_entrances+=1;main_count+=bool(connected)
+        elif b['osm_id'] in valid:
+            background_entrances+=1;background_main+=bool(connected)
+        else:
+            invalid_entrances+=1
         safe=(b is not None and b['osm_id'] in valid and point(entrance.get('point')) and
               isinstance(connector,list) and len(connector)>=2 and all(point(p) for p in connector))
         if safe:
@@ -195,17 +206,25 @@ def enrich_map(package, annotations=None, min_main_ratio=.9, min_function_ratio=
         associated=entrances_by_building[b['osm_id']]
         no_entrance+=not bool(associated)
         b['usable_entrance_ids']=sorted(e['id'] for e in associated if e['scene_reachable'])
-        in_scope=b['osm_id'] in valid and any(within_scope(b,part) for part in boundaries)
+        in_scope=b['osm_id'] in scoped
         wet=b['osm_id'] in valid and any(any(inside(p,w['polygon'],False) for p in b['polygon'][:-1]) or any(in_building(p,b,False) for p in w['polygon'][:-1]) or any(intersects(a,c,u,v) for a,c in zip(b['polygon'],b['polygon'][1:]) for u,v in zip(w['polygon'],w['polygon'][1:])) for w in water_index.query(coordinate_bounds(b['polygon'])))
         b['scene_eligible']=bool(in_scope and not wet and b['usable_entrance_ids'])
         if layered:
             b['scene_eligible']=b['scene_eligible'] and placeable(b)
         eligible+=b['scene_eligible']
         if not b['scene_eligible']:
-            warn('BUILDING_EXCLUDED','Invalid geometry, outside scope, water conflict, or no safe reachable entrance',[b['osm_id']])
-    ratio=main_count/len(entrances) if entrances else 0
+            if quality_policy is None:
+                warn('BUILDING_EXCLUDED','Invalid geometry, outside scope, water conflict, or no safe reachable entrance',[b['osm_id']])
+            else:
+                exclusion_warning(b,valid=b['osm_id'] in valid,in_scope=in_scope,wet=wet,
+                                  associated=associated,usable=b['usable_entrance_ids'],layered=layered,
+                                  placeable=placeable,warn=warn)
+    denominator=len(entrances) if quality_policy is None else scope_entrances
+    ratio=main_count/denominator if denominator else 0
     known_ratio=(len(buildings)-counts['unknown'])/len(buildings) if buildings else 0
     ready=bool(buildings and len(valid)==len(buildings) and eligible and ratio>=min_main_ratio and known_ratio>=min_function_ratio)
+    if quality_policy is not None:
+        ready=ready and bool(scope_entrances)
     if counts['unknown']:
         warn('UNKNOWN_USE','Unknown building functions do not participate in strict matching',[b['osm_id'] for b in buildings if b['functions']==['unknown']])
     if poi_stats['ambiguous']:
@@ -226,6 +245,12 @@ def enrich_map(package, annotations=None, min_main_ratio=.9, min_function_ratio=
         result['quality']['buildings_with_services']=sum(bool(b['services']) for b in buildings)
         result['quality']['non_placeable_buildings']=sum(not placeable(b) for b in buildings)
         result['quality']['poi_only_primary_buildings']=sum(b['primary_from_services'] for b in buildings)
+    if quality_policy is not None:
+        result['quality'].update(quality_policy=copy.deepcopy(quality_policy),
+            connectivity_entrances=scope_entrances,background_entrances=background_entrances,
+            background_main_component_entrances=background_main,
+            background_main_component_ratio=background_main/background_entrances if background_entrances else 0,
+            invalid_geometry_entrances=invalid_entrances)
     return result
 
 

@@ -12,6 +12,7 @@ import xml.etree.ElementTree as ET
 
 from adapter.scene_service.auto_evidence import validate_rules
 from adapter.scene_service.map_package import publish_map, json_bytes
+from adapter.scene_service.quality import current_policy
 from . import core
 from .asset_library import published_asset_library
 from .entrances import generate_entrances
@@ -184,6 +185,7 @@ def prepare_physical_map(osm_path, metadata_path, scope, *, scope_source, title,
     descriptor, catalog = published_asset_library()
     geometry_sha = hashlib.sha256(json.dumps(scope, sort_keys=True, ensure_ascii=False,
                                             separators=(',', ':'), allow_nan=False).encode('utf-8')).hexdigest()
+    quality_policy=current_policy()
     recipe = {'schema_version': 'scene.physical-recipe.v1', 'builder': _builder_identity(),
               'scope_geometry': copy.deepcopy(scope), 'geometry_sha256': geometry_sha, 'scope_source': source,
               'road_buffer_m': road_buffer_m, 'fetch_bbox_wgs84': window, 'net_area_km2': area,
@@ -192,6 +194,8 @@ def prepare_physical_map(osm_path, metadata_path, scope, *, scope_source, title,
               'rules_file_sha256': hashlib.sha256(rules_raw).hexdigest(),
               'asset_library_version': descriptor['version'], 'catalog_sha256': descriptor['catalog_sha256'],
               'source_sha256': metadata['sha256'], 'source_counts': counts, 'ai_used': False}
+    if quality_policy is not None:
+        recipe['quality_policy']=copy.deepcopy(quality_policy)
     report('geometry')
     bundle = core.build_from_osm(osm_path, metadata_path, campus_id=map_id, title=title,
                                  catalog=catalog, seed=str(seed))
@@ -229,7 +233,7 @@ def prepare_physical_map(osm_path, metadata_path, scope, *, scope_source, title,
         frozen_rules = work/'rules.json'
         frozen_rules.write_bytes(rules_raw)
         result = publish_map(draft, work/'candidate', map_id, map_version, title,
-                             evidence_mode='auto', rules_path=frozen_rules)
+                             evidence_mode='auto', rules_path=frozen_rules, quality_policy=quality_policy)
         report('publishing')
         _empty(out)
         shutil.copytree(work/'candidate', out, dirs_exist_ok=True)
