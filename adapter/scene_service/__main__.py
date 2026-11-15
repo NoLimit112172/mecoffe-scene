@@ -92,6 +92,8 @@ def main(argv=None):
     publication.add_argument('--map-id',required=True);publication.add_argument('--map-version',required=True)
     publication.add_argument('--title',required=True);publication.add_argument('--rules')
     publication.add_argument('--ai-evidence');publication.add_argument('--annotations')
+    publication.add_argument('--quality-policy',choices=('legacy','scoped'),default='legacy',
+                             help='scoped freezes scope-quality.1; legacy preserves earlier reproduction bytes')
     resolution=commands.add_parser('resolve')
     resolution.add_argument('--map'); resolution.add_argument('--snapshot',required=True)
     resolution.add_argument('--plan',required=True); resolution.add_argument('--prefs',required=True)
@@ -107,8 +109,10 @@ def main(argv=None):
             write_json(args.out,result);print(json.dumps({'buildings':len(result['buildings']),'map_ref':result['map_ref']},ensure_ascii=False))
         elif args.command=='publish':
             from .map_package import publish_map
+            from .quality import current_policy
             result=publish_map(args.source,args.out,args.map_id,args.map_version,args.title,args.annotations,
-                               evidence_mode='auto',ai_evidence=args.ai_evidence,rules_path=args.rules)
+                               evidence_mode='auto',ai_evidence=args.ai_evidence,rules_path=args.rules,
+                               quality_policy=current_policy() if args.quality_policy=='scoped' else None)
             print(json.dumps(result,ensure_ascii=False))
         elif args.command=='evidence':
             result=enrich_map(load_map(args.map),read_json(args.annotations) if args.annotations else None,

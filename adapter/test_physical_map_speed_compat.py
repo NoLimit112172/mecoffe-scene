@@ -33,6 +33,10 @@ from adapter.scene_builder import physical_map
 physical_map._builder_identity = lambda: {
     'name': 'mecoffe-physical-map-builder', 'version': 'physical-map.1',
     'implementation_sha256': '0'*64}
+# This oracle checks the original quality policy as well as geometry bytes.
+# New scoped-quality behavior has separate direct tests; do not normalize or
+# ignore its differences here, explicitly exercise the old-policy path.
+physical_map.current_policy = lambda: None
 from adapter.scene_builder.__main__ import main
 raise SystemExit(main(sys.argv[2:]))
 '''

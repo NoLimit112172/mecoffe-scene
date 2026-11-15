@@ -1,4 +1,46 @@
 {
+  "BUILDING_INVALID_GEOMETRY": {
+    "actions": ["修图后发布新版本", "换图"],
+    "admin_message": "这栋楼的外形无效，不能认证安全安置；不要凭名称或兜底放进去。",
+    "rerun_scope": "先修地图并发布新版本，再重跑 scene",
+    "severity": "warning",
+    "user_message": "楼栋几何无效，不能参与安全安置"
+  },
+  "BUILDING_OUT_OF_SCOPE": {
+    "actions": ["保留背景显示", "确需纳入时重新确认范围并发布新图"],
+    "admin_message": "这是确认范围外的背景楼，包含跨界或孔洞内的楼；保留显示属于正常行为，不代表地图损坏。",
+    "rerun_scope": "接受背景显示无需重跑；改变范围需新建地图，再重跑 scene",
+    "severity": "warning",
+    "user_message": "范围外背景楼保留显示，不参与安置或范围内路网质量统计"
+  },
+  "BUILDING_WATER_CONFLICT": {
+    "actions": ["修正楼栋或水域后发布新版本", "换图"],
+    "admin_message": "范围内楼体与水域冲突，不能放人或门店；不要放宽水域检查。",
+    "rerun_scope": "先修地图并发布新版本，再重跑 scene",
+    "severity": "warning",
+    "user_message": "范围内楼栋与水域冲突，不能参与安置"
+  },
+  "BUILDING_NO_SAFE_ENTRANCE": {
+    "actions": ["修正入口或路网后发布新版本", "使用其他合格楼栋", "换图"],
+    "admin_message": "这栋范围内楼没有安全可达入口，可能缺入口、未连上主路网或连线穿楼穿水；不要把它从质量分母删除。",
+    "rerun_scope": "修图需发布新版本后重跑 scene；接受排除可继续检查",
+    "severity": "warning",
+    "user_message": "范围内楼栋没有安全且连上主路网的入口，不能参与安置"
+  },
+  "BUILDING_NON_PLACEABLE": {
+    "actions": ["保留显示并使用可安置用途的楼", "确属误标时修图升版"],
+    "admin_message": "交通、后勤设施、在建废弃楼按规则不能安置，指定楼栋也不例外。",
+    "rerun_scope": "接受排除无需重跑；修正用途需新地图版本和 scene",
+    "severity": "warning",
+    "user_message": "交通、后勤设施或在建废弃楼只供显示，不参与安置"
+  },
+  "INVALID_QUALITY_POLICY": {
+    "actions": ["核对质量规则与摘要", "使用支持该规则的场景包", "换图"],
+    "admin_message": "地图质量规则不完整、未知或摘要不符，不能忽略新规则并套用旧口径；先核对配套版本。",
+    "rerun_scope": "先修复地图或配套运行包，再重跑 scene",
+    "severity": "error",
+    "user_message": "地图质量规则或实现摘要不一致，或当前程序不支持这版规则"
+  },
   "AI_LOW_CONFIDENCE": {
     "actions": [
       "保留现状",

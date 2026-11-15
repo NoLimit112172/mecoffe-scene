@@ -15,12 +15,17 @@ def json_bytes(value):
     return (json.dumps(value,ensure_ascii=False,sort_keys=True,indent=2,allow_nan=False)+'\n').encode('utf-8')
 
 
-def publish_map(source,out,map_id,map_version,title,annotations=None,template_out=None,*,evidence_mode='legacy',ai_evidence=None,rules_path=None):
+def publish_map(source,out,map_id,map_version,title,annotations=None,template_out=None,*,evidence_mode='legacy',ai_evidence=None,rules_path=None,quality_policy=None):
     source=Path(source);out=Path(out)
     require(bool(re.fullmatch(r'[A-Za-z0-9][A-Za-z0-9_.-]{0,63}',map_id)) and
             bool(re.fullmatch(r'[1-9][0-9]*',map_version)), 'INVALID_MAP','地图 ID 或数字版本无效')
     descriptor,catalog=published_asset_library()
     package=load_map(source)
+    if quality_policy is not None:
+        from .quality import validate_policy
+        package['quality_policy']=copy.deepcopy(validate_policy(quality_policy))
+        if 'quality' in package:
+            package['quality']['quality_policy']=copy.deepcopy(quality_policy)
     require(evidence_mode in ('legacy','auto'),'INVALID_INPUT','Unknown evidence mode')
     input_ref=copy.deepcopy(package['map_ref'])
     ai_raw=None;rules_raw=None;policy=None

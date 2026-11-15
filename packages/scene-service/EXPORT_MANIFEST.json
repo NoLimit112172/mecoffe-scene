@@ -1,6 +1,6 @@
 {
   "exporter": {
-    "sha256": "2bc785f9b9f4bf62e51fd0d11b6933372a08c4fb84891d37d5af43fcd987f9e8",
+    "sha256": "56ec96c487936cda819785faf5e4fbd97314db6c8b22893e64e41d465a4976fb",
     "source_policy": {
       "excluded_directories": {
         "__pycache__": "Interpreter cache is not source or a runtime delivery input.",
@@ -27,6 +27,7 @@
         "issue_messages.json",
         "issues.py",
         "maps.py",
+        "quality.py",
         "request.py",
         "resolver.py",
         "spatial_index.py",
@@ -34,14 +35,14 @@
         "validation.py"
       ]
     },
-    "version": "4"
+    "version": "5"
   },
   "files": {
     "NOTICE.md": "0c9d021d10cd7c3f5936b67b41e4e45d5eaa19bf26b066843256b4126f7ef4b1",
-    "README.md": "91d12e74a710a3da5804aa27f70c16ab269ba7d8ba29e7b13dd48a51ad7a92aa",
-    "VERSION": "71015c979ccb0fc8a0be7ca0ae83046ab045cdc2c8faa09fb2f0f7e440f9b4a6",
-    "pyproject.toml": "b826ef998d3cd8d41f888424df13d2430572518a7f0a118767062552e5aaea81",
-    "src/mecoffe_scene_service/__init__.py": "5a6a31addf593ff163b7d656f1b5ad61b72c0fc0f08640c66aa9c128c698fe32",
+    "README.md": "5e907d400f84fc375733643f830fe193071cd02494512657996ad976b9f3c59a",
+    "VERSION": "998f6b887ed7a6ef44e84210d0237b715bed42ea7254f48dc418afec0a484103",
+    "pyproject.toml": "b6fe78153215d90324decaa7cf98795111539a18e22a64b3b1b08b60d44a8a78",
+    "src/mecoffe_scene_service/__init__.py": "da82949ffd50d907a6a5f58a8b854a7a68925718040854ed5adeca0c1eb34301",
     "src/mecoffe_scene_service/_asset_library.py": "62a897bd3b57f1d082cf782c812636c647a11749fc6a9c2b8e153221e01b521b",
     "src/mecoffe_scene_service/auto_evidence.py": "e46d2f5e0adff81a917576c03d4e8c79e8d680077363e4097a127fe0b612318e",
     "src/mecoffe_scene_service/checker.py": "b73d79c2ed96a9857da19cc16a9f90dbe95edc1729670264946e36e7a0d7d005",
@@ -50,11 +51,12 @@
     "src/mecoffe_scene_service/contract-v2.json": "2aedb7b78e0cccd05693a30a407926eaa87e44eba6f959e027431631975dd992",
     "src/mecoffe_scene_service/contract-v3.json": "b12359faec57e5e770e87acb0a88cfb80c7a51016b38e39cd7f01499fd688fff",
     "src/mecoffe_scene_service/contract.json": "6789f985d31efa257e3ab7a0178517f6c0febb81faaee74f7a567bc58c0d82df",
-    "src/mecoffe_scene_service/evidence.py": "2cc6d0ac923db4af59a9bf24e64fb3d7ed4b9352dabacead9b629e1975756316",
+    "src/mecoffe_scene_service/evidence.py": "e7daa166e345740250f70f6d2c2f87863ee37d183c86a3180a1200619cd77367",
     "src/mecoffe_scene_service/geometry.py": "122b81d96d275a6005282ef10202da23f56758253377a012a1522c453fffca5c",
-    "src/mecoffe_scene_service/issue_messages.json": "77150dbefb6e2242abbb60801713c3c36a00bf5e0521078b4b2f04fcd8127575",
+    "src/mecoffe_scene_service/issue_messages.json": "88190dea6894401cf3ab8dbea1eb41d4b580c4d6e526cde4a14ad6856fa26f8c",
     "src/mecoffe_scene_service/issues.py": "a8712add07044dd0be134846096f9e46ab5b5d8827ce74b2328d25c01ecb7c7c",
-    "src/mecoffe_scene_service/maps.py": "27592b9a2e136e6cbcd768e0e0b377db037cab3ceb19fe38c773debd5af6efe9",
+    "src/mecoffe_scene_service/maps.py": "8027fc3df002f5c211a9c76b2bda0ab77e8c619e644b52a5fdf8e5f45341b9fb",
+    "src/mecoffe_scene_service/quality.py": "d06aaaf95f6670c1b83c224ce5f1fe55f393f56fe4f3e0e5b912b3f1376d212f",
     "src/mecoffe_scene_service/request.py": "d9648787afbe612a6951f432caf7d14866e6b576ddce5a925926c814d00827f7",
     "src/mecoffe_scene_service/resolver.py": "61485cb99dce32a863ebcd31ec03e13a3b5656f999d0851ba4bf3ce558fa283a",
     "src/mecoffe_scene_service/resources/mecoffe-embed-v1/asset-library.json": "cffecbe3ab2bcca21939d1180347bb06813cd14a1af0e752f0b46552655419b1",
@@ -111,7 +113,7 @@
     },
     "adapter/scene_service/evidence.py": {
       "byte_policy": "lf",
-      "sha256": "2cc6d0ac923db4af59a9bf24e64fb3d7ed4b9352dabacead9b629e1975756316"
+      "sha256": "e7daa166e345740250f70f6d2c2f87863ee37d183c86a3180a1200619cd77367"
     },
     "adapter/scene_service/geometry.py": {
       "byte_policy": "lf",
@@ -119,7 +121,7 @@
     },
     "adapter/scene_service/issue_messages.json": {
       "byte_policy": "lf",
-      "sha256": "77150dbefb6e2242abbb60801713c3c36a00bf5e0521078b4b2f04fcd8127575"
+      "sha256": "88190dea6894401cf3ab8dbea1eb41d4b580c4d6e526cde4a14ad6856fa26f8c"
     },
     "adapter/scene_service/issues.py": {
       "byte_policy": "lf",
@@ -127,7 +129,11 @@
     },
     "adapter/scene_service/maps.py": {
       "byte_policy": "lf",
-      "sha256": "c9cedd11c517f663c43c3c1dddde6bc039cc222f1b90260bc3b4fc2d773f4dd1"
+      "sha256": "150963ccb438e8b75c4865da496830058cecd56aa8e119c6fca7408eb2c5e0b9"
+    },
+    "adapter/scene_service/quality.py": {
+      "byte_policy": "lf",
+      "sha256": "d06aaaf95f6670c1b83c224ce5f1fe55f393f56fe4f3e0e5b912b3f1376d212f"
     },
     "adapter/scene_service/request.py": {
       "byte_policy": "lf",
@@ -154,8 +160,8 @@
     "import_name": "mecoffe_scene_service",
     "name": "mecoffe-scene-service",
     "requires_python": ">=3.11,<3.12",
-    "version": "0.2.1"
+    "version": "0.2.2"
   },
   "schema_version": "scene.service-export.v1",
-  "source_commit": "457b0e2b002d4c0f37750a481e1f2102cd7018fe"
+  "source_commit": "4cddfd289c5f1a0fa915c54d02210592fb27a4e8"
 }
